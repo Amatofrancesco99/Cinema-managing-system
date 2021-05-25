@@ -1,4 +1,4 @@
-package it.unipv.ingsw.cinema.model.enumerations;
+package cinema.model.enumerations;
 
 public enum TypeOfSeat {
 	BED, NORMAL, PREMIUM;

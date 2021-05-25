@@ -1,6 +1,6 @@
-package it.unipv.ingsw.cinema.model.cinema;
+package cinema.model.cinema;
 
-import it.unipv.ingsw.cinema.model.enumerations.TypeOfSeat;
+import cinema.model.enumerations.TypeOfSeat;
 
 public class PhisicalSeat {
 	

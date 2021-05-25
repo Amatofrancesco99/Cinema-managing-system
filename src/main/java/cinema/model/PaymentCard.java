@@ -1,4 +1,4 @@
-package it.unipv.ingsw.cinema.model;
+package cinema.model;
 
 import java.util.Date;
 

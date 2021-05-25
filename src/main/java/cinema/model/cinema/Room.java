@@ -1,4 +1,4 @@
-package it.unipv.ingsw.cinema.model.cinema;
+package cinema.model.cinema;
 
 import java.util.ArrayList;
 
