@@ -26,5 +26,14 @@ hs_err_pid*
 # Ignore Gradle project-specific cache directory
 .gradle
 
+# Ignore Gradle executable
+gradlew
+
 # Ignore Gradle build output directory
 build
+
+# Ignore Eclipse metadata
+.metadata
+
+# Ignore .DS_store files
+**/.DS_Store
