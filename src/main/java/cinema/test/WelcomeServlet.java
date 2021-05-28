@@ -20,9 +20,15 @@ public class WelcomeServlet extends HttpServlet {
 
 			ArrayList<Film> films = new ArrayList<>();
 
-			films.add(new Film("Quasi amici"));
+			films.add(new Film("Quasi amici 1", 0));
+			films.add(new Film("Quasi amici 2", 1));
+			films.add(new Film("Quasi amici 3", 2));
+			films.add(new Film("Quasi amici 4", 3));
+			films.add(new Film("Quasi amici 5", 4));
+			films.add(new Film("Quasi amici 6", 5));
+			films.add(new Film("Quasi amici 7", 5));
 
-			resp.getWriter().write(Rythm.render("index.rtm", (List<Film>) (films)));
+			resp.getWriter().write(Rythm.render("index.html", (List<Film>) (films)));
 		}
 	}
 
