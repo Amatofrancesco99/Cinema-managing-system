@@ -1,43 +1,34 @@
 package cinema.test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class WelcomeServlet extends HttpServlet {
+import org.rythmengine.Rythm;
 
-	private ArrayList<Order> orders = new ArrayList<>();
+@SuppressWarnings("serial")
+public class WelcomeServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (req.getPathInfo().equals("/")) {
 
-		try {
-			Scanner index = new Scanner(new File("index.html"));
-			while (index.hasNextLine()) {
-				String line = index.nextLine();
-				resp.getWriter().write(line);
-			}
-			index.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			ArrayList<Film> films = new ArrayList<>();
+
+			films.add(new Film("Quasi amici"));
+
+			resp.getWriter().write(Rythm.render("index.rtm", (List<Film>) (films)));
 		}
-
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		orders.add(new Order(req.getParameter("firstName"), req.getParameter("lastName"), req.getParameter("time"),
-				req.getParameter("pizzas")));
-		resp.sendRedirect("/");
-
+		resp.getWriter().write("POST");
 	}
 
 }
