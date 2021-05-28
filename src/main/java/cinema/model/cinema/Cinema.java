@@ -2,17 +2,37 @@ package cinema.model.cinema;
 
 import java.util.ArrayList;
 
+//Singleton class
 public class Cinema {
 	
+	private static Cinema single_instance = null;
 	private String name, city, state, zipCode, address;
 	private ArrayList<Room> rooms;
 	
-	public Cinema(String name, String city, String state, String zipCode, String address) {
-		this.name=name;
-		this.city=city;
-		this.state=state;
-		this.zipCode=zipCode;
-		this.address = address; 
+	// Our cinema class
+	private Cinema() {
+		this.name="Armadillo Cinema";
+		this.city="Pavia (PV)";
+		this.state="Italy";
+		this.zipCode="27100";
+		this.address = "Via A.Ferrata, 5";
+		rooms=new ArrayList<Room>();
+	}
+	
+	// static method to create instance of Singleton class
+    public static Cinema getInstance()
+    {
+        if (single_instance == null)
+            single_instance = new Cinema();
+  
+        return single_instance;
+    }
+    
+	public void addRoom(Room r) {
+		rooms.add(r);
+	}
+	public void removeRoom(Room r) {
+		rooms.remove(r);
 	}
 	
 	public String getName() {
