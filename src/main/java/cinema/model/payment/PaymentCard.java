@@ -1,4 +1,4 @@
-package cinema.model;
+package cinema.model.payment;
 
 import java.util.Date;
 
