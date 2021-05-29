@@ -1,9 +1,11 @@
 @import cinema.test.*
+@import cinema.model.cinema.*
 @import org.apache.commons.lang3.*
 
 @extends(wireframe)
 
 @args() {
+    Cinema cinema
     List<Film> films
 }
 
@@ -12,7 +14,7 @@
     <div class="row mt-5 mb-4">
         <div class="col-8 col-md-10 mx-auto">
             <h1 class="fw-light">
-                Cinema Armadillo
+                @(cinema.getName())
             </h1>
             <figure class="text-center mt-4 mb-2">
                 <blockquote class="blockquote lead text-dark">

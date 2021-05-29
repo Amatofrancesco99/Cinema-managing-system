@@ -34,7 +34,20 @@ public class Cinema {
   
         return single_instance;
     }
-
+    
+    // aggiungere o rimuovere una proiezione da un cinema
+    public void addProjection(Projection p) {
+    	cinemaProjections.add(p);
+    }
+    public void removeProjection(Projection p) {
+    	cinemaProjections.remove(p);
+    }
+    
+    // farsi dare tutte le proiezioni fatte da un cinema
+    public ArrayList<Projection> getCinemaProjections(){
+    	return cinemaProjections;
+    }
+    
 	// farsi dare tutte le proiezioni di uno specifico film
 	// ??? (high coupling)
 	public ArrayList<Projection> getMovieProjections(Movie m) throws NoMovieProjectionsException{
