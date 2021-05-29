@@ -92,6 +92,6 @@ public class Cinema {
 		return rooms.size();
 	}
 	public String getCinemaLocation() {
-		return city+" "+state+" "+zipCode+" "+address;
+		return address+" , "+city+" , "+zipCode+" - "+state;
 	}	
 }
