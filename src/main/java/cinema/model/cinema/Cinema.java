@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import cinema.model.Movie;
 import cinema.model.Projection;
-import cinema.model.exceptions.NoMovieProjectionsException;
+import cinema.model.exceptions.*;
 
 //Singleton class
 public class Cinema {
@@ -14,7 +14,7 @@ public class Cinema {
 	private ArrayList<Room> rooms;
 	private ArrayList<Projection> cinemaProjections; // ??? (high coupling)
 	
-	// Costruttore di default, contenente le informazioni specifiche del nostro cinema
+	// costruttore di default, contenente le informazioni specifiche del nostro cinema
 	private Cinema() {
 		this.name="Armadillo Cinema";
 		this.city="Pavia (PV)";
@@ -25,22 +25,8 @@ public class Cinema {
 		rooms=new ArrayList<Room>();
 		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
 	}
-	
-	// Se un'altra persona volesse creare un cinema con informazioni diverse da quelle di 
-	// default questo è il costruttore
-	private Cinema(String name, String city, String state, String zipCode, String address) {
-		this.name=name;
-		this.city=city;
-		this.state=state;
-		this.zipCode=zipCode;
-		this.address=address;
-		//default logo
-		this.urlLogo = "https://www.clipartmax.com/png/middle/310-3105859_film-cinema-icon-png.png";
-		rooms=new ArrayList<Room>();
-		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
-	}
-	
-	// static method to create instance of Singleton class
+
+	// metodo statico per creare un istanza di una classe singleton
     public static Cinema getInstance()
     {
         if (single_instance == null)
@@ -48,15 +34,8 @@ public class Cinema {
   
         return single_instance;
     }
-    
-	public void addRoom(Room r) {
-		rooms.add(r);
-	}
-	public void removeRoom(Room r) {
-		rooms.remove(r);
-	}
 
-	// get all projections of a specific movie
+	// farsi dare tutte le proiezioni di uno specifico film
 	// ??? (high coupling)
 	public ArrayList<Projection> getMovieProjections(Movie m) throws NoMovieProjectionsException{
 		ArrayList<Projection> movieProjections = new ArrayList<Projection>();
@@ -70,9 +49,29 @@ public class Cinema {
 		return movieProjections;
 	}
 	
+	//Cambiare le proprietà del cinema
+	public void addRoom(Room r) {
+		rooms.add(r);
+	}
+	public void removeRoom(Room r) throws NoCinemaRoomsException {
+		if (rooms.size()>0)
+			rooms.remove(r);
+		else throw new NoCinemaRoomsException(this.name,this.city,this.address);
+	}
 	public void setUrlLogo(String link) {
 		urlLogo=link;
 	}
+	public void setName(String n) {
+		this.name=n;
+	}
+	public void setLocation(String city,String state, String zipCode, String address) {
+		this.city=city;
+		this.state=state;
+		this.zipCode=zipCode;
+		this.address=address;
+	}
+	
+	//Getters per farsi dare le informazioni del cinema
 	public String getName() {
 		return name;
 	}
