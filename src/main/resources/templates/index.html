@@ -5,79 +5,106 @@
 @args() {
     Cinema cinema
     List<Film> films
+    String query
 }
 
 @extends(wireframe, cinema=cinema)
 
 @section(content) {
-<section class="bg-warning text-center mt-5 py-4">
-    <div class="row mt-5 mb-4">
-        <div class="col-8 col-md-10 mx-auto">
-            <h1 class="fw-light">
-                @(cinema.getName())
-            </h1>
-            <figure class="text-center mt-4 mb-2">
-                <blockquote class="blockquote lead text-dark">
-                    <p>
-                        &ldquo;La fotografia &egrave; verit&agrave;, e il cinema &egrave; verit&agrave; ventiquattro volte al secondo&rdquo;
-                    </p>
-                </blockquote>
-                <figcaption class="blockquote-footer">
-                    <cite>
-                        Jean-Luc Godard
-                    </cite>
-                </figcaption>
-            </figure>
-        </div>
-    </div>
-</section>
-
-<div class="album py-5 bg-light">
-    <div class="container">
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
-
-            @for (Film film: films) {
-            <div class="col">
-                <div class="card shadow-sm">
-                    <a href="#">
-                        <img src="@(film.urlImmagine)" class="card-img-top">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            @(film.titolo)
-                        </h5>
-                        <p class="card-text">
-                            @(StringUtils.abbreviate(film.descrizione, 150))
+    <section class="bg-warning text-center mt-5 py-4">
+        <div class="row mt-5 mb-4">
+            <div class="col-8 col-md-10 mx-auto">
+                <h1 class="fw-light">
+                    @(cinema.getName())
+                </h1>
+                <figure class="text-center mt-4 mb-2">
+                    <blockquote class="blockquote lead text-dark">
+                        <p>
+                            &ldquo;La fotografia &egrave; verit&agrave;, e il cinema &egrave; verit&agrave; ventiquattro volte al secondo&rdquo;
                         </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a class="btn btn-sm btn-primary" href="#" role="button">
-                                ACQUISTA ORA
-                            </a>
-                            <small class="text-muted">
-                                @(film.durata)
-                            </small>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a class="text-muted" href="@(film.urlTrailer)" target="_blank" rel="noopener noreferrer">
-                                Vai al trailer
-                            </a>
-                            <div>
-                                @for (int i = 0; i < film.rating; i++) {
-                                <span class="fa fa-star" style="color: orange;"></span>
-                                }
-                                @for (int i = 0; i < (5 - film.rating); i++) {
-                                <span class="fa fa-star"></span>
-                                }
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        <cite>
+                            Jean-Luc Godard
+                        </cite>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    @if (query) {
+        <div id="search-results">
+            <div class="container mt-5 mb-5">
+                <h4>
+                    <p>
+                        Hai cercato &ldquo;<b>@(query)</b>&rdquo;
+                    </p>
+                </h4>
+            </div>
+        </div>
+    }
+
+    @if (films) {
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
+
+                    @for (Film film: films) {
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <a href="/#">
+                                    <img src="@(film.urlImmagine)" class="card-img-top">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        @(film.titolo)
+                                    </h5>
+                                    <p class="card-text">
+                                        @(StringUtils.abbreviate(film.descrizione, 150))
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a class="btn btn-sm btn-primary" href="/#" role="button">
+                                            ACQUISTA ORA
+                                        </a>
+                                        <small class="text-muted">
+                                            @(film.durata)
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a class="text-muted" href="@(film.urlTrailer)" target="_blank" rel="noopener noreferrer">
+                                            Vai al trailer
+                                        </a>
+                                        <div>
+                                            @for (int i = 0; i < film.rating; i++) {
+                                                <span class="fa fa-star" style="color: orange;"></span>
+                                            }
+                                            @for (int i = 0; i < (5 - film.rating); i++) {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
+
                 </div>
             </div>
-            }
-
         </div>
-    </div>
-</div>
+    } else {
+        <div class="container my-5">
+            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <h1 class="m-4">
+                    <span class="fa fa-exclamation-circle"></span>
+                </h1>
+                <div>
+                    Ops! Quello che stai cercando qui non c'&egrave;.<br>
+                    <a href="/#">Torna alla home</a> e scegli il film che fa per te tra tutti quelli da non perdere!
+                </div>
+            </div>
+        </div>
+    }
 }

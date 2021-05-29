@@ -30,9 +30,24 @@ public class WelcomeServlet extends HttpServlet {
 			//films.add(new Film("Quasi amici 4", 3));
 			//films.add(new Film("Quasi amici 5", 4));
 			//films.add(new Film("Quasi amici 6", 5));
-			films.add(new Film("Quasi amici", 5));
+			
+			// TODO: search
+			if (req.getParameter("query") == null) {
+				// Show all films
+				films.add(new Film("Quasi amici", 5));
+			} else {
+				// Filter the films (this is a dumb filter, use it only for debug purposes)
+				if ("quasi amici".contains(req.getParameter("query").toLowerCase())) {
+					films.add(new Film("Quasi amici", 5));
+				}
+			}
 
-			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) (films)));
+			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, req.getParameter("query")));
+		} else {
+			Cinema myCinema = Cinema.getInstance();
+			ArrayList<Film> films = new ArrayList<>();
+
+			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, null));
 		}
 	}
 
