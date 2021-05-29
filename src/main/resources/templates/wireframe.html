@@ -1,3 +1,9 @@
+@import cinema.model.cinema.Cinema
+
+@args() {
+    Cinema cinema
+}
+
 <!DOCTYPE html>
 
 <html lang="it">
@@ -8,7 +14,7 @@
         <meta name="author" content="Screaming Hairy Armadillo Team">
 
         <title>
-            Cinema Armadillo - Home
+            @(cinema.getName()) - Home
         </title>
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -18,7 +24,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" aria-label="Eighth navbar example">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    Cinema Armadillo
+                    @(cinema.getName())
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="Barra di navigazione" aria-expanded="false" aria-label="Espandi la barra di navigazione">
                     <span class="navbar-toggler-icon"></span>
@@ -60,7 +66,10 @@
                     </a>
                 </p>
                 <p class="mb-1">
-                    Cinema Armadillo &egrave; un prodotto &copy; 2021 Screaming Hairy Armadillo Team
+                    @(cinema.getName()) &egrave; un prodotto &copy; 2021 Screaming Hairy Armadillo Team
+                </p>
+                <p class="mb-1">
+                    @(cinema.getLocation())
                 </p>
             </div>
         </footer>

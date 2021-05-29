@@ -1,13 +1,13 @@
-@import cinema.test.*
-@import cinema.model.cinema.*
-@import org.apache.commons.lang3.*
-
-@extends(wireframe)
+@import cinema.model.cinema.Cinema
+@import cinema.test.Film
+@import org.apache.commons.lang3.StringUtils
 
 @args() {
     Cinema cinema
     List<Film> films
 }
+
+@extends(wireframe, cinema=cinema)
 
 @section(content) {
 <section class="bg-warning text-center mt-5 py-4">
@@ -28,13 +28,6 @@
                     </cite>
                 </figcaption>
             </figure>
-                <font face="Helvetica" color="white">
-                    <i>
-                        <b>
-                            @(cinema.getCinemaLocation())
-                        </b>
-                    </i>
-                </font>
         </div>
     </div>
 </section>
@@ -46,7 +39,9 @@
             @for (Film film: films) {
             <div class="col">
                 <div class="card shadow-sm">
-                    <img src="@(film.urlImmagine)" class="card-img-top">
+                    <a href="#">
+                        <img src="@(film.urlImmagine)" class="card-img-top">
+                    </a>
                     <div class="card-body">
                         <h5 class="card-title">
                             @(film.titolo)

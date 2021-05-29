@@ -16,11 +16,11 @@ public class Cinema {
 	
 	// costruttore di default, contenente le informazioni specifiche del nostro cinema
 	private Cinema() {
-		this.name="Armadillo Cinema";
+		this.name="Cinema Armadillo";
 		this.city="Pavia (PV)";
-		this.state="Italy";
+		this.state="Italia";
 		this.zipCode="27100";
-		this.address = "Via A.Ferrata, 5";
+		this.address = "Via A. Ferrata, 5";
 		this.urlLogo = "https://www.clipartmax.com/png/middle/310-3105859_film-cinema-icon-png.png";
 		rooms=new ArrayList<Room>();
 		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
@@ -91,7 +91,7 @@ public class Cinema {
 	public int getNumberOfRooms() {
 		return rooms.size();
 	}
-	public String getCinemaLocation() {
-		return address+" , "+city+" , "+zipCode+" - "+state;
+	public String getLocation() {
+		return address + ", " + city + " - " + zipCode + "  " + state;
 	}	
 }
