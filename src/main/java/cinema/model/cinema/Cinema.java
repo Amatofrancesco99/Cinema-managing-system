@@ -21,7 +21,7 @@ public class Cinema {
 		this.state="Italia";
 		this.zipCode="27100";
 		this.address = "Via A. Ferrata, 5";
-		this.urlLogo = "https://www.clipartmax.com/png/middle/310-3105859_film-cinema-icon-png.png";
+		this.urlLogo = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms=new ArrayList<Room>();
 		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
 	}
@@ -87,6 +87,9 @@ public class Cinema {
 			rooms.remove(r);
 		else throw new NoCinemaRoomsException(this.name,this.city,this.address);
 	}
+	// !IMPORTANTE! quando passi un link come parametro, poiché vuoi cambiare il logo
+	// del tuo cinema, è importante che il link contenga il riferimento ad un immagine
+	// con estensione .png (MUST), altrimenti la resa grafica non sarà ottimale
 	public void setUrlLogo(String link) {
 		urlLogo=link;
 	}
@@ -110,4 +113,7 @@ public class Cinema {
 	public String getLocation() {
 		return address + ", " + city + " - " + zipCode + "  " + state;
 	}	
+	public String getUrlLogo() {
+		return urlLogo;
+	}
 }
