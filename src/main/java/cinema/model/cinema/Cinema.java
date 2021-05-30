@@ -10,7 +10,7 @@ import cinema.model.exceptions.*;
 public class Cinema {
 	
 	private static Cinema single_instance = null;
-	private String name, city, state, zipCode, address, urlLogo;
+	private String name, city, country, zipCode, address, logoUrl;
 	private ArrayList<Room> rooms;
 	private ArrayList<Projection> cinemaProjections; // ??? (high coupling)
 	
@@ -18,10 +18,10 @@ public class Cinema {
 	private Cinema() {
 		this.name="Cinema Armadillo";
 		this.city="Pavia (PV)";
-		this.state="Italia";
+		this.country="Italia";
 		this.zipCode="27100";
 		this.address = "Via A. Ferrata, 5";
-		this.urlLogo = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
+		this.logoUrl = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms=new ArrayList<Room>();
 		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
 	}
@@ -90,15 +90,15 @@ public class Cinema {
 	// !IMPORTANTE! quando passi un link come parametro, poiché vuoi cambiare il logo
 	// del tuo cinema, è importante che il link contenga il riferimento ad un immagine
 	// con estensione .png (MUST), altrimenti la resa grafica non sarà ottimale
-	public void setUrlLogo(String link) {
-		urlLogo=link;
+	public void setLogoUrl(String link) {
+		logoUrl=link;
 	}
 	public void setName(String n) {
 		this.name=n;
 	}
-	public void setLocation(String city,String state, String zipCode, String address) {
+	public void setLocation(String city,String country, String zipCode, String address) {
 		this.city=city;
-		this.state=state;
+		this.country=country;
 		this.zipCode=zipCode;
 		this.address=address;
 	}
@@ -111,9 +111,9 @@ public class Cinema {
 		return rooms.size();
 	}
 	public String getLocation() {
-		return address + ", " + city + " - " + zipCode + "  " + state;
+		return address + ", " + city + " - " + zipCode + "  " + country;
 	}	
-	public String getUrlLogo() {
-		return urlLogo;
+	public String getLogoUrl() {
+		return logoUrl;
 	}
 }
