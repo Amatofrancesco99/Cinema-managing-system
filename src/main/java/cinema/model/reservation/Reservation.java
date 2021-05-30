@@ -1,15 +1,24 @@
 package cinema.model.reservation;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import cinema.model.Projection;
 import cinema.model.Spectator;
@@ -18,16 +27,17 @@ import cinema.model.payment.PaymentCard;
 
 public class Reservation {
 
-	private int progressive;
-	private Date purchaseDate;
+	private static final AtomicInteger count = new AtomicInteger(0); 
+	private final long progressive;
+	private LocalDate purchaseDate;
 	private ArrayList<Spectator> spectators;
 	private ArrayList<Ticket> tickets;
 	private Projection projection;
 	private PaymentCard paymentCard;
 	
-	public Reservation (int id, Date purchaseDate) {
-		progressive=id;
-		this.purchaseDate=purchaseDate;
+	public Reservation () {
+		progressive = count.incrementAndGet(); 
+		purchaseDate=java.time.LocalDate.now();
 		spectators=new ArrayList<Spectator>();
 		tickets=new ArrayList<Ticket>();
 	}
@@ -64,48 +74,66 @@ public class Reservation {
 	}
 	
 	// invio per email del documento con le informazioni inerenti la reservation
-	public String sendEmail(String email, String password) {
+	public String sendEmail(String email) {
 		if (createReport()==false) {
 			return "La generazione del report non è andata a buon fine.";
 		}
-		
-		String to = email;
-        String from = "noreply@"+"CinemaArmadillo.com"; //our cinema email
-        // Assuming you are sending email from through gmails smtp
-        String host = "smtp.gmail.com";
-        // Get system properties
-        Properties properties = System.getProperties();
-        // Setup mail server
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
-        // Get the Session object and pass username and password
-        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(to, password);
-            }
-        });
-        // Used to debug SMTP issues
-        session.setDebug(true);
-        try {
-            // Create a default MimeMessage object.
-            MimeMessage message = new MimeMessage(session);
-            // Set From: header field of the header.
-            message.setFrom(new InternetAddress(from));
-            // Set To: header field of the header.
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            // Set Subject: header field
-            message.setSubject("RICEZIONE REPORT PRENOTAZIONE ID: " + String.valueOf(progressive));
-            // Now set the actual message
-            message.setText("This is actual message");
-            System.out.println("sending...");
-            // Send message
-            Transport.send(message);
-            return "Sent message successfully....";
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
-        	return "Error in sending email";
-        }
-	}
+		String to=email;//receiver email
+		final String user="ArmadilloCinema@gmail.com";//sender email (cinema)
+		final String password="xxxxx";//sender password
+		   
+		//1) get the session object     
+		Properties properties = System.getProperties();  
+		properties.setProperty("mail.smtp.host", "mail.javatpoint.com");  
+		properties.put("mail.smtp.auth", "true");  
+		  
+		Session session = Session.getDefaultInstance(properties,  
+		new javax.mail.Authenticator() {  
+			protected PasswordAuthentication getPasswordAuthentication() {  
+				return new PasswordAuthentication(user,password);  
+				}  
+			});  
+		     
+		//2) compose message     
+		try{  
+			MimeMessage message = new MimeMessage(session);  
+			message.setFrom(new InternetAddress(user));  
+			message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
+			message.setSubject("RESERVATION N° "+this.progressive+" | TI ASPETTIAMO!");  
+		      
+			//3) create MimeBodyPart object and set your message text     
+			BodyPart messageBodyPart1 = new MimeBodyPart();  
+			messageBodyPart1.setText("Benvenuto "+to+ " ,/n"
+					+ "In allegato trova il documento che conferma l'avvenuta prenotazione.\n"
+					+ "Stampi l'allegato, o porti una prova della ricevuta quando verrà"
+					+ "a visionare il film.\n"
+					+ "La aspettiamo, buona giornata.");  
+		      
+			//4) create new MimeBodyPart object and set DataHandler object to this object      
+			MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
+		  
+			String filename = "SendAttachment.java";//change accordingly  
+			DataSource source = new FileDataSource(filename);  
+			messageBodyPart2.setDataHandler(new DataHandler(source));  
+			messageBodyPart2.setFileName(filename);  
+		     
+		     
+			//5) create Multipart object and add MimeBodyPart objects to this object      
+		    Multipart multipart = new MimeMultipart();  
+		    multipart.addBodyPart(messageBodyPart1);  
+		    multipart.addBodyPart(messageBodyPart2);  
+		  
+		    //6) set the multiplart object to the message object  
+		    message.setContent(multipart );  
+		     
+		    //7) send message  
+		    Transport.send(message);  
+		   
+		    return "Email inviata...";  
+		   }
+		catch (MessagingException ex) {
+			   ex.printStackTrace();
+			   return "Processo di invio fallito...Riprova più tardi.";  
+			}  
+		 }  
 }
