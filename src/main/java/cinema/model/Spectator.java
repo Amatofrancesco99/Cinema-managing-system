@@ -14,4 +14,8 @@ public class Spectator {
 		this.birthDate=birthDate;
 	}
 	
+	public String getEmail() {
+		return email;
+	}
+	
 }
