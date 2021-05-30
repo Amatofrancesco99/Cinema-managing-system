@@ -44,24 +44,40 @@ public class Cinema {
     }
     
     // farsi dare tutte le proiezioni fatte da un cinema
-    public ArrayList<Projection> getCinemaProjections(){
+    public ArrayList<Projection> getProjections(){
     	return cinemaProjections;
     }
     
-	// farsi dare tutte le proiezioni di uno specifico film
-	// ??? (high coupling)
-	public ArrayList<Projection> getMovieProjections(Movie m) throws NoMovieProjectionsException{
-		ArrayList<Projection> movieProjections = new ArrayList<Projection>();
+    // farsi dare tutte le proiezioni di uno specifico film
+ 	// ??? (high coupling)
+ 	public ArrayList<Projection> getProjections(Movie m) throws NoMovieProjectionsException{
+ 		ArrayList<Projection> movieProjections = new ArrayList<Projection>();
+ 		for (Projection p: cinemaProjections) {
+ 			if (p.getMovie()==m) {
+ 				movieProjections.add(p);
+ 			}
+ 		}
+ 		if (movieProjections.size()==0)
+ 			throw new NoMovieProjectionsException(m);
+ 		return movieProjections;
+ 	}
+ 	
+ 	
+    // farsi dare tutti i film proiettati dal cinema
+    public ArrayList<Movie> getMovies(){
+		ArrayList<Movie> movies = new ArrayList<Movie>();
 		for (Projection p: cinemaProjections) {
-			if (p.getMovie()==m) {
-				movieProjections.add(p);
+			for (Movie m:movies) {
+				// se il film che si sta proiettando ha nome e data di rilascio
+				// diversa tra i film già presenti, allora si aggiunge alla lista di movies
+				// proiettati
+				if ((p.getMovie().getName()!=m.getName()) || (p.getMovie().getReleaseDate()!=m.getReleaseDate()))
+						movies.add(p.getMovie());
 			}
 		}
-		if (movieProjections.size()==0)
-			throw new NoMovieProjectionsException(m);
-		return movieProjections;
+		return movies;
 	}
-	
+    
 	//Cambiare le proprietà del cinema
 	public void addRoom(Room r) {
 		rooms.add(r);
