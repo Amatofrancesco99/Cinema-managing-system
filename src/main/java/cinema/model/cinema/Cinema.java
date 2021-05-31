@@ -16,16 +16,16 @@ public class Cinema {
 	
 	// costruttore di default, contenente le informazioni specifiche del nostro cinema
 	private Cinema() {
-		this.name="Cinema Armadillo";
-		this.city="Pavia (PV)";
-		this.country="Italia";
-		this.zipCode="27100";
+		this.name = "Cinema Armadillo";
+		this.city = "Pavia (PV)";
+		this.country = "Italia";
+		this.zipCode = "27100";
 		this.address = "Via A. Ferrata, 5";
-		this.email="CinemaArmadillo@gmail.com";
-		this.password="CinemaArmadillo@1999";
+		this.email = "CinemaArmadillo@gmail.com";
+		this.password = "CinemaArmadillo@1999";
 		this.logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
-		rooms=new ArrayList<Room>();
-		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
+		rooms = new ArrayList<Room>();
+		cinemaProjections = new ArrayList<Projection>(); // ??? (high coupling)
 	}
 
 	// metodo statico per creare un istanza di una classe singleton
@@ -53,11 +53,11 @@ public class Cinema {
  	public ArrayList<Projection> getProjections(Movie m) throws NoMovieProjectionsException{
  		ArrayList<Projection> movieProjections = new ArrayList<Projection>();
  		for (Projection p: cinemaProjections) {
- 			if (p.getMovie()==m) {
+ 			if (p.getMovie() == m) {
  				movieProjections.add(p);
  			}
  		}
- 		if (movieProjections.size()==0)
+ 		if (movieProjections.size() == 0)
  			throw new NoMovieProjectionsException(m);
  		return movieProjections;
  	}
@@ -80,7 +80,7 @@ public class Cinema {
 		rooms.add(r);
 	}
 	public void removeRoom(Room r) throws NoCinemaRoomsException {
-		if (rooms.size()>0)
+		if (rooms.size() > 0)
 			rooms.remove(r);
 		else throw new NoCinemaRoomsException(this.name,this.city,this.address);
 	}
@@ -90,13 +90,13 @@ public class Cinema {
 		this.logoURL = logoURL;
 	}
 	public void setName(String n) {
-		this.name=n;
+		this.name = n;
 	}
 	public void setLocation(String city,String country, String zipCode, String address) {
-		this.city=city;
-		this.country=country;
-		this.zipCode=zipCode;
-		this.address=address;
+		this.city = city;
+		this.country = country;
+		this.zipCode = zipCode;
+		this.address = address;
 	}
 	public void setEmail(String email) {
 		this.email=email;
