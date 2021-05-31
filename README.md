@@ -26,6 +26,13 @@ Con dispositivi Linux/MacOS:
 ./gradlew run
 ```
 
+Qualora uno dei due comandi sopracitati dicesse che manchi la classe wrapper, esegui il seguente comando:
+
+```
+gradle wrapper
+```
+
+
 ***
 ### 3. Open browser
 Nella barra degli indirizzi di un browser (preferibilmente Google Chrome), scrivi: 
