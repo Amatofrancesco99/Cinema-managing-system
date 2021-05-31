@@ -43,6 +43,11 @@ public class WelcomeServlet extends HttpServlet {
 			}
 
 			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, req.getParameter("query")));
+		} else if (req.getPathInfo().equals("/movie-details")) {
+			Cinema myCinema = Cinema.getInstance();
+			Film f = new Film("Quasi amici", 4);
+			
+			resp.getWriter().write(Rythm.render("movie-details.html", myCinema, f));
 		} else {
 			Cinema myCinema = Cinema.getInstance();
 			ArrayList<Film> films = new ArrayList<>();

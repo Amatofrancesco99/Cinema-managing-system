@@ -54,34 +54,34 @@
                         <div class="col">
                             <div class="card shadow-sm">
                                 <a href="/#">
-                                    <img src="@(film.urlImmagine)" class="card-img-top">
+                                    <img src="@(film.getImageURL())" class="card-img-top">
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        @(film.titolo)
+                                        @(film.getTitle())
                                     </h5>
                                     <p class="card-text">
-                                        @(StringUtils.abbreviate(film.descrizione, 150))
+                                        @(StringUtils.abbreviate(film.getDescription(), 150))
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <a class="btn btn-sm btn-primary" href="/#" role="button">
                                             ACQUISTA ORA
                                         </a>
                                         <small class="text-muted">
-                                            @(film.durata)
+                                            @(film.getDuration())
                                         </small>
                                     </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a class="text-muted" href="@(film.urlTrailer)" target="_blank" rel="noopener noreferrer">
+                                        <a class="text-muted" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
                                             Vai al trailer
                                         </a>
                                         <div>
-                                            @for (int i = 0; i < film.rating; i++) {
+                                            @for (int i = 0; i < film.getRating(); i++) {
                                                 <span class="fa fa-star" style="color: orange;"></span>
                                             }
-                                            @for (int i = 0; i < (5 - film.rating); i++) {
+                                            @for (int i = 0; i < (5 - film.getRating()); i++) {
                                                 <span class="fa fa-star"></span>
                                             }
                                         </div>

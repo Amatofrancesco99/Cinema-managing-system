@@ -1,0 +1,45 @@
+@import cinema.model.cinema.Cinema
+@import cinema.test.Film
+
+@args() {
+    Cinema cinema
+    Film film
+}
+
+@extends(wireframe, cinema=cinema, pageTitle="Dettagli film")
+
+@section(content) {
+    <div class="container pt-5">
+        <div class="row pt-5 mb-2 pb-4">
+            <div class="col-md-12">
+                <div class="row p-4 g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col-auto d-block">
+                        <img src="@(film.getImageURL())" class="img-fluid">
+                    </div>
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-1 text-secondary">
+                            Dettagli film
+                        </strong>
+                        <h3 class="pt-3 mb-0">
+                            @(film.getTitle())
+                        </h3>
+                        <div class="mb-1 text-muted">
+                            @for (int i = 0; i < film.getRating(); i++) {
+                                <span class="fa fa-star" style="color: orange;"></span>
+                            }
+                            @for (int i = 0; i < (5 - film.getRating()); i++) {
+                                <span class="fa fa-star"></span>
+                            }
+                        </div>
+                        <p class="card-text mt-3 mb-auto">
+                            @(film.getDescription())
+                        </p>
+                        <a class="text-muted pt-4" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
+                            Vai al trailer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
