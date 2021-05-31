@@ -9,10 +9,10 @@ public class Spectator {
 	private LocalDate birthDate;
 	
 	public Spectator(String name,String surname, String email, LocalDate birthDate) {
-		this.name=name;
-		this.surname=surname;
-		this.email=email;
-		this.birthDate=birthDate;
+		this.name = name;
+		this.surname = surname;
+		this.email = email;
+		this.birthDate = birthDate;
 	}
 	
 	public String getEmail() {

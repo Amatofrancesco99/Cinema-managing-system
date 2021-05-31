@@ -10,14 +10,14 @@ public class Movie {
 	private Date releaseDate;
 	
 	public Movie (String name, String cast, String producer, int duration, int minAgeSee, String urlImage, String urlTrailer,  Date releaseDate) {
-		this.name=name;
-		this.cast=cast;
-		this.producer=producer;
-		this.duration=duration;
-		this.minAgeSee=minAgeSee;
-		this.releaseDate=releaseDate;
-		this.urlImage=urlImage;
-		this.urlTrailer=urlTrailer;
+		this.name = name;
+		this.cast = cast;
+		this.producer = producer;
+		this.duration = duration;
+		this.minAgeSee = minAgeSee;
+		this.releaseDate = releaseDate;
+		this.urlImage = urlImage;
+		this.urlTrailer = urlTrailer;
 	}
 	
 	// Getters

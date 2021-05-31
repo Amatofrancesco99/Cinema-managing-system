@@ -9,9 +9,9 @@ public class PhisicalSeat {
 	private TypeOfSeat type;
 	
 	public PhisicalSeat(char row, int number, TypeOfSeat type) {
-		this.row=row;
-		this.number=number;
-		this.type=type;
+		this.row = row;
+		this.number = number;
+		this.type = type;
 	}
 	
 }
