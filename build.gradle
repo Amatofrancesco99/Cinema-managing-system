@@ -11,9 +11,11 @@ plugins {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
     jcenter()
-    maven{url "https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts"}
+    maven{
+        url "https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts"
+    }
 }
 
 dependencies {
