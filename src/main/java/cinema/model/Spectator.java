@@ -1,13 +1,14 @@
 package cinema.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class Spectator {
 
 	private String name, surname, email;
-	private Date birthDate;
+	private LocalDate birthDate;
 	
-	public Spectator(String name,String surname, String email, Date birthDate) {
+	public Spectator(String name,String surname, String email, LocalDate birthDate) {
 		this.name=name;
 		this.surname=surname;
 		this.email=email;
@@ -18,4 +19,8 @@ public class Spectator {
 		return email;
 	}
 	
+	public int getAge() {
+		LocalDate now = java.time.LocalDate.now();
+		return Period.between(birthDate, now).getYears();
+	}
 }
