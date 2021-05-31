@@ -86,7 +86,7 @@ public class Cinema {
 	}
 	
 	// parameter must refer to a .png file
-	public void setLogoUrl(String logoURL) {
+	public void setLogoURL(String logoURL) {
 		this.logoURL = logoURL;
 	}
 	public void setName(String n) {
