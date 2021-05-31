@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Film {
 	private int id, rating;
 	private String title, description, imageURL, trailerURL, duration;
-	private ArrayList<String> directors, cast;
+	private ArrayList<String> directors, cast, genres;
 
 	public Film(String title, int rating) {
 		this.title = title;
@@ -17,11 +17,15 @@ public class Film {
 		duration = "1h45";
 		directors = new ArrayList<String>();
 		directors.add("Olivier Nakache");
-		directors.add("Éric Toledano");
+		directors.add("Eric Toledano");
 		cast = new ArrayList<String>();
-		cast.add("François Cluzet");
+		cast.add("Francois Cluzet");
 		cast.add("Omar Sy");
 		cast.add("Anne Le Ny");
+		genres = new ArrayList<String>();
+		genres.add("Drammatico");
+		genres.add("Commedia");
+		
 	}
 
 	public int getId() {
@@ -58,6 +62,10 @@ public class Film {
 
 	public ArrayList<String> getCast() {
 		return cast;
+	}
+
+	public ArrayList<String> getGenres() {
+		return genres;
 	}
 	
 }

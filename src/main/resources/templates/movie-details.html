@@ -1,5 +1,6 @@
 @import cinema.model.cinema.Cinema
 @import cinema.test.Film
+@import java.lang.String
 
 @args() {
     Cinema cinema
@@ -23,24 +24,64 @@
                                     ACQUISTA ORA
                                 </a>
                             </p>
-                            <!--<strong class="d-inline-block mb-1 text-secondary align-self-center">
-                                Dettagli film
-                            </strong>-->
                         </div>
                         <h3 class="mb-0">
                             @(film.getTitle())
                         </h3>
-                        <div class="mb-1 text-muted">
-                            @for (int i = 0; i < film.getRating(); i++) {
-                                <span class="fa fa-star" style="color: orange;"></span>
-                            }
-                            @for (int i = 0; i < (5 - film.getRating()); i++) {
-                                <span class="fa fa-star"></span>
-                            }
-                        </div>
-                        <p class="card-text mt-3 mb-auto">
+                        <p class="card-text mt-3">
                             @(film.getDescription())
                         </p>
+                        <table class="table table-borderless mb-auto">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted">
+                                        Genere
+                                    </td>
+                                    <td>
+                                        @(film.getGenres().join(", "))
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        Regia
+                                    </td>
+                                    <td>
+                                        @(film.getDirectors().join(", "))
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        Cast
+                                    </td>
+                                    <td>
+                                        @(film.getCast().join(", "))
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        Rating
+                                    </td>
+                                    <td>
+                                        <div class="mb-1 text-muted">
+                                            @for (int i = 0; i < film.getRating(); i++) {
+                                                <span class="fa fa-star" style="color: orange;"></span>
+                                            }
+                                            @for (int i = 0; i < (5 - film.getRating()); i++) {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">
+                                        Durata
+                                    </td>
+                                    <td>
+                                        @(film.getDuration())
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <a class="text-muted pt-4" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
                             Vai al trailer
                         </a>
