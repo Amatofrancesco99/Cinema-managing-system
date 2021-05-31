@@ -23,7 +23,7 @@ import javax.mail.internet.MimeMultipart;
 import cinema.model.Money;
 import cinema.model.Projection;
 import cinema.model.Spectator;
-import cinema.model.Ticket;
+import cinema.model.cinema.PhisicalSeat;
 import cinema.model.payment.PaymentCard;
 import cinema.model.reservation.discount.types.*;
 
@@ -33,7 +33,7 @@ public class Reservation {
 	private final long progressive;
 	private LocalDate purchaseDate;
 	private ArrayList<Spectator> spectators;
-	private ArrayList<Ticket> tickets;
+	private ArrayList<PhisicalSeat> seats;
 	private Projection projection;
 	private PaymentCard paymentCard;
 	
@@ -41,7 +41,7 @@ public class Reservation {
 		progressive = count.incrementAndGet(); 
 		purchaseDate=java.time.LocalDate.now();
 		spectators=new ArrayList<Spectator>();
-		tickets=new ArrayList<Ticket>();
+		seats = new ArrayList<PhisicalSeat>();
 	}
 	
 	// aggiungi e rimuovi spettatori dalla Reservation
@@ -52,13 +52,22 @@ public class Reservation {
 		spectators.remove(s);
 	}
 	
-	// aggiungi e rimuovi tickets dalla Reservation
-	public void addTicket(Ticket t) {
-		tickets.add(t);
+	// aggiungi e rimuovi posti alla Reservation
+	public void addSeat(PhisicalSeat seatR) {
+		seats.add(seatR);
 	}
-	public void removeTicket(Ticket t) {
-		tickets.remove(t);
+	public void removeSeat(PhisicalSeat seatR) {
+		seats.remove(seatR);
 	}
+	//it depends on the implementation
+	/*public void addMultipleSeats(ArrayList<PhisicalSeat> seatsR) {
+		for(PhisicalSeat seat:seatsR) 
+			this.seats.add(seat);	
+	}
+	public void removeMultipleSeats(ArrayList<PhisicalSeat> seatsR) {
+		for(PhisicalSeat seat:seatsR) 
+			this.seats.remove(seat);	
+	}*/
 	
 	// imposta o cambia il metodo di pagamento
 	public void setPaymentCard(PaymentCard p) {
@@ -156,4 +165,11 @@ public class Reservation {
 	public LocalDate getDate() {
 		return purchaseDate;
 	}
+	
+	//payment method
+	public boolean buy(){
+		//Payment simulation
+		return paymentCard.decreaseMoney(getTotal());
+	}
+			
 }
