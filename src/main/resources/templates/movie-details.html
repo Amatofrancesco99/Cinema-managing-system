@@ -13,14 +13,21 @@
         <div class="row pt-5 mb-2 pb-4">
             <div class="col-md-12">
                 <div class="row p-4 g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                    <div class="col-auto d-block">
-                        <img src="@(film.getImageURL())" class="img-fluid">
+                    <div class="col-auto d-block text-center mx-auto mx-lg-2">
+                        <img src="@(film.getImageURL())" class="img-fluid rounded">
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
-                        <strong class="d-inline-block mb-1 text-secondary">
-                            Dettagli film
-                        </strong>
-                        <h3 class="pt-3 mb-0">
+                        <div>
+                            <p class="pb-3 pt-md-2 pt-4">
+                                <a class="btn btn-md btn-primary" href="/#" role="button">
+                                    ACQUISTA ORA
+                                </a>
+                            </p>
+                            <!--<strong class="d-inline-block mb-1 text-secondary align-self-center">
+                                Dettagli film
+                            </strong>-->
+                        </div>
+                        <h3 class="mb-0">
                             @(film.getTitle())
                         </h3>
                         <div class="mb-1 text-muted">
