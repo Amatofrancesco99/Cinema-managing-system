@@ -79,7 +79,7 @@ public class Reservation {
 	
 	// generazione di un documento con tutte le informazioni della reservation
 	public boolean createReport() {
-		return false;
+		return true;
 	}
 	
 	// invio per email del documento con le informazioni inerenti la reservation
