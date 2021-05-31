@@ -93,7 +93,7 @@ public class Cinema {
 	// del tuo cinema, è importante che il link contenga il riferimento ad un immagine
 	// con estensione .png (MUST), altrimenti la resa grafica non sarà ottimale
 	public void setLogoUrl(String link) {
-		logoUrl=link;
+		logoURL=link;
 	}
 	public void setName(String n) {
 		this.name=n;
