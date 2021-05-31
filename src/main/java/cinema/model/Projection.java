@@ -1,16 +1,13 @@
 package cinema.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-
 import cinema.model.cinema.PhisicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.enumerations.TypeOfCurrency;
 
 public class Projection {
-	
+	private int id;
 	private Movie movie;
 	private Room room;
 	private Date date;
@@ -18,16 +15,18 @@ public class Projection {
 	private Money price;
 	private HashMap<PhisicalSeat,Boolean> availableSeats;
 	
-	public Projection (Date date, String time, Money price) {
+	public Projection (int id, Date date, String time, Money price) {
 		this.date = date;
 		this.time = time;
 		this.price = price;
+		this.id = id;
 	}
 
 	// setta quale film e dove, il film sarà proiettato
 	public void setMovie (Movie movie) {
 		this.movie = movie;
 	}
+	
 	//da testare/controllare conformità
 	public void setRoom (Room room) {
 		this.room = room;
@@ -55,5 +54,12 @@ public class Projection {
 	public TypeOfCurrency getCurrency() {
 		return price.getCurrency();
 	}
-		
+
+	public Date getDate() {
+		return date;
+	}
+
+	public int getId() {
+		return id;
+	}
 }
