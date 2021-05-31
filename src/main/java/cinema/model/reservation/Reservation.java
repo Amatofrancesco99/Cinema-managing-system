@@ -20,10 +20,12 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import cinema.model.Money;
 import cinema.model.Projection;
 import cinema.model.Spectator;
 import cinema.model.Ticket;
 import cinema.model.payment.PaymentCard;
+import cinema.model.reservation.discount.types.*;
 
 public class Reservation {
 
@@ -68,9 +70,16 @@ public class Reservation {
 		projection=p;
 	}
 	
+	// farsi restituire l'ammontare di soldi da pagare 
+	public Money getTotal() {
+		// Cambia la discount strategy per farti dare lo sconto
+		// CREARE CLASSE COMPOSITE (FUTURO)!!!
+		return new DiscountAge().getTotal(this);
+	}  
+	
 	// generazione di un documento con tutte le informazioni della reservation
 	public boolean createReport() {
-		return true;
+		return false;
 	}
 	
 	// invio per email del documento con le informazioni inerenti la reservation
@@ -135,5 +144,16 @@ public class Reservation {
 			   ex.printStackTrace();
 			   return "Processo di invio fallito...Riprova più tardi.";  
 			}  
-		 }  
+		 }
+	
+	//getters della classe
+	public ArrayList<Spectator> getSpectators(){
+		return spectators;
+	}
+	public Projection getProjection() {
+		return projection;
+	}
+	public LocalDate getDate() {
+		return purchaseDate;
+	}
 }

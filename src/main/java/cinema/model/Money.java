@@ -22,4 +22,12 @@ public class Money {
 		this.amount=amount;
 		this.currency=currency;
 	}
+	
+	//getters
+	public float getAmount() {
+		return amount;
+	}
+	public TypeOfCurrency getCurrency() {
+		return currency;
+	}
 }
