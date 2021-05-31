@@ -85,7 +85,7 @@ public class Cinema {
 		else throw new NoCinemaRoomsException(this.name,this.city,this.address);
 	}
 	
-	// logoURL has to refer to a .png file
+	// parameter must refer to a .png file
 	public void setLogoUrl(String logoURL) {
 		this.logoURL = logoURL;
 	}
