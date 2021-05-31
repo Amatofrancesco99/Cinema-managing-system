@@ -10,7 +10,7 @@ import cinema.model.exceptions.*;
 public class Cinema {
 	
 	private static Cinema single_instance = null;
-	private String name, city, country, zipCode, address, logoUrl, email, password;
+	private String name, city, country, zipCode, address, logoURL, email, password;
 	private ArrayList<Room> rooms;
 	private ArrayList<Projection> cinemaProjections; // ??? (high coupling)
 	
@@ -23,7 +23,7 @@ public class Cinema {
 		this.address = "Via A. Ferrata, 5";
 		this.email="CinemaArmadillo@gmail.com";
 		this.password="CinemaArmadillo@1999";
-		this.logoUrl = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
+		this.logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms=new ArrayList<Room>();
 		cinemaProjections=new ArrayList<Projection>(); // ??? (high coupling)
 	}
@@ -122,8 +122,8 @@ public class Cinema {
 	public String getLocation() {
 		return address + ", " + city + " - " + zipCode + "  " + country;
 	}	
-	public String getLogoUrl() {
-		return logoUrl;
+	public String getLogoURL() {
+		return logoURL;
 	}
 	public String getEmail() {
 		return email;
