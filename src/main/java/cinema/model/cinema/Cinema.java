@@ -37,7 +37,6 @@ public class Cinema {
         return single_instance;
     }
     
-    // aggiungere o rimuovere una proiezione da un cinema
     public void addProjection(Projection p) {
     	cinemaProjections.add(p);
     }
@@ -45,7 +44,6 @@ public class Cinema {
     	cinemaProjections.remove(p);
     }
     
-    // farsi dare tutte le proiezioni fatte da un cinema
     public ArrayList<Projection> getProjections(){
     	return cinemaProjections;
     }
@@ -65,14 +63,11 @@ public class Cinema {
  	}
  	
  	
-    // farsi dare tutti i film proiettati dal cinema
     public ArrayList<Movie> getMovies(){
 		ArrayList<Movie> movies = new ArrayList<Movie>();
 		for (Projection p: cinemaProjections) {
 			for (Movie m:movies) {
-				// se il film che si sta proiettando ha nome e data di rilascio
-				// diversa tra i film già presenti, allora si aggiunge alla lista di movies
-				// proiettati
+				// a film is valid only if it has all the required fields
 				if ((p.getMovie().getName()!=m.getName()) || (p.getMovie().getReleaseDate()!=m.getReleaseDate()))
 						movies.add(p.getMovie());
 			}
@@ -89,11 +84,10 @@ public class Cinema {
 			rooms.remove(r);
 		else throw new NoCinemaRoomsException(this.name,this.city,this.address);
 	}
-	// !IMPORTANTE! quando passi un link come parametro, poiché vuoi cambiare il logo
-	// del tuo cinema, è importante che il link contenga il riferimento ad un immagine
-	// con estensione .png (MUST), altrimenti la resa grafica non sarà ottimale
-	public void setLogoUrl(String link) {
-		logoUrl=link;
+	
+	// logoURL has to refer to a .png file
+	public void setLogoUrl(String logoURL) {
+		this.logoURL = logoURL;
 	}
 	public void setName(String n) {
 		this.name=n;
@@ -112,7 +106,6 @@ public class Cinema {
 	}
 	
 	
-	//Getters per farsi dare le informazioni del cinema
 	public String getName() {
 		return name;
 	}
