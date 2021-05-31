@@ -53,13 +53,15 @@
                     @for (Film film: films) {
                         <div class="col">
                             <div class="card shadow-sm">
-                                <a href="/#">
+                                <a href="/movie-details?id=@(film.getId())#">
                                     <img src="@(film.getImageURL())" class="card-img-top">
                                 </a>
                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                        @(film.getTitle())
-                                    </h5>
+                                    <a href="/movie-details?id=@(film.getId())#" class="text-decoration-none text-dark">
+                                        <h5 class="card-title">
+                                            @(film.getTitle())
+                                        </h5>
+                                    </a>
                                     <p class="card-text">
                                         @(StringUtils.abbreviate(film.getDescription(), 150))
                                     </p>

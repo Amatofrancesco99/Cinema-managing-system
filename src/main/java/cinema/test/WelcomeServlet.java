@@ -18,11 +18,12 @@ public class WelcomeServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		Cinema myCinema = Cinema.getInstance();
+		ArrayList<Film> films = new ArrayList<>();
+		
 		if (req.getPathInfo().equals("/")) {
 			
 			// Create myCinema istance
-			Cinema myCinema = Cinema.getInstance();
-			ArrayList<Film> films = new ArrayList<>();
 
 			//films.add(new Film("Quasi amici 1", 0));
 			//films.add(new Film("Quasi amici 2", 1));
@@ -43,17 +44,18 @@ public class WelcomeServlet extends HttpServlet {
 			}
 
 			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, req.getParameter("query")));
+		    return;
 		} else if (req.getPathInfo().equals("/movie-details")) {
-			Cinema myCinema = Cinema.getInstance();
 			Film f = new Film("Quasi amici", 4);
 			
-			resp.getWriter().write(Rythm.render("movie-details.html", myCinema, f));
-		} else {
-			Cinema myCinema = Cinema.getInstance();
-			ArrayList<Film> films = new ArrayList<>();
-
-			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, null));
+			if (Integer.parseInt(req.getParameter("id")) == f.getId()) {
+				resp.getWriter().write(Rythm.render("movie-details.html", myCinema, f));
+				return;
+			}
 		}
+		
+		// Error
+		resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, null));
 	}
 
 	@Override
