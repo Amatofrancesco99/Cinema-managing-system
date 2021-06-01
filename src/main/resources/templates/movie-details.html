@@ -21,14 +21,14 @@
                         <img src="@(film.getImageURL())" class="img-fluid rounded">
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
-                        <div class="text-end">
-                            <a class="text-muted pt-4" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
-                                Vai al trailer
+                        <div class="d-flex justify-content-between">
+                            <h3 class="my-0 align-self-center">
+                                @(film.getTitle())
+                            </h3>
+                            <a class="btn btn-sm btn-secondary my-0 align-self-center" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer" role="button">
+                                Guarda il trailer
                             </a>
                         </div>
-                        <h3 class="mb-0">
-                            @(film.getTitle())
-                        </h3>
                         <p class="card-text mt-3">
                             @(film.getDescription())
                         </p>
@@ -100,7 +100,7 @@
                                     <div>
                                         @for(Projection projection : dailyProjections) {
                                             <a class="btn btn-sm btn-primary mt-2 mb-3" href="/checkout?id=@(projection.getId())#" role="button">
-                                                @(projection.getDateTime().getHour().format("00")):@(projection.getDateTime().getMinute().format("00"))
+                                                @(projection.getDateTime().toLocalTime().format("hh:mm"))
                                             </a>
                                         }
                                     </div>
