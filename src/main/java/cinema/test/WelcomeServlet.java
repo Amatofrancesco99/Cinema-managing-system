@@ -45,14 +45,14 @@ public class WelcomeServlet extends HttpServlet {
 			} else {
 				// Filter the films (this is a dumb filter, use it only for debug purposes)
 				if ("quasi amici".contains(req.getParameter("query").toLowerCase())) {
-					films.add(new Film("Quasi amici", 5));
+					films.add(new Film("Druk - Un altro giro", 5));
 				}
 			}
 
 			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, req.getParameter("query")));
 		    return;
 		} else if (req.getPathInfo().equals("/movie-details")) {
-			Film f = new Film("Quasi amici", 4);
+			Film f = new Film("Druk - Un altro giro", 4);
 			
 			ArrayList<Projection> p = new ArrayList<>();
 			
