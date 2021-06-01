@@ -49,7 +49,7 @@ public class Movie {
 		this.trailerURL = trailerURL;
 	}
 	
-	public void setRating(int vote) {
+	public void updateRating(int vote) {
 		this.numberPeopleInsertRating++;
 		//approssimazione del voto
 		this.rating = (int) ((this.rating+vote)/numberPeopleInsertRating);
