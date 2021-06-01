@@ -26,6 +26,26 @@ public class WelcomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Cinema myCinema = Cinema.getInstance();
 		ArrayList<Film> films = new ArrayList<>();
+
+		Film f = new Film("Druk - Un altro giro", 4);
+		
+		ArrayList<Projection> p = new ArrayList<>();
+		
+		Projection p1 = new Projection(123, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f));
+		Projection p2 = new Projection(183, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f));
+		Projection p3 = new Projection(193, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f));
+		Projection p4 = new Projection(109, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f));
+		Projection p5 = new Projection(743, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f));
+		Projection p6 = new Projection(233, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f));
+		Projection p7 = new Projection(184, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f));
+		
+		p.add(p1);
+		p.add(p2);
+		p.add(p3);
+		p.add(p4);
+		p.add(p5);
+		p.add(p6);
+		p.add(p7);
 		
 		if (req.getPathInfo().equals("/")) {
 			
@@ -52,25 +72,6 @@ public class WelcomeServlet extends HttpServlet {
 			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, req.getParameter("query")));
 		    return;
 		} else if (req.getPathInfo().equals("/movie-details")) {
-			Film f = new Film("Druk - Un altro giro", 4);
-			
-			ArrayList<Projection> p = new ArrayList<>();
-			
-			Projection p1 = new Projection(123, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f));
-			Projection p2 = new Projection(183, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f));
-			Projection p3 = new Projection(193, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f));
-			Projection p4 = new Projection(109, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f));
-			Projection p5 = new Projection(743, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f));
-			Projection p6 = new Projection(233, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f));
-			Projection p7 = new Projection(184, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f));
-			
-			p.add(p1);
-			p.add(p2);
-			p.add(p3);
-			p.add(p4);
-			p.add(p5);
-			p.add(p6);
-			p.add(p7);
 			
 			// Build the data structure used to store the sorted projections
             Collections.sort(p);
@@ -87,6 +88,11 @@ public class WelcomeServlet extends HttpServlet {
 			
 			if (Integer.parseInt(req.getParameter("id")) == f.getId()) {
 				resp.getWriter().write(Rythm.render("movie-details.html", myCinema, f, schedule));
+				return;
+			}
+		} else if (req.getPathInfo().equals("/checkout")) {
+			if (Integer.parseInt(req.getParameter("id")) == p2.getId()) {
+				resp.getWriter().write(Rythm.render("checkout.html", myCinema, f, p2));
 				return;
 			}
 		}

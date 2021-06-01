@@ -14,11 +14,19 @@ public class Spectator {
 		this.email = email;
 		this.birthDate = birthDate;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
 	public String getEmail() {
 		return email;
 	}
-	
+
 	public int getAge() {
 		return Period.between(birthDate, java.time.LocalDate.now()).getYears();
 	}
