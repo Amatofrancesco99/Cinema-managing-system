@@ -1,7 +1,10 @@
 package cinema.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
+
 import cinema.model.cinema.PhisicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.enumerations.TypeOfCurrency;
@@ -12,6 +15,9 @@ public class Projection implements Comparable<Projection> {
 	private Room room;
 	private LocalDateTime dateTime;
 	private Money price;
+	// I posti della sala in cui sarà proiettato il film possono essere liberi o occupati,
+	// per questo motivo ad ogni posto fisico della sala è associato un valore booleano.
+	// Se true allora il posto è libero, se falso il posto è occupato.
 	private HashMap<PhisicalSeat,Boolean> availableSeats;
 	
 	public Projection (int id, LocalDateTime dateTime, Money price) {
@@ -25,7 +31,9 @@ public class Projection implements Comparable<Projection> {
 		this.movie = movie;
 	}
 	
-	//da testare/controllare conformità
+	// da testare/controllare conformità, quando cambio la sala siamo sicuri che
+	// anche i posti liberi terranno memoria di questo cambiamento o resteranno associati
+	// alla prima stanza associata alla proiezione? 
 	public void setRoom (Room room) {
 		this.room = room;
 		availableSeats = new HashMap<PhisicalSeat,Boolean>(room.getNumberSeats());
@@ -33,7 +41,42 @@ public class Projection implements Comparable<Projection> {
 			availableSeats.put(room.getSeat(i), true);	
 	}
 	
-	//(DA FARE!!!!!) METODO OCCUPA POSTO E METODO PER VERIFICARE POSTO LIBERO + RELATIVO METODO IN RESERVATION
+	// farsi restituire i posti liberi della sala in cui sarà proiettato un film
+	public ArrayList<PhisicalSeat> getFreeSeats() {
+		ArrayList<PhisicalSeat> freeSeats=new ArrayList<PhisicalSeat>();
+		// per ogni posto della sala vado a vedere se è libero, ossia se getValue è true.
+		// se tale condizione è vera lo aggiungo alla lista dei posti liberi
+		for (Entry<PhisicalSeat, Boolean> entry : availableSeats.entrySet()) {
+			if (entry.getValue() == true) {
+				freeSeats.add(entry.getKey());
+			}
+		}
+		return freeSeats;
+	}
+	
+    // metodo occupa posto di una sala
+	public boolean takeSeat(PhisicalSeat seat) {
+		boolean takeSeat=false;
+		for (PhisicalSeat s : getFreeSeats()) {
+			if (seat == s) {
+				availableSeats.put(s,false);
+				takeSeat=true;
+			}
+		}
+		return takeSeat;
+	}
+	
+	// metodo per liberare il posto di una sala
+	public boolean freeSeat(PhisicalSeat seat) {
+		boolean freeSeat=false;
+		for (PhisicalSeat s : getFreeSeats()) {
+			if (seat == s) {
+				availableSeats.put(s,true);
+				freeSeat=true;
+			}
+		}
+		return freeSeat;
+	}
 	
 	// getters informazioni proiezioni
 	public Movie getMovie() {

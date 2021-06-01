@@ -54,10 +54,14 @@ public class Reservation {
 	
 	// aggiungi e rimuovi posti alla Reservation
 	public void addSeat(PhisicalSeat seatR) {
-		seats.add(seatR);
+		if (takeSeat(seatR) == true ) {
+			seats.add(seatR);
+		}
 	}
 	public void removeSeat(PhisicalSeat seatR) {
-		seats.remove(seatR);
+		if (freeSeat(seatR) == true) {
+			seats.remove(seatR);
+		}
 	}
 	//it depends on the implementation
 	/*public void addMultipleSeats(ArrayList<PhisicalSeat> seatsR) {
@@ -171,5 +175,17 @@ public class Reservation {
 		//Payment simulation
 		return paymentCard.decreaseMoney(getTotal());
 	}
-			
+	
+	// IMPLEMENTARE UN METODO PER OCCUPARE/LIBERARE IL POSTO DELLA SALA IN CUI IL FILM CHE HO SCELTO
+	// SARA' PROIETTATO
+	public boolean takeSeat(PhisicalSeat s) {
+		projection.freeSeat(s);
+		return projection.freeSeat(s);
+	}
+	
+	public boolean freeSeat(PhisicalSeat s) {
+		projection.freeSeat(s);
+		return projection.freeSeat(s);
+	}
+	
 }
