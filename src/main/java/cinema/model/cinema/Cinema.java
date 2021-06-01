@@ -68,7 +68,7 @@ public class Cinema {
 		for (Projection p: cinemaProjections) {
 			for (Movie m: movies) {
 				// a film is valid only if it has all the required fields
-				if ((p.getMovie().getName()!=m.getName()) || (p.getMovie().getReleaseDate()!=m.getReleaseDate()))
+				if ((p.getMovie().getTitle()!=m.getTitle()) || (p.getMovie().getReleaseDate()!=m.getReleaseDate()))
 						movies.add(p.getMovie());
 			}
 		}
