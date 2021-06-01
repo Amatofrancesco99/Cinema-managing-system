@@ -32,6 +32,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.rythmengine/rythm-engine
     implementation group: 'org.rythmengine', name: 'rythm-engine', version: '1.4.1'
+    
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+	implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
 }
 
 application {
