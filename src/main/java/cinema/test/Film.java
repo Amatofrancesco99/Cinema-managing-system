@@ -17,9 +17,9 @@ public class Film {
 		duration = "1h45";
 		directors = new ArrayList<String>();
 		directors.add("Olivier Nakache");
-		directors.add("Eric Toledano");
+		directors.add("Éric Toledano");
 		cast = new ArrayList<String>();
-		cast.add("Francois Cluzet");
+		cast.add("François Cluzet");
 		cast.add("Omar Sy");
 		cast.add("Anne Le Ny");
 		genres = new ArrayList<String>();
