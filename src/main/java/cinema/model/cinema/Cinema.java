@@ -66,7 +66,7 @@ public class Cinema {
     public ArrayList<Movie> getMovies(){
 		ArrayList<Movie> movies = new ArrayList<Movie>();
 		for (Projection p: cinemaProjections) {
-			for (Movie m:movies) {
+			for (Movie m: movies) {
 				// a film is valid only if it has all the required fields
 				if ((p.getMovie().getName()!=m.getName()) || (p.getMovie().getReleaseDate()!=m.getReleaseDate()))
 						movies.add(p.getMovie());

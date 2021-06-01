@@ -15,7 +15,7 @@ public class Projection implements Comparable<Projection> {
 	private HashMap<PhisicalSeat,Boolean> availableSeats;
 	
 	public Projection (int id, LocalDateTime dateTime, Money price) {
-		this.dateTime= dateTime;
+		this.dateTime = dateTime;
 		this.price = price;
 		this.id = id;
 	}

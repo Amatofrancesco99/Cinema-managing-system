@@ -39,8 +39,8 @@ public class Reservation {
 	
 	public Reservation () {
 		progressive = count.incrementAndGet(); 
-		purchaseDate=java.time.LocalDate.now();
-		spectators=new ArrayList<Spectator>();
+		purchaseDate = java.time.LocalDate.now();
+		spectators = new ArrayList<Spectator>();
 		seats = new ArrayList<PhisicalSeat>();
 	}
 	
@@ -71,12 +71,12 @@ public class Reservation {
 	
 	// imposta o cambia il metodo di pagamento
 	public void setPaymentCard(PaymentCard p) {
-		paymentCard=p;
+		paymentCard = p;
 	}
 	
 	// imposta la proiezione di un film 
 	public void setProjection(Projection p) {
-		projection=p;
+		projection = p;
 	}
 	
 	// farsi restituire l'ammontare di soldi da pagare 
@@ -96,9 +96,9 @@ public class Reservation {
 		if (createReport()==false) {
 			return "La generazione del report non è andata a buon fine.";
 		}
-		String to=email;//receiver email
-		final String user="ArmadilloCinema@gmail.com";//sender email (cinema)
-		final String password="xxxxx";//sender password
+		String to = email;//receiver email
+		final String user = "ArmadilloCinema@gmail.com";//sender email (cinema)
+		final String password = "xxxxx";//sender password
 		   
 		//1) get the session object     
 		Properties properties = System.getProperties();  
@@ -142,7 +142,7 @@ public class Reservation {
 		    multipart.addBodyPart(messageBodyPart2);  
 		  
 		    //6) set the multiplart object to the message object  
-		    message.setContent(multipart );  
+		    message.setContent(multipart);  
 		     
 		    //7) send message  
 		    Transport.send(message);  

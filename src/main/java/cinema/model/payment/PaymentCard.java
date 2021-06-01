@@ -12,10 +12,10 @@ public class PaymentCard {
 	private Date expirationDate;
 	
 	public PaymentCard(String IBAN, String accountHolder, int securityCode, Date expirationDate) {
-		this.IBAN=IBAN;
-		this.accountHolder=accountHolder;
-		this.securityCode=securityCode;
-		this.expirationDate=expirationDate;
+		this.IBAN = IBAN;
+		this.accountHolder = accountHolder;
+		this.securityCode = securityCode;
+		this.expirationDate = expirationDate;
 	}
 		
 	//to simplify, we do not ask to out credit card manager

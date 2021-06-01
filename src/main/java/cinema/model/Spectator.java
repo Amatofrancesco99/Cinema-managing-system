@@ -20,7 +20,6 @@ public class Spectator {
 	}
 	
 	public int getAge() {
-		LocalDate now = java.time.LocalDate.now();
-		return Period.between(birthDate, now).getYears();
+		return Period.between(birthDate, java.time.LocalDate.now()).getYears();
 	}
 }

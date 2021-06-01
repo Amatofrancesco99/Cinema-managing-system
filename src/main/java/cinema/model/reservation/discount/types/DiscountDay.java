@@ -23,10 +23,10 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	}
 	
 	public void setDateDiscount(LocalDate start, LocalDate end) {
-		this.start=start;
-		this.end=end;
+		this.start = start;
+		this.end = end;
 	}
 	public void setDayDiscount(LocalDate day) {
-		this.day=day;
+		this.day = day;
 	}
 }

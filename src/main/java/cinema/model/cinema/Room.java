@@ -11,7 +11,7 @@ public class Room {
 	
 	public Room() {
 		progressive = count.incrementAndGet(); 
-		seats=new ArrayList<PhisicalSeat>();
+		seats = new ArrayList<PhisicalSeat>();
 	}
 	
 	// aggiungi e rimuovi posti alla Room
