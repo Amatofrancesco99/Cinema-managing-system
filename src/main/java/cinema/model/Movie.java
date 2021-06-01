@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Movie {
 
 	private int id, rating, minAgeSee;
+	private long numberPeopleInsertRating;
 	private String title, description, duration, imageURL, trailerURL;
 	private ArrayList<String> directors, cast, genres;
 	private LocalDate releaseDate;
@@ -14,6 +15,7 @@ public class Movie {
 		this.id = id;
 		this.title = title;
 		this.rating = 0;
+		this.numberPeopleInsertRating = 0;
 		this.duration = duration;
 		this.minAgeSee = minAgeSee;
 		this.releaseDate = releaseDate;
@@ -47,6 +49,11 @@ public class Movie {
 		this.trailerURL = trailerURL;
 	}
 	
+	public void setRating(int vote) {
+		this.numberPeopleInsertRating++;
+		//approssimazione del voto
+		this.rating = (int) ((this.rating+vote)/numberPeopleInsertRating);
+	}
 	
 	//getters
 	public int getId() {
