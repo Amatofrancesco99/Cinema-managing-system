@@ -65,7 +65,7 @@
                                     <td>
                                         <div class="mb-1 text-muted">
                                             @for (int i = 0; i < film.getRating(); i++) {
-                                                <span class="fa fa-star" style="color: orange;"></span>
+                                                <span class="fa fa-star text-warning"></span>
                                             }
                                             @for (int i = 0; i < (5 - film.getRating()); i++) {
                                                 <span class="fa fa-star"></span>
@@ -84,11 +84,9 @@
                             </tbody>
                         </table>
                         <div id="buy-now" class="card mb-auto">
-                            <p class="card-header text-center bg-dark bg-gradient text-warning">
-                                <strong>
-                                    ACQUISTA ORA
-                                </strong>
-                            </p>
+                            <h6 class="card-header text-center bg-dark text-warning">
+                                ACQUISTA ORA
+                            </h6>
                             <div class="card-body">
                                 @for(ArrayList<Projection> dailyProjections : schedule) {
                                     <div>
