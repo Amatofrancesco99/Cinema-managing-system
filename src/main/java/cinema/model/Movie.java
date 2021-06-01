@@ -49,6 +49,20 @@ public class Movie {
 		this.trailerURL = trailerURL;
 	}
 	
+	public void setRating(int rating) {
+		this.rating=rating;
+	}
+	
+	// Metodo per poter permettere di aggiornare il rating del film, magari da un utente
+	// questa prima implementazione non richiede nessuna verifica su chi stia votando 
+	// (un utente non molto sveglio però potrebbe votare infinite volte facendo alzare o abbassare
+	// il ranking)...chiaramente ci potrebbero essere tecniche migliori 
+	// ( ad esempio andando a prendere il voto del film da diversi siti di 
+	// "ranking" dei film, sfruttando così l'ETL e i DWH per elaborare queste
+	// informazioni e aggiornare il rating del film ogni tot tempo ).
+	// Più semplicemente, ma più costoso (hw) un display che a fine film ti faccia dare 
+	// un parere e qualcuno che verifichi che non venga fatta n volte dallo stesso utente 
+	// una votazione.
 	public void updateRating(int vote) {
 		this.numberPeopleInsertRating++;
 		//approssimazione del voto
