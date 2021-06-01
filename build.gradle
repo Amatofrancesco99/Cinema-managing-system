@@ -12,9 +12,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven{
-        url 'https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts'
-    }
 }
 
 dependencies {
@@ -23,9 +20,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/joda-time/joda-time
     implementation group: 'joda-time', name: 'joda-time', version: '2.10.10'
-
-    // https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
-    implementation group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.17.0'
+	
+	// https://mvnrepository.com/artifact/com.itextpdf/itextpdf
+	implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.0.6'
 
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
     implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.41.v20210516'
