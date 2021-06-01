@@ -47,7 +47,7 @@ public class ApplicationServer {
 
 	private void initTemplateEngine() {
 		Map<String, Object> conf = new HashMap<>();
-		conf.put("home.template", "templates");
+		conf.put("home.template.dir", "templates");
 		Rythm.init(conf);
 	}
 }
