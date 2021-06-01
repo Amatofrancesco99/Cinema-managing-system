@@ -46,7 +46,7 @@ public class Projection implements Comparable<Projection> {
 		return price;
 	}
 	// getters per ricavare le informazioni sul prezzo di queste ultime
-	public float getAmount() {
+	public double getAmount() {
 		return price.getAmount();
 	}
 	public TypeOfCurrency getCurrency() {
