@@ -41,7 +41,7 @@ public class WelcomeServlet extends HttpServlet {
 			// TODO: search
 			if (req.getParameter("query") == null) {
 				// Show all films
-				films.add(new Film("Quasi amici", 5));
+				films.add(new Film("Druk - Un altro giro", 5));
 			} else {
 				// Filter the films (this is a dumb filter, use it only for debug purposes)
 				if ("quasi amici".contains(req.getParameter("query").toLowerCase())) {
