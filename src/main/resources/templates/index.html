@@ -38,7 +38,7 @@
             <div class="container mt-5 mb-5">
                 <h4>
                     <p>
-                        Hai cercato &ldquo;<b>@(query)</b>&rdquo;
+                        Hai cercato &ldquo;<strong>@(query)</strong>&rdquo;
                     </p>
                 </h4>
             </div>
@@ -66,7 +66,7 @@
                                         @(StringUtils.abbreviate(film.getDescription(), 150))
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a class="btn btn-sm btn-primary" href="/#" role="button">
+                                        <a class="btn btn-sm btn-primary" href="/movie-details?id=@(film.getId())#buy-now" role="button">
                                             ACQUISTA ORA
                                         </a>
                                         <small class="text-muted">

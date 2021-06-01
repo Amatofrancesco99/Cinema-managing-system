@@ -1,10 +1,14 @@
 @import cinema.model.cinema.Cinema
+@import cinema.model.Projection
 @import cinema.test.Film
-@import java.lang.String
+@import java.time.format.DateTimeFormatter
+@import java.time.format.TextStyle
+@import java.util.Locale
 
 @args() {
     Cinema cinema
     Film film
+    List<List<Projection>> schedule
 }
 
 @extends(wireframe, cinema=cinema, pageTitle="Dettagli film")
@@ -18,12 +22,10 @@
                         <img src="@(film.getImageURL())" class="img-fluid rounded">
                     </div>
                     <div class="col p-4 d-flex flex-column position-static">
-                        <div>
-                            <p class="pb-3 pt-md-2 pt-4">
-                                <a class="btn btn-md btn-primary" href="/#" role="button">
-                                    ACQUISTA ORA
-                                </a>
-                            </p>
+                        <div class="text-end">
+                            <a class="text-muted pt-4" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
+                                Vai al trailer
+                            </a>
                         </div>
                         <h3 class="mb-0">
                             @(film.getTitle())
@@ -31,7 +33,7 @@
                         <p class="card-text mt-3">
                             @(film.getDescription())
                         </p>
-                        <table class="table table-borderless mb-auto">
+                        <table class="table table-borderless">
                             <tbody>
                                 <tr>
                                     <td class="text-muted">
@@ -82,9 +84,30 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <a class="text-muted pt-4" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
-                            Vai al trailer
-                        </a>
+                        <div id="buy-now" class="card mb-auto">
+                            <p class="card-header text-center">
+                                <small>
+                                    ACQUISTA ORA
+                                </small>
+                            </p>
+                            <div class="card-body">
+                                @for(ArrayList<Projection> dailyProjections : schedule) {
+                                    <div>
+                                        @(dailyProjections.get(0).getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html"))
+                                        <strong>
+                                            @(dailyProjections.get(0).getDateTime().getDayOfMonth().format("00"))/@(dailyProjections.get(0).getDateTime().getMonthValue().format("00"))
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        @for(Projection projection : dailyProjections) {
+                                            <a class="btn btn-sm btn-primary mt-2 mb-3" href="/checkout?id=@(projection.getId())#" role="button">
+                                                @(projection.getDateTime().getHour().format("00")):@(projection.getDateTime().getMinute().format("00"))
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

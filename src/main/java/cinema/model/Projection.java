@@ -1,23 +1,21 @@
 package cinema.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import cinema.model.cinema.PhisicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.enumerations.TypeOfCurrency;
 
-public class Projection {
+public class Projection implements Comparable<Projection> {
 	private int id;
 	private Movie movie;
 	private Room room;
-	private Date date;
-	private String time;
+	private LocalDateTime dateTime;
 	private Money price;
 	private HashMap<PhisicalSeat,Boolean> availableSeats;
 	
-	public Projection (int id, Date date, String time, Money price) {
-		this.date = date;
-		this.time = time;
+	public Projection (int id, LocalDateTime dateTime, Money price) {
+		this.dateTime= dateTime;
 		this.price = price;
 		this.id = id;
 	}
@@ -55,11 +53,16 @@ public class Projection {
 		return price.getCurrency();
 	}
 
-	public Date getDate() {
-		return date;
+	public LocalDateTime getDateTime() {
+		return dateTime;
 	}
 
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public int compareTo(Projection p) {
+		return this.dateTime.compareTo(p.getDateTime());
 	}
 }
