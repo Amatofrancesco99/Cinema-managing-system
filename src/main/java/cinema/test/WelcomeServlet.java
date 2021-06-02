@@ -24,6 +24,15 @@ public class WelcomeServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		handleRequest(req, resp);
+	}
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		handleRequest(req, resp);
+	}
+
+	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Cinema myCinema = Cinema.getInstance();
 		ArrayList<Film> films = new ArrayList<>();
 
@@ -99,11 +108,6 @@ public class WelcomeServlet extends HttpServlet {
 		
 		// Error
 		resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, null));
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.getWriter().write("POST");
 	}
 
 }
