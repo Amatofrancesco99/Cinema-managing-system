@@ -39,10 +39,10 @@
                             </a>
                         </li>
                     </ul>
-                    <form action="/#search-results" method="get" class="needs-validation" novalidate>
-                        <div class="input-group has-validation">
-                            <input class="form-control" type="text" name="query" placeholder="Cosa guardi oggi?" aria-label="Cosa guardi oggi?" required>
-                            <button class="btn btn-outline-secondary" type="submit">
+                    <form action="/#search-results" method="get" novalidate>
+                        <div class="input-group">
+                            <input class="form-control" type="text" id="query" name="query" value="" placeholder="Cosa guardi oggi?" aria-label="Cosa guardi oggi?" size="40" required>
+                            <button class="btn btn-outline-secondary" type="submit" id="submit-query" disabled>
                                 Cerca
                             </button>
                         </div>
@@ -100,6 +100,11 @@
                         }
                         form.classList.add('was-validated');
                     }, false);
+                });
+
+                // Enable the search button only if the search field is filled up
+                document.getElementById('query').addEventListener('input', function() {
+                    document.getElementById('submit-query').disabled = (this.value.trim() == '');
                 });
             })();
         </script>
