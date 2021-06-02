@@ -12,20 +12,17 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven{
-        url 'https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts'
-    }
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/com.itextpdf/itextpdf
+    implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.0.6'
+
     // https://mvnrepository.com/artifact/javax.mail/mail
     implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
 
     // https://mvnrepository.com/artifact/joda-time/joda-time
     implementation group: 'joda-time', name: 'joda-time', version: '2.10.10'
-
-    // https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports
-    implementation group: 'net.sf.jasperreports', name: 'jasperreports', version: '6.17.0'
 
     // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
     implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.41.v20210516'
@@ -35,6 +32,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.rythmengine/rythm-engine
     implementation group: 'org.rythmengine', name: 'rythm-engine', version: '1.4.1'
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
 }
 
 application {
