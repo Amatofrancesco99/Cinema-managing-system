@@ -38,14 +38,9 @@
                                 Home
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/#">
-                                Link
-                            </a>
-                        </li>
                     </ul>
-                    <form action="/#search-results" method="get">
-                        <div class="input-group">
+                    <form action="/#search-results" method="get" class="needs-validation" novalidate>
+                        <div class="input-group has-validation">
                             <input class="form-control" type="text" name="query" placeholder="Cosa guardi oggi?" aria-label="Cosa guardi oggi?" required>
                             <button class="btn btn-outline-secondary" type="submit">
                                 Cerca
@@ -84,5 +79,30 @@
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+        <script>
+            (function() {
+                'use strict';
+
+                // Set the text shown when a form field is invalid
+                var defaultFeedback = document.querySelectorAll('.default-feedback');
+                Array.prototype.slice.call(defaultFeedback).forEach(function(div) {
+                    div.innerHTML = 'Questo campo &egrave; obbligatorio';
+                });
+
+                // Disable form submission if there are invalid form fields
+                var forms = document.querySelectorAll('.needs-validation');
+                Array.prototype.slice.call(forms).forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            })();
+        </script>
+
     </body>
 </html>

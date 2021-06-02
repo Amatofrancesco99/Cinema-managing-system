@@ -162,28 +162,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        (function() {
-            'use strict';
-
-            // Set the text shown when a field is invalid
-            var defaultFeedback = document.querySelectorAll('.default-feedback');
-            Array.prototype.slice.call(defaultFeedback).forEach(function(div) {
-                div.innerHTML = 'Questo campo &egrave; obbligatorio';
-            });
-
-            // Disable form submission if there are invalid fields
-            var forms = document.querySelectorAll('.needs-validation');
-            Array.prototype.slice.call(forms).forEach(function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
-        })();
-    </script>
 }
