@@ -36,8 +36,19 @@ public class WelcomeServlet extends HttpServlet {
 		Cinema myCinema = Cinema.getInstance();
 		ArrayList<Film> films = new ArrayList<>();
 
-		Film f = new Film("Druk - Un altro giro", 4);
-		
+		ArrayList<String> directors, cast, genres;
+		directors = new ArrayList<>();
+		directors.add("Thomas Vinterberg");
+		cast = new ArrayList<>();
+		cast.add("Mads Mikkelsen");
+		cast.add("Thomas Bo Larsen");
+		cast.add("Lars Ranthe");
+		cast.add("Magnus Millang");
+		genres = new ArrayList<>();
+		genres.add("Drammatico");
+		genres.add("Commedia");
+		Film f = new Film(1, 4, 117, "Druk - Un altro giorno", "C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?", "https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg", "https://www.youtube.com/watch?v=hFbDh58QHzw", directors, cast, genres);
+
 		ArrayList<Projection> p = new ArrayList<>();
 		
 		Projection p1 = new Projection(123, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f));
@@ -57,24 +68,15 @@ public class WelcomeServlet extends HttpServlet {
 		p.add(p7);
 		
 		if (req.getPathInfo().equals("/")) {
-			
-			// Create myCinema istance
 
-			//films.add(new Film("Quasi amici 1", 0));
-			//films.add(new Film("Quasi amici 2", 1));
-			//films.add(new Film("Quasi amici 3", 2));
-			//films.add(new Film("Quasi amici 4", 3));
-			//films.add(new Film("Quasi amici 5", 4));
-			//films.add(new Film("Quasi amici 6", 5));
-			
 			// TODO: search
 			if (req.getParameter("query") == null) {
 				// Show all films
-				films.add(new Film("Druk - Un altro giro", 5));
+				films.add(f);
 			} else {
 				// Filter the films (this is a dumb filter, use it only for debug purposes)
-				if ("quasi amici".contains(req.getParameter("query").toLowerCase())) {
-					films.add(new Film("Druk - Un altro giro", 5));
+				if (f.getTitle().toLowerCase().contains(req.getParameter("query").toLowerCase())) {
+					films.add(f);
 				}
 			}
 

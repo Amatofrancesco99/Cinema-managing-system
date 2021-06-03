@@ -6,8 +6,9 @@
  */
 
 plugins {
-    id 'java'
     id 'application'
+    id 'io.freefair.lombok' version '6.0.0-m2'
+    id 'java'
 }
 
 repositories {
