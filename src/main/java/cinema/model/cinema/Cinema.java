@@ -113,7 +113,7 @@ public class Cinema {
  		}
  		if (movieProjections.size() == 0)
  			throw new NoMovieProjectionsException(m);
- 		return movieProjections;
+ 		else return movieProjections;
  	}
  	
  	/**
@@ -133,6 +133,25 @@ public class Cinema {
 		return movies;
 	}
     
+    
+ 	/**
+ 	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo di un 
+ 	 * film
+ 	 * @param title  				Nome del film che si vuole cercare tra le proiezioni del cinema
+ 	 * @return ArrayList<Movie> 	Lista dei film
+ 	 */
+ 	public ArrayList<Movie> getMovies(String title){
+ 		ArrayList<Movie> movie = new ArrayList<Movie>();
+ 		for (Projection p: cinemaProjections) {
+ 			if (p.getMovie().getTitle() == title) {
+ 				movie.add(p.getMovie());
+ 			}
+ 		}
+ 		if (movie.size() == 0)
+ 			return null;
+ 		else return movie;
+ 	}
+ 	
 	/**
 	 * METODO per aggiungere una sala del cinema
 	 * @param r   Sala del cinema da aggiungere, all'insieme delle sale del cinema stesso
