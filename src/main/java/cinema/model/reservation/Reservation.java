@@ -49,9 +49,31 @@ import cinema.model.payment.PaymentCard;
 import cinema.model.reservation.discount.types.*;
 import lombok.Data;
 
+/**BREVE SPIEGAZIONE CLASSE RESERVATION (Facade Controller)
+ * 
+ * @author Screaming Hairy Armadillo Team
+ *
+ * Questa classe (Facade Controller), rappresenta la prenotazione effettiva che viene fatta
+ * una volta selezionato il film che si vuole visionare e l'ora (Proiezione).
+ * Tramite questa classe riusciamo a creare la prenotazione e tutte le sue informazioni, 
+ * generare un file .pdf contenente tutte le informazioni della prenotazione stessa (sala,
+ * film, posti riservati, ecc...) ed inviarlo come allegato tramite email, da parte del cinema
+ * al cliente che sta comprando il biglietto, infine possiamo pagare tramite il metodo
+ * di pagamento selezionato dall'utente.
+ * Oltre la classe Cinema, forse è la seconda per importanza e per responsabilità. 
+ */
 @Data
 public class Reservation {
-
+	
+	/**
+	 *@param progressive	 Numero di prenotazione
+	 *@param purchaseDate	 Data di creazione della prenotazione
+	 *@param spectators		 Spettatori associati alla prenotazione
+	 *@param seats			 Posti selezionati/occupati
+	 *@param projection		 Proiezione che lo spettatore/gli spettatori vogliono visionare
+	 *@param paymentCard	 Metodo di pagamento
+	 *@param reportLocation  Area di memoria in cui salviamo il report della prenotazione
+	 */
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
 	private LocalDate purchaseDate;
@@ -61,6 +83,11 @@ public class Reservation {
 	private PaymentCard paymentCard;
 	private String reportLocation;
 	
+	/**
+	 * COSTRUTTORE della classe, esso una volta invocato genera una prenotazione con un
+	 * progressivo che si auto-incrementa e la data di creazione corrisponde alla data di
+	 * sistema in cui viene invocato il costruttore stesso
+	 */
 	public Reservation () {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
@@ -69,34 +96,64 @@ public class Reservation {
 		reportLocation = null;
 	}
 	
-	// aggiungi e rimuovi spettatori dalla Reservation
+	/**
+	 * METODO per aggiungere uno spettatore alla prenotazione
+	 * @param s	 Spettatore da aggiungere
+	 */
 	public void addSpectator(Spectator s) {
 		spectators.add(s);
 	}
+	
+	/**
+	 * METODO per rimuovere uno spettatore dalla prenotazione
+	 * @param s  Spettatore da rimuovere
+	 */
 	public void removeSpectator(Spectator s) {
 		spectators.remove(s);
 	}
 	
-	// aggiungi e rimuovi posti alla Reservation
+	/***
+	 * METODO per aggiungere un posto alla reservation
+	 * @param seatR	  Posto da occupare
+	 */
 	public void addSeat(PhysicalSeat seatR) {
 		if (takeSeat(seatR) == true ) {
 			seats.add(seatR);
 		}
 	}
+	
+	/**
+	 * METODO per rimuovere un posto dalla reservation
+	 * @param seatR		Posto da liberare
+	 */
 	public void removeSeat(PhysicalSeat seatR) {
 		if (freeSeat(seatR) == true) {
 			seats.remove(seatR);
 		}
 	}
 	
-	// farsi restituire l'ammontare di soldi da pagare 
+	/**
+	 * METODO per farsi dare il totale della reservation, di fronte ad eventuali
+	 * sconti effettuati su quest'ultima a seconda degli spettatori che sono intenzionati
+	 * a visionare il film.
+	 * 
+	 * @return total  Imposta da pagare
+	 */
 	public Money getTotal() {
 		// Cambia la discount strategy per farti dare lo sconto
 		// CREARE CLASSE COMPOSITE (FUTURO)!!!
+		
+		// Al momento viene implementato il metodo che ti fa dare uno sconto a seconda 
+		// dell'età degli spettatori
 		return new DiscountAge().getTotal(this);
 	}  
 	
-	// generazione di un documento con tutte le informazioni della reservation
+	/**
+	 * METODO per creare un report, in formato .pdf, contenente tutte le informazioni 
+	 * inerenti la prenotazione stessa.
+	 * @return esitoCreazione   Qualora il file venisse creato senza problemi il valore restituito
+	 * 					 		assume valore true, viceversa false (boolean).
+	 */
 	public boolean createReport() {
 		String FILE = "./savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
 		 
@@ -219,7 +276,14 @@ public class Reservation {
 	        }
 	}
 	
-	// invio per email del documento con le informazioni inerenti la reservation
+	/**
+	 * METODO per effettuare l'invio tramite email da parte del cinema, all'utente che 
+	 * sta prenotando, del report .pdf della prenotazione stessa.
+	 * @param email     Indirizzo email a cui si vuole spedire l'email (utente)
+	 * @return esito    Stringa che descrive l'esito della creazione dell'email e 
+	 * 					qualora ci siano problemi indica quale sia la problematica specifica
+	 * 					che ha impedito un corretto invio dell'email stessa.
+	 */
 	public String sendEmail(String email) {
 		if ((createReport()==false) || (this.getReportLocation()==null)) {
 			return "La generazione del report non é andata a buon fine.";
@@ -284,11 +348,21 @@ public class Reservation {
 		}
 	}
 	
+	/**
+	 * METODO per farsi dire quanti siano stati i posti occupati dalla prenotazione
+	 * @return	TakenSeats		Numero di posti occupati
+	 */
 	public int getNSeats() {
 		return seats.size();
 	}
 	
-	//payment method
+	/**
+	 *  METODO che consente il pagamento della prenotazione, una volta compilata la prenotazione
+	 * @return esito	 Stringa che rappresenta l'esito del pagamento e il verificarsi
+	 * 					 di eventuali errori (ad esempio che la prenotazione occupi
+	 * 					 almeno un posto, o che il numero di persone ed il numero di posti
+	 * 					 occupati dalla reservation siano gli stessi).
+	 */
 	public String buy(){
 		if ((getNSeats()>0) || (getNSeats()==this.getSpectators().size()))
 		{
@@ -304,16 +378,25 @@ public class Reservation {
 				+ "Inoltre il numero di posti deve coincidere col numero di persone inserite.";
 	}
 	
-	// IMPLEMENTARE UN METODO PER OCCUPARE/LIBERARE IL POSTO DELLA SALA IN CUI IL FILM CHE HO SCELTO
-	// SARA' PROIETTATO
+	/**
+	 * METODO per occupare un posto specifico della sala in cui è proiettato il film
+	 * che sto prenotando.
+	 * @param s		    Posto da occupare
+	 * @return esito	Esito dell'occupazione del posto
+	 */
 	public boolean takeSeat(PhysicalSeat s) {
 		projection.freeSeat(s);
 		return projection.freeSeat(s);
 	}
 	
+	/**
+	 * METODO per liberare un posto specifico della sala in cui è proiettato il film che sto
+	 * prenotando.
+	 * @param s			Posto da liberare
+	 * @return esito	Esito della liberazione del posto
+	 */
 	public boolean freeSeat(PhysicalSeat s) {
 		projection.freeSeat(s);
 		return projection.freeSeat(s);
 	}
-	
 }
