@@ -4,6 +4,7 @@ Sistema per la gestione delle prenotazioni di biglietti di un cinema.
 
 ![image](https://user-images.githubusercontent.com/80333091/113708434-81895080-96e1-11eb-85db-60251d9deaf9.png)
 
+*** 
 ### 0.1 - Download Gradle
 
 Per poter eseguire l'applicazione è necessario avere un'installazione locale di [Gradle](https://it.wikipedia.org/wiki/Gradle).
@@ -23,16 +24,19 @@ Una volta scaricato, eseguirlo come amministratore e seguire le istruzioni per i
 
 Al termine dell'installazione riavviare Eclipse e aggiornare la struttura del progetto per abilitare l'interprete delle annotazioni di lombok.
 
+***
 ### 1 - Open terminal/command prompt
 
 Aprite il vostro terminale/prompt dei comandi per poter eseguire i comandi che saranno riportati nei passaggi successivi.
 
+***
 ### 2 - Build application
 
 ```
 gradle clean build
 ```
 
+***
 ### 3 - Run application
 
 Con dispositivi Windows:
@@ -53,6 +57,7 @@ Qualora uno dei due comandi sopracitati dicesse che manchi la classe wrapper, es
 gradle wrapper
 ```
 
+***
 ### 4 - Open your browser
 
 [`http://localhost:8080/`](http://localhost:8080/)
