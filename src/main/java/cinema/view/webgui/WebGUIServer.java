@@ -1,4 +1,4 @@
-package cinema.test;
+package cinema.view.webgui;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,32 +9,24 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
 import org.rythmengine.Rythm;
 
-public class ApplicationServer {
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class WebGUIServer {
 
 	private int port;
 	private Servlet servlet;
-	private Server server;
-
-	public ApplicationServer(int port, Servlet servlet) {
-		this.port = port;
-		this.servlet = servlet;
-	}
 
 	public void start() throws Exception {
-		initTemplateEngine();
-		server = new Server(port);
+		initRythm();
+		Server server = new Server(port);
 		ServletContextHandler handler = new ServletContextHandler();
 		handler.addServlet(new ServletHolder(servlet), "/*");
 		addStaticFileServing(handler);
 		server.setHandler(handler);
 		server.start();
-	}
-
-	public void stop() throws Exception {
-		server.stop();
 	}
 
 	private void addStaticFileServing(ServletContextHandler handler) {
@@ -45,9 +37,10 @@ public class ApplicationServer {
 		handler.addServlet(holderPwd, "/static/*");
 	}
 
-	private void initTemplateEngine() {
-		Map<String, Object> conf = new HashMap<>();
-		conf.put("home.template.dir", "templates");
-		Rythm.init(conf);
+	private void initRythm() {
+		Map<String, Object> configuration = new HashMap<>();
+		configuration.put("home.template.dir", "templates");
+		Rythm.init(configuration);
 	}
+
 }

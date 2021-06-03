@@ -1,4 +1,4 @@
-package cinema.test;
+package cinema.view.webgui;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,7 +21,7 @@ import cinema.model.Projection;
 import cinema.model.cinema.Cinema;
 
 @SuppressWarnings("serial")
-public class WelcomeServlet extends HttpServlet {
+public class WebGUIServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
