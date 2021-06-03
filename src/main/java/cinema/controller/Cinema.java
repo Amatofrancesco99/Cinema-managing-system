@@ -1,13 +1,14 @@
-package cinema.model.cinema;
+package cinema.controller;
 
 import java.util.ArrayList;
 
 import cinema.model.Movie;
 import cinema.model.Projection;
+import cinema.model.cinema.Room;
 import cinema.model.exceptions.*;
 import lombok.Data;
 
-/** BREVE SPIEGAZIONE CLASSE CINEMA (Pattern Singleton GoF)
+/** BREVE SPIEGAZIONE CLASSE CINEMA (Pattern Singleton GoF - Pattern Controller)
  * 
  * @author Screaming Hairy Armadillo Team
  *

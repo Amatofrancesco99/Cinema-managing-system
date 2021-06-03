@@ -18,7 +18,7 @@ import org.rythmengine.Rythm;
 import cinema.model.Money;
 import cinema.model.Movie;
 import cinema.model.Projection;
-import cinema.model.cinema.Cinema;
+import cinema.controller.Cinema;
 
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
