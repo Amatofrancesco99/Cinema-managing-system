@@ -129,7 +129,7 @@ public class Reservation {
 	            document.open();
 	            
 	            // ADD METADATA
-	            document.addTitle("PDF Report Reservation n°" + this.getProgressive());
+	            document.addTitle("PDF Report Reservation nÂ°" + this.getProgressive());
 		        document.addSubject("Using iText");
 		        document.addKeywords("Java, PDF, iText");
 		        document.addAuthor("Screaming Hairy Armadillo Team");
@@ -170,7 +170,7 @@ public class Reservation {
 		        					+ "\t\t\t\t\t\t\tRating film:  " + this.getProjection().getMovie().getRating(),
 		        					subFont2);
 		        
-		        Paragraph infoReservationP = new Paragraph("Sala n°:  " + this.getProjection().getRoom().getProgressive()
+		        Paragraph infoReservationP = new Paragraph("Sala nÂ°:  " + this.getProjection().getRoom().getProgressive()
 		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek()
 		        							+ "/" + this.getProjection().getDateTime().getMonth()
 		        							+ "/" + this.getProjection().getDateTime().getYear()
@@ -234,7 +234,7 @@ public class Reservation {
 	// invio per email del documento con le informazioni inerenti la reservation
 	public String sendEmail(String email) {
 		if ((createReport()==false) || (this.getReportLocation()==null)) {
-			return "La generazione del report non è andata a buon fine.";
+			return "La generazione del report non Ã© andata a buon fine.";
 		}
 		else {
 			String to = email; //receiver email
@@ -258,13 +258,13 @@ public class Reservation {
 				MimeMessage message = new MimeMessage(session);  
 				message.setFrom(new InternetAddress(user));  
 				message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
-				message.setSubject("REPORT PRENOTAZIONE N° " + this.progressive + " | TI ASPETTIAMO!");  
+				message.setSubject("REPORT PRENOTAZIONE NÂ° " + this.progressive + " | TI ASPETTIAMO!");  
 		      
 				//3) create MimeBodyPart object and set your message text     
 				BodyPart messageBodyPart1 = new MimeBodyPart();  
 				messageBodyPart1.setText("Benvenuto " + to + " ,/n"
 						+ "In allegato trova il documento che conferma l'avvenuta prenotazione.\n"
-						+ "Stampi l'allegato, o porti una prova della ricevuta quando verrà "
+						+ "Stampi l'allegato, o porti una prova della ricevuta quando verrÃ "
 						+ "a visionare il film.\n"
 						+ "La aspettiamo, buona giornata.");  
 		      
@@ -291,7 +291,7 @@ public class Reservation {
 			}
 			catch (MessagingException ex) {
 				ex.printStackTrace();
-				return "Processo di invio fallito...Riprova più tardi.";  
+				return "Processo di invio fallito...Riprova piÃ¹ tardi.";  
 				}  
 		}
 	}
@@ -327,7 +327,7 @@ public class Reservation {
 		{
 			//Payment simulation
 			if (paymentCard.decreaseMoney(getTotal())==false) {
-				return "Il pagamento non è andato a buon fine.";
+				return "Il pagamento non Ã¨ andato a buon fine.";
 			}
 			else {
 				return "Pagamento andato a buon fine.";
