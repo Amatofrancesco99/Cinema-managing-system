@@ -9,7 +9,7 @@ Sistema per la gestione delle prenotazioni di biglietti di un cinema.
 
 ### 0. Download Gradle
 
-Per poter eseguire l'applicazione c'è bisogno di aver installato sul proprio dispositivo Gradle.
+Per poter eseguire l'applicazione c'è bisogno di aver installato sul proprio dispositivo [Gradle](https://it.wikipedia.org/wiki/Gradle).
 
 Qui sotto è riportato un link contenente tutte le istruzioni per poter fare il setup di Gradle sul vostro dispositivo, qualora non lo aveste già precedentemente installato.
 Trovate inoltre i procedimenti per l'installazione a seconda del sistema operativo che state utilizzando.
@@ -57,7 +57,7 @@ gradle wrapper
 
 
 ***
-### 3. Open browser
+### 4. Open browser
 Nella barra degli indirizzi di un browser (preferibilmente Google Chrome), scrivi: 
 
  `http://localhost:8080/`
