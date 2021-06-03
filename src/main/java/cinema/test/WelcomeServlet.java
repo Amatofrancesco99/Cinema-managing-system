@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.rythmengine.Rythm;
 
 import cinema.model.Money;
+import cinema.model.Movie;
 import cinema.model.Projection;
 import cinema.model.cinema.Cinema;
 
@@ -34,7 +35,7 @@ public class WelcomeServlet extends HttpServlet {
 
 	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		Cinema myCinema = Cinema.getInstance();
-		ArrayList<Film> films = new ArrayList<>();
+		ArrayList<Movie> films = new ArrayList<>();
 
 		ArrayList<String> directors, cast, genres;
 		directors = new ArrayList<>();
@@ -47,10 +48,10 @@ public class WelcomeServlet extends HttpServlet {
 		genres = new ArrayList<>();
 		genres.add("Drammatico");
 		genres.add("Commedia");
-		Film f = new Film(1, 4, 117, "Druk - Un altro giorno", "C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?", "https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg", "https://www.youtube.com/watch?v=hFbDh58QHzw", directors, cast, genres);
+		Movie f = new Movie(1, "Druk - Un altro giorno", "C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?", genres, directors, cast, 4, 117, "https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg", "https://www.youtube.com/watch?v=hFbDh58QHzw");
 
 		ArrayList<Projection> p = new ArrayList<>();
-		
+
 		Projection p1 = new Projection(123, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f));
 		Projection p2 = new Projection(183, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f));
 		Projection p3 = new Projection(193, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f));
@@ -80,7 +81,7 @@ public class WelcomeServlet extends HttpServlet {
 				}
 			}
 
-			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, req.getParameter("query")));
+			resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Movie>) films, req.getParameter("query")));
 		    return;
 		} else if (req.getPathInfo().equals("/movie-details")) {
 			
@@ -109,7 +110,7 @@ public class WelcomeServlet extends HttpServlet {
 		}
 		
 		// Error
-		resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Film>) films, null));
+		resp.getWriter().write(Rythm.render("index.html", myCinema, (List<Movie>) films, null));
 	}
 
 }
