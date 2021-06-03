@@ -57,12 +57,14 @@ public class Reservation {
 	private ArrayList<PhisicalSeat> seats;
 	private Projection projection;
 	private PaymentCard paymentCard;
+	private String reportLocation;
 	
 	public Reservation () {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
 		spectators = new ArrayList<Spectator>();
 		seats = new ArrayList<PhisicalSeat>();
+		reportLocation = null;
 	}
 	
 	// aggiungi e rimuovi spettatori dalla Reservation
@@ -84,15 +86,6 @@ public class Reservation {
 			seats.remove(seatR);
 		}
 	}
-	//it depends on the implementation
-	/*public void addMultipleSeats(ArrayList<PhisicalSeat> seatsR) {
-		for(PhisicalSeat seat:seatsR) 
-			this.seats.add(seat);	
-	}
-	public void removeMultipleSeats(ArrayList<PhisicalSeat> seatsR) {
-		for(PhisicalSeat seat:seatsR) 
-			this.seats.remove(seat);	
-	}*/
 	
 	// imposta o cambia il metodo di pagamento
 	public void setPaymentCard(PaymentCard p) {
@@ -104,6 +97,10 @@ public class Reservation {
 		projection = p;
 	}
 	
+	public void setReportLocation(String path) {
+		this.reportLocation=path;
+	}
+	
 	// farsi restituire l'ammontare di soldi da pagare 
 	public Money getTotal() {
 		// Cambia la discount strategy per farti dare lo sconto
@@ -112,8 +109,9 @@ public class Reservation {
 	}  
 	
 	// generazione di un documento con tutte le informazioni della reservation
-	public boolean createReport() {   
-		String FILE = "./savedReports/"+Long.toString(getProgressive())+".pdf";
+	public boolean createReport() {
+		String FILE = "./savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
+		 
 		//String FILE = Long.toString(getProgressive())+".pdf";
 		Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 33,
 	            Font.BOLD);
@@ -131,11 +129,11 @@ public class Reservation {
 	            document.open();
 	            
 	            // ADD METADATA
-	            document.addTitle("My first PDF");
+	            document.addTitle("PDF Report Reservation n°" + this.getProgressive());
 		        document.addSubject("Using iText");
 		        document.addKeywords("Java, PDF, iText");
-		        document.addAuthor("Lars Vogel");
-		        document.addCreator("Lars Vogel");
+		        document.addAuthor("Screaming Hairy Armadillo Team");
+		        document.addCreator("Screaming Hairy Armadillo Team");
 		        
 		        String imageBG = "https://i.pinimg.com/originals/00/25/03/002503946c0a59d4ae800ab05a037fda.jpg";
 		        
@@ -152,26 +150,35 @@ public class Reservation {
 	            
 	            image.setAbsolutePosition(250f, 715f);
 		        
-		        Paragraph titleP = new Paragraph("NOME CINEMA", catFont);
+		        Paragraph titleP = new Paragraph(Cinema.getInstance().getName() + "\n", catFont);
 		        
 		        titleP.setSpacingBefore(80);
 		        titleP.setAlignment(Element.ALIGN_CENTER);
 		        
-		        Paragraph infoCinemaP = new Paragraph("Location cinema\nInfo cinema\nAltre info", smallFont);
+		        Paragraph infoCinemaP = new Paragraph(Cinema.getInstance().getLocation() 
+		        		+ "\n" + Cinema.getInstance().getEmail() + "\n", smallFont);
 		        
 		        infoCinemaP.setSpacingBefore(10);
 		        infoCinemaP.setAlignment(Element.ALIGN_CENTER);
 		        
-		        Paragraph FilmP = new Paragraph("TITOLO FILM", subFont);
+		        Paragraph FilmP = new Paragraph(this.getProjection().getMovie().getTitle(), subFont);
 
 		        FilmP.setSpacingBefore(40);
 		        
-		        Paragraph infoFilmP = new Paragraph("Autore:  ?,	\t\t\t\t\t\t\tDurata:  ? h,	\t\t\t\t\t\t\tInfo:  ?", subFont2);
+		        Paragraph infoFilmP = new Paragraph("Regista/i:  " + this.getProjection().getMovie().getDirectors().toString()
+		        					+ "\t\t\t\t\t\t\tDurata:  " + this.getProjection().getMovie().getDuration() 
+		        					+ "\t\t\t\t\t\t\tRating film:  " + this.getProjection().getMovie().getRating(),
+		        					subFont2);
 		        
-		        Paragraph infoReservationP = new Paragraph("ROOM:  ?,	\t\t\t\t\t\t\tDATA:  ?/?/?,	\t\t\t\t\t\tORA:  ?:?", subFont3);
+		        Paragraph infoReservationP = new Paragraph("Sala n°:  " + this.getProjection().getRoom().getProgressive()
+		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek()
+		        							+ "/" + this.getProjection().getDateTime().getMonth()
+		        							+ "/" + this.getProjection().getDateTime().getYear()
+		        							+ " \t\t\t\t\t\tOra: " + this.getProjection().getDateTime().getHour()
+		        							+ ":" + this.getProjection().getDateTime().getMinute(), 
+		        							subFont3);
 		        
 		        infoReservationP.setSpacingBefore(30);
-		        
 		        
 		        PdfPTable table = new PdfPTable(3);
 		        
@@ -197,7 +204,8 @@ public class Reservation {
 		        table.addCell("Rossi");
 		        table.addCell("A2");
 		        
-		        Paragraph totalP = new Paragraph("TOTALE:  ? ?", subFont3);
+		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal().getAmount()
+		        				   + this.getTotal().getCurrency().toString(), subFont3);
 		        
 		        totalP.setSpacingBefore(80);
 		        totalP.setAlignment(Element.ALIGN_RIGHT);
@@ -215,123 +223,78 @@ public class Reservation {
 		        
 		        // CLOSE DOCUMENT
 	            document.close();
-		        return true;
+	            setReportLocation(FILE);
+	            return true;
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            return false;
 	        }
 	}
-
-	   /* private static void createTable(Section subCatPart)
-	            throws BadElementException {
-	        PdfPTable table = new PdfPTable(3);
-
-	        // t.setBorderColor(BaseColor.GRAY);
-	        // t.setPadding(4);
-	        // t.setSpacing(4);
-	        // t.setBorderWidth(1);
-
-	        PdfPCell c1 = new PdfPCell(new Phrase("Table Header 1"));
-	        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-	        table.addCell(c1);
-
-	        c1 = new PdfPCell(new Phrase("Table Header 2"));
-	        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-	        table.addCell(c1);
-
-	        c1 = new PdfPCell(new Phrase("Table Header 3"));
-	        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-	        table.addCell(c1);
-	        table.setHeaderRows(1);
-
-	        table.addCell("1.0");
-	        table.addCell("1.1");
-	        table.addCell("1.2");
-	        table.addCell("2.1");
-	        table.addCell("2.2");
-	        table.addCell("2.3");
-
-	        subCatPart.add(table);
-
-	    }
-
-	    private static void createList(Section subCatPart) {
-	        List list = new List(true, false, 10);
-	        list.add(new ListItem("First point"));
-	        list.add(new ListItem("Second point"));
-	        list.add(new ListItem("Third point"));
-	        subCatPart.add(list);
-	    }
-
-	    private static void addEmptyLine(Paragraph paragraph, int number) {
-	        for (int i = 0; i < number; i++) {
-	            paragraph.add(new Paragraph(" "));
-	        }
-	    }*/
-	    
+	
 	// invio per email del documento con le informazioni inerenti la reservation
 	public String sendEmail(String email) {
 		if (createReport()==false) {
 			return "La generazione del report non è andata a buon fine.";
 		}
-		String to = email;//receiver email
-		final String user = "ArmadilloCinema@gmail.com";//sender email (cinema)
-		final String password = "xxxxx";//sender password
+		else {
+			String to = email; //receiver email
+			final String user = Cinema.getInstance().getEmail(); //sender email (cinema)
+			final String password = Cinema.getInstance().getPassword(); //sender password
 		   
-		//1) get the session object     
-		Properties properties = System.getProperties();  
-		properties.setProperty("mail.smtp.host", "mail.javatpoint.com");  
-		properties.put("mail.smtp.auth", "true");  
+			//1) get the session object     
+			Properties properties = System.getProperties();  
+			properties.setProperty("mail.smtp.host", "mail.javatpoint.com");  
+			properties.put("mail.smtp.auth", "true");  
 		  
-		Session session = Session.getDefaultInstance(properties,  
-		new javax.mail.Authenticator() {  
-			protected PasswordAuthentication getPasswordAuthentication() {  
-				return new PasswordAuthentication(user,password);  
+			Session session = Session.getDefaultInstance(properties,  
+			new javax.mail.Authenticator() {  
+				protected PasswordAuthentication getPasswordAuthentication() {  
+					return new PasswordAuthentication(user,password);  
 				}  
 			});  
 		     
-		//2) compose message     
-		try{  
-			MimeMessage message = new MimeMessage(session);  
-			message.setFrom(new InternetAddress(user));  
-			message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
-			message.setSubject("RESERVATION N° "+this.progressive+" | TI ASPETTIAMO!");  
+			//2) compose message     
+			try{  
+				MimeMessage message = new MimeMessage(session);  
+				message.setFrom(new InternetAddress(user));  
+				message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
+				message.setSubject("REPORT PRENOTAZIONE N° "+this.progressive+" | TI ASPETTIAMO!");  
 		      
-			//3) create MimeBodyPart object and set your message text     
-			BodyPart messageBodyPart1 = new MimeBodyPart();  
-			messageBodyPart1.setText("Benvenuto "+to+ " ,/n"
-					+ "In allegato trova il documento che conferma l'avvenuta prenotazione.\n"
-					+ "Stampi l'allegato, o porti una prova della ricevuta quando verrà"
-					+ "a visionare il film.\n"
-					+ "La aspettiamo, buona giornata.");  
+				//3) create MimeBodyPart object and set your message text     
+				BodyPart messageBodyPart1 = new MimeBodyPart();  
+				messageBodyPart1.setText("Benvenuto "+to+ " ,/n"
+						+ "In allegato trova il documento che conferma l'avvenuta prenotazione.\n"
+						+ "Stampi l'allegato, o porti una prova della ricevuta quando verrà"
+						+ "a visionare il film.\n"
+						+ "La aspettiamo, buona giornata.");  
 		      
-			//4) create new MimeBodyPart object and set DataHandler object to this object      
-			MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
+				//4) create new MimeBodyPart object and set DataHandler object to this object      
+				MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
 		  
-			String filename = "SendAttachment.java";//change accordingly  
-			DataSource source = new FileDataSource(filename);  
-			messageBodyPart2.setDataHandler(new DataHandler(source));  
-			messageBodyPart2.setFileName(filename);  
+				String filename = getReportLocation(); //change accordingly  
+				DataSource source = new FileDataSource(filename);  
+				messageBodyPart2.setDataHandler(new DataHandler(source));  
+				messageBodyPart2.setFileName(filename);  
 		     
-		     
-			//5) create Multipart object and add MimeBodyPart objects to this object      
-		    Multipart multipart = new MimeMultipart();  
-		    multipart.addBodyPart(messageBodyPart1);  
-		    multipart.addBodyPart(messageBodyPart2);  
+				//5) create Multipart object and add MimeBodyPart objects to this object      
+				Multipart multipart = new MimeMultipart();  
+				multipart.addBodyPart(messageBodyPart1);  
+				multipart.addBodyPart(messageBodyPart2);  
 		  
-		    //6) set the multiplart object to the message object  
-		    message.setContent(multipart);  
+				//6) set the multiplart object to the message object  
+				message.setContent(multipart);  
 		     
-		    //7) send message  
-		    Transport.send(message);  
+				//7) send message  
+				Transport.send(message);  
 		   
-		    return "Email inviata...";  
-		   }
-		catch (MessagingException ex) {
-			   ex.printStackTrace();
-			   return "Processo di invio fallito...Riprova più tardi.";  
-			}  
-		 }
+				return "Email inviata...";  
+			}
+			catch (MessagingException ex) {
+				ex.printStackTrace();
+				return "Processo di invio fallito...Riprova più tardi.";  
+				}  
+		}
+	}
 	
 	//getters della classe
 	public ArrayList<Spectator> getSpectators(){
@@ -348,6 +311,10 @@ public class Reservation {
 	
 	public LocalDate getDate() {
 		return purchaseDate;
+	}
+	
+	public String getReportLocation() {
+		return reportLocation;
 	}
 	
 	//payment method
