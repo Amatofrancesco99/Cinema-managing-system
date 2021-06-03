@@ -6,13 +6,36 @@ Sistema per la gestione delle prenotazioni di biglietti di un cinema.
 
 
 ***
-### 1. Build application
+
+### 0. Download Gradle
+
+Per poter eseguire l'applicazione c'è bisogno di aver installato sul proprio dispositivo Gradle.
+
+Qui sotto è riportato un link contenente tutte le istruzioni per poter fare il setup di Gradle sul vostro dispositivo, qualora non lo aveste già precedentemente installato.
+Trovate inoltre i procedimenti per l'installazione a seconda del sistema operativo che state utilizzando.
+
+[Gradle installation](https://gradle.org/install/)
+
+
+***
+
+### 1 Open terminal/command prompt
+
+Aprite il vostro terminale/prompt dei comandi, per poter eseguire i comandi che saranno riportati nei passaggi successivi.
+
+
+***
+
+### 2 Build application
+
 ```
 gradle clean build
 ```
 
+
 ***
-### 2. Run application
+
+### 3 Run application
 
 Con dispositivi Windows:
 
