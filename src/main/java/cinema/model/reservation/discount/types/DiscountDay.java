@@ -14,8 +14,8 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	@Override
 	public Money getTotal(Reservation r) {
 		float totalPrice = 0;
-		if(((r.getDate().compareTo(start)>=0) && (r.getDate().compareTo(end)<=0)) 
-		|| (r.getDate().compareTo(day)==0)) {
+		if(((r.getPurchaseDate().compareTo(start)>=0) && (r.getPurchaseDate().compareTo(end)<=0)) 
+		|| (r.getPurchaseDate().compareTo(day)==0)) {
 			totalPrice+=r.getProjection().getPrice().getAmount()*PERCENTAGE;
 		}
 		else totalPrice+=r.getProjection().getPrice().getAmount();

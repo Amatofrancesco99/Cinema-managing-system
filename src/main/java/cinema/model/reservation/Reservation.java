@@ -47,7 +47,9 @@ import cinema.model.cinema.Cinema;
 import cinema.model.cinema.PhisicalSeat;
 import cinema.model.payment.PaymentCard;
 import cinema.model.reservation.discount.types.*;
+import lombok.Data;
 
+@Data
 public class Reservation {
 
 	private static final AtomicInteger count = new AtomicInteger(0); 
@@ -85,20 +87,6 @@ public class Reservation {
 		if (freeSeat(seatR) == true) {
 			seats.remove(seatR);
 		}
-	}
-	
-	// imposta o cambia il metodo di pagamento
-	public void setPaymentCard(PaymentCard p) {
-		paymentCard = p;
-	}
-	
-	// imposta la proiezione di un film 
-	public void setProjection(Projection p) {
-		projection = p;
-	}
-	
-	public void setReportLocation(String path) {
-		this.reportLocation=path;
 	}
 	
 	// farsi restituire l'ammontare di soldi da pagare 
@@ -294,27 +282,6 @@ public class Reservation {
 				return "Processo di invio fallito...Riprova più tardi.";  
 				}  
 		}
-	}
-	
-	//getters della classe
-	public ArrayList<Spectator> getSpectators(){
-		return spectators;
-	}
-	
-	public Projection getProjection() {
-		return projection;
-	}
-	
-	public long getProgressive() {
-		return progressive;
-	}
-	
-	public LocalDate getDate() {
-		return purchaseDate;
-	}
-	
-	public String getReportLocation() {
-		return reportLocation;
 	}
 	
 	public int getNSeats() {
