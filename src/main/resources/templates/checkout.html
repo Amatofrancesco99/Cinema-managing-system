@@ -16,150 +16,202 @@
     <div class="container pt-5">
         <div class="pt-5 pb-5">
             <h3>
-                Dettagli del tuo acquisto
+                Scegli il tuo posto in sala
             </h3>
         </div>
-        <div class="row">
-            <div class="col-md-5 col-lg-4 order-md-last">
-                <h4 class="d-flex align-items-center mb-3">
-                    <span class="text-primary">
-                        I tuoi biglietti
-                    </span>
-                </h4>
-                <ul class="list-group mb-3">
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">
-                                Product name
-                            </h6>
-                            <small class="text-muted">
-                                Brief description
-                            </small>
-                        </div>
-                        <span class="text-muted">
-                            12,00 &euro;
-                        </span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between bg-light">
-                        <div class="text-success">
-                            <h6 class="my-0">
-                                Promo code
-                            </h6>
-                            <small>
-                                EXAMPLECODE
-                            </small>
-                        </div>
-                        <span class="text-success">
-                            - 5,00 &euro;
-                        </span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>
-                            Totale (EUR)
-                        </span>
-                        <strong>
-                            7,00 &euro;
-                        </strong>
-                    </li>
-                </ul>
-                <form action="/apply-promo-code#" method="post" class="card p-2 needs-validation" novalidate>
-                    <div class="input-group has-validation">
-                        <input type="text" class="form-control" placeholder="Codice promozionale" required>
-                        <button type="submit" class="btn btn-secondary">
-                            Applica
-                        </button>
-                        <div class="invalid-feedback default-feedback"></div>
-                    </div>
-                    <div class="invalid-feedback default-feedback"></div>
-                </form>
+        (TODO: selezione posto/i in sala)
+        <div class="text-end mt-3 mb-5">
+            <a class="btn btn-primary" href="#checkout-details" role="button" id="go-to-checkout">
+                Procedi all'acquisto dei biglietti
+            </a>
+        </div>
+        <div class="collapse" id="checkout-details">
+            <hr class="py-0 mt-0 mb-3">
+            <div class="pt-3 pb-5">
+                <h3>
+                    Dettagli del tuo acquisto
+                </h3>
             </div>
-            <div class="col-md-7 col-lg-8">
-                <form action="/buy#" method="post" class="needs-validation" novalidate>
-                    <div class="row g-3">
-                        <h4 class="mb-3">
-                            Dati personali
-                        </h4>
-                        <div class="col-sm-6">
-                            <label for="name" class="form-label">
-                                Nome
-                            </label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Mario" required>
+            <div class="row">
+                <div class="col-md-5 col-lg-4 order-md-last">
+                    <h4 class="d-flex align-items-center mb-3">
+                        <span class="text-primary">
+                            I tuoi biglietti
+                        </span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div>
+                                <h6 class="my-0">
+                                    Product name
+                                </h6>
+                                <small class="text-muted">
+                                    Brief description
+                                </small>
+                            </div>
+                            <span class="text-muted">
+                                12,00 &euro;
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0">
+                                    Promo code
+                                </h6>
+                                <small>
+                                    EXAMPLECODE
+                                </small>
+                            </div>
+                            <span class="text-success">
+                                - 5,00 &euro;
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>
+                                Totale (EUR)
+                            </span>
+                            <strong>
+                                7,00 &euro;
+                            </strong>
+                        </li>
+                    </ul>
+                    <form action="/apply-promo-code#" method="post" class="card p-2 needs-validation" novalidate>
+                        <div class="input-group has-validation">
+                            <input type="text" class="form-control" placeholder="Codice promozionale" required>
+                            <button type="submit" class="btn btn-secondary">
+                                Applica
+                            </button>
                             <div class="invalid-feedback default-feedback"></div>
                         </div>
-                        <div class="col-sm-6">
-                            <label for="surname" class="form-label">
-                                Cognome
+                        <div class="invalid-feedback default-feedback"></div>
+                    </form>
+                </div>
+                <div class="col-md-7 col-lg-8">
+                    <form action="/buy#" method="post" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <h4 class="mb-3">
+                                Dati personali
+                            </h4>
+                            <div class="col-sm-6">
+                                <label for="name" class="form-label">
+                                    Nome
+                                </label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Mario" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="surname" class="form-label">
+                                    Cognome
+                                </label>
+                                <input type="text" class="form-control" id="surname" name="surname" placeholder="Rossi" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                            <div class="col-12">
+                                <label for="birth-date" class="form-label">
+                                    Data di nascita
+                                </label>
+                                <input type="date" class="form-control" id="birth-date" name="birth-date" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                            <div class="col-12">
+                                <label for="e-mail" class="form-label">
+                                    E-mail
+                                </label>
+                                <input type="email" class="form-control" id="e-mail" name="e-mail" placeholder="mario.rossi@@dominio.com" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                        </div>
+                        <hr class="my-3">
+                        <div class="row g-3">
+                            <h4 class="mt-4 mb-3">
+                                Dati di pagamento
+                            </h4>
+                            <div class="col-md-6">
+                                <label for="cc-name" class="form-label">
+                                    Titolare della carta di credito
+                                </label>
+                                <input type="text" class="form-control" id="cc-name" name="cc-name" placeholder="Mario Rossi" required>
+                                <small class="text-muted">
+                                    Nome completo scritto sulla carta
+                                </small>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cc-number" class="form-label">
+                                    Numero della carta di credito
+                                </label>
+                                <input type="text" class="form-control" id="cc-number" name="cc-number" placeholder="0000 0000 0000 0000" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="cc-expiration" class="form-label">
+                                    Scadenza
+                                </label>
+                                <input type="text" class="form-control" id="cc-expiration" name="cc-expiration" placeholder="01/23" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="cc-cvv" class="form-label">
+                                    CVV
+                                </label>
+                                <input type="text" class="form-control" id="cc-cvv" name="cc-cvv" placeholder="123" required>
+                                <div class="invalid-feedback default-feedback"></div>
+                            </div>
+                        </div>
+                        <hr class="my-3">
+                        <div class="form-check py-0 my-4">
+                            <input type="checkbox" class="form-check-input" id="agreement" name="agreement" required>
+                            <label class="form-check-label" for="agreement">
+                                Acconsento al trattamento dei miei dati personali.
                             </label>
-                            <input type="text" class="form-control" id="surname" name="surname" placeholder="Rossi" required>
-                            <div class="invalid-feedback default-feedback"></div>
+                            <div class="invalid-feedback">
+                                Il tuo consenso &egrave; obbligatorio
+                            </div>
                         </div>
-                        <div class="col-12">
-                            <label for="birth-date" class="form-label">
-                                Data di nascita
-                            </label>
-                            <input type="date" class="form-control" id="birth-date" name="birth-date" required>
-                            <div class="invalid-feedback default-feedback"></div>
-                        </div>
-                        <div class="col-12">
-                            <label for="e-mail" class="form-label">
-                                E-mail
-                            </label>
-                            <input type="email" class="form-control" id="e-mail" name="e-mail" placeholder="mario.rossi@@dominio.com" required>
-                            <div class="invalid-feedback default-feedback"></div>
-                        </div>
-                    </div>
-                    <hr class="my-3">
-                    <div class="row g-3">
-                        <h4 class="mt-4 mb-3">
-                            Dati di pagamento
-                        </h4>
-                        <div class="col-md-6">
-                            <label for="cc-name" class="form-label">
-                                Titolare della carta di credito
-                            </label>
-                            <input type="text" class="form-control" id="cc-name" name="cc-name" placeholder="Mario Rossi" required>
-                            <small class="text-muted">
-                                Nome completo scritto sulla carta
-                            </small>
-                            <div class="invalid-feedback default-feedback"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="cc-number" class="form-label">
-                                Numero della carta di credito
-                            </label>
-                            <input type="text" class="form-control" id="cc-number" name="cc-number" placeholder="0000 0000 0000 0000" required>
-                            <div class="invalid-feedback default-feedback"></div>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="cc-expiration" class="form-label">
-                                Scadenza
-                            </label>
-                            <input type="text" class="form-control" id="cc-expiration" name="cc-expiration" placeholder="01/23" required>
-                            <div class="invalid-feedback default-feedback"></div>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="cc-cvv" class="form-label">
-                                CVV
-                            </label>
-                            <input type="text" class="form-control" id="cc-cvv" name="cc-cvv" placeholder="123" required>
-                            <div class="invalid-feedback default-feedback"></div>
-                        </div>
-                    </div>
-                    <hr class="my-3">
-                    <div class="form-check py-0 my-4">
-                        <input type="checkbox" class="form-check-input" id="agreement" name="agreement" required>
-                        <label class="form-check-label" for="agreement">
-                            Acconsento al trattamento dei miei dati personali.
-                        </label>
-                        <div class="invalid-feedback">
-                            Il tuo consenso &egrave; obbligatorio
-                        </div>
-                    </div>
-                    <button class="w-100 btn btn-primary btn-lg mt-3 mb-5" type="submit">
-                        ACQUISTA E PAGA
-                    </button>
-                </form>
+                        <button class="w-100 btn btn-primary btn-lg mt-3 mb-5" type="submit">
+                            CONCLUDI L'ACQUISTO
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+}
+
+@section(javascript) {
+    <script>
+        (function() {
+            'use strict';
+
+            // Create the object that represents the collapsible checkout form
+            var checkoutDetails = document.getElementById('checkout-details');
+            var checkoutDetailsCollapse = new bootstrap.Collapse(checkoutDetails, {
+                toggle: false
+            });
+
+            // Show the checkout form only when the buyer has chosen the seats
+            document.getElementById('go-to-checkout').addEventListener('click', function() {
+                this.classList.add('invisible');
+                checkoutDetailsCollapse.show();
+            });
+
+            // Set the text shown when a form field is invalid
+            var defaultFeedback = document.querySelectorAll('.default-feedback');
+            Array.prototype.slice.call(defaultFeedback).forEach(function(div) {
+                div.innerHTML = 'Questo campo &egrave; obbligatorio';
+            });
+
+            // Disable form submission if there are invalid form fields
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>
 }
