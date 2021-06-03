@@ -233,7 +233,7 @@ public class Reservation {
 	
 	// invio per email del documento con le informazioni inerenti la reservation
 	public String sendEmail(String email) {
-		if (createReport()==false) {
+		if ((createReport()==false) || (this.getReportLocation()==null)) {
 			return "La generazione del report non è andata a buon fine.";
 		}
 		else {
@@ -317,10 +317,24 @@ public class Reservation {
 		return reportLocation;
 	}
 	
+	public int getNSeats() {
+		return seats.size();
+	}
+	
 	//payment method
-	public boolean buy(){
-		//Payment simulation
-		return paymentCard.decreaseMoney(getTotal());
+	public String buy(){
+		if ((getNSeats()>0) || (getNSeats()==this.getSpectators().size()))
+		{
+			//Payment simulation
+			if (paymentCard.decreaseMoney(getTotal())==false) {
+				return "Il pagamento non è andato a buon fine.";
+			}
+			else {
+				return "Pagamento andato a buon fine.";
+			}
+		}
+		else return "Verifica di aver inserito almeno un posto alla prenotazione.\n"
+				+ "Inoltre il numero di posti deve coincidere col numero di persone inserite.";
 	}
 	
 	// IMPLEMENTARE UN METODO PER OCCUPARE/LIBERARE IL POSTO DELLA SALA IN CUI IL FILM CHE HO SCELTO
