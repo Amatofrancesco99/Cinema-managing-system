@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import cinema.model.cinema.PhisicalSeat;
+import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.enumerations.TypeOfCurrency;
 import lombok.Data;
@@ -21,7 +21,7 @@ public class Projection implements Comparable<Projection> {
 	// I posti della sala in cui sarà proiettato il film possono essere liberi o occupati,
 	// per questo motivo ad ogni posto fisico della sala è associato un valore booleano.
 	// Se true allora il posto è libero, se falso il posto è occupato.
-	private HashMap<PhisicalSeat,Boolean> availableSeats;
+	private HashMap<PhysicalSeat,Boolean> availableSeats;
 	
 	public Projection (int id, LocalDateTime dateTime, Money price) {
 		this.dateTime = dateTime;
@@ -34,17 +34,17 @@ public class Projection implements Comparable<Projection> {
 	// alla prima stanza associata alla proiezione? 
 	public void setRoom (Room room) {
 		this.room = room;
-		availableSeats = new HashMap<PhisicalSeat,Boolean>(room.getNumberSeats());
+		availableSeats = new HashMap<PhysicalSeat,Boolean>(room.getNumberSeats());
 		for(int i = 0; i < room.getNumberSeats(); i++) 
 			availableSeats.put(room.getSeat(i), true);	
 	}
 	
 	// farsi restituire i posti liberi della sala in cui sarà proiettato un film
-	public ArrayList<PhisicalSeat> getFreeSeats() {
-		ArrayList<PhisicalSeat> freeSeats=new ArrayList<PhisicalSeat>();
+	public ArrayList<PhysicalSeat> getFreeSeats() {
+		ArrayList<PhysicalSeat> freeSeats=new ArrayList<PhysicalSeat>();
 		// per ogni posto della sala vado a vedere se è libero, ossia se getValue è true.
 		// se tale condizione è vera lo aggiungo alla lista dei posti liberi
-		for (Entry<PhisicalSeat, Boolean> entry : availableSeats.entrySet()) {
+		for (Entry<PhysicalSeat, Boolean> entry : availableSeats.entrySet()) {
 			if (entry.getValue() == true) {
 				freeSeats.add(entry.getKey());
 			}
@@ -53,9 +53,9 @@ public class Projection implements Comparable<Projection> {
 	}
 	
     // metodo occupa posto di una sala
-	public boolean takeSeat(PhisicalSeat seat) {
+	public boolean takeSeat(PhysicalSeat seat) {
 		boolean takeSeat=false;
-		for (PhisicalSeat s : getFreeSeats()) {
+		for (PhysicalSeat s : getFreeSeats()) {
 			if (seat == s) {
 				availableSeats.put(s,false);
 				takeSeat=true;
@@ -65,9 +65,9 @@ public class Projection implements Comparable<Projection> {
 	}
 	
 	// metodo per liberare il posto di una sala
-	public boolean freeSeat(PhisicalSeat seat) {
+	public boolean freeSeat(PhysicalSeat seat) {
 		boolean freeSeat=false;
-		for (PhisicalSeat s : getFreeSeats()) {
+		for (PhysicalSeat s : getFreeSeats()) {
 			if (seat == s) {
 				availableSeats.put(s,true);
 				freeSeat=true;

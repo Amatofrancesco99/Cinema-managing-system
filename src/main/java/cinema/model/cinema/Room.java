@@ -11,18 +11,18 @@ public class Room {
 	
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
-	private ArrayList<PhisicalSeat> seats;
+	private ArrayList<PhysicalSeat> seats;
 	
 	public Room() {
 		progressive = count.incrementAndGet(); 
-		seats = new ArrayList<PhisicalSeat>();
+		seats = new ArrayList<PhysicalSeat>();
 	}
 	
 	// aggiungi e rimuovi posti alla Room
-	public void addSeat(PhisicalSeat s) {
+	public void addSeat(PhysicalSeat s) {
 		seats.add(s);
 	}
-	public void removeSeat(PhisicalSeat s) {
+	public void removeSeat(PhysicalSeat s) {
 		seats.remove(s);
 	}
 	
@@ -30,7 +30,7 @@ public class Room {
 		return seats.size();
 	}
 	
-	public PhisicalSeat getSeat(int index) {
+	public PhysicalSeat getSeat(int index) {
 		if(index < seats.size())
 			return seats.get(index);
 		else

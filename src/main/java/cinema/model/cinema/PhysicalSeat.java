@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class PhisicalSeat {
+public class PhysicalSeat {
 	
 	private char row;
 	private int number;

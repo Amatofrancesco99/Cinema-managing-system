@@ -44,7 +44,7 @@ import cinema.model.Money;
 import cinema.model.Projection;
 import cinema.model.Spectator;
 import cinema.model.cinema.Cinema;
-import cinema.model.cinema.PhisicalSeat;
+import cinema.model.cinema.PhysicalSeat;
 import cinema.model.payment.PaymentCard;
 import cinema.model.reservation.discount.types.*;
 import lombok.Data;
@@ -56,7 +56,7 @@ public class Reservation {
 	private final long progressive;
 	private LocalDate purchaseDate;
 	private ArrayList<Spectator> spectators;
-	private ArrayList<PhisicalSeat> seats;
+	private ArrayList<PhysicalSeat> seats;
 	private Projection projection;
 	private PaymentCard paymentCard;
 	private String reportLocation;
@@ -65,7 +65,7 @@ public class Reservation {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
 		spectators = new ArrayList<Spectator>();
-		seats = new ArrayList<PhisicalSeat>();
+		seats = new ArrayList<PhysicalSeat>();
 		reportLocation = null;
 	}
 	
@@ -78,12 +78,12 @@ public class Reservation {
 	}
 	
 	// aggiungi e rimuovi posti alla Reservation
-	public void addSeat(PhisicalSeat seatR) {
+	public void addSeat(PhysicalSeat seatR) {
 		if (takeSeat(seatR) == true ) {
 			seats.add(seatR);
 		}
 	}
-	public void removeSeat(PhisicalSeat seatR) {
+	public void removeSeat(PhysicalSeat seatR) {
 		if (freeSeat(seatR) == true) {
 			seats.remove(seatR);
 		}
@@ -306,12 +306,12 @@ public class Reservation {
 	
 	// IMPLEMENTARE UN METODO PER OCCUPARE/LIBERARE IL POSTO DELLA SALA IN CUI IL FILM CHE HO SCELTO
 	// SARA' PROIETTATO
-	public boolean takeSeat(PhisicalSeat s) {
+	public boolean takeSeat(PhysicalSeat s) {
 		projection.freeSeat(s);
 		return projection.freeSeat(s);
 	}
 	
-	public boolean freeSeat(PhisicalSeat s) {
+	public boolean freeSeat(PhysicalSeat s) {
 		projection.freeSeat(s);
 		return projection.freeSeat(s);
 	}
