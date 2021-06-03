@@ -1,10 +1,10 @@
 @import cinema.model.cinema.Cinema
-@import cinema.test.Film
+@import cinema.model.cinema.Movie
 @import org.apache.commons.lang3.StringUtils
 
 @args() {
     Cinema cinema
-    List<Film> films
+    List<Movie> movies
     String query
 }
 
@@ -45,45 +45,45 @@
         </div>
     }
 
-    @if (films) {
+    @if (movies) {
         <div class="album py-5 bg-light">
             <div class="container">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4">
 
-                    @for (Film film: films) {
+                    @for (Movie movie: movies) {
                         <div class="col">
                             <div class="card shadow-sm">
-                                <a href="/movie-details?id=@(film.getId())#">
-                                    <img src="@(film.getImageURL())" class="card-img-top">
+                                <a href="/movie-details?id=@(movie.getId())#">
+                                    <img src="@(movie.getImageURL())" class="card-img-top">
                                 </a>
                                 <div class="card-body">
-                                    <a href="/movie-details?id=@(film.getId())#" class="text-decoration-none text-dark">
+                                    <a href="/movie-details?id=@(movie.getId())#" class="text-decoration-none text-dark">
                                         <h5 class="card-title">
-                                            @(film.getTitle())
+                                            @(movie.getTitle())
                                         </h5>
                                     </a>
                                     <p class="card-text">
-                                        @(StringUtils.abbreviate(film.getDescription(), 150))
+                                        @(StringUtils.abbreviate(movie.getDescription(), 150))
                                     </p>
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a class="btn btn-sm btn-primary" href="/movie-details?id=@(film.getId())#buy-now" role="button">
+                                        <a class="btn btn-sm btn-primary" href="/movie-details?id=@(movie.getId())#buy-now" role="button">
                                             ACQUISTA ORA
                                         </a>
                                         <small class="text-muted">
-                                            @(film.getDuration()) min.
+                                            @(movie.getDuration()) min.
                                         </small>
                                     </div>
                                 </div>
                                 <div class="card-footer">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a class="text-muted" href="@(film.getTrailerURL())" target="_blank" rel="noopener noreferrer">
+                                        <a class="text-muted" href="@(movie.getTrailerURL())" target="_blank" rel="noopener noreferrer">
                                             Vai al trailer
                                         </a>
                                         <div>
-                                            @for (int i = 0; i < film.getRating(); i++) {
+                                            @for (int i = 0; i < movie.getRating(); i++) {
                                                 <span class="fa fa-star text-warning"></span>
                                             }
-                                            @for (int i = 0; i < (5 - film.getRating()); i++) {
+                                            @for (int i = 0; i < (5 - movie.getRating()); i++) {
                                                 <span class="fa fa-star"></span>
                                             }
                                         </div>
