@@ -1,8 +1,11 @@
 package cinema.model;
 
 import cinema.model.enumerations.TypeOfCurrency;
+import lombok.Data;
 
+@Data
 public class Money {
+	
 	private double amount;
 	private TypeOfCurrency currency;
 	
@@ -21,13 +24,5 @@ public class Money {
 	public Money (double amount, TypeOfCurrency currency) {
 		this.amount = amount;
 		this.currency = currency;
-	}
-	
-	//getters
-	public double getAmount() {
-		return amount;
-	}
-	public TypeOfCurrency getCurrency() {
-		return currency;
 	}
 }

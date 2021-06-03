@@ -16,11 +16,11 @@ public class DiscountAge implements ReservationDiscountStrategy{
 		float totalPrice = 0;
 		for(Spectator s: r.getSpectators()) {
 			if((s.getAge()<=MIN_AGE)||(s.getAge()>=MAX_AGE)){
-				totalPrice+=r.getProjection().getAmount()*PERCENTAGE;
+				totalPrice+=r.getProjection().getPrice().getAmount()*PERCENTAGE;
 			}
-			else totalPrice+=r.getProjection().getAmount();
+			else totalPrice+=r.getProjection().getPrice().getAmount();
 		}
-		return new Money(totalPrice,r.getProjection().getCurrency());
+		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
 	}
 
 }

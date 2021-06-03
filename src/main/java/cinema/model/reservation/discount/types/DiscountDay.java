@@ -16,10 +16,10 @@ public class DiscountDay implements ReservationDiscountStrategy{
 		float totalPrice = 0;
 		if(((r.getDate().compareTo(start)>=0) && (r.getDate().compareTo(end)<=0)) 
 		|| (r.getDate().compareTo(day)==0)) {
-			totalPrice+=r.getProjection().getAmount()*PERCENTAGE;
+			totalPrice+=r.getProjection().getPrice().getAmount()*PERCENTAGE;
 		}
-		else totalPrice+=r.getProjection().getAmount();
-		return new Money(totalPrice,r.getProjection().getCurrency());
+		else totalPrice+=r.getProjection().getPrice().getAmount();
+		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
 	}
 	
 	public void setDateDiscount(LocalDate start, LocalDate end) {

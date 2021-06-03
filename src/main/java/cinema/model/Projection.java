@@ -8,8 +8,11 @@ import java.util.Map.Entry;
 import cinema.model.cinema.PhisicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.enumerations.TypeOfCurrency;
+import lombok.Data;
 
+@Data
 public class Projection implements Comparable<Projection> {
+	
 	private int id;
 	private Movie movie;
 	private Room room;
@@ -24,11 +27,6 @@ public class Projection implements Comparable<Projection> {
 		this.dateTime = dateTime;
 		this.price = price;
 		this.id = id;
-	}
-
-	// setta quale film e dove, il film sarà proiettato
-	public void setMovie (Movie movie) {
-		this.movie = movie;
 	}
 	
 	// da testare/controllare conformità, quando cambio la sala siamo sicuri che
@@ -76,32 +74,6 @@ public class Projection implements Comparable<Projection> {
 			}
 		}
 		return freeSeat;
-	}
-	
-	// getters informazioni proiezioni
-	public Movie getMovie() {
-		return movie;
-	}
-	public Room getRoom() {
-		return room;
-	}
-	public Money getPrice() {
-		return price;
-	}
-	// getters per ricavare le informazioni sul prezzo di queste ultime
-	public double getAmount() {
-		return price.getAmount();
-	}
-	public TypeOfCurrency getCurrency() {
-		return price.getCurrency();
-	}
-
-	public LocalDateTime getDateTime() {
-		return dateTime;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	@Override

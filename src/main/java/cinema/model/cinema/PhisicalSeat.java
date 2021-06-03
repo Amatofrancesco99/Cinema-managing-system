@@ -1,7 +1,9 @@
 package cinema.model.cinema;
 
 import cinema.model.enumerations.TypeOfSeat;
+import lombok.Data;
 
+@Data
 public class PhisicalSeat {
 	
 	private char row;

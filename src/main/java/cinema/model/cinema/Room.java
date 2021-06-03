@@ -3,6 +3,10 @@ package cinema.model.cinema;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import cinema.model.Movie;
+import lombok.Data;
+
+@Data
 public class Room {
 	
 	private static final AtomicInteger count = new AtomicInteger(0); 
@@ -22,10 +26,6 @@ public class Room {
 		seats.remove(s);
 	}
 	
-	public long getProgressive() {
-		return progressive;
-	}
-	
 	public int getNumberSeats() {
 		return seats.size();
 	}
@@ -35,6 +35,5 @@ public class Room {
 			return seats.get(index);
 		else
 			return null;
-			
 	}
 }

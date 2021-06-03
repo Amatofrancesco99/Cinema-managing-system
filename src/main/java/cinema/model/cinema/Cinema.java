@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import cinema.model.Movie;
 import cinema.model.Projection;
 import cinema.model.exceptions.*;
+import lombok.Data;
 
 /** BREVE SPIEGAZIONE CLASSE CINEMA (Pattern Singleton GoF)
  * 
@@ -15,6 +16,7 @@ import cinema.model.exceptions.*;
  *  raggiunta da altre classi presenti nel nostro dominio, andando a richiamare il metodo
  *  getIstance().
  */
+@Data
 public class Cinema {
 	
 	/**
@@ -150,23 +152,6 @@ public class Cinema {
 	}
 	
 	/**
-	 * METODO per settare/cambiare il logo del cinema
-	 * @param logoURL   Indirizzo URL contentente il logo del cinema ( si suggerisce un immagine
-	 * 					con formato .png, per una migliore resa grafica )
-	 */
-	public void setLogoURL(String logoURL) {
-		this.logoURL = logoURL;
-	}
-	
-	/**
-	 * METODO per settare/cambiare il nome del cinema
-	 * @param n   Nome del cinema
-	 */
-	public void setName(String n) {
-		this.name = n;
-	}
-	
-	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
 	 * @param city		Citta
 	 * @param country	Paese
@@ -178,30 +163,6 @@ public class Cinema {
 		this.country = country;
 		this.zipCode = zipCode;
 		this.address = address;
-	}
-	
-	/**
-	 * METODO per settare/cambiare l'email del cinema
-	 * @param email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	/**
-	 * METODO per settare/cambiare la password associata all'email del cinema
-	 * @param newPassword	Password associata all'account email del cinema
-	 */
-	public void changePassword(String newPassword) {
-		password = newPassword;
-	}
-	
-	/**
-	 * METODO per farsi dire il nome del cinema
-	 * @return name   Nome del cinema
-	 */
-	public String getName() {
-		return name;
 	}
 	
 	/**
@@ -219,32 +180,4 @@ public class Cinema {
 	public String getLocation() {
 		return address + ", " + city + " - " + zipCode + "  " + country;
 	}	
-	
-	/**
-	 * METODO per farsi restituire una stringa contentente l'indirizzo web in cui è presente
-	 * il logo del cinema
-	 * @return logoURL
-	 */
-	public String getLogoURL() {
-		return logoURL;
-	}
-	
-	/**
-	 * METODO per farsi dire l'email del cinema
-	 * @return email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * METODO per farsi dire la password associata all'email del cinema
-	 * Questo metodo viene utilizzato solamente quando deve essere mandata l'email all'utente,
-	 * contenente come allegato un .pdf file contenente le informazioni sulla prenotazione
-	 * effettuata
-	 * @return password
-	 */
-	public String getPassword() {
-		return password;
-	}
 }
