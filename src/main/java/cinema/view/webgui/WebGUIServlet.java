@@ -25,7 +25,6 @@ public class WebGUIServlet extends HttpServlet {
 
 	private Cinema cinema;
 	private List<Movie> movies;
-	private Movie movie;
 	private List<Projection> projections;
 
 	public WebGUIServlet() {
@@ -44,9 +43,13 @@ public class WebGUIServlet extends HttpServlet {
 		cast.add("Thomas Bo Larsen");
 		cast.add("Lars Ranthe");
 		cast.add("Magnus Millang");
-		this.movie = new Movie(1, "Druk - Un altro giro", "C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?", genres, directors, cast, 4, 117, "https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg", "https://www.youtube.com/watch?v=hFbDh58QHzw");
+		Movie movie = new Movie(1, "Druk - Un altro giro",
+				"C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?",
+				genres, directors, cast, 4, 117,
+				"https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg",
+				"https://www.youtube.com/watch?v=hFbDh58QHzw");
 
-		this.movies.add(this.movie);
+		this.movies.add(movie);
 
 		// Test projections
 		this.projections = new ArrayList<>();
@@ -76,32 +79,36 @@ public class WebGUIServlet extends HttpServlet {
 		handleRequest(req, resp);
 	}
 
-	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		if (req.getPathInfo().equals("/")) {
 			renderIndex(req, resp);
 			return;
 		} else if (req.getPathInfo().equals("/movie-details")) {
-			
+
 			// Build the data structure used to store the sorted projections
-            Collections.sort(projections);
-            ArrayList<ArrayList<Projection>> schedule = new ArrayList<>();
-            LocalDate lastLocalDate = null;
-            for(Projection projection : projections) {
-            	LocalDate localDate = projection.getDateTime().toLocalDate();
-            	if (!Objects.equals(lastLocalDate, localDate)) {
-            		schedule.add(new ArrayList<Projection>());
-            		lastLocalDate = localDate;
-            	}
-            	schedule.get(schedule.size() - 1).add(projection);
-            }
-			
-			if (Integer.parseInt(req.getParameter("id")) == movie.getId()) {
-				resp.getWriter().write(Rythm.render("movie-details.html", cinema, movie, schedule));
+
+			ArrayList<Projection> sortedProjections = new ArrayList<>(projections);
+			Collections.sort(sortedProjections);
+			ArrayList<ArrayList<Projection>> schedule = new ArrayList<>();
+			LocalDate lastLocalDate = null;
+			for (Projection projection : sortedProjections) {
+				LocalDate localDate = projection.getDateTime().toLocalDate();
+				if (!Objects.equals(lastLocalDate, localDate)) {
+					schedule.add(new ArrayList<Projection>());
+					lastLocalDate = localDate;
+				}
+				schedule.get(schedule.size() - 1).add(projection);
+			}
+
+			if (Integer.parseInt(req.getParameter("id")) == movies.get(0).getId()) {
+				resp.getWriter().write(Rythm.render("movie-details.html", cinema, movies.get(0), schedule));
 				return;
 			}
 		} else if (req.getPathInfo().equals("/checkout")) {
+			System.out.println(this.projections.get(1).getId());
 			if (Integer.parseInt(req.getParameter("id")) == this.projections.get(1).getId()) {
-				resp.getWriter().write(Rythm.render("checkout.html", cinema, movie, this.projections.get(1)));
+				resp.getWriter().write(Rythm.render("checkout.html", cinema, movies.get(0), this.projections.get(1)));
 				return;
 			}
 		}
@@ -109,22 +116,22 @@ public class WebGUIServlet extends HttpServlet {
 	}
 
 	protected void renderError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.getWriter().write(Rythm.render("index.html", cinema, movies, null));
-    }
+		resp.getWriter().write(Rythm.render("index.html", cinema, null, null));
+	}
 
 	protected void renderIndex(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO: search
-		List<Movie> resultMovies = new ArrayList<>();
+		List<Movie> resultMovies;
 		if (req.getParameter("query") == null) {
-			// Show all films
 			resultMovies = movies;
 		} else {
-			// Filter the films (this is a dumb filter, use it only for debug purposes)
-			if (movie.getTitle().toLowerCase().contains(req.getParameter("query").toLowerCase())) {
-				resultMovies.add(movie);
+			resultMovies = new ArrayList<>();
+			for (Movie movie : this.movies) {
+				if (movie.getTitle().toLowerCase().contains(req.getParameter("query").toLowerCase())) {
+					resultMovies.add(movie);
+				}
 			}
 		}
 		resp.getWriter().write(Rythm.render("index.html", cinema, resultMovies, req.getParameter("query")));
-    }
+	}
 
 }
