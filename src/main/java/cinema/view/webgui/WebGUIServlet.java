@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.rythmengine.Rythm;
 
+import cinema.controller.Cinema;
 import cinema.model.Money;
 import cinema.model.Movie;
 import cinema.model.Projection;
-import cinema.controller.Cinema;
 
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {

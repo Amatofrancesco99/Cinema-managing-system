@@ -137,20 +137,19 @@ public class Cinema {
     
  	/**
  	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo di un 
- 	 * film
- 	 * @param title  				Nome del film che si vuole cercare tra le proiezioni del cinema
+ 	 * film (o una parte di esso)
+ 	 * @param title  				Titolo del film che si vuole cercare tra le proiezioni del cinema (o una parte di esso)
  	 * @return ArrayList<Movie> 	Lista dei film
  	 */
- 	public ArrayList<Movie> getMovies(String title){
- 		ArrayList<Movie> movie = new ArrayList<Movie>();
+ 	public ArrayList<Movie> getMovies(String title) {
+ 		ArrayList<Movie> movies = new ArrayList<Movie>();
+ 		// TODO: multiple projections of the same movie shouldn't be repeated in the result
  		for (Projection p: cinemaProjections) {
- 			if (p.getMovie().getTitle() == title) {
- 				movie.add(p.getMovie());
+ 			if (p.getMovie().getTitle().toLowerCase().contains(title.toLowerCase())) {
+ 				movies.add(p.getMovie());
  			}
  		}
- 		if (movie.size() == 0)
- 			return null;
- 		else return movie;
+ 		return movies;
  	}
  	
 	/**
