@@ -5,7 +5,7 @@ import java.util.List;
 
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.NoCinemaRoomsException;
+import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import lombok.Data;
 

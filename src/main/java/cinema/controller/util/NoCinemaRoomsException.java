@@ -1,4 +1,4 @@
-package cinema.model.cinema.util;
+package cinema.controller.util;
 
 public class NoCinemaRoomsException extends Exception {
 
