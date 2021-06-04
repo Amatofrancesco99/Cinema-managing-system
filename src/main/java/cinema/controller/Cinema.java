@@ -1,6 +1,7 @@
 package cinema.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cinema.model.Movie;
 import cinema.model.Projection;
@@ -32,13 +33,13 @@ public class Cinema {
 	* @param  email			     E-mail, utile per inviare report al cliente con i diversi dati
 	* 						     riferiti alla specifica prenotazione, effettuata da quest ultimo
 	* @param  password           Password associata all'indirizzo email
-	* @param  rooms			     ArrayList: comprende tutte le sale del cinema
-	* @param  cinemaProjections  ArrayList: comprende tutte le proiezioni fatte dal cinema
+	* @param  rooms			     List: comprende tutte le sale del cinema
+	* @param  cinemaProjections  List: comprende tutte le proiezioni fatte dal cinema
 	*/
 	private static Cinema single_instance = null;
 	private String name, city, country, zipCode, address, logoURL, email, password;
-	private ArrayList<Room> rooms;
-	private ArrayList<Projection> cinemaProjections;
+	private List<Room> rooms;
+	private List<Projection> cinemaProjections;
 	
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro cinema
@@ -93,60 +94,64 @@ public class Cinema {
      * METODO per farsi restituire tutte le proiezioni di cui il cinema dispone
      * @return ArrayList<Projection>  Insieme di tutte le proiezioni del cinema
      */
-    public ArrayList<Projection> getProjections(){
+    public List<Projection> getProjections(){
     	return cinemaProjections;
     }
     
     /**
      * 
      * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
-     * @param m  						    Film di cui si vogliono cercare le proiezioni
+     * tramite l'id
+     * @param movieId  						Id del film di cui si vogliono cercare le proiezioni
      * @return ArrayList<Projection>        Insieme delle proiezioni dello specifico film
-     * @throws NoMovieProjectionsException  eccezione lanciata, qualora il cinema non abbia quel 
+     * @throws NoMovieProjectionsException  Eccezione lanciata, qualora il cinema non abbia quel 
      * 										film, tra i film proiettati
      */
- 	public ArrayList<Projection> getProjections(Movie m) throws NoMovieProjectionsException{
- 		ArrayList<Projection> movieProjections = new ArrayList<Projection>();
+ 	public List<Projection> getProjections(int movieId) {
+ 		List<Projection> movieProjections = new ArrayList<Projection>();
+ 		// TODO: Check that movieId is valid
  		for (Projection p: cinemaProjections) {
- 			if (p.getMovie() == m) {
+ 			if (p.getMovie().getId() == movieId) {
  				movieProjections.add(p);
  			}
  		}
- 		if (movieProjections.size() == 0)
- 			throw new NoMovieProjectionsException(m);
- 		else return movieProjections;
+ 		return movieProjections;
  	}
  	
  	/**
- 	 * METODO per restituire tutti i film che il cinema sta proiettando
- 	 * @return ArrayList<Movie>   Insieme di tutti i film che il cinema sta momentaneamente
- 	 * 							  proiettando
+ 	 * 
+ 	 * METODO per restituire tutti i film che il cinema sta attualmente proiettando
+ 	 * @return List<Movie>   Insieme di tutti i film che il cinema sta momentaneamente
+ 	 * 						 proiettando
  	 */
-    public ArrayList<Movie> getMovies(){
-		ArrayList<Movie> movies = new ArrayList<Movie>();
-		for (Projection p: cinemaProjections) {
-			for (Movie m: movies) {
-				// a film is valid only if it has all the required fields
-				if ((p.getMovie().getTitle()!=m.getTitle()) )
-						movies.add(p.getMovie());
+    public List<Movie> getCurrentlyAvailableMovies(){
+		List<Movie> movies = new ArrayList<Movie>();
+		for (Projection p : cinemaProjections) {
+			boolean alreadyExists = false;
+			for (Movie m : movies) {
+				if (p.getMovie().getId() == m.getId()) {
+					alreadyExists = true;
+					break;
+				}
+			}
+			if (!alreadyExists) {
+				movies.add(p.getMovie());
 			}
 		}
 		return movies;
 	}
     
-    
  	/**
  	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo di un 
  	 * film (o una parte di esso)
- 	 * @param title  				Titolo del film che si vuole cercare tra le proiezioni del cinema (o una parte di esso)
+ 	 * @param query 				Titolo del film che si vuole cercare tra le proiezioni del cinema (o una parte di esso)
  	 * @return ArrayList<Movie> 	Lista dei film
  	 */
- 	public ArrayList<Movie> getMovies(String title) {
- 		ArrayList<Movie> movies = new ArrayList<Movie>();
- 		// TODO: multiple projections of the same movie shouldn't be repeated in the result
- 		for (Projection p: cinemaProjections) {
- 			if (p.getMovie().getTitle().toLowerCase().contains(title.toLowerCase())) {
- 				movies.add(p.getMovie());
+ 	public List<Movie> getCurrentlyAvailableMovies(String query) {
+ 		List<Movie> movies = new ArrayList<Movie>();
+ 		for (Movie m: getCurrentlyAvailableMovies()) {
+ 			if (m.getTitle().toLowerCase().contains(query.toLowerCase())) {
+ 				movies.add(m);
  			}
  		}
  		return movies;
