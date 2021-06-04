@@ -19,5 +19,9 @@ public class Movie {
 	private int duration;
 	private String imageURL;
 	private String trailerURL;
-
+	// private int minAgeSee;  
+	/* oppure si potrebbe ricavare l'età da cui guardare
+	* il film dall'attributo genere, anche se forse è troppo "generico" (non tutti i film
+	* di un genere possono essere visti da minori e non è detto che un film con quel genere
+	* non possa essere visto da minori)*/
 }
