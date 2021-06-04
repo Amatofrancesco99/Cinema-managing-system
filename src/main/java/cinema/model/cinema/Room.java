@@ -33,11 +33,11 @@ public class Room {
 		return seats.size()*seats.get(0).size();
 	}
 	
-	public int getNumberRows() {
+	public int getNumberCols() {
 		return seats.get(0).size();
 	}
 	
-	public int getNumberCols() {
+	public int getNumberRows() {
 		return seats.size();
 	}
 	
