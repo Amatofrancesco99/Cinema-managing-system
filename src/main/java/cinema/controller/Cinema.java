@@ -123,9 +123,9 @@ public class Cinema {
 	 * 
 	 * Attenzione! Solamente una istanza potrà essere presente
 	 * 
-	 * @return Cinema Istanza della classe Cinema, se il cinema è già stato
-	 *         precedentemente istanziato allora il metodo restituirà l'oggetto già
-	 *         istanziato, viceversa procederà con l'istanziamento di quest ultimo
+	 * @return Cinema 	 Istanza della classe Cinema, se il cinema è già stato
+	 *         			 precedentemente istanziato allora il metodo restituirà l'oggetto già
+	 *        			 istanziato, viceversa procederà con l'istanziamento di quest ultimo
 	 */
 	public static Cinema getInstance() {
 		if (single_instance == null)
@@ -137,8 +137,8 @@ public class Cinema {
 	/**
 	 * METODO per aggiungere una proiezione al cinema
 	 * 
-	 * @param p Proiezione da aggiungere alla lista di proiezioni di cui il cinema
-	 *          dispone
+	 * @param p 	Proiezione da aggiungere alla lista di proiezioni di cui il cinema
+	 *          	dispone
 	 */
 	public void addProjection(Projection p) {
 		cinemaProjections.add(p);
@@ -147,8 +147,8 @@ public class Cinema {
 	/**
 	 * METODO per rimuovere una proiezione al cinema
 	 * 
-	 * @param p Proiezione da rimuovere alla lista di proiezioni di cui il cinema
-	 *          dispone
+	 * @param p 	Proiezione da rimuovere alla lista di proiezioni di cui il cinema
+	 *          	dispone
 	 */
 	public void removeProjection(Projection p) {
 		cinemaProjections.remove(p);
@@ -157,7 +157,7 @@ public class Cinema {
 	/**
 	 * METODO per farsi restituire tutte le proiezioni di cui il cinema dispone
 	 * 
-	 * @return ArrayList<Projection> Insieme di tutte le proiezioni del cinema
+	 * @return ArrayList<Projection>	 Insieme di tutte le proiezioni del cinema
 	 */
 	public List<Projection> getProjections() {
 		return cinemaProjections;
@@ -168,10 +168,10 @@ public class Cinema {
 	 * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
 	 * tramite l'id
 	 * 
-	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
-	 * @return ArrayList<Projection> Insieme delle proiezioni dello specifico film
-	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
-	 *                                     abbia quel film, tra i film proiettati
+	 * @param movieId 						 Id del film di cui si vogliono cercare le proiezioni
+	 * @return ArrayList<Projection> 		 Insieme delle proiezioni dello specifico film
+	 * @throws NoMovieProjectionsException   Eccezione lanciata, qualora il cinema non
+	 *                                       abbia quel film, tra i film proiettati
 	 */
 	public List<Projection> getProjections(int movieId) {
 		List<Projection> movieProjections = new ArrayList<Projection>();
@@ -188,8 +188,8 @@ public class Cinema {
 	 * 
 	 * METODO per restituire tutti i film che il cinema sta attualmente proiettando
 	 * 
-	 * @return List<Movie> Insieme di tutti i film che il cinema sta momentaneamente
-	 *         proiettando
+	 * @return List<Movie>  Insieme di tutti i film che il cinema sta momentaneamente
+	 *         				proiettando
 	 */
 	public List<Movie> getCurrentlyAvailableMovies() {
 		List<Movie> movies = new ArrayList<Movie>();
@@ -212,9 +212,9 @@ public class Cinema {
 	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo
 	 * di un film (o una parte di esso)
 	 * 
-	 * @param query Titolo del film che si vuole cercare tra le proiezioni del
-	 *              cinema (o una parte di esso)
-	 * @return ArrayList<Movie> Lista dei film
+	 * @param query 			  Titolo del film che si vuole cercare tra le proiezioni del
+	 *              			  cinema (o una parte di esso)
+	 * @return ArrayList<Movie>   Lista dei film
 	 */
 	public List<Movie> getCurrentlyAvailableMovies(String query) {
 		List<Movie> movies = new ArrayList<Movie>();
@@ -226,6 +226,13 @@ public class Cinema {
 		return movies;
 	}
 
+	/**
+	 * METODO per restituire un film, dato il suo Id
+	 * @param id					Id del film
+	 * @return Movie				Film trovato
+	 * @throws NoMovieException		Eccezione lanciata qualora non si trovi nessun film
+	 * 								con quell'Id
+	 */
 	public Movie getMovie(int id) throws NoMovieException {
 		for (Projection p : cinemaProjections) {
 			if (p.getMovie().getId() == id) {
@@ -235,6 +242,13 @@ public class Cinema {
 		throw new NoMovieException(id);
 	}
 
+	/**
+	 * METODO per resituire una proiezione, dato il suo Id
+	 * @param id						Id della proiezione
+	 * @return Projection				Proiezione con quello specifico Id
+	 * @throws NoProjectionException	Eccezione lanciata qualora non ci sia nessuna proiezione
+	 * 									con quell'Id
+	 */
 	public Projection getProjection(int id) throws NoProjectionException {
 		for (Projection p : cinemaProjections) {
 			if (p.getId() == id) {
@@ -247,8 +261,8 @@ public class Cinema {
 	/**
 	 * METODO per aggiungere una sala del cinema
 	 * 
-	 * @param r Sala del cinema da aggiungere, all'insieme delle sale del cinema
-	 *          stesso
+	 * @param r 	Sala del cinema da aggiungere, all'insieme delle sale del cinema
+	 *          	stesso
 	 */
 	public void addRoom(Room r) {
 		rooms.add(r);
@@ -257,8 +271,8 @@ public class Cinema {
 	/**
 	 * METODO per rimuovere una sala del cinema
 	 * 
-	 * @param r Sala del cinema da rimuovere, dall'insieme delle sale del cinema
-	 *          stesso
+	 * @param r		 Sala del cinema da rimuovere, dall'insieme delle sale del cinema
+	 *          	 stesso
 	 */
 	public void removeRoom(Room r) throws NoCinemaRoomsException {
 		if (rooms.size() > 0)
@@ -270,10 +284,10 @@ public class Cinema {
 	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
 	 * 
-	 * @param city    Citta
-	 * @param country Paese
-	 * @param zipCode Codice comunale
-	 * @param address Indirizzo (Via, numero civico)
+	 * @param city      Citta
+	 * @param country   Paese
+	 * @param zipCode   Codice comunale
+	 * @param address   Indirizzo (Via, numero civico)
 	 */
 	public void setLocation(String city, String country, String zipCode, String address) {
 		this.city = city;
