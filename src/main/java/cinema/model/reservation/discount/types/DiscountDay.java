@@ -2,7 +2,7 @@ package cinema.model.reservation.discount.types;
 
 import java.time.LocalDate;
 
-import cinema.model.Money;
+import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 

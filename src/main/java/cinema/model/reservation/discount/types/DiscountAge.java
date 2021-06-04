@@ -1,6 +1,6 @@
 package cinema.model.reservation.discount.types;
 
-import cinema.model.Money;
+import cinema.model.money.Money;
 import cinema.model.Spectator;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;

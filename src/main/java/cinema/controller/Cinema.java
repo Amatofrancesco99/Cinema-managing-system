@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cinema.model.Movie;
-import cinema.model.Projection;
 import cinema.model.cinema.Room;
-import cinema.model.exceptions.*;
+import cinema.model.cinema.util.NoCinemaRoomsException;
+import cinema.model.projection.Projection;
 import lombok.Data;
 
 /** BREVE SPIEGAZIONE CLASSE CINEMA (Pattern Singleton GoF - Pattern Controller)

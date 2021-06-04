@@ -32,8 +32,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import cinema.model.Money;
-import cinema.model.Projection;
+import cinema.model.money.Money;
+import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
@@ -107,7 +107,7 @@ public class Reservation {
 	/***
 	 * METODO per aggiungere un posto alla reservation
 	 * @param seatR	  Posto da occupare
-	 */
+	 
 	public void addSeat(PhysicalSeat seatR) {
 		if (takeSeat(seatR) == true ) {
 			seats.add(seatR);
@@ -117,12 +117,14 @@ public class Reservation {
 	/**
 	 * METODO per rimuovere un posto dalla reservation
 	 * @param seatR		Posto da liberare
-	 */
+	 
 	public void removeSeat(PhysicalSeat seatR) {
 		if (freeSeat(seatR) == true) {
 			seats.remove(seatR);
 		}
 	}
+	**/
+	
 	
 	/**
 	 * METODO per farsi dare il totale della reservation, di fronte ad eventuali
@@ -375,7 +377,7 @@ public class Reservation {
 	 * che sto prenotando.
 	 * @param s		    Posto da occupare
 	 * @return esito	Esito dell'occupazione del posto
-	 */
+	 
 	public boolean takeSeat(PhysicalSeat s) {
 		projection.freeSeat(s);
 		return projection.freeSeat(s);
@@ -386,9 +388,10 @@ public class Reservation {
 	 * prenotando.
 	 * @param s			Posto da liberare
 	 * @return esito	Esito della liberazione del posto
-	 */
 	public boolean freeSeat(PhysicalSeat s) {
 		projection.freeSeat(s);
 		return projection.freeSeat(s);
 	}
+	
+	 */
 }

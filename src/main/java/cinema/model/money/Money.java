@@ -1,6 +1,6 @@
-package cinema.model;
+package cinema.model.money;
 
-import cinema.model.enumerations.TypeOfCurrency;
+import cinema.model.money.util.TypeOfCurrency;
 import lombok.Data;
 
 @Data
