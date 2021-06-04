@@ -39,9 +39,7 @@ public class Room {
 	
 	public int getNumberRows() {
 		return seats.size();
-	}
-	
-	
+	}	
 	
 	public PhysicalSeat getSeat(int row, int col) {
 		return seats.get(row).get(col);

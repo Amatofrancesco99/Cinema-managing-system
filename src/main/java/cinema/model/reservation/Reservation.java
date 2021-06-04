@@ -60,7 +60,7 @@ public class Reservation {
 	/**
 	 *@param progressive	 Numero di prenotazione
 	 *@param purchaseDate	 Data di creazione della prenotazione
-	 *@param spectators		 Spettatori associati alla prenotazione
+	 *@param purchaser		 Spettatore che sta compilando la prenotazione
 	 *@param seats			 Posti selezionati/occupati
 	 *@param projection		 Proiezione che lo spettatore/gli spettatori vogliono visionare
 	 *@param paymentCard	 Metodo di pagamento
@@ -69,7 +69,7 @@ public class Reservation {
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
 	private LocalDate purchaseDate;
-	private ArrayList<Spectator> spectators;
+	private Spectator purchaser;
 	private ArrayList<PhysicalSeat> seats;
 	private Projection projection;
 	private PaymentCard paymentCard;
@@ -83,25 +83,8 @@ public class Reservation {
 	public Reservation () {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
-		spectators = new ArrayList<Spectator>();
 		seats = new ArrayList<PhysicalSeat>();
 		reportLocation = null;
-	}
-	
-	/**
-	 * METODO per aggiungere uno spettatore alla prenotazione
-	 * @param s	 Spettatore da aggiungere
-	 */
-	public void addSpectator(Spectator s) {
-		spectators.add(s);
-	}
-	
-	/**
-	 * METODO per rimuovere uno spettatore dalla prenotazione
-	 * @param s  Spettatore da rimuovere
-	 */
-	public void removeSpectator(Spectator s) {
-		spectators.remove(s);
 	}
 	
 	/***
@@ -131,11 +114,10 @@ public class Reservation {
 	 * sconti effettuati su quest'ultima a seconda degli spettatori che sono intenzionati
 	 * a visionare il film.
 	 * 
-	 * @return total  Imposta da pagare
+	 * @return total  Ammontare di denaro da pagare
 	 */
 	public Money getTotal() {
-		// Cambia la discount strategy per farti dare lo sconto
-		// CREARE CLASSE COMPOSITE (FUTURO)!!!
+		//TODO: CREARE CLASSE COMPOSITE (FUTURO)!!!
 		
 		// Al momento viene implementato il metodo che ti fa dare uno sconto a seconda 
 		// dell'età degli spettatori
@@ -273,17 +255,16 @@ public class Reservation {
 	/**
 	 * METODO per effettuare l'invio tramite email da parte del cinema, all'utente che 
 	 * sta prenotando, del report .pdf della prenotazione stessa.
-	 * @param email     Indirizzo email a cui si vuole spedire l'email (utente)
 	 * @return esito    Stringa che descrive l'esito della creazione dell'email e 
 	 * 					qualora ci siano problemi indica quale sia la problematica specifica
 	 * 					che ha impedito un corretto invio dell'email stessa.
 	 */
-	public String sendEmail(String email) {
+	public String sendEmail() {
 		if ((createReport()==false) || (this.getReportLocation()==null)) {
 			return "La generazione del report non é andata a buon fine.";
 		}
 		else {
-			String to = email; //receiver email
+			String to = this.getPurchaser().getEmail(); //receiver email
 			final String user = Cinema.getInstance().getEmail(); //sender email (cinema)
 			final String password = Cinema.getInstance().getPassword(); //sender password
 		   
@@ -308,11 +289,13 @@ public class Reservation {
 		      
 				//3) create MimeBodyPart object and set your message text     
 				BodyPart messageBodyPart1 = new MimeBodyPart();  
-				messageBodyPart1.setText("Benvenuto " + to + " ,/n"
-						+ "In allegato trova il documento che conferma l'avvenuta prenotazione.\n"
-						+ "Stampi l'allegato, o porti una prova della ricevuta quando verrà"
+				messageBodyPart1.setText(
+						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n"
+						+ "Benvenuto " + to + " ,/n"
+						+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
+						+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
 						+ "a visionare il film.\n"
-						+ "La aspettiamo, buona giornata.");  
+						+ "Ti aspettiamo, buona giornata.");  
 		      
 				//4) create new MimeBodyPart object and set DataHandler object to this object      
 				MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
@@ -351,6 +334,18 @@ public class Reservation {
 	}
 	
 	/**
+	 * METODO per settare l'età degli spettatori che guarderanno il film.
+	 * Il numero di spettatori da inserire dipende chiaramente dai posti associati alla
+	 * prenotazione.
+	 * @return	TakenSeats		Numero di posti occupati
+	public void setSpectator(int n, int age) {
+		if (n>getNSeats()) {
+		}
+		else //TODO aggiungi queste informazioni alla prenotazione
+	}
+	*/
+	
+	/**
 	 *  METODO che consente il pagamento della prenotazione, una volta compilata la prenotazione
 	 * @return esito	 Stringa che rappresenta l'esito del pagamento e il verificarsi
 	 * 					 di eventuali errori (ad esempio che la prenotazione occupi
@@ -358,7 +353,7 @@ public class Reservation {
 	 * 					 occupati dalla reservation siano gli stessi).
 	 */
 	public String buy(){
-		if ((getNSeats()>0) || (getNSeats()==this.getSpectators().size()))
+		if ((getNSeats()>0) || (getNSeats()>=1))
 		{
 			//Payment simulation
 			if (paymentCard.decreaseMoney(getTotal())==false) {
@@ -368,8 +363,7 @@ public class Reservation {
 				return "Pagamento andato a buon fine.";
 			}
 		}
-		else return "Verifica di aver inserito almeno un posto alla prenotazione.\n"
-				+ "Inoltre il numero di posti deve coincidere col numero di persone inserite.";
+		else return "Verifica di aver inserito almeno un posto alla prenotazione.";
 	}
 	
 	/**
