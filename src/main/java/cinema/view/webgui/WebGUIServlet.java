@@ -18,6 +18,8 @@ import org.rythmengine.Rythm;
 import cinema.controller.Cinema;
 import cinema.model.money.Money;
 import cinema.model.Movie;
+import cinema.model.cinema.Room;
+import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.projection.Projection;
 
 @SuppressWarnings("serial")
@@ -51,15 +53,25 @@ public class WebGUIServlet extends HttpServlet {
 
 		this.movies.add(movie);
 
+		// Create new room
+		Room r1 = null;
+		try {
+			r1 = new Room(1,1);
+		} catch (InvalidRoomDimensionsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// Test projections
 		this.projections = new ArrayList<>();
-		Projection p1 = new Projection(123, movie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f), null);
-		Projection p2 = new Projection(183, movie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f), null);
-		Projection p3 = new Projection(193, movie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f), null);
-		Projection p4 = new Projection(109, movie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f), null);
-		Projection p5 = new Projection(743, movie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f), null);
-		Projection p6 = new Projection(233, movie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f), null);
-		Projection p7 = new Projection(184, movie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f), null);
+		
+		Projection p1 = new Projection(123, movie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f), r1);
+		Projection p2 = new Projection(183, movie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f), r1);
+		Projection p3 = new Projection(193, movie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f), r1);
+		Projection p4 = new Projection(109, movie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f), r1);
+		Projection p5 = new Projection(743, movie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f), r1);
+		Projection p6 = new Projection(233, movie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f), r1);
+		Projection p7 = new Projection(184, movie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f), r1);
 		this.projections.add(p1);
 		this.projections.add(p2);
 		this.projections.add(p3);
