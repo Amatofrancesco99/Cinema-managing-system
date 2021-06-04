@@ -1,4 +1,4 @@
-package cinema.model.enumerations;
+package cinema.model.money.util;
 
 public enum TypeOfCurrency {
 	// TOP 8 currencies

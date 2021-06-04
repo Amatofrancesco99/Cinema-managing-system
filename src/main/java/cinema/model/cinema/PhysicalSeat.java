@@ -1,6 +1,6 @@
 package cinema.model.cinema;
 
-import cinema.model.enumerations.TypeOfSeat;
+import cinema.model.cinema.util.TypeOfSeat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
  * Qualora fosse utile per uno specifico cinema aggiungere attributi a questa classe il 
  * programmatore è libero di aggiungerli.
  */
+
 @AllArgsConstructor
 @Data
 @NoArgsConstructor

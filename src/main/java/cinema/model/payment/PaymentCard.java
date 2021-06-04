@@ -2,7 +2,7 @@ package cinema.model.payment;
 
 import java.util.Date;
 
-import cinema.model.Money;
+import cinema.model.money.Money;
 
 
 public class PaymentCard {

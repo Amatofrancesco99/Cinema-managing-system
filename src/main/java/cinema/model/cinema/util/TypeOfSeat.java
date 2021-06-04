@@ -1,4 +1,4 @@
-package cinema.model.enumerations;
+package cinema.model.cinema.util;
 
 public enum TypeOfSeat {
 	BED, NORMAL, PREMIUM;

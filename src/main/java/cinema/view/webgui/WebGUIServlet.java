@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.rythmengine.Rythm;
 
 import cinema.controller.Cinema;
-import cinema.model.Money;
+import cinema.model.money.Money;
 import cinema.model.Movie;
-import cinema.model.Projection;
+import cinema.model.projection.Projection;
 
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
@@ -53,13 +53,13 @@ public class WebGUIServlet extends HttpServlet {
 
 		// Test projections
 		this.projections = new ArrayList<>();
-		Projection p1 = new Projection(123, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f));
-		Projection p2 = new Projection(183, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f));
-		Projection p3 = new Projection(193, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f));
-		Projection p4 = new Projection(109, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f));
-		Projection p5 = new Projection(743, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f));
-		Projection p6 = new Projection(233, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f));
-		Projection p7 = new Projection(184, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f));
+		Projection p1 = new Projection(123, movie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f), null);
+		Projection p2 = new Projection(183, movie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f), null);
+		Projection p3 = new Projection(193, movie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f), null);
+		Projection p4 = new Projection(109, movie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f), null);
+		Projection p5 = new Projection(743, movie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f), null);
+		Projection p6 = new Projection(233, movie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f), null);
+		Projection p7 = new Projection(184, movie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f), null);
 		this.projections.add(p1);
 		this.projections.add(p2);
 		this.projections.add(p3);

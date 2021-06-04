@@ -1,6 +1,6 @@
 package cinema.model.reservation.discount;
 
-import cinema.model.Money;
+import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 
 /** BREVE DESCRIZIONE CLASSE ReservationDiscountStrategy (Pattern Strategy + Pattern Composite)
