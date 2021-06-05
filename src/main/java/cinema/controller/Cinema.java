@@ -123,12 +123,14 @@ public class Cinema {
 	 * METODO STATICO per creare l'istanza della classe
 	 * 
 	 * Attenzione! Solamente una istanza potrà essere presente
-	 * 
+	 * La parola chiave synchronized indica che solo un thread per volta può accedere al
+	 * seguente metodo.
 	 * @return Cinema 	 Istanza della classe Cinema, se il cinema è già stato
 	 *         			 precedentemente istanziato allora il metodo restituirà l'oggetto già
 	 *        			 istanziato, viceversa procederà con l'istanziamento di quest ultimo
+	 *
 	 */
-	public static Cinema getInstance() {
+	public static synchronized Cinema getInstance() {
 		if (single_instance == null)
 			single_instance = new Cinema();
 
