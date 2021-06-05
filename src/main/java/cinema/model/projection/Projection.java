@@ -1,12 +1,7 @@
 package cinema.model.projection;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Map.Entry;
 
 import cinema.model.money.Money;
 import cinema.model.Movie;
@@ -42,32 +37,19 @@ public class Projection implements Comparable<Projection> {
 		}
 	}
 	
-	// da testare/controllare conformità, quando cambio la sala siamo sicuri che
-	// anche i posti liberi terranno memoria di questo cambiamento o resteranno associati
-	// alla prima stanza associata alla proiezione? 
-	
-	/**
-	public void setAllSeatsAsAvailable (Room room) {
-		this.room = room;
-		
-		seatsRow = new ArrayList<ProjectionSeats>();
-		seats = new ArrayList<>();
-		for () {
-			LocalDate localDate = projection.getDateTime().toLocalDate();
-			if (!Objects.equals(lastLocalDate, localDate)) {
-				schedule.add(new ArrayList<Projection>());
-				lastLocalDate = localDate;
-			}
-			schedule.get(schedule.size() - 1).add(projection);
-		}
+    // metodo occupa posto di una sala
+	public boolean takeSeat(int row, int col) {
+		// if (this.room.getSeat(row, col) == null) 
+			return false;
 	}
 	
+	/**
 	// farsi restituire i posti liberi della sala in cui sarà proiettato un film
-	public ArrayList<PhysicalSeat> getFreeSeats() {
-		ArrayList<PhysicalSeat> freeSeats=new ArrayList<PhysicalSeat>();
+	public ArrayList<ArrayList<PhysicalSeat>> getFreeSeats() {
+		ArrayList<ArrayList<PhysicalSeat>> freeSeats=new ArrayList<ArrayList<PhysicalSeat>>();
 		// per ogni posto della sala vado a vedere se è libero, ossia se getValue è true.
 		// se tale condizione è vera lo aggiungo alla lista dei posti liberi
-		for (Entry<PhysicalSeat, Boolean> entry : availableSeats.entrySet()) {
+		for () {
 			if (entry.getValue() == true) {
 				freeSeats.add(entry.getKey());
 			}
@@ -75,18 +57,7 @@ public class Projection implements Comparable<Projection> {
 		return freeSeats;
 	}
 	
-    // metodo occupa posto di una sala
-	public boolean takeSeat(PhysicalSeat seat) {
-		boolean takeSeat=false;
-		for (PhysicalSeat s : getFreeSeats()) {
-			if (seat == s) {
-				availableSeats.put(s,false);
-				takeSeat=true;
-			}
-		}
-		return takeSeat;
-	}
-	
+	/**
 	// metodo per liberare il posto di una sala
 	public boolean freeSeat(PhysicalSeat seat) {
 		boolean freeSeat=false;
