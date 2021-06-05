@@ -10,6 +10,7 @@ import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.money.Money;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
+import cinema.model.reservation.Reservation;
 import lombok.Data;
 
 /**
@@ -134,6 +135,13 @@ public class Cinema {
 		return single_instance;
 	}
 
+	/**
+	 * METODO per creare una nuova prenotazione, a partire dalla classe cinema
+	 */
+	public void createReservation() {
+		new Reservation();
+	}
+	
 	/**
 	 * METODO per aggiungere una proiezione al cinema
 	 * 
@@ -280,7 +288,7 @@ public class Cinema {
 		else
 			throw new NoCinemaRoomsException(this.name, this.city, this.address);
 	}
-
+	
 	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
 	 * 
