@@ -36,9 +36,19 @@ public class Projection implements Comparable<Projection> {
 		}
 	}
 	
-    // metodo occupa posto di una sala
+    // metodo occupa posto della sala in cui è fatta la proiezione
 	public boolean takeSeat(int row, int col) {
-		// if (this.room.getSeat(row, col) == null) 
+			ProjectionSeat takenSeat= new ProjectionSeat(room.getSeat(row, col),true);
+			for(int i = 0; i < room.getNumberRows(); i++) {
+				ArrayList<ProjectionSeat> r = new ArrayList<ProjectionSeat>();
+				for(int j = 0; j < room.getNumberCols(); j++) {
+					if (new ProjectionSeat(room.getSeat(i, j), true) == takenSeat) {
+						seats.remove(r);
+						r.add(new ProjectionSeat(room.getSeat(i, j), false));
+					}
+				}
+				seats.add(r);
+			}
 			return false;
 	}
 	
