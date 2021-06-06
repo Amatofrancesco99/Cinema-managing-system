@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**BREVE SPIEGAZIONE CLASSE PHYSICAL SEAT
+/**BREVE SPIEGAZIONE CLASSE PhysicalSeat
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -22,5 +22,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PhysicalSeat {
 	
+	/**	ATTRIBUTI
+	 * @param type  Tipo di posto
+	 */
 	private TypeOfSeat type;
+	
 }

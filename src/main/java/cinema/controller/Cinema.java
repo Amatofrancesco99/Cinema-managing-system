@@ -18,18 +18,17 @@ import lombok.Data;
  * 
  * @author Screaming Hairy Armadillo Team
  *
- *         Questa classe è stata realizzata seguendo il pattern singleton (GoF),
- *         poiché nel nostro intero progetto ci servirà solamente un istanza di
- *         questa classe, la quale potrà essere raggiunta da altre classi
- *         presenti nel nostro dominio, andando a richiamare il metodo
- *         getIstance().
+ * Questa classe è stata realizzata seguendo il pattern singleton (GoF),
+ * poiché nel nostro intero progetto ci servirà solamente un istanza di
+ * questa classe, la quale potrà essere raggiunta da altre classi
+ * presenti nel nostro dominio, andando a richiamare il metodo
+ * getIstance().
  */
 @Data
 public class Cinema {
 
 	/**
-	 * Qui sotto sono riportati tutti gli ATTRIBUTI della classe cinema e i loro
-	 * significati
+	 * ATTRIBUTI
 	 * 
 	 * @param single_istance    Poiché una sola istanza della classe potrà essere
 	 *                          presente

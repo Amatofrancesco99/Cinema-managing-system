@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,8 +14,36 @@ import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.money.Money;
 import cinema.model.projection.Projection;
 
+/** BREVE DESCRIZIONE CLASSE CinemaTest
+ * 
+ * @author Screaming Hairy Armadillo Team
+ *
+ * Questa classe nasce con lo scopo specifico di effettuare il test di unità (tramite JUnit),
+ * ossia test effettuati su una classe specifica e dei suoi metodi, provando differenti
+ * input e verificando gli output in maniera automatica (confrontando i risultati attesi
+ * con quelli ottenuti), sulla classe Cinema, presente all'interno del model package.
+ * Anche se l'implementazione reale prevede l'utilizzo di dati presenti su un DB, per
+ * sfruttare il principio di persistenza dei dati (ad esempio dei Film, delle Sale, delle
+ * Proiezioni, ecc...) sono utilizzati oggetti istanza "finti" (mock), ossia oggetti
+ * che hanno la stessa interfaccia di oggetti esterni realmente utilizzati e che simulano le
+ * loro funzionalità. 
+ * Questo per evitare di dover effettuare attività preliminari di inserimento dati 
+ * all'interno del DB, il che potrebbe comportare eventuali problematiche (perdita dei dati), 
+ * un evento non molto gradito e una perdita di tempo, visto che i dati inseriti non sarebbero
+ * quelli veri, ma quelli ottenuti di fronte ad errori di inserimento da parte di utenti
+ * non particolarmente attenti/istruiti.
+ * Chiaramente potrebbe essere utile fare sessioni di "istruzioni" a chi vendiamo il 
+ * software, per poter fare in modo tale che inseriscano valori corretti all'interno del DB.
+ * 
+ */
 public class CinemaTest {
 
+	/** 
+	 * METODO per poter effettuare l'impostazione del nostro sistema, creando gli input
+	 * e gli output previsti.
+	 * 
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 				// ********* TEMPORARY DATA USED FOR TESTING *********
@@ -111,6 +138,13 @@ public class CinemaTest {
 				// ********* END *********
 	}
 
+	/**
+	 * METODO per effettuare il test sulla classe, usando gli oggetti istanziati e usando
+	 * questi ultimi all'interno di metodi specifici della classe presa in considerazione.
+	 * Inoltre viene effettuata l'asserzione, ossia viene confrontato il risultato previsto
+	 * con quello ottenuto dalla chiamata del metodo specifico.
+	 * Se l'asserzione è vera il test ha avuto successo, viceversa ha fallito.
+	 */
 	@Test
 	public void test() {
 		fail("Not yet implemented");

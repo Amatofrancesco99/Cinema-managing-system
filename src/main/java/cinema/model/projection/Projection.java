@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import cinema.model.money.Money;
 import cinema.model.Movie;
-import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import lombok.*;
 
