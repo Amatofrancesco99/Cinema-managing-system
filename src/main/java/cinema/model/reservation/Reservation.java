@@ -137,9 +137,8 @@ public class Reservation {
 	 * 					 		assume valore true, viceversa false (boolean).
 	 */
 	public boolean createReport() {
-		String FILE = "./savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
+		String FILE = "./src/main/java/cinema/model/reservation/savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
 		 
-		//String FILE = Long.toString(getProgressive())+".pdf";
 		Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 33,
 	            Font.BOLD);
 		Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
@@ -198,13 +197,13 @@ public class Reservation {
 		        					subFont2);
 		        
 		        Paragraph infoReservationP = new Paragraph("Sala n°:  " + this.getProjection().getRoom().getProgressive()
-		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek()
-		        							+ "/" + this.getProjection().getDateTime().getMonth()
-		        							+ "/" + this.getProjection().getDateTime().getYear()
+		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek().toString().toLowerCase()
+		        							+ " " + this.getProjection().getDateTime().getMonth().toString().toLowerCase()
+		        							+ " " + this.getProjection().getDateTime().getYear()
 		        							+ " \t\t\t\t\t\tOra: " + this.getProjection().getDateTime().getHour()
 		        							+ ":" + this.getProjection().getDateTime().getMinute()
 		        							+ " \t\t\t\t\t\tCliente: " + this.purchaser.getName() + " " + this.purchaser.getSurname(),
-		        							subFont3);
+		        							subFont2);
 		        
 		        infoReservationP.setSpacingBefore(30);
 		        
@@ -221,8 +220,8 @@ public class Reservation {
 		        		table.addCell(projection.getSeatCoordinates(s));	
 		        }
 		        
-		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal().getAmount()
-		        				   + this.getTotal().getCurrency().toString(), subFont3);
+		        Paragraph totalP = new Paragraph("TOTALE:  " + String.format("%.02f", this.getTotal().getAmount())
+		        				   + " " + this.getTotal().getCurrency().toString(), subFont3);
 		        
 		        totalP.setSpacingBefore(80);
 		        totalP.setAlignment(Element.ALIGN_RIGHT);
@@ -267,8 +266,14 @@ public class Reservation {
 		   
 			//1) get the session object     
 			Properties properties = System.getProperties();  
-			properties.setProperty("mail.smtp.host", "mail.javatpoint.com");  
-			properties.put("mail.smtp.auth", "true");  
+			String host = "smtp.gmail.com";
+			properties.put("mail.smtp.starttls.enable", "true");
+	        properties.put("mail.smtp.host", host);
+	        properties.put("mail.smtp.user", user);
+	        properties.put("mail.smtp.password", password);
+	        properties.put("mail.smtp.port", "587");
+	        properties.put("mail.smtp.auth", "true");
+
 		  
 			Session session = Session.getDefaultInstance(properties,  
 			new javax.mail.Authenticator() {  
@@ -288,7 +293,7 @@ public class Reservation {
 				BodyPart messageBodyPart1 = new MimeBodyPart();  
 				messageBodyPart1.setText(
 						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n"
-						+ "Benvenuto " + to + " ,/n"
+						+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + " ,\n"
 						+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
 						+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
 						+ "a visionare il film.\n"
@@ -300,7 +305,7 @@ public class Reservation {
 				String filename = getReportLocation(); //change accordingly  
 				DataSource source = new FileDataSource(filename);  
 				messageBodyPart2.setDataHandler(new DataHandler(source));  
-				messageBodyPart2.setFileName(filename);  
+				messageBodyPart2.setFileName("Reservation_"+Long.toString(getProgressive())+".pdf");  
 		     
 				//5) create Multipart object and add MimeBodyPart objects to this object      
 				Multipart multipart = new MimeMultipart();  

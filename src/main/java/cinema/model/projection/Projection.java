@@ -122,7 +122,7 @@ public class Projection implements Comparable<Projection> {
 		for(int i=0; i < room.getNumberRows(); i++) {
 			for(int j=0; j < room.getNumberCols(); j++) {
 				if(getPhysicalSeat(i,j) == s)
-					return "RIGA: " + i + "COLONNA: " + j;		
+					return "RIGA: " + i + "  COLONNA: " + j;		
 			}
 		}
 		return null;		
