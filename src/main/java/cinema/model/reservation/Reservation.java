@@ -292,12 +292,12 @@ public class Reservation {
 				//3) create MimeBodyPart object and set your message text     
 				BodyPart messageBodyPart1 = new MimeBodyPart();  
 				messageBodyPart1.setText(
-						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n"
-						+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + " ,\n"
+						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n\n"
+						+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + " ,\n\n"
 						+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
 						+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
-						+ "a visionare il film.\n"
-						+ "Ti aspettiamo, buona giornata.");  
+						+ "a visionare il film.\n\n"
+						+ "Ti aspettiamo, buona giornata.\n\n\n");  
 		      
 				//4) create new MimeBodyPart object and set DataHandler object to this object      
 				MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
