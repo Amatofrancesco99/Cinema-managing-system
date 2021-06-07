@@ -3,6 +3,7 @@ package cinema.model.reservation.discount;
 import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 
+
 /** BREVE DESCRIZIONE CLASSE ReservationDiscountStrategy (Pattern Strategy + Pattern Composite)
  * 
  * @author Screaming Hairy Armadillo Team
@@ -15,6 +16,8 @@ import cinema.model.reservation.Reservation;
  * nel sottopackage types, di questo stesso package. 
  */
 public interface ReservationDiscountStrategy {
+	
+	
 	/**
 	 * METODO per farsi restituire il totale di una prenotazione, dopo che è stato verificato
 	 * se si può calcolare dello sconto su di essa.

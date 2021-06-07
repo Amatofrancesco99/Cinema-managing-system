@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 /**BREVE SPIEGAZIONE CLASSE PhysicalSeat
  * 
  * @author Screaming Hairy Armadillo Team
@@ -16,11 +17,11 @@ import lombok.NoArgsConstructor;
  * Qualora fosse utile per uno specifico cinema aggiungere attributi a questa classe il 
  * programmatore è libero di aggiungerli.
  */
-
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 public class PhysicalSeat {
+	
 	
 	/**	ATTRIBUTI
 	 * @param type  Tipo di posto

@@ -41,6 +41,7 @@ import cinema.model.cinema.PhysicalSeat;
 import cinema.model.reservation.discount.types.*;
 import lombok.Data;
 
+
 /**BREVE SPIEGAZIONE CLASSE RESERVATION (Facade Controller)
  * 
  * @author Screaming Hairy Armadillo Team
@@ -56,6 +57,7 @@ import lombok.Data;
  */
 @Data
 public class Reservation {
+	
 	
 	/**
 	 *@param progressive	 Numero di prenotazione
@@ -75,6 +77,7 @@ public class Reservation {
 	private PaymentCard paymentCard;
 	private String reportLocation;
 	
+	
 	/**
 	 * COSTRUTTORE della classe, esso una volta invocato genera una prenotazione con un
 	 * progressivo che si auto-incrementa e la data di creazione corrisponde alla data di
@@ -87,6 +90,7 @@ public class Reservation {
 		reportLocation = null;
 	}
 	
+	
 	/***
 	 * METODO per aggiungere un posto alla reservation
 	 * @param row, col		Coordinate posto sala da occupare
@@ -98,6 +102,7 @@ public class Reservation {
 		}
 		return "Posto già occupato";		
 	}
+	
 	
 	/**
 	 * METODO per rimuovere un posto dalla reservation
@@ -123,6 +128,7 @@ public class Reservation {
 		// dell'età degli spettatori
 		return new DiscountAge().getTotal(this);
 	}  
+	
 	
 	/**
 	 * METODO per creare un report, in formato .pdf, contenente tutte le informazioni 
@@ -196,34 +202,24 @@ public class Reservation {
 		        							+ "/" + this.getProjection().getDateTime().getMonth()
 		        							+ "/" + this.getProjection().getDateTime().getYear()
 		        							+ " \t\t\t\t\t\tOra: " + this.getProjection().getDateTime().getHour()
-		        							+ ":" + this.getProjection().getDateTime().getMinute(), 
+		        							+ ":" + this.getProjection().getDateTime().getMinute()
+		        							+ " \t\t\t\t\t\tCliente: " + this.purchaser.getName() + " " + this.purchaser.getSurname(),
 		        							subFont3);
 		        
 		        infoReservationP.setSpacingBefore(30);
 		        
-		        PdfPTable table = new PdfPTable(3);
+		        PdfPTable table = new PdfPTable(1);
 		        
 		        table.setSpacingBefore(60);
 
-		        PdfPCell c1 = new PdfPCell(new Phrase("NOME"));
+		        PdfPCell c1 = new PdfPCell(new Phrase("POSTI RISERVATI"));
 		        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		        table.addCell(c1);
-
-		        c1 = new PdfPCell(new Phrase("COGNOME"));
-		        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		        table.addCell(c1);
-
-		        c1 = new PdfPCell(new Phrase("POSTO"));
-		        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		        table.addCell(c1);
-		        table.setHeaderRows(1);
-
-		        table.addCell("Mario");
-		        table.addCell("Rossi");
-		        table.addCell("A1");
-		        table.addCell("Giovanni");
-		        table.addCell("Rossi");
-		        table.addCell("A2");
+		        
+		        for(PhysicalSeat s : seats) {
+		        	if(projection.getSeatCoordinates(s) != null)
+		        		table.addCell(projection.getSeatCoordinates(s));	
+		        }
 		        
 		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal().getAmount()
 		        				   + this.getTotal().getCurrency().toString(), subFont3);
@@ -251,6 +247,7 @@ public class Reservation {
 	            return false;
 	        }
 	}
+	
 	
 	/**
 	 * METODO per effettuare l'invio tramite email da parte del cinema, all'utente che 
@@ -325,6 +322,7 @@ public class Reservation {
 		}
 	}
 	
+	
 	/**
 	 * METODO per farsi dire quanti siano stati i posti occupati dalla prenotazione
 	 * @return	TakenSeats		Numero di posti occupati
@@ -332,6 +330,7 @@ public class Reservation {
 	public int getNSeats() {
 		return seats.size();
 	}
+	
 	
 	/**
 	 * METODO per settare l'età degli spettatori che guarderanno il film.
@@ -344,6 +343,7 @@ public class Reservation {
 		else //TODO aggiungi queste informazioni alla prenotazione
 	}
 	*/
+	
 	
 	/**
 	 *  METODO che consente il pagamento della prenotazione, una volta compilata la prenotazione
