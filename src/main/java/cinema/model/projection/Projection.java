@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import cinema.model.money.Money;
 import cinema.model.Movie;
+import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import lombok.*;
 
@@ -36,50 +37,35 @@ public class Projection implements Comparable<Projection> {
 		}
 	}
 	
+	public boolean verifyIfSeatAvailable(int row, int col) {
+		return seats.get(row).get(col).isAvailable();
+	}
+	
     // metodo occupa posto della sala in cui è fatta la proiezione
 	public boolean takeSeat(int row, int col) {
-			ProjectionSeat takenSeat= new ProjectionSeat(room.getSeat(row, col),true);
-			for(int i = 0; i < room.getNumberRows(); i++) {
-				ArrayList<ProjectionSeat> r = new ArrayList<ProjectionSeat>();
-				for(int j = 0; j < room.getNumberCols(); j++) {
-					if (new ProjectionSeat(room.getSeat(i, j), true) == takenSeat) {
-						seats.remove(r);
-						r.add(new ProjectionSeat(room.getSeat(i, j), false));
-					}
-				}
-				seats.add(r);
+			if(verifyIfSeatAvailable(row, col)) {
+				seats.get(row).get(col).setAvailable(false);
+				return true;
 			}
-			return false;
+			return false;		
 	}
 	
-	/**
-	// farsi restituire i posti liberi della sala in cui sarà proiettato un film
-	public ArrayList<ArrayList<PhysicalSeat>> getFreeSeats() {
-		ArrayList<ArrayList<PhysicalSeat>> freeSeats=new ArrayList<ArrayList<PhysicalSeat>>();
-		// per ogni posto della sala vado a vedere se è libero, ossia se getValue è true.
-		// se tale condizione è vera lo aggiungo alla lista dei posti liberi
-		for () {
-			if (entry.getValue() == true) {
-				freeSeats.add(entry.getKey());
-			}
-		}
-		return freeSeats;
-	}
-	
-	/**
-	// metodo per liberare il posto di una sala
-	public boolean freeSeat(PhysicalSeat seat) {
-		boolean freeSeat=false;
-		for (PhysicalSeat s : getFreeSeats()) {
-			if (seat == s) {
-				availableSeats.put(s,true);
-				freeSeat=true;
-			}
-		}
-		return freeSeat;
-	}
-	**/
 
+	// metodo per liberare il posto di una sala
+	public boolean freeSeat(int row, int col) {
+		if(!verifyIfSeatAvailable(row, col)) {
+			seats.get(row).get(col).setAvailable(true);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	public PhysicalSeat getPhysicalSeat(int row, int col) {
+		return this.getSeats().get(row).get(col).getPhysicalSeat();
+	}
+
+	
 	@Override
 	public int compareTo(Projection p) {
 		return this.dateTime.compareTo(p.getDateTime());

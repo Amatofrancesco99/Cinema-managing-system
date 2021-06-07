@@ -33,11 +33,11 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import cinema.model.money.Money;
+import cinema.model.payment.methods.PaymentCard;
 import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
-import cinema.model.payment.PaymentCard;
 import cinema.model.reservation.discount.types.*;
 import lombok.Data;
 
@@ -89,24 +89,24 @@ public class Reservation {
 	
 	/***
 	 * METODO per aggiungere un posto alla reservation
-	 * @param seatR	  Posto da occupare
-	 
-	public void addSeat(PhysicalSeat seatR) {
-		if (takeSeat(seatR) == true ) {
-			seats.add(seatR);
+	 * @param row, col		Coordinate posto sala da occupare
+	*/
+	public String addSeat(int row, int col) {
+		if(projection.takeSeat(row, col)) {
+			seats.add(projection.getPhysicalSeat(row, col));
+			return "Posto occupato";
 		}
+		return "Posto già occupato";		
 	}
 	
 	/**
 	 * METODO per rimuovere un posto dalla reservation
-	 * @param seatR		Posto da liberare
-	 
-	public void removeSeat(PhysicalSeat seatR) {
-		if (freeSeat(seatR) == true) {
-			seats.remove(seatR);
-		}
+	 * @param row, col		Coordinate posto sala da liberare
+	*/
+	public void removeSeat(int row, int col) {
+		if(projection.freeSeat(row, col)) 
+			seats.remove(projection.getPhysicalSeat(row, col));		
 	}
-	**/
 	
 	
 	/**
@@ -353,7 +353,7 @@ public class Reservation {
 	 * 					 occupati dalla reservation siano gli stessi).
 	 */
 	public String buy(){
-		if ((getNSeats()>0) || (getNSeats()>=1))
+		if (getNSeats()>0)
 		{
 			//Payment simulation
 			if (paymentCard.decreaseMoney(getTotal())==false) {
@@ -366,26 +366,4 @@ public class Reservation {
 		else return "Verifica di aver inserito almeno un posto alla prenotazione.";
 	}
 	
-	/**
-	 * METODO per occupare un posto specifico della sala in cui è proiettato il film
-	 * che sto prenotando.
-	 * @param s		    Posto da occupare
-	 * @return esito	Esito dell'occupazione del posto
-	 
-	public boolean takeSeat(PhysicalSeat s) {
-		projection.freeSeat(s);
-		return projection.freeSeat(s);
-	}
-	
-	/**
-	 * METODO per liberare un posto specifico della sala in cui è proiettato il film che sto
-	 * prenotando.
-	 * @param s			Posto da liberare
-	 * @return esito	Esito della liberazione del posto
-	public boolean freeSeat(PhysicalSeat s) {
-		projection.freeSeat(s);
-		return projection.freeSeat(s);
-	}
-	
-	 */
 }
