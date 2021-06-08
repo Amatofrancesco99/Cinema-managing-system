@@ -87,7 +87,7 @@ public class Cinema {
 
 		// Test room
 		try {
-			rooms.add(new Room(1, 1));
+			rooms.add(new Room(5, 10));
 		} catch (InvalidRoomDimensionsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -102,7 +102,6 @@ public class Projection implements Comparable<Projection> {
 		return false;
 	}
 	
-	
 	/**
 	 * METODO per restituire un posto, date le coordinate
 	 * @param row, col		Coordinate 
@@ -122,24 +121,11 @@ public class Projection implements Comparable<Projection> {
 		for(int i=0; i < room.getNumberRows(); i++) {
 			for(int j=0; j < room.getNumberCols(); j++) {
 				if(getPhysicalSeat(i,j) == s)
-					return "Fila: " + getCharFromNumber(i) + "\t\t\tPosto: " + (j+1);		
+					return "Fila: " + Room.rowIndexToRowLetter(i) + "\t\t\tPosto: " + (j+1);		
 			}
 		}
 		return null;		
 	}
-	
-	/**
-	 * METODO per convertire un numero in un carattere
-	 * 
-	 */
-	private String getCharFromNumber(int i) {
-		char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-	    if ((i > 25)||(i < 0)) {
-	        return null;
-	    }
-	    return Character.toString(alphabet[i]);
-	}
-	
 	
 	@Override
 	public int compareTo(Projection p) {

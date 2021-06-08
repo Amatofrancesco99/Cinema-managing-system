@@ -81,4 +81,16 @@ public class Room {
 		return seats.get(row).get(col);
 	}
 	
+	/**
+	 * METODO per convertire il numero della riga in un carattere
+	 * 
+	 */
+	public static String rowIndexToRowLetter(int i) {
+		char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+	    if ((i > 25)||(i < 0)) {
+	        return null;
+	    }
+	    return Character.toString(alphabet[i]);
+	}
+	
 }
