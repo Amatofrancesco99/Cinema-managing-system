@@ -12,8 +12,8 @@
 }
 
 <css>
-    .buttonGreen {background-color: #4CAF50;} /* Green */
-    .buttonRed {background-color: #f44336;} /* Red */ 
+    .buttonGreen {background-color: #4CAF50; color: black;} /* Green */
+    .buttonRed {background-color: #f44336; color: black;} /* Red */ 
     .buttonGray {background-color: #e7e7e7; color: black;} /* Gray */
 </css>
 
@@ -36,12 +36,6 @@
                                     <button class="w-75 buttonGray btn-lg p-1 m-1"> 
                                         @(Room.rowIndexToRowLetter(i))@(j+1)
                                     </button>
-                                    <script>
-                                        if (!projection.verifyIfSeatAvailable(i,j))
-                                            <button class="w-75 buttonRed btn-lg p-1 m-1"> 
-                                                 @(Room.rowIndexToRowLetter(i))@(j+1)
-                                             </button>
-                                    </script>
                                 </td>
                             }
                         </tr>
