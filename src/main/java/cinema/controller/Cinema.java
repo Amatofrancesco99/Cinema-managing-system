@@ -116,8 +116,8 @@ public class Cinema {
 		this.cinemaProjections.add(p6);
 		this.cinemaProjections.add(p7);
 		
-		//occupare il primo posto della proiezione
-		p1.takeSeat(0, 0);
+		//occupare il primo posto della seconda proiezione
+		p2.takeSeat(0, 0);
 		
 		// ********* END *********
 	}

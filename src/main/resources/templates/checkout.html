@@ -36,6 +36,12 @@
                                     <button class="w-75 buttonGray btn-lg p-1 m-1"> 
                                         @(Room.rowIndexToRowLetter(i))@(j+1)
                                     </button>
+                                    <script>
+                                        if (!projection.verifyIfSeatAvailable(i,j))
+                                            <button class="w-75 buttonRed btn-lg p-1 m-1"> 
+                                                 @(Room.rowIndexToRowLetter(i))@(j+1)
+                                             </button>
+                                    </script>
                                 </td>
                             }
                         </tr>
