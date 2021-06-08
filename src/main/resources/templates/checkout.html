@@ -11,6 +11,12 @@
     Projection projection
 }
 
+<css>
+    .buttonGreen {background-color: #4CAF50;} /* Green */
+    .buttonRed {background-color: #f44336;} /* Red */ 
+    .buttonGray {background-color: #e7e7e7; color: black;} /* Gray */
+</css>
+
 @extends(wireframe, cinema=cinema, pageTitle="Acquisto biglietti")
 
 @section(content) {
@@ -26,8 +32,8 @@
                     @for(int i = 0; i < projection.getRoom().getNumberRows(); i++){
                         <tr class="p-0 m-0">
                             @for(int j = 0; j < projection.getRoom().getNumberCols(); j++){
-                                <td class="p-1 m-0">
-                                    <button class="w-75 btn btn-primary btn-lg p-1 m-1">
+                                <td class="p-1 m-0">                                    
+                                    <button class="w-75 buttonGray btn-lg p-1 m-1"> 
                                         @(Room.rowIndexToRowLetter(i))@(j+1)
                                     </button>
                                 </td>
