@@ -293,7 +293,7 @@ public class Reservation {
 				BodyPart messageBodyPart1 = new MimeBodyPart();  
 				messageBodyPart1.setText(
 						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n\n"
-						+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + " ,\n\n"
+						+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + ",\n\n"
 						+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
 						+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
 						+ "a visionare il film.\n\n"

@@ -36,7 +36,7 @@ public class ReservationTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		r = new Reservation();
-		r.setPurchaser(new Spectator("Fra", "Ama" , "francesco.amato01@universitadipavia.it", LocalDate.parse("2001-06-02")));
+		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it", LocalDate.parse("1999-12-27")));
 		Room room = new Room(3,3);
 		
 		ArrayList<String> genres, directors, cast;
