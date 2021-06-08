@@ -16,12 +16,16 @@ repositories {
 }
 
 dependencies {
+
     // https://mvnrepository.com/artifact/com.itextpdf/itextpdf
     implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.0.6'
 
     // https://mvnrepository.com/artifact/javax.mail/mail
     implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
 
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.22'
+	
     // https://mvnrepository.com/artifact/joda-time/joda-time
     implementation group: 'joda-time', name: 'joda-time', version: '2.10.10'
 
@@ -39,6 +43,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+
 }
 
 application {
