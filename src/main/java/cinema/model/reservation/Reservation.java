@@ -137,8 +137,10 @@ public class Reservation {
 	 * 					 		assume valore true, viceversa false (boolean).
 	 */
 	public boolean createReport() {
+		// setting della posizione in cui il report sarà salvato
 		String FILE = "./src/main/java/cinema/model/reservation/savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
 		 
+		// impostazione dei caratteri che verranno utilizzati nel report
 		Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 33,
 	            Font.BOLD);
 		Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
@@ -149,53 +151,56 @@ public class Reservation {
 	            Font.NORMAL);
 		Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 14,
 	            Font.ITALIC);  
+		// tentativo di generazione del report
 		 try {
+			 	// creazione di un nuovo documento
 	            Document document = new Document();
 	            PdfWriter.getInstance(document, new FileOutputStream(FILE));
 	            document.open();
 	            
-	            // ADD METADATA
+	            // aggiungere i metadati al documento
 	            document.addTitle("PDF Report Reservation n°" + this.getProgressive());
 		        document.addSubject("Using iText");
 		        document.addKeywords("Java, PDF, iText");
 		        document.addAuthor("Screaming Hairy Armadillo Team");
 		        document.addCreator("Screaming Hairy Armadillo Team");
 		        
+		        // creazione di un colore di background per il nostro report (giallognolo)
 		        String imageBG = "https://i.pinimg.com/originals/00/25/03/002503946c0a59d4ae800ab05a037fda.jpg";
 		        
+		        // creare una nuova immagine di quel colore e setting delle sue dimensioni
 	            Image bg = Image.getInstance(new URL(imageBG));
-		        
 	            bg.scalePercent(100f);
 	            bg.setAbsolutePosition(-600f, -500f);
-
-	            String imageUrl = Cinema.getInstance().getLogoURL();
-
-	            Image image = Image.getInstance(new URL(imageUrl));
-		        
-	            image.scalePercent(20f);
 	            
+	            // creazione di una nuova immagine con il logo del cinema
+	            String imageUrl = Cinema.getInstance().getLogoURL();
+	            Image image = Image.getInstance(new URL(imageUrl));
+	            image.scalePercent(20f);
 	            image.setAbsolutePosition(250f, 715f);
 		        
+	            // creare un titolo per il report
 		        Paragraph titleP = new Paragraph(Cinema.getInstance().getName() + "\n", catFont);
-		        
 		        titleP.setSpacingBefore(80);
 		        titleP.setAlignment(Element.ALIGN_CENTER);
 		        
+		        // creare informazioni sul nome del cinema 
 		        Paragraph infoCinemaP = new Paragraph(Cinema.getInstance().getLocation() 
 		        		+ "\n" + Cinema.getInstance().getEmail() + "\n", smallFont);
-		        
 		        infoCinemaP.setSpacingBefore(10);
 		        infoCinemaP.setAlignment(Element.ALIGN_CENTER);
 		        
+		        // creazione di informazioni sul film che si vuole visionare
 		        Paragraph FilmP = new Paragraph(this.getProjection().getMovie().getTitle(), subFont);
-
 		        FilmP.setSpacingBefore(40);
 		        
+		        // creazione di alcune informazioni riassuntive sul film che si è prenotato
 		        Paragraph infoFilmP = new Paragraph("Regista/i:  " + this.getProjection().getMovie().getDirectors().toString()
 		        					+ "\t\t\t\t\t\t\tDurata:  " + this.getProjection().getMovie().getDuration() 
 		        					+ "\t\t\t\t\t\t\tRating film:  " + this.getProjection().getMovie().getRating(),
 		        					subFont2);
 		        
+		        // creazione di informazioni sulla prenotazione
 		        Paragraph infoReservationP = new Paragraph("Sala n°:  " + this.getProjection().getRoom().getProgressive()
 		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek().toString().toLowerCase()
 		        							+ " " + this.getProjection().getDateTime().getMonth().toString().toLowerCase()
@@ -204,29 +209,31 @@ public class Reservation {
 		        							+ ":" + this.getProjection().getDateTime().getMinute()
 		        							+ " \t\t\t\t\t\tCliente: " + this.purchaser.getName() + " " + this.purchaser.getSurname(),
 		        							subFont2);
-		        
 		        infoReservationP.setSpacingBefore(30);
 		        
+		        // generazione di una tabella 
 		        PdfPTable table = new PdfPTable(1);
-		        
 		        table.setSpacingBefore(60);
 
+		        // aggiungere alla tabella come primo campo il titolo "Posti riservati"
 		        PdfPCell c1 = new PdfPCell(new Phrase("POSTI RISERVATI"));
 		        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		        table.addCell(c1);
 		        
+		        //aggiungere alla tabella tutti i posti che si sono aggiunti alla prenotazione
 		        for(PhysicalSeat s : seats) {
 		        	if(projection.getSeatCoordinates(s) != null)
 		        		table.addCell(projection.getSeatCoordinates(s));	
 		        }
 		        
+		        //totale della prenotazione
 		        Paragraph totalP = new Paragraph("TOTALE:  " + String.format("%.02f", this.getTotal().getAmount())
 		        				   + " " + this.getTotal().getCurrency().toString(), subFont3);
-		        
 		        totalP.setSpacingBefore(80);
 		        totalP.setAlignment(Element.ALIGN_RIGHT);
 		        totalP.setIndentationRight(55);
 		        
+		        // aggiunte al documento tutte le informazioni precedentemente create
 		        document.add(bg);
 		        document.add(image);
 		        document.add(titleP);
@@ -237,11 +244,14 @@ public class Reservation {
 		        document.add(table);
 		        document.add(totalP);
 		        
-		        // CLOSE DOCUMENT
+		        // Chiusura del documento
 	            document.close();
 	            setReportLocation(FILE);
+	            // generazione del file andata a buon fine
 	            return true;
 	        } catch (Exception e) {
+	        	// se la generazione del file non è andata a buon fine genero l'errore
+	        	// e resituisco false
 	            e.printStackTrace();
 	            return false;
 	        }
@@ -256,15 +266,18 @@ public class Reservation {
 	 * 					che ha impedito un corretto invio dell'email stessa.
 	 */
 	public String sendEmail() {
+		// prima di inviare l'email verifico che il report sia già stato generato, 
+		// se non è ancora stato generato lo genero
 		if ((createReport()==false) || (this.getReportLocation()==null)) {
 			return "La generazione del report non é andata a buon fine.";
 		}
 		else {
+			// Stabilire le informazioni sul sender ed il receiver dell'email
 			String to = this.getPurchaser().getEmail(); //receiver email
 			final String user = Cinema.getInstance().getEmail(); //sender email (cinema)
 			final String password = Cinema.getInstance().getPassword(); //sender password
 		   
-			//1) get the session object     
+			// Stabilire le proprietà dell'email
 			Properties properties = System.getProperties();  
 			String host = "smtp.gmail.com";
 			properties.put("mail.smtp.starttls.enable", "true");
@@ -274,7 +287,7 @@ public class Reservation {
 	        properties.put("mail.smtp.port", "587");
 	        properties.put("mail.smtp.auth", "true");
 
-		  
+	        // Generazione di una nuova sessione mail
 			Session session = Session.getDefaultInstance(properties,  
 			new javax.mail.Authenticator() {  
 				protected PasswordAuthentication getPasswordAuthentication() {  
@@ -282,14 +295,14 @@ public class Reservation {
 				}  
 			});  
 		     
-			//2) compose message     
+			//Tentativo di composizione del messaggio ed invio dell'email  
 			try{  
 				MimeMessage message = new MimeMessage(session);  
 				message.setFrom(new InternetAddress(user));  
 				message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
 				message.setSubject("REPORT PRENOTAZIONE N° " + this.progressive + " | TI ASPETTIAMO!");  
 		      
-				//3) create MimeBodyPart object and set your message text     
+				// Creazione del body della nostra email   
 				BodyPart messageBodyPart1 = new MimeBodyPart();  
 				messageBodyPart1.setText(
 						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n\n"
@@ -299,28 +312,32 @@ public class Reservation {
 						+ "a visionare il film.\n\n"
 						+ "Ti aspettiamo, buona giornata.\n\n\n");  
 		      
-				//4) create new MimeBodyPart object and set DataHandler object to this object      
+				// Aggiungere all'email come allegato il report della prenotazione      
 				MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
 		  
-				String filename = getReportLocation(); //change accordingly  
+				String filename = getReportLocation();
 				DataSource source = new FileDataSource(filename);  
 				messageBodyPart2.setDataHandler(new DataHandler(source));  
 				messageBodyPart2.setFileName("Reservation_"+Long.toString(getProgressive())+".pdf");  
 		     
-				//5) create Multipart object and add MimeBodyPart objects to this object      
+				// Creazione di un campo multipart comprendente body e allegato    
 				Multipart multipart = new MimeMultipart();  
 				multipart.addBodyPart(messageBodyPart1);  
 				multipart.addBodyPart(messageBodyPart2);  
 		  
-				//6) set the multiplart object to the message object  
+				// Aggiungere al messaggio da inviare (email) body e allegato
 				message.setContent(multipart);  
 		     
-				//7) send message  
+				// Invio dell'email
 				Transport.send(message);  
 		   
+				// se tutto va bene l'email viene inviata
 				return "Email inviata...";  
 			}
 			catch (MessagingException ex) {
+				// qualora ci sia qualsiasi problema nella spedizione dell'email si informa
+				// quale sia lo specifico errore e si ritorna una stringa che informa
+				// il fallimento nell'esito dell'invio dell'email stessa
 				ex.printStackTrace();
 				return "Processo di invio fallito...Riprova più tardi.";  
 				}  
