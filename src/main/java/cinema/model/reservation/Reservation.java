@@ -205,8 +205,8 @@ public class Reservation {
 		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek().toString().toLowerCase()
 		        							+ " " + this.getProjection().getDateTime().getMonth().toString().toLowerCase()
 		        							+ " " + this.getProjection().getDateTime().getYear()
-		        							+ " \t\t\t\t\t\tOra: " + this.getProjection().getDateTime().getHour()
-		        							+ ":" + this.getProjection().getDateTime().getMinute()
+		        							+ " \t\t\t\t\t\tOra: " + String.format("%02d", this.projection.getDateTime().getHour()) 
+		        							+ ":" + String.format("%02d", this.projection.getDateTime().getMinute())
 		        							+ " \t\t\t\t\t\tCliente: " + this.purchaser.getName() + " " + this.purchaser.getSurname(),
 		        							subFont2);
 		        infoReservationP.setSpacingBefore(30);

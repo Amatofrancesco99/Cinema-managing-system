@@ -43,4 +43,19 @@ public class Movie {
 	* di un genere possono essere visti da minori e non è detto che un film con quel genere
 	* non possa essere visto da minori)*/
 	
+	
+	/**
+	 * METODO per stampare le caratteristiche principali della classe
+	 * @return caratteristiche
+	 */
+	@Override
+	public String toString() {
+		return "Titolo:\t" + this.getTitle() + "\n"
+			 + "Descrizione: " + this.getDescription().substring(0, 80) + "\n"
+			 + "\t    " + this.getDescription().substring(80, 150) + "...\n"
+			 + "Genere/i: " + this.getGenres().toString() + "\n"
+			 + "Rating: " + this.getRating() + "\n"
+			 + "Durata: " + this.getDuration() + " min.\n\n";
+	}
+	
 }

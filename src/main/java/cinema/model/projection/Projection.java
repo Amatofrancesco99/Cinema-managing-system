@@ -131,4 +131,20 @@ public class Projection implements Comparable<Projection> {
 	public int compareTo(Projection p) {
 		return this.dateTime.compareTo(p.getDateTime());
 	}
+	
+	/**
+	 * METODO per stampare le caratteristiche principali della classe
+	 * @return caratteristiche
+	 */
+	@Override 
+	public String toString() {
+		return "Sala n°:  " + this.getRoom().getProgressive() + "\n"
+				+ "Data:  " + this.getDateTime().getDayOfWeek().toString().toLowerCase()
+				+ " " + this.getDateTime().getMonth().toString().toLowerCase()
+				+ " " + this.getDateTime().getYear() + "   "
+				+ "Ora: " + String.format("%02d", this.getDateTime().getHour()) 
+				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
+				+ "Prezzo: " + this.getPrice().getAmount() + " " 
+				+ this.getPrice().getCurrency().toString() + "\n";
+	}
 }
