@@ -42,7 +42,7 @@ public class CLIMain {
 		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI
 		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI \n");
 		System.out.println("Inserisci il numero del film di cui vuoi vedere maggiori dettagli e le sue"
-				+ " relative proiezioni.");
+				+ " relative proiezioni:  ");
 		@SuppressWarnings("resource")
 		Scanner keyboard = new Scanner(System.in);
 		int filmId = 0;
@@ -116,10 +116,26 @@ public class CLIMain {
 			}
 			System.out.println("");
 		}
-		System.out.println("\nInserisci i posti che vuoi occupare:  \n");
-		// TODO: Occupazione posto/i
-		System.out.println(r.addSeat(0, 0)); // prova -- Posto già occupato (Film 1 - Proiezione 183)
-		System.out.println(r.addSeat(0, 1)); // prova
+		boolean end = false;
+		do {
+			System.out.println("\nInserisci il posto che vuoi occupare:  \n");
+			String posto = "";
+			posto = keyboard.next();
+			System.out.println("\n");
+			int riga = Room.rowLetterToRowIndex(posto.replaceAll("\\d",""));
+			int colonna = Integer.valueOf(posto.replaceAll("[\\D]", "")) -1;
+			System.out.print(r.addSeat(riga, colonna));
+			System.out.println("\n\nVuoi occupare altri posti? (Y/N): ");
+			String occupaAltri = keyboard.next();
+			if (occupaAltri.contains("N")) {
+				System.out.println("\nFase di occupazione posti terminata.\n\n");
+				end = true;
+			}
+			if ((!occupaAltri.equals("Y"))&&(!occupaAltri.equals("N"))){
+				System.out.println("Scelta non valida...");
+				System.exit(1);
+			}
+		} while (!end);
 		
 		
 		// 3) Inserimento dei dati personali (Anagrafici + Pagamento)
