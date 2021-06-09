@@ -76,6 +76,23 @@ public class Projection implements Comparable<Projection> {
 	
 	
 	/**
+	 * METODO per farsi restituire il numero di posti liberi per quella stanza
+	 * @return int  Numero di posti disponibili/liberi
+	 */
+	public int getNumberAvailableSeat() {
+		int availableSeats = 0;
+		for (int i = 0 ; i < this.getRoom().getNumberRows() ; i++) {
+			for (int j = 0 ; j < this.getRoom().getNumberCols() ; j++) {
+				if (verifyIfSeatAvailable(i, j)) {
+					availableSeats++;
+				}
+			}
+		}
+		return availableSeats;
+	}
+	
+	
+	/**
 	 * METODO occupa posto della sala in cui è fatta la proiezione
 	 * @param row, col		Coordinate 
 	 * @return esito 		Esito occupazione del posto

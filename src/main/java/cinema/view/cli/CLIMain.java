@@ -65,16 +65,8 @@ public class CLIMain {
 		for (Projection p : Cinema.getInstance().getProjections(filmId)) {
 			System.out.println(p.getId() + ")");
 			System.out.print(p.toString());
-			int postiDisponibili=0;
 			System.out.print("Posti disponibili: ");
-			for (int i = 0 ; i < p.getRoom().getNumberRows() ; i++) {
-				for (int j = 0 ; j < p.getRoom().getNumberCols() ; j++) {
-					if (p.verifyIfSeatAvailable(i, j)) {
-						postiDisponibili++;
-					}
-				}
-			}
-			System.out.print(postiDisponibili + "\n\n");
+			System.out.print(p.getNumberAvailableSeat() + "\n\n");
 		}
 		
 		
