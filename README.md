@@ -79,5 +79,5 @@ Tramite un browser (preferibilmente Chrome) inserisci nella barra di ricerca que
 
 *** 
 ## 2. CLI APPLICATION
-Attraverso un IDE (che supporti Java), esegui la classe CliGUIMain.java, presente nel percorso qui sotto riportato:
-- [src/main/java/cinema/view/cligui/CliGUIMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cligui/CliGUIMain.java)
+Attraverso un IDE (che supporti Java), esegui la classe CLIMain.java, presente nel percorso qui sotto riportato:
+- [src/main/java/cinema/view/cli/CLIMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/CLIMain.java)
