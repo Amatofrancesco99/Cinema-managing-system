@@ -9,6 +9,7 @@ import cinema.controller.Cinema;
 import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.Spectator;
+import cinema.model.cinema.Room;
 import cinema.model.payment.methods.PaymentCard;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
@@ -32,15 +33,16 @@ public class CLIMain {
 		System.out.println("FILM ATTUALMENTE PROIETTATI \n");
 		for (Movie m : Cinema.getInstance().getCurrentlyAvailableMovies()) {
 			System.out.println(m.getId() + ")");
-			System.out.println(m.toString());
+			System.out.println(m.getDefaultDescription());
 		}
 		System.out.println("-----------------------------------------------------\n");
 		
 		
 		
 		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI
-		System.out.println("MAGGIORI DETTAGLI PROIEZIONE FILM \n");
-		System.out.println("Inserisci il numero del film di cui sei interessatto a vedere le proiezioni:  ");
+		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI \n");
+		System.out.println("Inserisci il numero del film di cui vuoi vedere maggiori dettagli e le sue"
+				+ " relative proiezioni.");
 		@SuppressWarnings("resource")
 		Scanner keyboard = new Scanner(System.in);
 		int filmId = 0;
@@ -48,15 +50,18 @@ public class CLIMain {
 			filmId = keyboard.nextInt();
 			if ((filmId <= 0) || (filmId > Cinema.getInstance().getCurrentlyAvailableMovies().size())) {
 				System.err.println("\nSelezione non valida. \n");
-				System.exit(0);
+				System.exit(1);
 			}
 		}
 		catch (InputMismatchException e){
 			System.err.println("\nInserisci un numero, non una lettera.\n");
-			System.exit(0);
+			System.exit(1);
 		}
 		System.out.println("\n");
 		
+		System.out.println("Maggiori dettagli sul film: \n");
+		System.out.println(Cinema.getInstance().getProjections(filmId).get(0).getMovie().getDetailedDescription());
+		System.out.println("Proiezioni previste\n");
 		for (Projection p : Cinema.getInstance().getProjections(filmId)) {
 			System.out.println(p.getId() + ")");
 			System.out.println(p.toString());
@@ -80,27 +85,41 @@ public class CLIMain {
 			projectionId = keyboard.nextInt();
 			if ((projectionId <= 0)) { 
 				System.err.println("\nSelezione non valida. \n");
-				System.exit(0);
+				System.exit(1);
 			}
 		}
 		catch (InputMismatchException e){
 			System.err.println("\nInserisci un numero, non una lettera.\n");
-			System.exit(0);
+			System.exit(1);
 		}
 		System.out.println("\n");
 		try {
 			r.setProjection(Cinema.getInstance().getProjection(projectionId));
 		} catch (NoProjectionException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(1);
 		}
 		
 		
-		//TODO: 2) Selezione del posto/i
+		// 2) Selezione del posto/i
 		System.out.println("\n2- SELEZIONE POSTO/I \n");
-		System.out.println("Seleziona i posti che vuoi occupare:  \n");
-		r.addSeat(0, 0); // prova
-		
+		System.out.println("Disposizione sala e posti liberi.");
+		System.out.println("I posti segnati con XX sono quelli già stati occupati. \n");
+		System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
+		for (int i = 0 ; i < r.getProjection().getRoom().getNumberRows() ; i++) {
+			for (int j = 0 ; j < r.getProjection().getRoom().getNumberCols() ; j++) {
+				if (!r.getProjection().verifyIfSeatAvailable(i, j)) {
+					System.out.print(" [ XX ] ");
+				}
+				else 
+					System.out.print(" [ " + Room.rowIndexToRowLetter(i) + (j+1) + " ] ");
+			}
+			System.out.println("");
+		}
+		System.out.println("\nInserisci i posti che vuoi occupare:  \n");
+		// TODO: Occupazione posto/i
+		System.out.println(r.addSeat(0, 0)); // prova -- Posto già occupato (Film 1 - Proiezione 183)
+		System.out.println(r.addSeat(0, 1)); // prova
 		
 		
 		// 3) Inserimento dei dati personali (Anagrafici + Pagamento)
@@ -125,7 +144,7 @@ public class CLIMain {
 		}
 		catch(DateTimeParseException e) {
 			System.err.println("\nLa data di nascita che hai inserito non è valida. ");
-			System.exit(0);
+			System.exit(1);
 		}
 		System.out.println("\n");
 		
@@ -135,13 +154,13 @@ public class CLIMain {
 		System.out.println("\n");
 		
 		//TODO: aggiungere NOME TITOLARE CARTA, NUMERO CARTA, SCADENZA, CVV
-		System.out.println("\n3.2- INSERIMENTO DATI PAGAMENTO \n");
+		System.out.println("\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
 		
 		
 		
 		if ((birthDate == null)||(email.equals(""))||(name.equals(""))||(surname.equals(""))) {
 			System.err.println("Ops...I tuoi dati anagrafici inseriti sembrano essere mancanti.");
-			System.exit(0);
+			System.exit(1);
 		}
 		r.setPurchaser(new Spectator(name,surname,email,birthDate));
 		r.setPaymentCard(new PaymentCard());
@@ -155,7 +174,7 @@ public class CLIMain {
 		String esitoPagamento = r.buy();
 		if (!esitoPagamento.equals("Pagamento andato a buon fine.")) {
 			System.err.println(esitoPagamento);
-			System.exit(0);
+			System.exit(1);
 		}
 		// Vi assicuro che l'invio dell'email, una volta inseriti i parametri corretti funziona.
 		// ... Qualora vogliate comunque provare, disabilitate questo commento.

@@ -38,6 +38,7 @@ import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
+import cinema.model.cinema.Room;
 import cinema.model.reservation.discount.types.*;
 import lombok.Data;
 
@@ -98,7 +99,7 @@ public class Reservation {
 	public String addSeat(int row, int col) {
 		if(projection.takeSeat(row, col)) {
 			seats.add(projection.getPhysicalSeat(row, col));
-			return "Posto occupato";
+			return "Posto " + Room.rowIndexToRowLetter(row) + (col+1) + " occupato";
 		}
 		return "Posto già occupato";		
 	}

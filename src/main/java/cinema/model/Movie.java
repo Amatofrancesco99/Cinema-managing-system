@@ -45,17 +45,31 @@ public class Movie {
 	
 	
 	/**
-	 * METODO per stampare le caratteristiche principali della classe
+	 * METODO per descrivere brevemente le caratteristiche principali di un film
 	 * @return caratteristiche
 	 */
-	@Override
-	public String toString() {
+	public String getDefaultDescription() {
 		return "Titolo:\t" + this.getTitle() + "\n"
-			 + "Descrizione: " + this.getDescription().substring(0, 80) + "\n"
+			 + "Breve trama: " + this.getDescription().substring(0, 80) + "\n"
 			 + "\t    " + this.getDescription().substring(80, 150) + "...\n"
 			 + "Genere/i: " + this.getGenres().toString() + "\n"
 			 + "Rating: " + this.getRating() + "\n"
 			 + "Durata: " + this.getDuration() + " min.\n\n";
+	}
+	
+	/**
+	 * METODO per descrivere tutte le caratteristiche di un film
+	 * @return caratteristiche
+	 */
+	public String getDetailedDescription() {
+		return "Titolo:\t" + this.getTitle() + "\n"
+			 + "Trama: " + this.getDescription() + "\n"
+			 + "Genere/i: " + this.getGenres().toString() + "\n"
+			 + "Regista/i: " + this.getDirectors().toString() + "\n"
+			 + "Cast: " + this.getCast().toString() + "\n"
+			 + "Rating: " + this.getRating() + "\n"
+			 + "Durata: " + this.getDuration() + " min.\n"
+			 + "Trailer (URL): " + this.getTrailerURL() + "\n\n";
 	}
 	
 }
