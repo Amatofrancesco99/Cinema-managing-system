@@ -1,4 +1,4 @@
-package cinema.view.cligui;
+package cinema.view.cli;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -13,7 +13,7 @@ import cinema.model.payment.methods.PaymentCard;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 
-public class CliGUIMain {
+public class CLIMain {
 
 	public static void main(String[] args) {
 		//****************************** CLI GUI START *********************************
