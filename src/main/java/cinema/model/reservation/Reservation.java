@@ -223,6 +223,7 @@ public class Reservation {
 		        // creazione di informazioni sulla prenotazione
 		        Paragraph infoReservationP = new Paragraph("Sala n°:  " + this.getProjection().getRoom().getProgressive()
 		        							+ "\t\t\t\t\t\t\tData:  " + this.getProjection().getDateTime().getDayOfWeek().toString().toLowerCase()
+		        							+ " " + this.getProjection().getDateTime().getDayOfMonth()
 		        							+ " " + this.getProjection().getDateTime().getMonth().toString().toLowerCase()
 		        							+ " " + this.getProjection().getDateTime().getYear()
 		        							+ " \t\t\t\t\t\tOra: " + String.format("%02d", this.projection.getDateTime().getHour()) 

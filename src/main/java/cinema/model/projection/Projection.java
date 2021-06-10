@@ -155,8 +155,9 @@ public class Projection implements Comparable<Projection> {
 	 */
 	@Override 
 	public String toString() {
-		return "Sala n°:  " + this.getRoom().getProgressive() + "\n"
-				+ "Data:  " + this.getDateTime().getDayOfWeek().toString().toLowerCase()
+		return "Sala n°: " + this.getRoom().getProgressive() + "\n"
+				+ "Data: " + this.getDateTime().getDayOfWeek().toString().toLowerCase()
+				+ " " + this.getDateTime().getDayOfMonth()
 				+ " " + this.getDateTime().getMonth().toString().toLowerCase()
 				+ " " + this.getDateTime().getYear() + "   "
 				+ "Ora: " + String.format("%02d", this.getDateTime().getHour()) 
