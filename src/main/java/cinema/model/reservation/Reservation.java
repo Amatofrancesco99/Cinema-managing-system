@@ -39,6 +39,8 @@ import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
+import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.*;
 import lombok.Data;
 
@@ -68,6 +70,7 @@ public class Reservation {
 	 *@param projection		 Proiezione che lo spettatore/gli spettatori vogliono visionare
 	 *@param paymentCard	 Metodo di pagamento
 	 *@param reportLocation  Area di memoria in cui salviamo il report della prenotazione
+	 *@param coupon			 Coupon che può essere usato nella prenotazione
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
@@ -77,7 +80,7 @@ public class Reservation {
 	private Projection projection;
 	private PaymentCard paymentCard;
 	private String reportLocation;
-	
+	private Coupon coupon;
 	
 	/**
 	 * COSTRUTTORE della classe, esso una volta invocato genera una prenotazione con un
@@ -123,12 +126,28 @@ public class Reservation {
 	 * @return total  Ammontare di denaro da pagare
 	 */
 	public Money getTotal() {
-		//TODO: CREARE CLASSE COMPOSITE (FUTURO)!!!
+		//TODO: CREARE CLASSE DISCOUNT COMPOSITE (FUTURO)!!!
 		
-		// Al momento viene implementato il metodo che ti fa dare uno sconto a seconda 
-		// dell'età degli spettatori
-		return new DiscountAge().getTotal(this);
+		// Al momento viene implementato il metodo che effettua uno sconto comitiva
+		Money total = new DiscountNumberSpectators().getTotal(this);
+		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
+		// il totale dell'importo di sconto di questo coupon
+		if (getCoupon() != null) {
+			total = new Money (total.getAmount()-getCoupon().getDiscount().getAmount(),total.getCurrency());
+		}
+		return total;
 	}  
+	
+	
+	/**
+	 * METODO per aggiungere un coupon dato il suo progressivo
+	 * @param progressive				  Id del coupon
+	 * @throws CouponNotExistsException	  Eccezione lanciata qualora non esista un coupon
+	 * 									  con quell'id
+	 */
+	public void setCoupon(long progressive) throws CouponNotExistsException {
+		this.coupon=Cinema.getInstance().getCoupon(progressive);
+	}
 	
 	
 	/**

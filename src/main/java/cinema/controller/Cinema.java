@@ -11,6 +11,8 @@ import cinema.model.money.Money;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import lombok.Data;
 
 /**
@@ -44,11 +46,13 @@ public class Cinema {
 	 * @param password          Password associata all'indirizzo email
 	 * @param rooms             List: comprende tutte le sale del cinema
 	 * @param cinemaProjections List: comprende tutte le proiezioni fatte dal cinema
+	 * @param coupon			List: comprende tutti i coupon emessi dal cinema
 	 */
 	private static Cinema single_instance = null;
 	private String name, city, country, zipCode, address, logoURL, email, password;
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
+	private List<Coupon> coupons;
 
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
@@ -65,7 +69,8 @@ public class Cinema {
 		this.logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
-
+		coupons = new ArrayList<Coupon>();
+		
 		// ********* TEMPORARY DATA USED FOR TESTING *********
 		// Test movie
 		
@@ -158,6 +163,11 @@ public class Cinema {
 		
 		//occupare il primo posto della seconda proiezione
 		p2.takeSeat(0, 0);
+		
+		// Aggiunti due coupon di prova emessi dal cinema
+		coupons.add(new Coupon(new Money(5f)));
+		coupons.add(new Coupon(new Money(3.5f)));
+		
 		
 		// ********* END *********
 	}
@@ -312,6 +322,24 @@ public class Cinema {
 		throw new NoProjectionException(id);
 	}
 
+	
+	/**
+	 * METODO per resituire un coupon, dato il suo id (progressivo)
+	 * @param progressive				 Id del coupon
+	 * @return Coupon					 Coupon con quello specifico progressivo
+	 * @throws CouponNotExistsException	 Eccezione lanciata qualora non ci sia nessun coupon
+	 * 									 con quell'Id progressivo
+	 */
+	public Coupon getCoupon(long progressive) throws CouponNotExistsException {
+		for (Coupon c: coupons) {
+			if (c.getProgressive() == progressive ) {
+				return c;
+			}
+		}
+		throw new CouponNotExistsException(progressive);
+	}
+	
+	
 	/**
 	 * METODO per aggiungere una sala del cinema
 	 * 

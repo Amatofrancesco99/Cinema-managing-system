@@ -13,11 +13,27 @@ import cinema.model.cinema.Room;
 import cinema.model.payment.methods.PaymentCard;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 
+
+/** BREVE DESCRIZIONE CLASSE CLIMain
+ * 
+ * @author Screaming Hairy Armadillo Team
+ *
+ *  Questa classe permette di testare le stesse funzionalità offerte dall'interfaccia
+ *  web, ma tramite Command Line Interface (CLI)... chiaramente la resa grafica non sarà
+ *  la stessa.
+ */
 public class CLIMain {
 
+	
+	/**
+	 * METODO Main, per eseguire la nostra CLI
+	 * @param args   Parametri in ingresso, nel nostro caso non servono, ne tanto meno
+	 * 				 vengono utilizzati.
+	 */
 	public static void main(String[] args) {
-		//****************************** CLI GUI START *********************************
+		//******************************* CLI START **********************************
 		
 		
 		// INFORMAZIONI GENERALI
@@ -25,6 +41,7 @@ public class CLIMain {
 		System.err.println(Cinema.getInstance().getName().toUpperCase()+"\n");
 		System.out.println("Puoi trovarci in: " + Cinema.getInstance().getLocation() + "\n");
 		System.out.println("Contattaci: " + Cinema.getInstance().getEmail() + "\n\n");
+		System.err.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.out.println("-----------------------------------------------------\n");
 		
 		
@@ -98,7 +115,7 @@ public class CLIMain {
 		try {
 			r.setProjection(Cinema.getInstance().getProjection(projectionId));
 		} catch (NoProjectionException e) {
-			e.printStackTrace();
+			e.toString();
 			System.exit(1);
 		}
 		
@@ -175,7 +192,6 @@ public class CLIMain {
 		System.out.println("\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
 		
 		
-		
 		if ((birthDate == null)||(email.equals(""))||(name.equals(""))||(surname.equals(""))) {
 			System.err.println("Ops...I tuoi dati anagrafici inseriti sembrano essere mancanti.");
 			System.exit(1);
@@ -184,6 +200,24 @@ public class CLIMain {
 		r.setPaymentCard(new PaymentCard());
 		// TODO: aggiungere informazioni sugli altri spettatori che parteciperanno alla 
 		// proiezione, in modo tale da applicare sconti (comitiva/età/giorno)
+		
+		
+		// Aggiungi un coupon alla tua prenotazione
+		System.out.println("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
+		String usaCoupon = keyboard.next();
+		if (usaCoupon.equals("Y")) {
+			System.out.println("Inserisci il codice del coupon:  ");
+			String couponId = keyboard.next();
+			long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
+			try {
+				r.setCoupon(coupon);
+			} catch (CouponNotExistsException e) {
+				e.toString();
+			}
+		}
+		if ((!usaCoupon.equals("Y"))&&(!usaCoupon.equals("N"))){
+			System.out.println("Scelta non valida...");
+		}
 		
 		
 		
@@ -200,8 +234,9 @@ public class CLIMain {
 		System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
 				+ "a: ");
 		System.err.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
-		System.out.println("Il prezzo scalato comprende già lo sconto" 
-				+ " applicato dal nostro cinema, in base alle specifiche inserite.");
+		System.out.println("Il prezzo mostrato comprende sia lo sconto" 
+				+ " applicato dal nostro cinema, in base alle specifiche inserite, sia"
+				+ " lo sconto\ndell'eventuale coupon applicato.");
 		System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
 				+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
 		
@@ -210,11 +245,11 @@ public class CLIMain {
 		// SALUTO CLIENTE E CHIUSURA CLI
 		System.out.println("\n\nGrazie, a presto!\n");
 		System.out.println("-----------------------------------------------------\n");
-		System.err.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.exit(0);
 		
 		
 		
-		//******************************* CLI GUI END **********************************
+		//********************************* CLI END *************************************
 	}
+	
 }
