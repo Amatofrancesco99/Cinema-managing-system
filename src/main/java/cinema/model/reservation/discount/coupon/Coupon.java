@@ -19,14 +19,21 @@ public class Coupon {
 	/**
 	 * @param number     Numero di coupon, univoco (reso tale grazie al progressivo)
 	 * @param discount   Sconto del coupon
+	 * @param used		 Lo sconto è già stato utilizzato? (True = sì, False = no )
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0);
 	private final long progressive;
 	private Money discount;
+	private boolean used; 
 	
+	/**
+	 * COSTRUTTORE della classe
+	 * @param discount
+	 */
 	public Coupon (Money discount) {
 		progressive = count.incrementAndGet(); 
 		this.discount = discount;
+		used = false;
 	}
 	
 }

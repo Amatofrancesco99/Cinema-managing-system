@@ -166,6 +166,8 @@ public class Cinema {
 		
 		// Aggiunti due coupon di prova emessi dal cinema
 		coupons.add(new Coupon(new Money(5f)));
+		coupons.get(0).setUsed(true);   // Coupon ID: 1 già utilizzato (Prova)
+		coupons.add(new Coupon(new Money(6f)));
 		coupons.add(new Coupon(new Money(3.5f)));
 		
 		

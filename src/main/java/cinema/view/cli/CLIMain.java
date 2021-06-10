@@ -210,7 +210,7 @@ public class CLIMain {
 			String couponId = keyboard.next();
 			long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
 			try {
-				r.setCoupon(coupon);
+				System.out.println(r.setCoupon(coupon) + "\n");
 			} catch (CouponNotExistsException e) {
 				e.toString();
 			}
@@ -224,14 +224,16 @@ public class CLIMain {
 		// 4) Pagamento e spedizione dell'email al cliente
 		System.out.println("\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
 		String esitoPagamento = r.buy();
-		if (!esitoPagamento.equals("Pagamento andato a buon fine.")) {
+		if ((esitoPagamento.equals("Il pagamento non è andato a buon fine."))
+		|| (esitoPagamento.equals("Verifica di aver inserito almeno un posto alla prenotazione."))){
 			System.err.println(esitoPagamento);
 			System.exit(1);
 		}
+		System.out.println(esitoPagamento);
 		// Vi assicuro che l'invio dell'email, una volta inseriti i parametri corretti funziona.
 		// ... Qualora vogliate comunque provare, disabilitate questo commento.
 		// r.sendEmail();
-		System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
+		System.out.print("\nAbbiamo scalato dalla tua carta inserita un ammontare pari "
 				+ "a: ");
 		System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
 		System.out.println("Il prezzo mostrato comprende sia lo sconto" 

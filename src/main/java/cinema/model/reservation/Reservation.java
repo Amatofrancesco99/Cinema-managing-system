@@ -132,8 +132,9 @@ public class Reservation {
 		Money total = new DiscountNumberSpectators().getTotal(this);
 		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
 		// il totale dell'importo di sconto di questo coupon
+		// Chiaramente il coupon non deve già essere stato utilizzato
 		if (getCoupon() != null) {
-			total = new Money (total.getAmount()-getCoupon().getDiscount().getAmount(),total.getCurrency());
+			total = new Money(total.getAmount()-getCoupon().getDiscount().getAmount(),total.getCurrency());
 		}
 		return total;
 	}  
@@ -145,8 +146,13 @@ public class Reservation {
 	 * @throws CouponNotExistsException	  Eccezione lanciata qualora non esista un coupon
 	 * 									  con quell'id
 	 */
-	public void setCoupon(long progressive) throws CouponNotExistsException {
-		this.coupon=Cinema.getInstance().getCoupon(progressive);
+	public String setCoupon(long progressive) throws CouponNotExistsException {
+		Coupon coupon = Cinema.getInstance().getCoupon(progressive);
+		if (coupon.isUsed() == true) {
+			 return "Il coupon " + progressive + " è già stato utilizzato.";
+		}
+		this.coupon = coupon;
+		return "";
 	}
 	
 	
@@ -399,11 +405,18 @@ public class Reservation {
 		if (getNSeats()>0)
 		{
 			//Payment simulation
-			if (paymentCard.decreaseMoney(getTotal())==false) {
+			if (paymentCard.decreaseMoney(getTotal()) == false) {
 				return "Il pagamento non è andato a buon fine.";
 			}
 			else {
-				return "Pagamento andato a buon fine.";
+				String output = "";
+				if (getCoupon() != null) {
+					// se il pagamento va a buon fine dico che il coupon è stato utilizzato
+					// chiaramente se un coupon è stato associato alla prenotazione
+					this.coupon.setUsed(true);
+					output = "Coupon " + this.coupon.getProgressive() + " utilizzato.";
+				}
+				return (output + " Pagamento andato a buon fine.");
 			}
 		}
 		else return "Verifica di aver inserito almeno un posto alla prenotazione.";
