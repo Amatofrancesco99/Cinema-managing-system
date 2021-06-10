@@ -233,7 +233,7 @@ public class CLIMain {
 		// r.sendEmail();
 		System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
 				+ "a: ");
-		System.err.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
+		System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
 		System.out.println("Il prezzo mostrato comprende sia lo sconto" 
 				+ " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 				+ " lo sconto\ndell'eventuale coupon applicato.");
