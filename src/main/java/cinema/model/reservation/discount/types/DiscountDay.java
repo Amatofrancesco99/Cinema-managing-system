@@ -25,7 +25,7 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	 *  @param day			giorno in cui vale lo sconto
 	 *  @param PERCENTAGE	percentuale di sconto
 	 */
-	private HashMap<LocalDate, Float> discount = new HashMap<>();
+	private HashMap<LocalDate, Double> discount = new HashMap<>();
 	
 	
 	/**
@@ -34,9 +34,9 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	 */
 	@Override
 	public Money getTotal(Reservation r) {
-		float totalPrice = 0;
+		double totalPrice = 0;
 		if (discount.size() > 0) {
-			for(Entry<LocalDate, Float> entry : discount.entrySet()) {
+			for(Entry<LocalDate, Double> entry : discount.entrySet()) {
 			    if(entry.getKey().equals(r.getProjection().getDateTime().toLocalDate())){
 		            totalPrice += r.getProjection().getPrice().getAmount()*(1 - entry.getValue())*r.getNSeats();
 		            return new Money(totalPrice , r.getProjection().getPrice().getCurrency());
@@ -53,11 +53,11 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	 * @param f				Valore dello sconto
 	 * @return boolean 		True = aggiunto, False = non aggiunto
 	 */
-	public boolean addDiscount(LocalDate d, float f) {
-		if ((f <= 0f) || (f > 1f)){
+	public boolean addDiscount(LocalDate date, double d) {
+		if ((d <= 0) || (d > 1)){
 			return false;
 		}
-		discount.put(d, f);
+		discount.put(date, d);
 		return true;
 	}
 }

@@ -24,7 +24,7 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	 * @param PERCENTAGE  		Percentuale di sconto effettuata
 	 */
 	private int numberPeople = 5;
-	private float percentage = (float) 0.15;
+	private double percentage = 0.15;
 	
 	
 	/**
@@ -33,7 +33,7 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	 */
 	@Override
 	public Money getTotal(Reservation r) {
-		float totalPrice = 0;
+		double totalPrice = 0;
 		if(r.getNSeats() >= getNumberPeople()){
 			totalPrice+=r.getProjection().getPrice().getAmount()*(1 - percentage)*r.getNSeats();
 		}
@@ -48,11 +48,11 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	 * @param f		      Percentuale di sconto da applicare
 	 * @return boolean	  Esito assegnazione percentuale di sconto
 	 */
-	public boolean setPercentage(float f) {
-		if ((f <= 0f) || (f >= 1f)){
+	public boolean setPercentage(double d) {
+		if ((d <= 0) || (d >= 1)){
 			return false;
 		}
-		percentage = f;
+		percentage = d;
 		return true;
 	}
 }

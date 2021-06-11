@@ -14,6 +14,7 @@ import cinema.model.payment.methods.PaymentCard;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
+import cinema.model.reservation.discount.types.DiscountAge;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIMain
@@ -188,7 +189,7 @@ public class CLIMain {
 		email = keyboard.next();
 		
 		//TODO: aggiungere NOME TITOLARE CARTA, NUMERO CARTA, SCADENZA, CVV
-		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
+		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n\n");
 		
 		
 		if ((birthDate == null)||(email.equals(""))||(name.equals(""))||(surname.equals(""))) {
@@ -197,12 +198,22 @@ public class CLIMain {
 		}
 		r.setPurchaser(new Spectator(name,surname,email,birthDate));
 		r.setPaymentCard(new PaymentCard());
-		// TODO: aggiungere informazioni sugli altri spettatori che parteciperanno alla 
-		// proiezione, in modo tale da applicare sconti (comitiva/età/giorno)
+		
+		
+		// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
+		// sconti
+		System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (new DiscountAge().getMin_age()) + " anni: ");
+		String n1 = keyboard.next();
+		int nMin = Integer.valueOf(n1.replaceAll("[\\D]", ""));
+		r.setNumberPeopleUntilMinAge(nMin);
+		System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (new DiscountAge().getMax_age()) + " anni: ");
+		String n2 = keyboard.next();
+		int nMax = Integer.valueOf(n2.replaceAll("[\\D]", ""));
+		r.setNumberPeopleOverMaxAge(nMax);
 		
 		
 		// Aggiungi un coupon alla tua prenotazione
-		System.out.println("Vuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
+		System.out.println("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
 		String usaCoupon = keyboard.next();
 		if (usaCoupon.equals("Y")) {
 			System.out.println("Inserisci il codice del coupon:  ");
@@ -221,7 +232,7 @@ public class CLIMain {
 		
 		
 		// 4) Pagamento e spedizione dell'email al cliente
-		System.out.println("\n\n\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
+		System.out.println("\n\n\n4- PAGAMENTO E SPEDIZIONE EMAIL \n\n");
 		String esitoPagamento = r.buy();
 		if ((esitoPagamento.equals("Il pagamento non è andato a buon fine."))
 		|| (esitoPagamento.equals("Verifica di aver inserito almeno un posto alla prenotazione."))){

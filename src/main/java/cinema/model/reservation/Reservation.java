@@ -71,6 +71,8 @@ public class Reservation {
 	 *@param paymentCard	 Metodo di pagamento
 	 *@param reportLocation  Area di memoria in cui salviamo il report della prenotazione
 	 *@param coupon			 Coupon che può essere usato nella prenotazione
+	 *@param numberPeopleUntilMinAge   Numero di persone che hanno un'età inferiore ad un età min
+	 *@param numberPeopleOverMaxAge    Numero di persone che hanno un'età superiore ad un età max
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
@@ -81,6 +83,9 @@ public class Reservation {
 	private PaymentCard paymentCard;
 	private String reportLocation;
 	private Coupon coupon;
+	private int numberPeopleUntilMinAge;
+	private int numberPeopleOverMaxAge;
+	
 	
 	/**
 	 * COSTRUTTORE della classe, esso una volta invocato genera una prenotazione con un
@@ -92,6 +97,8 @@ public class Reservation {
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
 		reportLocation = null;
+		numberPeopleUntilMinAge = 0;
+		numberPeopleOverMaxAge = 0;
 	}
 	
 	
@@ -126,13 +133,9 @@ public class Reservation {
 	 * @return total  Ammontare di denaro da pagare
 	 */
 	public Money getTotal() {
-		//TODO: CREARE CLASSE DISCOUNT COMPOSITE (FUTURO)!!!
-		
-		// Al momento viene implementato il metodo che effettua uno sconto comitiva
-		Money total = new DiscountNumberSpectators().getTotal(this);
+		Money total = new CinemaDiscount().getTotal(this);
 		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
 		// il totale dell'importo di sconto di questo coupon
-		// Chiaramente il coupon non deve già essere stato utilizzato
 		if (getCoupon() != null) {
 			total = new Money(total.getAmount()-getCoupon().getDiscount().getAmount(),total.getCurrency());
 		}
@@ -420,6 +423,34 @@ public class Reservation {
 			}
 		}
 		else return "Verifica di aver inserito almeno un posto alla prenotazione.";
+	}
+	
+	
+	/**
+	 * METODO per settare il numero di persone che hanno un'età inferiore ad un età minima
+	 * @param n				Numero di persone
+	 * @return boolean 		Esito metodo set
+	 */
+	public boolean setNumberPeopleUntilMinAge(int n) {
+		if (n + getNumberPeopleOverMaxAge() > this.getNSeats()) {
+			return false;
+		}
+		numberPeopleUntilMinAge = n;
+		return true;
+	}
+	
+	
+	/**
+	 * METODO per settare il numero di persone che hanno un'età superiore ad un età massima
+	 * @param n				Numero di persone
+	 * @return boolean 		Esito metodo set
+	 */
+	public boolean setNumberPeopleOverMaxAge(int n) {
+		if (n + getNumberPeopleUntilMinAge() > this.getNSeats()) {
+			return false;
+		}
+		numberPeopleOverMaxAge = n;
+		return true;
 	}
 	
 }
