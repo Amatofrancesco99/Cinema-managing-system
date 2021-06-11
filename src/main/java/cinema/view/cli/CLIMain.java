@@ -186,10 +186,9 @@ public class CLIMain {
 		System.out.println("Inserisci la tua email:  ");
 		String email = "";
 		email = keyboard.next();
-		System.out.println("\n");
 		
 		//TODO: aggiungere NOME TITOLARE CARTA, NUMERO CARTA, SCADENZA, CVV
-		System.out.println("\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
+		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
 		
 		
 		if ((birthDate == null)||(email.equals(""))||(name.equals(""))||(surname.equals(""))) {
@@ -203,14 +202,14 @@ public class CLIMain {
 		
 		
 		// Aggiungi un coupon alla tua prenotazione
-		System.out.println("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
+		System.out.println("Vuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
 		String usaCoupon = keyboard.next();
 		if (usaCoupon.equals("Y")) {
 			System.out.println("Inserisci il codice del coupon:  ");
 			String couponId = keyboard.next();
 			long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
 			try {
-				System.out.println(r.setCoupon(coupon) + "\n");
+				System.out.print(r.setCoupon(coupon));
 			} catch (CouponNotExistsException e) {
 				e.toString();
 			}
@@ -222,7 +221,7 @@ public class CLIMain {
 		
 		
 		// 4) Pagamento e spedizione dell'email al cliente
-		System.out.println("\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
+		System.out.println("\n\n\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
 		String esitoPagamento = r.buy();
 		if ((esitoPagamento.equals("Il pagamento non è andato a buon fine."))
 		|| (esitoPagamento.equals("Verifica di aver inserito almeno un posto alla prenotazione."))){

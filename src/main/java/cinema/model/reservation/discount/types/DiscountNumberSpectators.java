@@ -3,6 +3,7 @@ package cinema.model.reservation.discount.types;
 import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
+import lombok.Data;
 
 
 /** BREVE DESCRIZIONE CLASSE DiscountNumberSpectator  (Pattern Strategy)
@@ -13,6 +14,7 @@ import cinema.model.reservation.discount.ReservationDiscountStrategy;
  *  sconto comitiva, ovvero a seconda di quante persone fanno parte di quella 
  *  specifica prenotazione (si può anche vedere come numero di posti che sono stati occupati).
  */
+@Data
 public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 
 	
@@ -21,8 +23,8 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	 * 							comitiva sarà valido
 	 * @param PERCENTAGE  		Percentuale di sconto effettuata
 	 */
-	private final int NUMBER_PEOPLE = 10;
-	private final float PERCENTAGE = (float) 0.85;
+	private int numberPeople = 5;
+	private float percentage = (float) 0.15;
 	
 	
 	/**
@@ -32,12 +34,25 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	@Override
 	public Money getTotal(Reservation r) {
 		float totalPrice = 0;
-		if(r.getNSeats() >= NUMBER_PEOPLE){
-			totalPrice+=r.getProjection().getPrice().getAmount()*PERCENTAGE*r.getNSeats();
+		if(r.getNSeats() >= getNumberPeople()){
+			totalPrice+=r.getProjection().getPrice().getAmount()*(1 - percentage)*r.getNSeats();
 		}
 		else 
 			totalPrice+=r.getProjection().getPrice().getAmount()*r.getNSeats();
 		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
 	}
-
+	
+	
+	/**
+	 * METODO per settare il nuovo sconto in base al numero di persone
+	 * @param f		      Percentuale di sconto da applicare
+	 * @return boolean	  Esito assegnazione percentuale di sconto
+	 */
+	public boolean setPercentage(float f) {
+		if ((f <= 0f) || (f >= 1f)){
+			return false;
+		}
+		percentage = f;
+		return true;
+	}
 }

@@ -414,9 +414,9 @@ public class Reservation {
 					// se il pagamento va a buon fine dico che il coupon è stato utilizzato
 					// chiaramente se un coupon è stato associato alla prenotazione
 					this.coupon.setUsed(true);
-					output = "Coupon " + this.coupon.getProgressive() + " utilizzato.";
+					output = "Coupon " + this.coupon.getProgressive() + " utilizzato. ";
 				}
-				return (output + " Pagamento andato a buon fine.");
+				return (output + "Pagamento andato a buon fine.");
 			}
 		}
 		else return "Verifica di aver inserito almeno un posto alla prenotazione.";

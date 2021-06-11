@@ -1,10 +1,13 @@
 package cinema.model.reservation.discount.types;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
+
 
 /** BREVE DESCRIZIONE CLASSE DiscontDay	 (Pattern Strategy)
  * 
@@ -15,14 +18,15 @@ import cinema.model.reservation.discount.ReservationDiscountStrategy;
  */
 public class DiscountDay implements ReservationDiscountStrategy{
 	
+	
 	/** ATTRIBUTI 
 	 *  @param start		giorno da cui parte lo sconto
 	 *  @param end			giorno in cui finisce lo sconto
 	 *  @param day			giorno in cui vale lo sconto
 	 *  @param PERCENTAGE	percentuale di sconto
 	 */
-	private LocalDate start, end, day;
-	private final float PERCENTAGE = (float) 0.90;
+	private HashMap<LocalDate, Float> discount = new HashMap<>();
+	
 	
 	/**
 	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi
@@ -31,30 +35,29 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	@Override
 	public Money getTotal(Reservation r) {
 		float totalPrice = 0;
-		if(((r.getPurchaseDate().compareTo(start)>=0) && (r.getPurchaseDate().compareTo(end)<=0)) 
-		|| (r.getPurchaseDate().compareTo(day)==0)) {
-			totalPrice+=r.getProjection().getPrice().getAmount()*PERCENTAGE;
+		if (discount.size() > 0) {
+			for(Entry<LocalDate, Float> entry : discount.entrySet()) {
+			    if(entry.getKey().equals(r.getProjection().getDateTime().toLocalDate())){
+		            totalPrice += r.getProjection().getPrice().getAmount()*(1 - entry.getValue())*r.getNSeats();
+		            return new Money(totalPrice , r.getProjection().getPrice().getCurrency());
+		        }
+			}
 		}
-		else totalPrice+=r.getProjection().getPrice().getAmount();
-		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
-	}
-	
-	/** 
-	 * METODO per impostare il periodo di validità dello sconto
-	 * @param start	 Giorno a partire dal quale lo sconto inizia
-	 * @param end	 Giorno a partire dal quale lo sconto termina
-	 */
-	public void setDateDiscount(LocalDate start, LocalDate end) {
-		this.start = start;
-		this.end = end;
+		totalPrice += r.getProjection().getPrice().getAmount()*r.getNSeats();
+		return new Money(totalPrice , r.getProjection().getPrice().getCurrency());
 	}
 	
 	/**
-	 * METODO per impostare lo sconto in un determinato giorno
-	 * @param day	Giorno in cui si vuole valga lo sconto
+	 * METODO per aggiungere una nuova data con uno sconto
+	 * @param d				Giorno di validità dello sconto
+	 * @param f				Valore dello sconto
+	 * @return boolean 		True = aggiunto, False = non aggiunto
 	 */
-	public void setDayDiscount(LocalDate day) {
-		this.day = day;
+	public boolean addDiscount(LocalDate d, float f) {
+		if ((f <= 0f) || (f > 1f)){
+			return false;
+		}
+		discount.put(d, f);
+		return true;
 	}
-	
 }
