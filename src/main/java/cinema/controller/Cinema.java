@@ -13,6 +13,7 @@ import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
+import cinema.model.reservation.discount.types.DiscountAge;
 import lombok.Data;
 
 /**
@@ -122,7 +123,6 @@ public class Cinema {
 			rooms.add(new Room(5 , 10));
 			rooms.add(new Room(7 , 10));
 		} catch (InvalidRoomDimensionsException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -379,7 +379,28 @@ public class Cinema {
 		this.zipCode = zipCode;
 		this.address = address;
 	}
-
+	
+	
+	/** METODO per farsi dire l'età più elevata da cui il cinema effettua uno sconto sul 
+	 * totale
+	 * 
+	 * @return max_age   Età massima
+	 */
+	public int getMaxDiscountAge() {
+		return new DiscountAge().getMax_age();
+	}
+	
+	
+	/** METODO per farsi dire l'età più bassa da cui il cinema effettua uno sconto sul 
+	 * totale
+	 * 
+	 * @return min_age   Età minima
+	 */
+	public int getMinDiscountAge() {
+		return new DiscountAge().getMin_age();
+	}
+	
+	
 	/**
 	 * METODO per farsi dire il numero di sale di cui il cinema è composto
 	 * 

@@ -385,19 +385,6 @@ public class Reservation {
 	
 	
 	/**
-	 * METODO per settare l'età degli spettatori che guarderanno il film.
-	 * Il numero di spettatori da inserire dipende chiaramente dai posti associati alla
-	 * prenotazione.
-	 * @return	TakenSeats		Numero di posti occupati
-	public void setSpectator(int n, int age) {
-		if (n>getNSeats()) {
-		}
-		else //TODO aggiungi queste informazioni alla prenotazione
-	}
-	*/
-	
-	
-	/**
 	 *  METODO che consente il pagamento della prenotazione, una volta compilata la prenotazione
 	 * @return esito	 Stringa che rappresenta l'esito del pagamento e il verificarsi
 	 * 					 di eventuali errori (ad esempio che la prenotazione occupi

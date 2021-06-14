@@ -14,7 +14,6 @@ import cinema.model.payment.methods.PaymentCard;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
-import cinema.model.reservation.discount.types.DiscountAge;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIMain
@@ -202,11 +201,11 @@ public class CLIMain {
 		
 		// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
 		// sconti
-		System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (new DiscountAge().getMin_age()) + " anni: ");
+		System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (Cinema.getInstance().getMinDiscountAge()) + " anni: ");
 		String n1 = keyboard.next();
 		int nMin = Integer.valueOf(n1.replaceAll("[\\D]", ""));
 		r.setNumberPeopleUntilMinAge(nMin);
-		System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (new DiscountAge().getMax_age()) + " anni: ");
+		System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (Cinema.getInstance().getMaxDiscountAge()) + " anni: ");
 		String n2 = keyboard.next();
 		int nMax = Integer.valueOf(n2.replaceAll("[\\D]", ""));
 		r.setNumberPeopleOverMaxAge(nMax);
