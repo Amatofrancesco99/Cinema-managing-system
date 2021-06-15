@@ -81,7 +81,7 @@ public class CLIMain {
 		System.out.println("Proiezioni previste\n");
 		for (Projection p : Cinema.getInstance().getProjections(filmId)) {
 			System.out.println(p.getId() + ")");
-			System.out.print(p.toString());
+			System.out.println(p.toString());
 		}
 		
 		

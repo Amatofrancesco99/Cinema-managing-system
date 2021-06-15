@@ -164,6 +164,6 @@ public class Projection implements Comparable<Projection> {
 				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
 				+ "Prezzo: " + this.getPrice().getAmount() + " "
 				+ this.getPrice().getCurrency().toString() + "\n" 
-				+ "Posti disponibili: " + this.getNumberAvailableSeat() + "\n\n";
+				+ "Posti disponibili: " + this.getNumberAvailableSeat() + "\n";
 	}
 }
