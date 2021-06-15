@@ -1,7 +1,7 @@
 package cinema.model.money;
 
 import cinema.model.money.util.TypeOfCurrency;
-import lombok.Data;
+import lombok.*;
 
 /** BREVE DESCRIZIONE CLASSE Money
  * 
@@ -10,7 +10,7 @@ import lombok.Data;
  * Come lascia intuire questa classe viene utilizzata per rappresentare i soldi, ossia 
  * una coppia ammontare di soldi, valuta.
  */
-@Data
+@Getter
 public class Money {
 	
 	/**
@@ -34,7 +34,7 @@ public class Money {
 	 * @param amount Ammontare di soldi
 	 */
 	public Money(double amount) {
-		this.amount = amount;
+		this.amount = Math.round(amount*100.0)/100.0;
 		currency = TypeOfCurrency.EUR;
 	}
 	
@@ -44,7 +44,7 @@ public class Money {
 	 * @param currency	Valuta
 	 */
 	public Money (double amount, TypeOfCurrency currency) {
-		this.amount = amount;
+		this.amount = Math.round(amount*100.0)/100.0;
 		this.currency = currency;
 	}
 }

@@ -257,7 +257,7 @@ public class Reservation {
 		        }
 		        
 		        //totale della prenotazione
-		        Paragraph totalP = new Paragraph("TOTALE:  " + String.format("%.02f", this.getTotal().getAmount())
+		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal().getAmount()
 		        				   + " " + this.getTotal().getCurrency().toString(), subFont3);
 		        totalP.setSpacingBefore(80);
 		        totalP.setAlignment(Element.ALIGN_RIGHT);

@@ -127,27 +127,27 @@ public class Cinema {
 		}
 
 		// Test projections
-		Projection p1 = new Projection(123, DrukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5f),
+		Projection p1 = new Projection(123, DrukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p2 = new Projection(183, DrukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5f),
+		Projection p2 = new Projection(183, DrukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p3 = new Projection(193, DrukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5f),
+		Projection p3 = new Projection(193, DrukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p4 = new Projection(109, DrukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f),
+		Projection p4 = new Projection(109, DrukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p5 = new Projection(743, DrukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f),
+		Projection p5 = new Projection(743, DrukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p6 = new Projection(233, DrukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f),
+		Projection p6 = new Projection(233, DrukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p7 = new Projection(144, DrukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f),
+		Projection p7 = new Projection(144, DrukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p8 = new Projection(101, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5f),
+		Projection p8 = new Projection(101, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),
 				rooms.get(1));
-		Projection p9 = new Projection(724, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5f),
+		Projection p9 = new Projection(724, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5),
 				rooms.get(1));
-		Projection p10 = new Projection(287, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5f),
+		Projection p10 = new Projection(287, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5),
 				rooms.get(1));
-		Projection p11 = new Projection(150, AvengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5f),
+		Projection p11 = new Projection(150, AvengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
 				rooms.get(1));
 		this.cinemaProjections.add(p1);
 		this.cinemaProjections.add(p2);
@@ -165,10 +165,10 @@ public class Cinema {
 		p2.takeSeat(0, 0);
 		
 		// Aggiunti due coupon di prova emessi dal cinema
-		coupons.add(new Coupon(new Money(5f)));
+		coupons.add(new Coupon(new Money(5)));
 		coupons.get(0).setUsed(true);   // Coupon ID: 1 già utilizzato (Prova)
-		coupons.add(new Coupon(new Money(6f)));
-		coupons.add(new Coupon(new Money(3.5f)));
+		coupons.add(new Coupon(new Money(6)));
+		coupons.add(new Coupon(new Money(3.5)));
 		
 		
 		// ********* END *********
