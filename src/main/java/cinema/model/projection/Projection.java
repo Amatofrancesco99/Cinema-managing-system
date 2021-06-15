@@ -162,7 +162,8 @@ public class Projection implements Comparable<Projection> {
 				+ " " + this.getDateTime().getYear() + "   "
 				+ "Ora: " + String.format("%02d", this.getDateTime().getHour()) 
 				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
-				+ "Prezzo: " + this.getPrice().getAmount() + " " 
-				+ this.getPrice().getCurrency().toString() + "\n";
+				+ "Prezzo: " + this.getPrice().getAmount() + " "
+				+ this.getPrice().getCurrency().toString() + "\n" 
+				+ "Posti disponibili: " + this.getNumberAvailableSeat() + "\n\n";
 	}
 }
