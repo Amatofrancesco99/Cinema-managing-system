@@ -10,6 +10,7 @@ import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.Spectator;
 import cinema.model.cinema.Room;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinates;
 import cinema.model.payment.methods.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
@@ -131,11 +132,14 @@ public class CLIMain {
 		System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
 		for (int i = 0 ; i < r.getProjection().getRoom().getNumberRows() ; i++) {
 			for (int j = 0 ; j < r.getProjection().getRoom().getNumberCols() ; j++) {
-				if (!r.getProjection().verifyIfSeatAvailable(i, j)) {
-					System.out.print(" [ XX ] ");
+				try {
+					if (!r.getProjection().verifyIfSeatAvailable(i, j)) {
+						System.out.print(" [ XX ] ");
+					}
+					else 
+						System.out.print(" [ " + Room.rowIndexToRowLetter(i) + (j+1) + " ] ");
+				} catch (InvalidRoomSeatCoordinates e) {
 				}
-				else 
-					System.out.print(" [ " + Room.rowIndexToRowLetter(i) + (j+1) + " ] ");
 			}
 			System.out.println("");
 		}
@@ -149,7 +153,7 @@ public class CLIMain {
 			int colonna = Integer.valueOf(posto.replaceAll("[\\D]", "")) -1;
 			try {
 				r.addSeat(riga, colonna);
-			} catch (SeatAlreadyTakenException e) {
+			} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinates e) {
 				e.toString();
 			}
 			System.out.println("\nVuoi occupare altri posti? (Y/N): ");
@@ -238,10 +242,7 @@ public class CLIMain {
 			long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
 			try {
 				r.setCoupon(coupon);
-			} catch (CouponNotExistsException e) {
-				e.toString();
-				System.exit(1);
-			} catch (CouponAleadyUsedException e) {
+			} catch (CouponNotExistsException | CouponAleadyUsedException e) {
 				e.toString();
 				System.exit(1);
 			}
@@ -270,13 +271,7 @@ public class CLIMain {
 			System.out.println("-----------------------------------------------------\n");
 			System.exit(0);
 			
-		} catch (PaymentErrorException e) {
-			e.toString();
-			System.exit(1);
-		} catch (ReservationHasNoSeatException e) {
-			e.toString();
-			System.exit(1);
-		} catch (ReservationHasNoPaymentCardException e) {
+		} catch (PaymentErrorException | ReservationHasNoSeatException | ReservationHasNoPaymentCardException e) {
 			e.toString();
 			System.exit(1);
 		}

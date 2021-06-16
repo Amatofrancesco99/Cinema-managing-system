@@ -13,8 +13,8 @@ public class ReservationHasNoSeatException extends Exception {
 	/** 
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
-	public ReservationHasNoSeatException(long progressive) {
-		System.err.println("Verifica di aver inserito almeno un posto alla prenotazione n°: " + progressive);
+	public ReservationHasNoSeatException() {
+		System.err.println("Verifica di aver inserito almeno un posto alla prenotazione. ");
 	}
 	
 }

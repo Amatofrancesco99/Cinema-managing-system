@@ -39,6 +39,7 @@ import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinates;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
@@ -112,8 +113,9 @@ public class Reservation {
 	 * METODO per aggiungere un posto alla reservation
 	 * @param row, col		Coordinate posto sala da occupare
 	 * @throws SeatAlreadyTakenException 
+	 * @throws InvalidRoomSeatCoordinates 
 	*/
-	public void addSeat(int row, int col) throws SeatAlreadyTakenException {
+	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinates {
 		if(projection.takeSeat(row, col)) {
 			seats.add(projection.getPhysicalSeat(row, col));
 		}
@@ -124,8 +126,9 @@ public class Reservation {
 	/**
 	 * METODO per rimuovere un posto dalla reservation
 	 * @param row, col		Coordinate posto sala da liberare
+	 * @throws InvalidRoomSeatCoordinates 
 	*/
-	public void removeSeat(int row, int col) {
+	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinates {
 		if(projection.freeSeat(row, col)) 
 			seats.remove(projection.getPhysicalSeat(row, col));		
 	}
@@ -410,7 +413,7 @@ public class Reservation {
 				}
 			}
 		}
-		else throw new ReservationHasNoSeatException(progressive);
+		else throw new ReservationHasNoSeatException();
 	}
 	
 	

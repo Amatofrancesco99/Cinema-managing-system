@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import cinema.model.money.Money;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinates;
 import cinema.model.Movie;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
@@ -69,17 +70,26 @@ public class Projection implements Comparable<Projection> {
 	 * è libero.
 	 * @param row, col		Coordinate 
 	 * @return				True: libero, False: occupato
+	 * @throws InvalidRoomSeatCoordinates 
 	 */
-	public boolean verifyIfSeatAvailable(int row, int col) {
-		return seats.get(row).get(col).isAvailable();
+	public boolean verifyIfSeatAvailable(int row, int col) throws InvalidRoomSeatCoordinates {
+		try {
+			return seats.get(row).get(col).isAvailable();
+		}
+		catch (IndexOutOfBoundsException e) {
+			{
+				throw new InvalidRoomSeatCoordinates(row, col);
+			}
+		}
 	}
 	
 	
 	/**
 	 * METODO per farsi restituire il numero di posti liberi per quella stanza
 	 * @return int  Numero di posti disponibili/liberi
+	 * @throws InvalidRoomSeatCoordinates 
 	 */
-	public int getNumberAvailableSeat() {
+	public int getNumberAvailableSeat() throws InvalidRoomSeatCoordinates {
 		int availableSeats = 0;
 		for (int i = 0 ; i < this.getRoom().getNumberRows() ; i++) {
 			for (int j = 0 ; j < this.getRoom().getNumberCols() ; j++) {
@@ -96,13 +106,14 @@ public class Projection implements Comparable<Projection> {
 	 * METODO occupa posto della sala in cui è fatta la proiezione
 	 * @param row, col		Coordinate 
 	 * @return esito 		Esito occupazione del posto
+	 * @throws InvalidRoomSeatCoordinates 
 	 */
-	public boolean takeSeat(int row, int col) {
-			if(verifyIfSeatAvailable(row, col)) {
+	public boolean takeSeat(int row, int col) throws InvalidRoomSeatCoordinates {
+			if (verifyIfSeatAvailable(row, col)) {
 				seats.get(row).get(col).setAvailable(false);
 				return true;
 			}
-			return false;		
+			return false;
 	}
 	
 	
@@ -110,8 +121,9 @@ public class Projection implements Comparable<Projection> {
 	 * METODO per liberare il posto di una sala
 	 * @param row, col		Coordinate 
 	 * @return esito 		Esito rilascio del posto
+	 * @throws InvalidRoomSeatCoordinates 
 	 */
-	public boolean freeSeat(int row, int col) {
+	public boolean freeSeat(int row, int col) throws InvalidRoomSeatCoordinates {
 		if(!verifyIfSeatAvailable(row, col)) {
 			seats.get(row).get(col).setAvailable(true);
 			return true;
@@ -119,13 +131,15 @@ public class Projection implements Comparable<Projection> {
 		return false;
 	}
 	
+	
 	/**
 	 * METODO per restituire un posto, date le coordinate
 	 * @param row, col		Coordinate 
 	 * @return 		 		Posto fisico
+	 * @throws InvalidRoomSeatCoordinates 
 	 */
-	public PhysicalSeat getPhysicalSeat(int row, int col) {
-		return this.getSeats().get(row).get(col).getPhysicalSeat();
+	public PhysicalSeat getPhysicalSeat(int row, int col) throws InvalidRoomSeatCoordinates {
+		 return this.getSeats().get(row).get(col).getPhysicalSeat();
 	}
 	
 	
@@ -133,8 +147,9 @@ public class Projection implements Comparable<Projection> {
 	 * METODO per farsi dare le coordinate di un posto
 	 * @param s			Posto fisico
 	 * @return			Coordinate
+	 * @throws InvalidRoomSeatCoordinates 
 	 */
-	public String getSeatCoordinates(PhysicalSeat s) {
+	public String getSeatCoordinates(PhysicalSeat s) throws InvalidRoomSeatCoordinates {
 		for(int i=0; i < room.getNumberRows(); i++) {
 			for(int j=0; j < room.getNumberCols(); j++) {
 				if(getPhysicalSeat(i,j) == s)
@@ -155,6 +170,13 @@ public class Projection implements Comparable<Projection> {
 	 */
 	@Override 
 	public String toString() {
+		int availableSeats = 0;
+		try { 
+			availableSeats = this.getNumberAvailableSeat();
+		}
+		catch (InvalidRoomSeatCoordinates e) {
+		}
+		
 		return "Sala n°: " + this.getRoom().getProgressive() + "\n"
 				+ "Data: " + this.getDateTime().getDayOfWeek().toString().toLowerCase()
 				+ " " + this.getDateTime().getDayOfMonth()
@@ -164,6 +186,6 @@ public class Projection implements Comparable<Projection> {
 				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
 				+ "Prezzo: " + this.getPrice().getAmount() + " "
 				+ this.getPrice().getCurrency().toString() + "\n" 
-				+ "Posti disponibili: " + this.getNumberAvailableSeat() + "\n";
+				+ "Posti disponibili: " + availableSeats + "\n";
 	}
 }
