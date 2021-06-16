@@ -246,7 +246,7 @@ public class Cinema {
 	 */
 	public List<Projection> getProjections(int movieId) throws NoMovieException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
-		Movie m = Cinema.getInstance().getMovie(movieId);
+		Movie m = getMovie(movieId);
 		if (m != null) {
 			for (Projection p : cinemaProjections) {
 				if (p.getMovie().getId() == movieId) {
