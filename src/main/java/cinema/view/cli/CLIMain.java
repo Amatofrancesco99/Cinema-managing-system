@@ -11,9 +11,15 @@ import cinema.model.Movie;
 import cinema.model.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.payment.methods.PaymentCard;
+import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
+import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
+import cinema.model.reservation.util.ReservationHasNoSeatException;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIMain
@@ -141,8 +147,12 @@ public class CLIMain {
 			System.out.println("\n");
 			int riga = Room.rowLetterToRowIndex(posto.replaceAll("\\d",""));
 			int colonna = Integer.valueOf(posto.replaceAll("[\\D]", "")) -1;
-			System.out.print(r.addSeat(riga, colonna));
-			System.out.println("\n\nVuoi occupare altri posti? (Y/N): ");
+			try {
+				r.addSeat(riga, colonna);
+			} catch (SeatAlreadyTakenException e) {
+				e.toString();
+			}
+			System.out.println("\nVuoi occupare altri posti? (Y/N): ");
 			String occupaAltri = keyboard.next();
 			if (occupaAltri.contains("N")) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
@@ -202,11 +212,21 @@ public class CLIMain {
 		System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (Cinema.getInstance().getMinDiscountAge()) + " anni: ");
 		String n1 = keyboard.next();
 		int nMin = Integer.valueOf(n1.replaceAll("[\\D]", ""));
-		r.setNumberPeopleUntilMinAge(nMin);
+		try {
+			r.setNumberPeopleUntilMinAge(nMin);
+		} catch (InvalidNumberPeopleValueException e) {
+			e.toString();
+			System.exit(1);
+		}
 		System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (Cinema.getInstance().getMaxDiscountAge()) + " anni: ");
 		String n2 = keyboard.next();
 		int nMax = Integer.valueOf(n2.replaceAll("[\\D]", ""));
-		r.setNumberPeopleOverMaxAge(nMax);
+		try {
+			r.setNumberPeopleOverMaxAge(nMax);
+		} catch (InvalidNumberPeopleValueException e) {
+			e.toString();
+			System.exit(1);
+		}
 		
 		
 		// Aggiungi un coupon alla tua prenotazione
@@ -217,9 +237,13 @@ public class CLIMain {
 			String couponId = keyboard.next();
 			long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
 			try {
-				System.out.print(r.setCoupon(coupon));
+				r.setCoupon(coupon);
 			} catch (CouponNotExistsException e) {
 				e.toString();
+				System.exit(1);
+			} catch (CouponAleadyUsedException e) {
+				e.toString();
+				System.exit(1);
 			}
 		}
 		if ((!usaCoupon.equals("Y"))&&(!usaCoupon.equals("N"))){
@@ -229,33 +253,33 @@ public class CLIMain {
 		
 		
 		// 4) Pagamento e spedizione dell'email al cliente
-		System.out.println("\n\n\n4- PAGAMENTO E SPEDIZIONE EMAIL \n\n");
-		String esitoPagamento = r.buy();
-		if ((esitoPagamento.equals("Il pagamento non è andato a buon fine."))
-		|| (esitoPagamento.equals("Verifica di aver inserito almeno un posto alla prenotazione."))){
-			System.err.println(esitoPagamento);
+		System.out.println("\n\n\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
+		try {
+			r.buy();
+			System.out.print("\nAbbiamo scalato dalla tua carta inserita un ammontare pari "
+					+ "a: ");
+			System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
+			System.out.println("Il prezzo mostrato comprende sia lo sconto" 
+				   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
+				  + " lo sconto\ndell'eventuale coupon applicato.");
+			System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
+					+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
+			
+			// SALUTO CLIENTE E CHIUSURA CLI
+			System.out.println("\n\nGrazie, a presto!\n");
+			System.out.println("-----------------------------------------------------\n");
+			System.exit(0);
+			
+		} catch (PaymentErrorException e) {
+			e.toString();
+			System.exit(1);
+		} catch (ReservationHasNoSeatException e) {
+			e.toString();
+			System.exit(1);
+		} catch (ReservationHasNoPaymentCardException e) {
+			e.toString();
 			System.exit(1);
 		}
-		System.out.println(esitoPagamento);
-		// Vi assicuro che l'invio dell'email, una volta inseriti i parametri corretti funziona.
-		// ... Qualora vogliate comunque provare, disabilitate questo commento.
-		// r.sendEmail();
-		System.out.print("\nAbbiamo scalato dalla tua carta inserita un ammontare pari "
-				+ "a: ");
-		System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
-		System.out.println("Il prezzo mostrato comprende sia lo sconto" 
-				+ " applicato dal nostro cinema, in base alle specifiche inserite, sia"
-				+ " lo sconto\ndell'eventuale coupon applicato.");
-		System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
-				+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
-		
-		
-		
-		// SALUTO CLIENTE E CHIUSURA CLI
-		System.out.println("\n\nGrazie, a presto!\n");
-		System.out.println("-----------------------------------------------------\n");
-		System.exit(0);
-		
 		
 		
 		//********************************* CLI END *************************************

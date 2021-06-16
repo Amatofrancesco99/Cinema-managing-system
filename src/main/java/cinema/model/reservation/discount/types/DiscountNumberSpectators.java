@@ -3,7 +3,9 @@ package cinema.model.reservation.discount.types;
 import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
-import lombok.Data;
+import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import lombok.Getter;
 
 
 /** BREVE DESCRIZIONE CLASSE DiscountNumberSpectator  (Pattern Strategy)
@@ -14,7 +16,7 @@ import lombok.Data;
  *  sconto comitiva, ovvero a seconda di quante persone fanno parte di quella 
  *  specifica prenotazione (si può anche vedere come numero di posti che sono stati occupati).
  */
-@Data
+@Getter
 public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 
 	
@@ -42,17 +44,28 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
 	}
 	
+	/**
+	 * METODO per settare il numero di persone da cui parte lo sconto comitiva
+	 * @param n			Numero di persone minimo
+	 * @throws InvalidNumberPeopleValueException 
+	 */
+	public void setNumberPeople(int n) throws InvalidNumberPeopleValueException {
+		if (n > 0) {
+			this.numberPeople = n;
+		}
+		else throw new InvalidNumberPeopleValueException();
+	}
+	
 	
 	/**
 	 * METODO per settare il nuovo sconto in base al numero di persone
 	 * @param f		      Percentuale di sconto da applicare
-	 * @return boolean	  Esito assegnazione percentuale di sconto
+	 * @throws InvalidPercentageValueException 
 	 */
-	public boolean setPercentage(double d) {
+	public void setPercentage(double d) throws InvalidPercentageValueException {
 		if ((d <= 0) || (d >= 1)){
-			return false;
+			throw new InvalidPercentageValueException();
 		}
-		percentage = d;
-		return true;
+		else percentage = d;
 	}
 }

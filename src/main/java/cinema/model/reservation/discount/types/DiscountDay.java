@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
+import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
 
 
 /** BREVE DESCRIZIONE CLASSE DiscontDay	 (Pattern Strategy)
@@ -20,10 +21,7 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	
 	
 	/** ATTRIBUTI 
-	 *  @param start		giorno da cui parte lo sconto
-	 *  @param end			giorno in cui finisce lo sconto
-	 *  @param day			giorno in cui vale lo sconto
-	 *  @param PERCENTAGE	percentuale di sconto
+	 * 
 	 */
 	private HashMap<LocalDate, Double> discount = new HashMap<>();
 	
@@ -51,13 +49,12 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	 * METODO per aggiungere una nuova data con uno sconto
 	 * @param d				Giorno di validità dello sconto
 	 * @param f				Valore dello sconto
-	 * @return boolean 		True = aggiunto, False = non aggiunto
+	 * @throws InvalidPercentageValueException 
 	 */
-	public boolean addDiscount(LocalDate date, double d) {
+	public void addDiscount(LocalDate date, double d) throws InvalidPercentageValueException {
 		if ((d <= 0) || (d > 1)){
-			return false;
+			throw new InvalidPercentageValueException();
 		}
-		discount.put(date, d);
-		return true;
+		else discount.put(date, d);
 	}
 }

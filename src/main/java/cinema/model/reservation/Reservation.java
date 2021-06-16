@@ -34,14 +34,19 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import cinema.model.money.Money;
 import cinema.model.payment.methods.PaymentCard;
+import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
-import cinema.model.cinema.Room;
 import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.*;
+import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
+import cinema.model.reservation.util.ReservationHasNoSeatException;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
 import lombok.Data;
 
 
@@ -96,6 +101,7 @@ public class Reservation {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
+		paymentCard = null;
 		reportLocation = null;
 		numberPeopleUntilMinAge = 0;
 		numberPeopleOverMaxAge = 0;
@@ -105,13 +111,13 @@ public class Reservation {
 	/***
 	 * METODO per aggiungere un posto alla reservation
 	 * @param row, col		Coordinate posto sala da occupare
+	 * @throws SeatAlreadyTakenException 
 	*/
-	public String addSeat(int row, int col) {
+	public void addSeat(int row, int col) throws SeatAlreadyTakenException {
 		if(projection.takeSeat(row, col)) {
 			seats.add(projection.getPhysicalSeat(row, col));
-			return "Posto " + Room.rowIndexToRowLetter(row) + (col+1) + " occupato";
 		}
-		return "Posto già occupato";		
+		else throw new SeatAlreadyTakenException(row,col);
 	}
 	
 	
@@ -148,14 +154,14 @@ public class Reservation {
 	 * @param progressive				  Id del coupon
 	 * @throws CouponNotExistsException	  Eccezione lanciata qualora non esista un coupon
 	 * 									  con quell'id
+	 * @throws CouponAleadyUsedException 
 	 */
-	public String setCoupon(long progressive) throws CouponNotExistsException {
+	public void setCoupon(long progressive) throws CouponNotExistsException, CouponAleadyUsedException {
 		Coupon coupon = Cinema.getInstance().getCoupon(progressive);
 		if (coupon.isUsed() == true) {
-			 return "Il coupon " + progressive + " è già stato utilizzato.";
+			throw new CouponAleadyUsedException(progressive);
 		}
-		this.coupon = coupon;
-		return "";
+		else this.coupon = coupon;
 	}
 	
 	
@@ -277,13 +283,12 @@ public class Reservation {
 		        // Chiusura del documento
 	            document.close();
 	            setReportLocation(FILE);
+	       
 	            // generazione del file andata a buon fine
 	            return true;
 	        } catch (Exception e) {
-	        	// se la generazione del file non è andata a buon fine genero l'errore
-	        	// e resituisco false
-	            e.printStackTrace();
-	            return false;
+	        	e.toString();
+	        	return false;
 	        }
 	}
 	
@@ -291,88 +296,81 @@ public class Reservation {
 	/**
 	 * METODO per effettuare l'invio tramite email da parte del cinema, all'utente che 
 	 * sta prenotando, del report .pdf della prenotazione stessa.
-	 * @return esito    Stringa che descrive l'esito della creazione dell'email e 
-	 * 					qualora ci siano problemi indica quale sia la problematica specifica
-	 * 					che ha impedito un corretto invio dell'email stessa.
+	 * @return esito invio email
 	 */
-	public String sendEmail() {
+	public boolean sendEmail() {
 		// prima di inviare l'email verifico che il report sia già stato generato, 
 		// se non è ancora stato generato lo genero
-		if ((createReport()==false) || (this.getReportLocation()==null)) {
-			return "La generazione del report non é andata a buon fine.";
+		while (this.getReportLocation() == null) {
+			createReport();
 		}
-		else {
-			// Stabilire le informazioni sul sender ed il receiver dell'email
-			String to = this.getPurchaser().getEmail(); //receiver email
-			final String user = Cinema.getInstance().getEmail(); //sender email (cinema)
-			final String password = Cinema.getInstance().getPassword(); //sender password
+		
+		// Stabilire le informazioni sul sender ed il receiver dell'email
+		String to = this.getPurchaser().getEmail(); //receiver email
+		final String user = Cinema.getInstance().getEmail(); //sender email (cinema)
+		final String password = Cinema.getInstance().getPassword(); //sender password
 		   
-			// Stabilire le proprietà dell'email
-			Properties properties = System.getProperties();  
-			String host = "smtp.gmail.com";
-			properties.put("mail.smtp.starttls.enable", "true");
-	        properties.put("mail.smtp.host", host);
-	        properties.put("mail.smtp.user", user);
-	        properties.put("mail.smtp.password", password);
-	        properties.put("mail.smtp.port", "587");
-	        properties.put("mail.smtp.auth", "true");
+		// Stabilire le proprietà dell'email
+		Properties properties = System.getProperties();  
+		String host = "smtp.gmail.com";
+		properties.put("mail.smtp.starttls.enable", "true");
+	    properties.put("mail.smtp.host", host);
+	    properties.put("mail.smtp.user", user);
+	    properties.put("mail.smtp.password", password);
+	    properties.put("mail.smtp.port", "587");
+	    properties.put("mail.smtp.auth", "true");
 
-	        // Generazione di una nuova sessione mail
-			Session session = Session.getDefaultInstance(properties,  
-			new javax.mail.Authenticator() {  
-				protected PasswordAuthentication getPasswordAuthentication() {  
-					return new PasswordAuthentication(user,password);  
-				}  
-			});  
+	    // Generazione di una nuova sessione mail
+	    Session session = Session.getDefaultInstance(properties,  
+		new javax.mail.Authenticator() {  
+		protected PasswordAuthentication getPasswordAuthentication() {  
+				return new PasswordAuthentication(user,password);  
+			}  
+	    });  
 		     
-			//Tentativo di composizione del messaggio ed invio dell'email  
-			try{  
-				MimeMessage message = new MimeMessage(session);  
-				message.setFrom(new InternetAddress(user));  
-				message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
-				message.setSubject("REPORT PRENOTAZIONE N° " + this.progressive + " | TI ASPETTIAMO!");  
+	    //Tentativo di composizione del messaggio ed invio dell'email  
+		try{  
+			MimeMessage message = new MimeMessage(session);  
+			message.setFrom(new InternetAddress(user));  
+			message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
+			message.setSubject("REPORT PRENOTAZIONE N° " + this.progressive + " | TI ASPETTIAMO!");  
 		      
-				// Creazione del body della nostra email   
-				BodyPart messageBodyPart1 = new MimeBodyPart();  
-				messageBodyPart1.setText(
-						"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n\n"
-						+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + ",\n\n"
-						+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
-						+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
-						+ "a visionare il film.\n\n"
-						+ "Ti aspettiamo, buona giornata.\n\n\n");  
+			// Creazione del body della nostra email   
+			BodyPart messageBodyPart1 = new MimeBodyPart();  
+			messageBodyPart1.setText(
+					"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n\n"
+					+ "Benvenuto " + this.purchaser.getName() + " " + this.purchaser.getSurname() + ",\n\n"
+					+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
+					+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
+					+ "a visionare il film.\n\n"
+					+ "Ti aspettiamo, buona giornata.\n\n\n");  
 		      
-				// Aggiungere all'email come allegato il report della prenotazione      
-				MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
+			// Aggiungere all'email come allegato il report della prenotazione      
+			MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
 		  
-				String filename = getReportLocation();
-				DataSource source = new FileDataSource(filename);  
-				messageBodyPart2.setDataHandler(new DataHandler(source));  
-				messageBodyPart2.setFileName("Reservation_"+Long.toString(getProgressive())+".pdf");  
+			String filename = getReportLocation();
+			DataSource source = new FileDataSource(filename);  
+			messageBodyPart2.setDataHandler(new DataHandler(source));  
+			messageBodyPart2.setFileName("Reservation_"+Long.toString(getProgressive())+".pdf");  
 		     
-				// Creazione di un campo multipart comprendente body e allegato    
-				Multipart multipart = new MimeMultipart();  
-				multipart.addBodyPart(messageBodyPart1);  
-				multipart.addBodyPart(messageBodyPart2);  
+			// Creazione di un campo multipart comprendente body e allegato    
+			Multipart multipart = new MimeMultipart();  
+			multipart.addBodyPart(messageBodyPart1);  
+			multipart.addBodyPart(messageBodyPart2);  
 		  
-				// Aggiungere al messaggio da inviare (email) body e allegato
-				message.setContent(multipart);  
+			// Aggiungere al messaggio da inviare (email) body e allegato
+			message.setContent(multipart);  
 		     
-				// Invio dell'email
-				Transport.send(message);  
-		   
-				// se tutto va bene l'email viene inviata
-				return "Email inviata...";  
+			// Invio dell'email
+			Transport.send(message);   
+			
+			return true;
 			}
 			catch (MessagingException ex) {
-				// qualora ci sia qualsiasi problema nella spedizione dell'email si informa
-				// quale sia lo specifico errore e si ritorna una stringa che informa
-				// il fallimento nell'esito dell'invio dell'email stessa
-				ex.printStackTrace();
-				return "Processo di invio fallito...Riprova più tardi.";  
-				}  
+				ex.toString();
+				return false;
+			}  
 		}
-	}
 	
 	
 	/**
@@ -386,58 +384,59 @@ public class Reservation {
 	
 	/**
 	 *  METODO che consente il pagamento della prenotazione, una volta compilata la prenotazione
-	 * @return esito	 Stringa che rappresenta l'esito del pagamento e il verificarsi
-	 * 					 di eventuali errori (ad esempio che la prenotazione occupi
-	 * 					 almeno un posto, o che il numero di persone ed il numero di posti
-	 * 					 occupati dalla reservation siano gli stessi).
+	 * @return esito acquisto
+	 * @throws PaymentErrorException 
+	 * @throws ReservationHasNoSeatException 
+	 * @throws ReservationHasNoPaymentCardException 
 	 */
-	public String buy(){
-		if (getNSeats()>0)
+	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException{
+		if (getNSeats() > 0)
 		{
-			//Payment simulation
-			if (paymentCard.decreaseMoney(getTotal()) == false) {
-				return "Il pagamento non è andato a buon fine.";
+			if (paymentCard == null) {
+				throw new ReservationHasNoPaymentCardException();
 			}
 			else {
-				String output = "";
-				if (getCoupon() != null) {
-					// se il pagamento va a buon fine dico che il coupon è stato utilizzato
-					// chiaramente se un coupon è stato associato alla prenotazione
-					this.coupon.setUsed(true);
-					output = "Coupon " + this.coupon.getProgressive() + " utilizzato. ";
+				//Payment simulation
+				if (paymentCard.decreaseMoney(getTotal()) == false) {
+					throw new PaymentErrorException();
 				}
-				return (output + "Pagamento andato a buon fine.");
+				else {
+					if (getCoupon() != null) {
+						// se il pagamento va a buon fine dico che il coupon è stato utilizzato
+						// chiaramente se un coupon è stato associato alla prenotazione
+						this.coupon.setUsed(true);
+					}
+					return true;
+				}
 			}
 		}
-		else return "Verifica di aver inserito almeno un posto alla prenotazione.";
+		else throw new ReservationHasNoSeatException(progressive);
 	}
 	
 	
 	/**
 	 * METODO per settare il numero di persone che hanno un'età inferiore ad un età minima
 	 * @param n				Numero di persone
-	 * @return boolean 		Esito metodo set
+	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public boolean setNumberPeopleUntilMinAge(int n) {
+	public void setNumberPeopleUntilMinAge(int n) throws InvalidNumberPeopleValueException {
 		if (n + getNumberPeopleOverMaxAge() > this.getNSeats()) {
-			return false;
+			throw new InvalidNumberPeopleValueException();
 		}
-		numberPeopleUntilMinAge = n;
-		return true;
+		else numberPeopleUntilMinAge = n;
 	}
 	
 	
 	/**
 	 * METODO per settare il numero di persone che hanno un'età superiore ad un età massima
 	 * @param n				Numero di persone
-	 * @return boolean 		Esito metodo set
+	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public boolean setNumberPeopleOverMaxAge(int n) {
+	public void setNumberPeopleOverMaxAge(int n) throws InvalidNumberPeopleValueException {
 		if (n + getNumberPeopleUntilMinAge() > this.getNSeats()) {
-			return false;
+			throw new InvalidNumberPeopleValueException();
 		}
-		numberPeopleOverMaxAge = n;
-		return true;
+		else numberPeopleOverMaxAge = n;
 	}
 	
 }

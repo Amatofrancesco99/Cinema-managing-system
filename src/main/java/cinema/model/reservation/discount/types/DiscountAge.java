@@ -3,7 +3,9 @@ package cinema.model.reservation.discount.types;
 import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
-import lombok.Data;
+import cinema.model.reservation.discount.types.util.InvalidAgeException;
+import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import lombok.Getter;
 
 /** BREVE DESCRIZIONE CLASSE DiscountAge  (Pattern Strategy)
  * 
@@ -12,7 +14,7 @@ import lombok.Data;
  *	Questa classe rappresenta una strategia di sconto sulla prenotazione basata sull'età
  *  degli spettatori che visioneranno il film
  */
-@Data
+@Getter
 public class DiscountAge implements ReservationDiscountStrategy{
 
 	
@@ -58,34 +60,37 @@ public class DiscountAge implements ReservationDiscountStrategy{
 	/**
 	 * METODO per settare l'età minima di validità dello sconto
 	 * @param min_age
+	 * @throws InvalidMinAgeException 
 	 */
-	public void setMin_Age(int min_age) {
+	public void setMin_Age(int min_age) throws InvalidAgeException {
 		if (min_age >= 0) {
 			this.min_age = min_age;
 		}
+		else throw new InvalidAgeException();
 	}
 	
 	/**
 	 * METODO per settare l'età minima di validità dello sconto
 	 * @param max_age
+	 * @throws InvalidMaxAgeException 
 	 */
-	public void setMax_Age(int max_age) {
+	public void setMax_Age(int max_age) throws InvalidAgeException {
 		if (max_age >= 0) {
 			this.max_age = max_age;
 		}
+		else throw new InvalidAgeException();
 	}
 	
 	
 	/**
 	 * METODO per settare il nuovo sconto 
 	 * @param f		      Percentuale di sconto da applicare
-	 * @return boolean	  Esito assegnazione percentuale di sconto
+	 * @throws InvalidPercentageValueException 
 	 */
-	public boolean setPercentage(double d) {
+	public void setPercentage(double d) throws InvalidPercentageValueException {
 		if ((d <= 0) || (d >= 1)){
-			return false;
+			throw new InvalidPercentageValueException();
 		}
-		percentage = d;
-		return true;
+		else percentage = d;
 	}
 }

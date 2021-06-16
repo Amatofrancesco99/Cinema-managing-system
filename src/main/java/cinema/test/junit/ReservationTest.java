@@ -65,7 +65,6 @@ public class ReservationTest {
 		r.addSeat(0, 0);
 		r.addSeat(0, 1);
 		r.addSeat(0, 2);
-		
 	}
 
 	
@@ -78,7 +77,8 @@ public class ReservationTest {
 	 */
 	@Test
 	public void test() {
-		assertEquals("Email inviata...", r.sendEmail());
+		// Test invio email
+		assertEquals(true, r.sendEmail());
 	}
 
 }
