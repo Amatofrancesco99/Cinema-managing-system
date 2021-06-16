@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import cinema.controller.Cinema;
+import cinema.controller.util.NoMovieException;
 import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.Spectator;
@@ -72,26 +73,27 @@ public class CLIMain {
 		int filmId = 0;
 		try {
 			filmId = keyboard.nextInt();
-			if ((filmId <= 0) || (filmId > Cinema.getInstance().getCurrentlyAvailableMovies().size())) {
-				System.err.println("\nSelezione non valida. \n");
-				System.exit(1);
-			}
 		}
 		catch (InputMismatchException e){
 			System.err.println("\nInserisci un numero, non una lettera.\n");
 			System.exit(1);
 		}
 		System.out.println("\n");
-		
-		System.out.println("Maggiori dettagli sul film\n");
-		System.out.println(Cinema.getInstance().getProjections(filmId).get(0).getMovie().getDetailedDescription());
-		System.out.println("Proiezioni previste\n");
-		for (Projection p : Cinema.getInstance().getProjections(filmId)) {
-			System.out.println(p.getId() + ")");
-			System.out.println(p.toString());
+		try {
+			Cinema.getInstance().getProjections(filmId);
+			System.out.println("Maggiori dettagli sul film\n");
+			System.out.println(Cinema.getInstance().getProjections(filmId).get(0).getMovie().getDetailedDescription());
+			System.out.println("Proiezioni previste\n");
+			for (Projection p : Cinema.getInstance().getProjections(filmId)) {
+				System.out.println(p.getId() + ")");
+				System.out.println(p.toString());
+			}
+		} catch (NoMovieException e) {
+			e.toString();
+			System.exit(1);
 		}
 		
-		
+
 		
 		// COMPILAZIONE DELLA PRENOTAZIONE
 		

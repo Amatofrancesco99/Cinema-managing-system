@@ -240,15 +240,18 @@ public class Cinema {
 	 * 
 	 * @param movieId 						 Id del film di cui si vogliono cercare le proiezioni
 	 * @return ArrayList<Projection> 		 Insieme delle proiezioni dello specifico film
+	 * @throws NoMovieException 
 	 * @throws NoMovieProjectionsException   Eccezione lanciata, qualora il cinema non
 	 *                                       abbia quel film, tra i film proiettati
 	 */
-	public List<Projection> getProjections(int movieId) {
+	public List<Projection> getProjections(int movieId) throws NoMovieException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
-		// TODO: Check that movieId is valid
-		for (Projection p : cinemaProjections) {
-			if (p.getMovie().getId() == movieId) {
+		Movie m = Cinema.getInstance().getMovie(movieId);
+		if (m != null) {
+			for (Projection p : cinemaProjections) {
+				if (p.getMovie().getId() == movieId) {
 				movieProjections.add(p);
+				}
 			}
 		}
 		return movieProjections;
