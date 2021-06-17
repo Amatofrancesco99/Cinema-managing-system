@@ -151,6 +151,11 @@ public class Reservation {
 		return total;
 	}  
 	
+
+	public Money getFullPrice() {
+		return new Money(getNSeats() * this.projection.getPrice().getAmount(), projection.getPrice().getCurrency());
+	}  
+	
 	
 	/**
 	 * METODO per aggiungere un coupon dato il suo progressivo
