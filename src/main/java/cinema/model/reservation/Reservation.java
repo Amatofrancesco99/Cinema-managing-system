@@ -39,7 +39,7 @@ import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinates;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
@@ -113,9 +113,9 @@ public class Reservation {
 	 * METODO per aggiungere un posto alla reservation
 	 * @param row, col		Coordinate posto sala da occupare
 	 * @throws SeatAlreadyTakenException 
-	 * @throws InvalidRoomSeatCoordinates 
+	 * @throws InvalidRoomSeatCoordinatesException 
 	*/
-	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinates {
+	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException {
 		if(projection.takeSeat(row, col)) {
 			seats.add(projection.getPhysicalSeat(row, col));
 		}
@@ -126,9 +126,9 @@ public class Reservation {
 	/**
 	 * METODO per rimuovere un posto dalla reservation
 	 * @param row, col		Coordinate posto sala da liberare
-	 * @throws InvalidRoomSeatCoordinates 
+	 * @throws InvalidRoomSeatCoordinatesException 
 	*/
-	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinates {
+	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
 		if(projection.freeSeat(row, col)) 
 			seats.remove(projection.getPhysicalSeat(row, col));		
 	}
@@ -146,7 +146,7 @@ public class Reservation {
 		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
 		// il totale dell'importo di sconto di questo coupon
 		if (getCoupon() != null) {
-			total = new Money(total.getAmount()-getCoupon().getDiscount().getAmount(),total.getCurrency());
+			total = new Money(total.getAmount() - getCoupon().getDiscount().getAmount(), total.getCurrency());
 		}
 		return total;
 	}  

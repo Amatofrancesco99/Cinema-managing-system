@@ -18,9 +18,10 @@ public class ProjectionSeat {
 	
 	/** ATTRIBUTI
 	 * @param physicalSeat  Posto fisico della sala
-	 * @param available		Disponibilità del posto ( 0=occupato, 1=libero )
+	 * @param available		Disponibilità del posto ( 0 = occupato, 1 = libero )
 	 */
 	private PhysicalSeat physicalSeat;
 	private boolean available;
+	
 	
 }

@@ -1,6 +1,7 @@
 @import cinema.controller.Cinema
 @import cinema.model.Movie
 @import cinema.model.cinema.Room
+@import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 @import cinema.model.projection.Projection
 @import java.time.format.DateTimeFormatter
 @import java.time.format.TextStyle
@@ -11,15 +12,13 @@
     Projection projection
 }
 
-<css>
-    .buttonGreen {background-color: #4CAF50; color: black;} /* Green */
-    .buttonRed {background-color: #f44336; color: black;} /* Red */ 
-    .buttonGray {background-color: #e7e7e7; color: black;} /* Gray */
-</css>
-
 @extends(wireframe, cinema=cinema, pageTitle="Acquisto biglietti")
 
 @section(content) {
+    <style>
+
+    </style>
+
     <div class="container pt-5">
         <div class="pt-5 pb-5">
             <h3>
@@ -29,12 +28,26 @@
         <div>
             <table class="table table-bordered">
                 <tbody>
-                    @for(int i = 0; i < projection.getRoom().getNumberRows(); i++){
+                    @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
                         <tr class="p-0 m-0">
-                            @for(int j = 0; j < projection.getRoom().getNumberCols(); j++){
-                                <td class="p-1 m-0">                                    
-                                    <button class="w-75 buttonGray btn-lg p-1 m-1"> 
-                                        @(Room.rowIndexToRowLetter(i))@(j+1)
+                            @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
+                                <td class="p-1 m-0">
+                                    @{
+                                        String classes = "btn w-75 btn-lg p-1 m-1 ";
+                                        boolean isDisabled = false;
+                                        try {
+                                            if (projection.checkIfSeatIsAvailable(i, j)) {
+                                                classes += "btn-outline-success";
+                                            } else {
+                                                classes += "btn-outline-danger";
+                                                isDisabled = true;
+
+                                            }
+                                        } catch(InvalidRoomSeatCoordinatesException e) {
+                                        }
+                                    }
+                                    <button class="@(classes)" @if(isDisabled){disabled}> 
+                                        @(Room.rowIndexToRowLetter(i))@(j + 1)
                                     </button>
                                 </td>
                             }
@@ -42,9 +55,6 @@
                     }
                 </tbody>
             </table>
-
-
-
 
 
         </div>

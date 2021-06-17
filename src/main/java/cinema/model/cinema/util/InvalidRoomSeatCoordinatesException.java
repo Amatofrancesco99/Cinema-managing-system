@@ -10,14 +10,13 @@ import cinema.model.cinema.Room;
  * posti le cui coordinate non sono valide
  */
 @SuppressWarnings("serial")
-public class InvalidRoomSeatCoordinates extends Exception {
+public class InvalidRoomSeatCoordinatesException extends Exception {
 
 	/** 
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
-	public InvalidRoomSeatCoordinates(int row, int col) {
-		System.err.println("La sala non ha al suo interno il posto "
-						  + Room.rowIndexToRowLetter(row) + (col+1));
+	public InvalidRoomSeatCoordinatesException(int row, int col) {
+		System.err.println("La sala non ha al suo interno il posto " + Room.rowIndexToRowLetter(row) + (col+1));
 	}
 
 }

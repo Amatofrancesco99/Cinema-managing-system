@@ -9,7 +9,7 @@ import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.Spectator;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinates;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
@@ -39,70 +39,37 @@ public class CLIMain {
 	 * 				 vengono utilizzati.
 	 */
 	public static void main(String[] args) {
-		//******************************* CLI START **********************************
-		
-		
-		
-		// INFORMAZIONI GENERALI
+		// INFORMAZIONI GENERALI DEL CINEMA
 		printHeader();
-		
-		
+				
 		// FILM ATTUALMENTE DISPONIBILI
 		printCurrentlyAvailableMovies();
-		
-		
+				
 		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI
 		int movieID = askMovieId();
 		printMovieProjections(movieID);
-		
-
-		// COMPILAZIONE DELLA PRENOTAZIONE
-		
-		//Informazioni generali
-		printReservationHeader();
+		printReservationHeader();	//Informazioni generali
 		
 		// Creazione nuova reservation
 		Reservation r = Cinema.getInstance().createReservation();
+		int projectionID = selectProjection();		// Selezione di una specifica proiezione
 		
-		// 1) Selezione di una specifica proiezione
-		int projectionID = selectProjection();
 		setReservationProjection(r, projectionID);
-		
-		// 2) Selezione di un posto
-		showProjectionSeats(r);	
+		showProjectionSeats(r);						// Selezione di un posto
 		addSeatsToReservation(r);
-		
-		// 3) Inserimento dati anagrafici
-		insertPersonalData(r);
-		
-		// 4) Inserimento dati pagamento
-		insertPaymentCardInfo(r);
-		
-		// 5) Inserimento informazioni persone insieme al compratore del biglietto
-		insertSpectatorsInfo(r);
-		
-		// 6) Aggiungi un eventuale coupon alla prenotazione
-		insertCouponInfo(r);
-		
-		// 7) Pagamento e spedizione dell'email al cliente
-		buyAndSendEmail(r);
-		
-		
-		// SALUTO CLIENTE E CHIUSURA CLI
-		sayGoodbye();
-		
-		
-		
-		//********************************* CLI END *************************************
+		insertPersonalData(r);		// Inserimento dati anagrafici
+		insertPaymentCardInfo(r);	// Inserimento dati pagamento
+		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
+		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
+		buyAndSendEmail(r); 		// Pagamento e spedizione dell'email al cliente
+		sayGoodbye();				// Ringraziamenti e co
 	}
-
 
 
 	private static void sayGoodbye() {
 		System.out.println("\n\nGrazie, a presto!\n");
 		System.out.println("-----------------------------------------------------\n");
 	}
-
 
 
 	private static void buyAndSendEmail(Reservation r) {
@@ -265,21 +232,20 @@ public class CLIMain {
 	}
 
 
-
 	private static void showProjectionSeats(Reservation r) {
 			System.out.println("\n2- SELEZIONE POSTO/I \n");
 			System.out.println("Disposizione sala e posti liberi.");
 			System.out.println("I posti segnati con XX sono quelli già stati occupati. \n");
 			System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
-			for (int i = 0 ; i < r.getProjection().getRoom().getNumberRows() ; i++) {
-				for (int j = 0 ; j < r.getProjection().getRoom().getNumberCols() ; j++) {
+			for (int i = 0; i < r.getProjection().getRoom().getNumberRows(); i++) {
+				for (int j = 0; j < r.getProjection().getRoom().getNumberCols(); j++) {
 					try {
-						if (!r.getProjection().verifyIfSeatAvailable(i, j)) {
-							System.out.print("  ----  ");
+						if (!r.getProjection().checkIfSeatIsAvailable(i, j)){
+							System.out.print(" ------ ");
 						}
 						else 
-							System.out.print(" [ " + Room.rowIndexToRowLetter(i) + (j+1) + " ] ");
-					} catch (InvalidRoomSeatCoordinates e) {
+							System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
+					} catch (InvalidRoomSeatCoordinatesException e) {
 				  }
 				}
 				System.out.println("");
@@ -383,6 +349,4 @@ public class CLIMain {
 		}
 		System.out.println("-----------------------------------------------------\n");
 	}
-
-	
 }

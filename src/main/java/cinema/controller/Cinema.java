@@ -7,7 +7,7 @@ import java.util.List;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomDimensionsException;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinates;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.money.Money;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
@@ -165,7 +165,7 @@ public class Cinema {
 		//occupare il primo posto della seconda proiezione
 		try {
 			p2.takeSeat(0, 0);
-		} catch (InvalidRoomSeatCoordinates e) {
+		} catch (InvalidRoomSeatCoordinatesException e) {
 		}
 		
 		// Aggiunti due coupon di prova emessi dal cinema
@@ -173,9 +173,6 @@ public class Cinema {
 		coupons.get(0).setUsed(true);   // Coupon ID: 1 già utilizzato (Prova)
 		coupons.add(new Coupon(new Money(6)));
 		coupons.add(new Coupon(new Money(3.5)));
-		
-		
-		// ********* END *********
 	}
 
 	/**
