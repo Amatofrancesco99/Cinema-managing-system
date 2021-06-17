@@ -420,6 +420,6 @@ public class Cinema {
 	 * @return location
 	 */
 	public String getLocation() {
-		return address + ", " + city + " - " + zipCode + "  " + country;
+		return address + ", " + city + " - " + zipCode + " " + country;
 	}
 }

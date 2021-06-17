@@ -15,10 +15,6 @@
 @extends(wireframe, cinema=cinema, pageTitle="Acquisto biglietti")
 
 @section(content) {
-    <style>
-
-    </style>
-
     <div class="container pt-5">
         <div class="pt-5 pb-5">
             <h3>
@@ -27,28 +23,28 @@
         </div>
         <div>
 
-            <span style="display:block; overflow-x:auto;">
-                <table class="table table-bordered">
+            <span style="display: block; overflow-x: auto;">
+                <table class="table table-borderless">
                     <tbody>
                         @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
                             <tr class="p-0 m-0">
                                 @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
                                     <td class="p-1 m-0">
                                         @{
-                                            String classes = "btn w-75 btn-lg p-1 m-1 ";
+                                            String seatStatus = "";
                                             boolean isDisabled = false;
                                             try {
                                                 if (projection.checkIfSeatIsAvailable(i, j)) {
-                                                    classes += "btn-outline-success";
+                                                    seatStatus = "btn-outline-success";
                                                 } else {
-                                                    classes += "btn-outline-danger";
+                                                    seatStatus = "btn-outline-danger";
                                                     isDisabled = true;
-
                                                 }
                                             } catch(InvalidRoomSeatCoordinatesException e) {
+
                                             }
                                         }
-                                        <button id="seat-@(i)-@(j)" class="@(classes)" @if(isDisabled){disabled} data-bs-toggle="button" autocomplete="off"> 
+                                        <button id="seat-@(i)-@(j)" class="btn w-75 btn-lg p-1 m-1 @(seatStatus)" @if(isDisabled){disabled} data-bs-toggle="button" autocomplete="off"> 
                                             @(Room.rowIndexToRowLetter(i))@(j + 1)
                                         </button>
                                     </td>

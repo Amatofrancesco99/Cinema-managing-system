@@ -194,21 +194,19 @@ public class CLIMain {
 		}
 	}
 
-
-
 	private static void addSeatsToReservation(Reservation r) {
 		boolean end = false;
 		do {
 			boolean validSeat = false;
 			do {
-				System.out.println("\nInserisci il posto che vuoi occupare:  \n");
+				System.out.println("\nInserisci il posto che vuoi occupare:\n");
 				String posto = "";
 				posto = keyboard.next();
 				System.out.println("\n");
-				int riga = -1, colonna = -2;
+				int riga = -1, colonna = -1;
 				try {
 					riga = Room.rowLetterToRowIndex(posto.replaceAll("\\d",""));
-					colonna = Integer.valueOf(posto.replaceAll("[\\D]", "")) -1;
+					colonna = Integer.valueOf(posto.replaceAll("[\\D]", "")) - 1;
 				}
 				catch (Exception e) {
 				}
@@ -219,7 +217,7 @@ public class CLIMain {
 					e.toString();
 				}
 			} while (!validSeat);
-			System.out.println("\nVuoi occupare altri posti? (Y/N): ");
+			System.out.println("\nVuoi occupare altri posti? (Y/N):");
 			String occupaAltri = keyboard.next();
 			if (occupaAltri.contains("N")) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
@@ -233,9 +231,9 @@ public class CLIMain {
 
 
 	private static void showProjectionSeats(Reservation r) {
-			System.out.println("\n2- SELEZIONE POSTO/I \n");
+			System.out.println("\n2- SELEZIONE POSTO/I\n");
 			System.out.println("Disposizione sala e posti liberi.");
-			System.out.println("I posti segnati con XX sono quelli già stati occupati. \n");
+			System.out.println("I posti segnati con i trattini sono già occupati.\n");
 			System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
 			for (int i = 0; i < r.getProjection().getRoom().getNumberRows(); i++) {
 				for (int j = 0; j < r.getProjection().getRoom().getNumberCols(); j++) {
@@ -270,15 +268,15 @@ public class CLIMain {
 		while (!end) {
 			System.out.println("\nInserisci il numero della proiezione che sei interessato visionare:  ");
 			try {
-				projectionId = keyboard.nextInt();
+				projectionId = Integer.parseInt(keyboard.nextLine());
 				try {
 					Cinema.getInstance().getProjection(projectionId);
 					end = true;
 				} catch (NoProjectionException e) {
 				}
 			}
-			catch (InputMismatchException e){
-				System.err.println("\nInserisci un numero, non una lettera.\n");
+			catch (InputMismatchException | NumberFormatException e){
+				System.err.println("\nInserisci solamente caratteri numerici.\n");
 			}
 		}
 		return projectionId;
@@ -287,7 +285,7 @@ public class CLIMain {
 
 	private static void printReservationHeader() {
 		System.out.println("-----------------------------------------------------\n\n");
-		System.out.println("COMPILAZIONE PRENOTAZIONE \n");
+		System.out.println("COMPILAZIONE PRENOTAZIONE\n");
 	}
 
 
@@ -310,20 +308,20 @@ public class CLIMain {
 	private static int askMovieId() {
 		boolean end = false;
 		int filmId = 0;
-		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI \n");
+		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI\n");
 		while (!end) {
 			System.out.println("Inserisci il numero del film di cui vuoi vedere maggiori dettagli e le sue"
-						+ " relative proiezioni:  ");
+						+ " relative proiezioni:");
 			try {
-				filmId = keyboard.nextInt();
+				filmId = Integer.parseInt(keyboard.nextLine());
 				try {
 					Cinema.getInstance().getProjections(filmId);
 					end = true;
 				} catch (NoMovieException e) {
 				}
 			}
-			catch (InputMismatchException e){
-				System.err.println("\nInserisci un numero, non una lettera.\n");
+			catch (InputMismatchException | NumberFormatException e){
+				System.err.println("\nInserisci solamente caratteri numerici.\n");
 			}
 			System.out.println("\n");
 		}
@@ -333,10 +331,10 @@ public class CLIMain {
 
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
-		System.err.println(Cinema.getInstance().getName().toUpperCase()+"\n");
+		System.out.println(Cinema.getInstance().getName().toUpperCase()+"\n");
 		System.out.println("Puoi trovarci in: " + Cinema.getInstance().getLocation() + "\n");
 		System.out.println("Contattaci: " + Cinema.getInstance().getEmail() + "\n\n");
-		System.err.println("Sviluppato da Screaming Hairy Armadillo Team\n");
+		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.out.println("-----------------------------------------------------\n");
 	}
 	
