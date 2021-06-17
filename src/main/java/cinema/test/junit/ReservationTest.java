@@ -2,7 +2,6 @@ package cinema.test.junit;
 
 import static org.junit.Assert.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -36,7 +35,7 @@ public class ReservationTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		r = new Reservation();
-		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it", LocalDate.parse("1999-12-27")));
+		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		Room room = new Room(3,3);
 		
 		ArrayList<String> genres, directors, cast;
