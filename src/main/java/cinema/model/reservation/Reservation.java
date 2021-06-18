@@ -46,6 +46,7 @@ import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.*;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
 import cinema.model.reservation.util.SeatAlreadyTakenException;
@@ -128,10 +129,20 @@ public class Reservation {
 	 * METODO per rimuovere un posto dalla reservation
 	 * @param row, col		Coordinate posto sala da liberare
 	 * @throws InvalidRoomSeatCoordinatesException 
+	 * @throws FreeAnotherPersonSeatException 
 	*/
-	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
-		if(!projection.checkIfSeatIsAvailable(row, col)) 
-			seats.remove(projection.getPhysicalSeat(row, col));		
+	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException, FreeAnotherPersonSeatException {
+		try {
+			if(!projection.checkIfSeatIsAvailable(row, col)) 
+				seats.remove(projection.getPhysicalSeat(row, col));		
+			}
+		catch (Exception e) {
+			// Qualora il posto che sto cercando di rimuovere non fa parte dei posti della
+			// mia prenotazione allora il seat.remove(...) lancerà un eccezione, che noi
+			// gestiamo stampando una stringa che informi il cliente che non può liberare
+			// posti occupati da altre persone
+			throw new FreeAnotherPersonSeatException();
+		}
 	}
 	
 	
