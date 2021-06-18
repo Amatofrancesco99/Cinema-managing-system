@@ -50,6 +50,7 @@ import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
 import cinema.model.reservation.util.SeatAlreadyTakenException;
+import cinema.model.reservation.util.SeatTakenTwiceException;
 import lombok.Data;
 
 
@@ -416,8 +417,10 @@ public class Reservation {
 	 * @throws ReservationHasNoPaymentCardException 
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 * @throws SeatAlreadyTakenException 
+	 * @throws FreeAnotherPersonSeatException 
+	 * @throws SeatTakenTwiceException 
 	 */
-	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException{
+	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException{
 		// Prima di comprare il biglietto occupo veramente i posti, per evitare
 		// che una persona occupi i posti senza poi pagare ed impedire agli altri 
 		// la selezione dei posti
@@ -426,7 +429,15 @@ public class Reservation {
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
 			if (projection.takeSeat(row, col)) ;
-			else throw new SeatAlreadyTakenException(row,col);
+			else {
+				// TODO: Fixare il bug che si verifica quando occupi il posto per più volte
+				// Soluzione? O sistemare la cosa qua, oppure farlo direttamente dal metodo
+				// addSeat di questa stessa classe 
+				/** @see addSeat(row, col) */
+				removeSeat(row, col);
+				projection.freeSeat(row, col);
+				throw new SeatTakenTwiceException(row,col);
+			}
 		}
 
 		if (getNSeats() > 0)

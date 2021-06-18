@@ -1,6 +1,5 @@
 package cinema.view.cli;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -9,7 +8,6 @@ import cinema.controller.util.NoMovieException;
 import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.Spectator;
-import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.PaymentCard;
@@ -19,9 +17,10 @@ import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
-import cinema.model.reservation.util.SeatAlreadyTakenException;
+import cinema.model.reservation.util.SeatTakenTwiceException;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIMain
@@ -95,18 +94,17 @@ public class CLIMain {
 			} catch (PaymentErrorException  e) {
 				e.toString();
 			}
-			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException e) {
+			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException | FreeAnotherPersonSeatException  e) {
 				e.toString();
 				end = true;
 			}
-			catch (SeatAlreadyTakenException e) {
+			catch (SeatTakenTwiceException e) {
 				e.toString();
-				// TODO: Logica per poter mantenere i posti che non hanno dato problemi
-				// e fare inserire al cliente nuovi posti
-				System.out.println("\n\nInserisci nuovamente i posti che vuoi occupare.\n");
-				r.setSeats(new ArrayList<PhysicalSeat>());
+				System.out.println("\n\nInserisci il/i posto/i che volevi occupare.\n");
 				showProjectionSeats(r);						
 				addSeatsToReservation(r);
+				buyAndSendEmail(r);
+				end = true;
 			}
 		}
 	}
