@@ -90,8 +90,12 @@ public class CLIMain {
 				System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
 						+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
 				end = true;
-			} catch (PaymentErrorException | ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException | SeatAlreadyTakenException e) {
+			} catch (PaymentErrorException  e) {
 				e.toString();
+			}
+			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException | SeatAlreadyTakenException e) {
+				e.toString();
+				end = true;
 			}
 		}
 	}
