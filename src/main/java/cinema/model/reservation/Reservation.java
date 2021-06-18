@@ -117,10 +117,23 @@ public class Reservation {
 	 * @param row, col		Coordinate posto sala da occupare
 	 * @throws SeatAlreadyTakenException 
 	 * @throws InvalidRoomSeatCoordinatesException 
+	 * @throws SeatTakenTwiceException 
+	 * @throws FreeAnotherPersonSeatException 
 	*/
-	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException {
+	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
+		boolean findDuplicate = false;
 		if (projection.checkIfSeatIsAvailable(row, col)) {
-			seats.add(projection.getPhysicalSeat(row, col));
+			for (PhysicalSeat s : seats) {
+				if (s == projection.getPhysicalSeat(row, col)) {
+					findDuplicate = true;
+				}
+			}
+			if (!findDuplicate) {
+				seats.add(projection.getPhysicalSeat(row, col));
+			}
+			if (findDuplicate) {
+				throw new SeatTakenTwiceException(row,col);
+			}
 		}
 		else throw new SeatAlreadyTakenException(row,col);
 	}
@@ -416,11 +429,8 @@ public class Reservation {
 	 * @throws ReservationHasNoSeatException 
 	 * @throws ReservationHasNoPaymentCardException 
 	 * @throws InvalidRoomSeatCoordinatesException 
-	 * @throws SeatAlreadyTakenException 
-	 * @throws FreeAnotherPersonSeatException 
-	 * @throws SeatTakenTwiceException 
 	 */
-	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException{
+	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException{
 		// Prima di comprare il biglietto occupo veramente i posti, per evitare
 		// che una persona occupi i posti senza poi pagare ed impedire agli altri 
 		// la selezione dei posti
@@ -429,15 +439,6 @@ public class Reservation {
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
 			if (projection.takeSeat(row, col)) ;
-			else {
-				// TODO: Fixare il bug che si verifica quando occupi il posto per più volte
-				// Soluzione? O sistemare la cosa qua, oppure farlo direttamente dal metodo
-				// addSeat di questa stessa classe 
-				/** @see addSeat(row, col) */
-				removeSeat(row, col);
-				projection.freeSeat(row, col);
-				throw new SeatTakenTwiceException(row,col);
-			}
 		}
 
 		if (getNSeats() > 0)

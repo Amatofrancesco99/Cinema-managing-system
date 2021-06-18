@@ -20,6 +20,7 @@ import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueExce
 import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
 import cinema.model.reservation.util.SeatTakenTwiceException;
 
 
@@ -41,30 +42,31 @@ public class CLIMain {
 	 * 				 vengono utilizzati.
 	 */
 	public static void main(String[] args) {
-		// INFORMAZIONI GENERALI DEL CINEMA
+		// INFORMAZIONI GENERALI DEL CINEMA E BENVENUTO AL CLIENTE
 		printHeader();
 				
-		// FILM ATTUALMENTE DISPONIBILI
+		// FILM ATTUALMENTE DISPONIBILI/PROIETTATI
 		printCurrentlyAvailableMovies();
 				
-		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI
+		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI E MAGGIORI DETTAGLI 
 		int movieID = askMovieId();
 		printMovieProjections(movieID);
-		printReservationHeader();	//Informazioni generali
 		
-		// Creazione nuova reservation
+		// CREAZIONE DI UNA NUOVA RESERVATION E INSERIMENTO DATI
+		printReservationHeader();
 		Reservation r = Cinema.getInstance().createReservation();
-		int projectionID = selectProjection();		// Selezione di una specifica proiezione
-		
+		int projectionID = selectProjection();	// Selezione di una specifica proiezione
 		setReservationProjection(r, projectionID);
-		showProjectionSeats(r);						// Selezione di un posto
-		addSeatsToReservation(r);
+		showProjectionSeats(r);	 	// Disposizione posti in sala e posti già occupati
+		addSeatsToReservation(r);	// Selezione di uno/più posto/i
 		insertPersonalData(r);		// Inserimento dati anagrafici
 		insertPaymentCardInfo(r);	// Inserimento dati pagamento
 		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
 		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
 		buyAndSendEmail(r); 		// Pagamento e spedizione dell'email al cliente
-		sayGoodbye();				// Ringraziamenti e co
+		
+		// SALUTO DEL CLIENTE E TERMINA PROGRAMMA
+		sayGoodbye();
 	}
 
 
@@ -94,16 +96,8 @@ public class CLIMain {
 			} catch (PaymentErrorException  e) {
 				e.toString();
 			}
-			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException | FreeAnotherPersonSeatException  e) {
+			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException e) {
 				e.toString();
-				end = true;
-			}
-			catch (SeatTakenTwiceException e) {
-				e.toString();
-				System.out.println("\n\nInserisci il/i posto/i che volevi occupare.\n");
-				showProjectionSeats(r);						
-				addSeatsToReservation(r);
-				buyAndSendEmail(r);
 				end = true;
 			}
 		}
@@ -227,9 +221,9 @@ public class CLIMain {
 				try {
 					r.addSeat(riga, colonna);
 					validSeat = true;
-				} catch (Exception e) {
+				} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException e) {
 					e.toString();
-				}
+				} 
 			} while (!validSeat);
 			System.out.println("\nVuoi occupare altri posti? (Y/N):");
 			String occupaAltri = keyboard.next();
