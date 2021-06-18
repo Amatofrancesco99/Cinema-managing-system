@@ -1,5 +1,6 @@
 package cinema.view.cli;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -8,6 +9,7 @@ import cinema.controller.util.NoMovieException;
 import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.Spectator;
+import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.PaymentCard;
@@ -93,9 +95,18 @@ public class CLIMain {
 			} catch (PaymentErrorException  e) {
 				e.toString();
 			}
-			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException | SeatAlreadyTakenException e) {
+			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException e) {
 				e.toString();
 				end = true;
+			}
+			catch (SeatAlreadyTakenException e) {
+				e.toString();
+				// TODO: Logica per poter mantenere i posti che non hanno dato problemi
+				// e fare inserire al cliente nuovi posti
+				System.out.println("\n\nInserisci nuovamente i posti che vuoi occupare.\n");
+				r.setSeats(new ArrayList<PhysicalSeat>());
+				showProjectionSeats(r);						
+				addSeatsToReservation(r);
 			}
 		}
 	}
