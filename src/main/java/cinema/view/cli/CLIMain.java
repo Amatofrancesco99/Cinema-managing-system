@@ -1,5 +1,6 @@
 package cinema.view.cli;
 
+import java.time.YearMonth;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -10,7 +11,10 @@ import cinema.model.Movie;
 import cinema.model.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
-import cinema.model.payment.methods.PaymentCard;
+import cinema.model.payment.methods.paymentCard.PaymentCard;
+import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
+import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
+import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
@@ -102,8 +106,8 @@ public class CLIMain {
 			} catch (SeatAlreadyTakenException e) {
 				System.out.println("\nSiamo spiacenti: ");
 				e.toString();
-				// TODO: Scelta se vuole occupare altri posti o se pagare solo i posti
-				// che ha prenotato
+				/* TODO: Scelta se vuole occupare altri posti o se pagare solo i posti
+				* che ha prenotato */
 				System.out.println("\nInserisci altri posti alla tua prenotazione...");
 			}
 		}
@@ -142,7 +146,7 @@ public class CLIMain {
 
 	private static void insertSpectatorsInfo(Reservation r) {
 		boolean end = false;
-		System.out.println("\n\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
+		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
 		while (!end) {
 			// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
 			// sconti
@@ -169,14 +173,61 @@ public class CLIMain {
 
 	private static void insertPaymentCardInfo(Reservation r) {
 		boolean end = false;
-		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n\n");
+		PaymentCard p = new PaymentCard();
+		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
 		while (!end) {
-			//TODO: aggiungere NOME TITOLARE CARTA, NUMERO CARTA, SCADENZA, CVV
-			r.setPaymentCard(new PaymentCard());
+			System.out.println("\nInserisci il nome del titolare della carta:  ");
+			String owner = keyboard.next();
+			System.out.println("\n");
+			p.setOwner(owner);
 			end = true;
 		}
+		end = false;
+		while (!end) {
+			System.out.println("\nInserisci il numero della carta: ");
+			String number = keyboard.next();
+			System.out.println("\n");
+			try {
+				p.setNumber(number);
+				end = true;
+			} catch (InvalidCreditCardNumberException e) {
+				e.toString();
+			}
+		}
+		end = false;
+		while (!end) {
+			System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
+			String expD = keyboard.next();
+			System.out.println("\n");
+			YearMonth expirationDate = null;
+			try {
+				expirationDate = YearMonth.parse(expD);
+			}
+			catch(Exception e) {}
+			try {
+				if (expirationDate != null)
+					p.setExpirationDate(expirationDate);
+					end = true;
+			} catch (ExpiredCreditCardException e) {
+				e.toString();
+				System.out.println("...Inserisci una nuova carta...");
+				insertPaymentCardInfo(r);
+			}
+		}
+		end = false;
+		while (!end) {
+			System.out.println("\nInserisci il ccv: ");
+			String ccv = keyboard.next();
+			System.out.println("\n");
+			try {
+				p.setCCV(ccv);
+				end = true;
+			} catch (InvalidCCVException e) {
+				e.toString();
+			}
+		}	
+		r.setPaymentCard(p);
 	}
-
 
 
 	private static void insertPersonalData(Reservation r) {

@@ -33,7 +33,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import cinema.model.money.Money;
-import cinema.model.payment.methods.PaymentCard;
+import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.Spectator;
