@@ -429,8 +429,9 @@ public class Reservation {
 	 * @throws ReservationHasNoSeatException 
 	 * @throws ReservationHasNoPaymentCardException 
 	 * @throws InvalidRoomSeatCoordinatesException 
+	 * @throws SeatAlreadyTakenException 
 	 */
-	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException{
+	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException{
 		// Prima di comprare il biglietto occupo veramente i posti, per evitare
 		// che una persona occupi i posti senza poi pagare ed impedire agli altri 
 		// la selezione dei posti
@@ -439,6 +440,7 @@ public class Reservation {
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
 			if (projection.takeSeat(row, col)) ;
+			else throw new SeatAlreadyTakenException(row,col);
 		}
 
 		if (getNSeats() > 0)

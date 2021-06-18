@@ -99,6 +99,12 @@ public class CLIMain {
 			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException e) {
 				e.toString();
 				end = true;
+			} catch (SeatAlreadyTakenException e) {
+				System.out.println("\nSiamo spiacenti: ");
+				e.toString();
+				// TODO: Scelta se vuole occupare altri posti o se pagare solo i posti
+				// che ha prenotato
+				System.out.println("\nInserisci altri posti alla tua prenotazione...");
 			}
 		}
 	}
