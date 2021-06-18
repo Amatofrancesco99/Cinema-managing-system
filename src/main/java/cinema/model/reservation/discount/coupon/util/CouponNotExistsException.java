@@ -14,7 +14,7 @@ public class CouponNotExistsException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public CouponNotExistsException(long progressive) {
-		System.err.println("Il coupon " + progressive + " non esiste.");
+		System.out.println("Il coupon " + progressive + " non esiste.");
 	}
 
 }

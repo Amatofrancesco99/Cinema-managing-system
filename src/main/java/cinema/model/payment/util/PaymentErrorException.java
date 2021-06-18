@@ -14,7 +14,7 @@ public class PaymentErrorException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public PaymentErrorException() {
-		System.err.println("Il pagamento non è andato a buon fine.");
+		System.out.println("Il pagamento non è andato a buon fine.");
 	}
 	
 }

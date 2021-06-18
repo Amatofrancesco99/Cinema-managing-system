@@ -15,7 +15,7 @@ public class InvalidRoomDimensionsException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public InvalidRoomDimensionsException() {
-		System.err.println("Dimensioni della stanza invalide: devono essere maggiori di zero.");
+		System.out.println("Dimensioni della stanza invalide: devono essere maggiori di zero.");
 	}
 	
 }

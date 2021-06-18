@@ -19,6 +19,7 @@ import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIMain
@@ -89,7 +90,7 @@ public class CLIMain {
 				System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
 						+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
 				end = true;
-			} catch (PaymentErrorException | ReservationHasNoSeatException | ReservationHasNoPaymentCardException e) {
+			} catch (PaymentErrorException | ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException | SeatAlreadyTakenException e) {
 				e.toString();
 			}
 		}
@@ -137,7 +138,7 @@ public class CLIMain {
 			int nMin = Integer.parseInt(n1);
 			try {
 				r.setNumberPeopleUntilMinAge(nMin);
-			} catch (InvalidNumberPeopleValueException e) {
+			} catch (InvalidNumberPeopleValueException | NumberFormatException e) {
 				e.toString();
 			}
 			System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (Cinema.getInstance().getMaxDiscountAge()) + " anni: ");
@@ -146,7 +147,7 @@ public class CLIMain {
 			try {
 				r.setNumberPeopleOverMaxAge(nMax);
 				end = true;
-			} catch (InvalidNumberPeopleValueException e) {
+			} catch (InvalidNumberPeopleValueException | NumberFormatException e) {
 				e.toString();
 			}		
 		}

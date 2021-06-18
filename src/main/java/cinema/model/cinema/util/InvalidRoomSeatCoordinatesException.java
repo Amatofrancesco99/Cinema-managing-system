@@ -16,7 +16,7 @@ public class InvalidRoomSeatCoordinatesException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public InvalidRoomSeatCoordinatesException(int row, int col) {
-		System.err.println("La sala non ha al suo interno il posto " + Room.rowIndexToRowLetter(row) + (col+1));
+		System.out.println("La sala non ha al suo interno il posto " + Room.rowIndexToRowLetter(row) + (col+1));
 	}
 
 }

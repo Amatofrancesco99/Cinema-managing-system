@@ -14,7 +14,7 @@ public class ReservationHasNoPaymentCardException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public ReservationHasNoPaymentCardException() {
-		System.err.println("Verifica di aver inserito un metodo di pagamento.");
+		System.out.println("Verifica di aver inserito un metodo di pagamento.");
 	}
 	
 }

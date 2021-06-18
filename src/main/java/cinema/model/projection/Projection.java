@@ -150,7 +150,7 @@ public class Projection implements Comparable<Projection> {
 		for(int i=0; i < room.getNumberRows(); i++) {
 			for(int j=0; j < room.getNumberCols(); j++) {
 				if(getPhysicalSeat(i,j) == s)
-					return "Fila: " + Room.rowIndexToRowLetter(i) + "\t\t\tPosto: " + (j+1);		
+					return Room.rowIndexToRowLetter(i) + (j+1);		
 			}
 		}
 		return null;		

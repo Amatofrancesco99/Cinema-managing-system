@@ -13,7 +13,7 @@ public class InvalidNumberPeopleValueException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public InvalidNumberPeopleValueException() {
-		System.err.println("Numero di persone inserito non valido. ");
+		System.out.println("Numero di persone inserito non valido. ");
 	}
 	
 }

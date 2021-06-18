@@ -14,7 +14,7 @@ public class ReservationHasNoSeatException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public ReservationHasNoSeatException() {
-		System.err.println("Verifica di aver inserito almeno un posto alla prenotazione. ");
+		System.out.println("Verifica di aver inserito almeno un posto alla prenotazione. ");
 	}
 	
 }

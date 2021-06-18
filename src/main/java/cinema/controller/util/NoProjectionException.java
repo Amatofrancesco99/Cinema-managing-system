@@ -13,7 +13,7 @@ public class NoProjectionException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public NoProjectionException(int id) {
-		System.err.println("La proiezione con id " + id + " non esiste.");
+		System.out.println("La proiezione con id " + id + " non esiste.");
 	}
 	
 }

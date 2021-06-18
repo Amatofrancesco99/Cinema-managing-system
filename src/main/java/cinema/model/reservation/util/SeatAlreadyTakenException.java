@@ -16,7 +16,7 @@ public class SeatAlreadyTakenException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public SeatAlreadyTakenException(int row, int col) {
-		System.err.println("Il posto " + Room.rowIndexToRowLetter(row) + (col+1) + " è già stato occupato.");
+		System.out.println("Il posto " + Room.rowIndexToRowLetter(row) + (col+1) + " è già stato occupato.");
 	}
 
 }

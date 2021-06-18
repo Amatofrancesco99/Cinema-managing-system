@@ -14,7 +14,7 @@ public class InvalidAgeException extends Exception {
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
 	public InvalidAgeException() {
-		System.err.println("Età inserita non valida.");
+		System.out.println("Età inserita non valida.");
 	}
 	
 }

@@ -39,6 +39,7 @@ import cinema.model.projection.Projection;
 import cinema.model.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
+import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
@@ -116,7 +117,7 @@ public class Reservation {
 	 * @throws InvalidRoomSeatCoordinatesException 
 	*/
 	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException {
-		if(projection.takeSeat(row, col)) {
+		if (projection.checkIfSeatIsAvailable(row, col)) {
 			seats.add(projection.getPhysicalSeat(row, col));
 		}
 		else throw new SeatAlreadyTakenException(row,col);
@@ -129,7 +130,7 @@ public class Reservation {
 	 * @throws InvalidRoomSeatCoordinatesException 
 	*/
 	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
-		if(projection.freeSeat(row, col)) 
+		if(!projection.checkIfSeatIsAvailable(row, col)) 
 			seats.remove(projection.getPhysicalSeat(row, col));		
 	}
 	
@@ -152,6 +153,10 @@ public class Reservation {
 	}  
 	
 
+	/**
+	 * METODO per farsi dare il totale della prenotazione, senza sconti
+	 * @return total  Ammontare di denaro
+	 */
 	public Money getFullPrice() {
 		return new Money(getNSeats() * this.projection.getPrice().getAmount(), projection.getPrice().getCurrency());
 	}  
@@ -266,8 +271,10 @@ public class Reservation {
 		        
 		        //aggiungere alla tabella tutti i posti che si sono aggiunti alla prenotazione
 		        for(PhysicalSeat s : seats) {
-		        	if(projection.getSeatCoordinates(s) != null)
-		        		table.addCell(projection.getSeatCoordinates(s));	
+		        	String seatCoordinates = projection.getSeatCoordinates(s);
+		        	if(seatCoordinates != null)
+		        		table.addCell("Fila: " + seatCoordinates.replaceAll("\\d","") +
+		        				 "\t\tPosto: " + seatCoordinates.replaceAll("[\\D]",""));	
 		        }
 		        
 		        //totale della prenotazione
@@ -396,8 +403,21 @@ public class Reservation {
 	 * @throws PaymentErrorException 
 	 * @throws ReservationHasNoSeatException 
 	 * @throws ReservationHasNoPaymentCardException 
+	 * @throws InvalidRoomSeatCoordinatesException 
+	 * @throws SeatAlreadyTakenException 
 	 */
-	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException{
+	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException{
+		// Prima di comprare il biglietto occupo veramente i posti, per evitare
+		// che una persona occupi i posti senza poi pagare ed impedire agli altri 
+		// la selezione dei posti
+		for (PhysicalSeat ps : seats) {
+			String coordinates = projection.getSeatCoordinates(ps);
+			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
+			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
+			if (projection.takeSeat(row, col)) ;
+			else throw new SeatAlreadyTakenException(row,col);
+		}
+
 		if (getNSeats() > 0)
 		{
 			if (paymentCard == null) {
@@ -428,7 +448,7 @@ public class Reservation {
 	 * @throws InvalidNumberPeopleValueException 
 	 */
 	public void setNumberPeopleUntilMinAge(int n) throws InvalidNumberPeopleValueException {
-		if (n + getNumberPeopleOverMaxAge() > this.getNSeats()) {
+		if ((n + getNumberPeopleOverMaxAge() > this.getNSeats()) || (n < 0)) {
 			throw new InvalidNumberPeopleValueException();
 		}
 		else numberPeopleUntilMinAge = n;
@@ -441,7 +461,7 @@ public class Reservation {
 	 * @throws InvalidNumberPeopleValueException 
 	 */
 	public void setNumberPeopleOverMaxAge(int n) throws InvalidNumberPeopleValueException {
-		if (n + getNumberPeopleUntilMinAge() > this.getNSeats()) {
+		if ((n + getNumberPeopleUntilMinAge() > this.getNSeats()) || (n < 0)) {
 			throw new InvalidNumberPeopleValueException();
 		}
 		else numberPeopleOverMaxAge = n;
