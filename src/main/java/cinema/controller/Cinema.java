@@ -96,9 +96,9 @@ public class Cinema {
 				"https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg",
 				"https://www.youtube.com/watch?v=hFbDh58QHzw");
 		
-		genres.clear();
-		directors.clear();
-		cast.clear();
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
 		
 		// AVENGERS - ENDGAME
 		genres.add("Azione");
