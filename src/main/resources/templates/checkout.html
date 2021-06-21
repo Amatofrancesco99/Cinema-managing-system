@@ -22,14 +22,16 @@
             </h3>
         </div>
         <div>
-
             <span style="display: block; overflow-x: auto;">
-                <table class="table table-borderless">
+                <div class="text-center">
+                    <img src="/static/img/screen.svg" class="img-fluid">
+                </div>
+                <table class="table table-bordered">
                     <tbody>
                         @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
                             <tr class="p-0 m-0">
                                 @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
-                                    <td class="p-1 m-0">
+                                    <td class="p-0 m-0 text-center">
                                         @{
                                             String seatStatus = "";
                                             boolean isDisabled = false;
@@ -44,7 +46,7 @@
 
                                             }
                                         }
-                                        <button id="seat-@(i)-@(j)" class="btn w-75 btn-lg p-1 m-1 @(seatStatus)" @if(isDisabled){disabled} data-bs-toggle="button" autocomplete="off"> 
+                                        <button id="seat-@(i)-@(j)" class="btn w-100 btn-lg p-0 m-0 @(seatStatus)" @if(isDisabled){disabled} data-bs-toggle="button" autocomplete="off"> 
                                             @(Room.rowIndexToRowLetter(i))@(j + 1)
                                         </button>
                                     </td>

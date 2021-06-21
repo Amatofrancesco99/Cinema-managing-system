@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PhysicalSeat {
 	
-	
 	/**	ATTRIBUTI
 	 * @param type  Tipo di posto
 	 */
