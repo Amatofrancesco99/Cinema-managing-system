@@ -432,15 +432,29 @@ public class Reservation {
 	 * @throws SeatAlreadyTakenException 
 	 */
 	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException{
-		// Prima di comprare il biglietto occupo veramente i posti, per evitare
-		// che una persona occupi i posti senza poi pagare ed impedire agli altri 
-		// la selezione dei posti
+	   /* Prima di comprare il biglietto occupo veramente i posti, per evitare
+		* che una persona occupi i posti senza poi pagare ed impedire agli altri 
+		* la selezione dei posti   */
 		for (PhysicalSeat ps : seats) {
 			String coordinates = projection.getSeatCoordinates(ps);
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
 			if (projection.takeSeat(row, col)) ;
-			else throw new SeatAlreadyTakenException(row,col);
+			else {
+				seats.remove(ps);
+				/*TODO:
+				* Priorità: AGGIUSTARE IL BUG RIPORTATO QUI SOTTO
+				* Esso si verifica qualora ci sia un cliente che nel frattempo che prenota
+				* ed inserisce i posti qualcun altro gli prenda alcuni/tutti gli stessi posti, prima
+				* che lui abbia fatto in tempo a pagare.
+				* La soluzione riportata in alto gestisce bene il caso in cui un solo dei posti
+				* selezionati sia occupato da qualcun altro...funziona meno bene quando sono
+				* più di uno...
+				* In questo caso c'è da sistemare la resa del codice ( sia la CLI, sia
+				* questo metodo)...
+				*/
+				throw new SeatAlreadyTakenException(row,col);
+			}
 		}
 
 		if (getNSeats() > 0)
