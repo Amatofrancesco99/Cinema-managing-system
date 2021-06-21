@@ -23,10 +23,10 @@
         </div>
         <div>
             <span style="display: block; overflow-x: auto;">
-                <div class="text-center">
+                <div class="text-center pb-4">
                     <img src="/static/img/screen.svg" class="img-fluid">
                 </div>
-                <table class="table table-bordered">
+                <table class="table table-borderless">
                     <tbody>
                         @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
                             <tr class="p-0 m-0">
@@ -46,9 +46,10 @@
 
                                             }
                                         }
-                                        <button id="seat-@(i)-@(j)" class="btn w-100 btn-lg p-0 m-0 @(seatStatus)" @if(isDisabled){disabled} data-bs-toggle="button" autocomplete="off"> 
+                                        <input type="checkbox" id="seat-@(i)-@(j)" class="btn-check seat-button" autocomplete="off" @if(isDisabled){disabled}>
+                                        <label class="btn w-100 btn-lg p-0 m-0 @(seatStatus)" data-bs-toggle="button" autocomplete="off"> 
                                             @(Room.rowIndexToRowLetter(i))@(j + 1)
-                                        </button>
+                                        </label>
                                     </td>
                                 }
                             </tr>
@@ -213,6 +214,21 @@
     <script>
         (function() {
             'use strict';
+
+            //
+            Array.from(document.getElementsByClassName('seat-button')).forEach(function(element) {
+                element.addEventListener('change', function() {
+                    var serializedPressedButtons = "";
+                    Array.from(document.getElementsByClassName('seat-button')).forEach(function(item) {
+                        alert('preif');
+                        if (item.getAttribute('checked')) {
+                            alert('culetto');
+                            serializedPressedButtons += item.id;
+                        }
+                    });
+                    alert(serializedPressedButtons);
+                });
+            });
 
             // Create the object that represents the collapsible checkout form
             var checkoutDetails = document.getElementById('checkout-details');
