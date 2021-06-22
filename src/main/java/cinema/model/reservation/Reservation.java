@@ -94,7 +94,7 @@ public class Reservation {
 	private Coupon coupon;
 	private int numberPeopleUntilMinAge;
 	private int numberPeopleOverMaxAge;
-	
+	private int countTakenSeat = 0;
 	
 	/**
 	 * COSTRUTTORE della classe, esso una volta invocato genera una prenotazione con un
@@ -429,33 +429,43 @@ public class Reservation {
 	 * @throws ReservationHasNoPaymentCardException 
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 * @throws SeatAlreadyTakenException 
+	 * @throws NumberFormatException 
 	 */
-	public boolean buy() throws PaymentErrorException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException{
-	   /* Prima di comprare il biglietto occupo veramente i posti, per evitare
-		* che una persona occupi i posti senza poi pagare ed impedire agli altri 
-		* la selezione dei posti   */
-		for (PhysicalSeat ps : seats) {
-			String coordinates = projection.getSeatCoordinates(ps);
+	public boolean buy() throws SeatAlreadyTakenException, NumberFormatException, InvalidRoomSeatCoordinatesException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException{
+		takeSeat();
+		return pay();
+	}
+	
+	
+	/**
+	 * Metodo che permette di occupare i posti selezionati e di gestire le situazioni di concorrenza 
+	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws SeatAlreadyTakenException
+	 */
+	private void takeSeat() throws InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException {		
+		for (int i = countTakenSeat; i<seats.size(); i++) {
+			String coordinates = projection.getSeatCoordinates(seats.get(i));
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
-			if (projection.takeSeat(row, col)) ;
+			if (projection.takeSeat(row, col))
+				countTakenSeat++;
 			else {
-				seats.remove(ps);
-				/*TODO:
-				* Priorità: AGGIUSTARE IL BUG RIPORTATO QUI SOTTO
-				* Esso si verifica qualora ci sia un cliente che nel frattempo che prenota
-				* ed inserisce i posti qualcun altro gli prenda alcuni/tutti gli stessi posti, prima
-				* che lui abbia fatto in tempo a pagare.
-				* La soluzione riportata in alto gestisce bene il caso in cui un solo dei posti
-				* selezionati sia occupato da qualcun altro...funziona meno bene quando sono
-				* più di uno...
-				* In questo caso c'è da sistemare la resa del codice ( sia la CLI, sia
-				* questo metodo)...
-				*/
+				seats.remove(seats.get(i));
 				throw new SeatAlreadyTakenException(row,col);
 			}
 		}
-
+		
+	}
+	
+	
+	/**
+	 * Metodo che permette di pagare la reservation
+	 * @return esito pagamento
+	 * @throws ReservationHasNoSeatException
+	 * @throws ReservationHasNoPaymentCardException
+	 * @throws PaymentErrorException
+	 */
+	private boolean pay() throws ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
 		if (getNSeats() > 0)
 		{
 			if (paymentCard == null) {
@@ -478,7 +488,6 @@ public class Reservation {
 		}
 		else throw new ReservationHasNoSeatException();
 	}
-	
 	
 	/**
 	 * METODO per settare il numero di persone che hanno un'età inferiore ad un età minima
