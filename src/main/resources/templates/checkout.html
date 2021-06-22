@@ -33,23 +33,23 @@
                                 @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
                                     <td class="p-0 m-0 text-center">
                                         @{
+                                            String seatIcon = "";
                                             String seatStatus = "";
-                                            boolean isDisabled = false;
+                                            boolean clickable = false;
                                             try {
                                                 if (projection.checkIfSeatIsAvailable(i, j)) {
-                                                    seatStatus = "btn-outline-success";
+                                                    seatIcon = "/static/img/seat-available.svg";
+                                                    seatStatus = "disponibile";
+                                                    clickable = true;
                                                 } else {
-                                                    seatStatus = "btn-outline-danger";
-                                                    isDisabled = true;
+                                                    seatIcon = "/static/img/seat-unavailable.svg";
+                                                    seatStatus = "non disponibile";
                                                 }
                                             } catch(InvalidRoomSeatCoordinatesException e) {
 
                                             }
                                         }
-                                        <input type="checkbox" id="seat-@(i)-@(j)" class="btn-check seat-button" autocomplete="off" @if(isDisabled){disabled}>
-                                        <label class="btn w-100 btn-lg p-0 m-0 @(seatStatus)" data-bs-toggle="button" autocomplete="off"> 
-                                            @(Room.rowIndexToRowLetter(i))@(j + 1)
-                                        </label>
+                                        <img id="seat-@(i)-@(j)" status="@(seatStatus)" @if(clickable){class="seat"} src="@(seatIcon)" width="40px" alt="Sedia @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" data-bs-toggle="tooltip" data-placement="top" title="Sedia @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" @if(clickable){style="cursor: pointer;"}>
                                     </td>
                                 }
                             </tr>
@@ -57,7 +57,6 @@
                     </tbody>
                 </table>
             </span>
-
         </div>
         <div class="text-end mt-3 mb-5">
             <a class="btn btn-primary" href="#checkout-details" role="button" id="go-to-checkout">
@@ -127,6 +126,7 @@
                 </div>
                 <div class="col-md-7 col-lg-8">
                     <form action="/buy#" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" id="selected-seats" name="selected-seats" value="">
                         <div class="row g-3">
                             <h4 class="mb-3">
                                 Dati personali
@@ -215,18 +215,36 @@
         (function() {
             'use strict';
 
-            //
-            Array.from(document.getElementsByClassName('seat-button')).forEach(function(element) {
-                element.addEventListener('change', function() {
-                    var serializedPressedButtons = "";
-                    Array.from(document.getElementsByClassName('seat-button')).forEach(function(item) {
-                        alert('preif');
-                        if (item.getAttribute('checked')) {
-                            alert('culetto');
-                            serializedPressedButtons += item.id;
+            // Enable tooltips on seat icons
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Add the listener used to track the available/selected state to every seat icon
+            Array.from(document.getElementsByClassName('seat')).forEach(function(seat) {
+                seat.addEventListener('click', function(event) {
+                    // Serialized list of selected seats
+                    var serializedSelectedSeats = '';
+
+                    // Toggle the seat status between available and selected
+                    if (event.target.status == 'selezionato') {
+                        event.target.status = 'disponibile';
+                        event.target.src = '/static/img/seat-available.svg';
+                    } else {
+                        event.target.status = 'selezionato';
+                        event.target.src = '/static/img/seat-selected.svg';
+                    }
+
+                    // Add the ids of the selected seats to the list
+                    Array.from(document.getElementsByClassName('seat')).forEach(function(item) {
+                        if (item.status == 'selezionato') {
+                            serializedSelectedSeats += item.id + ' ';
                         }
                     });
-                    alert(serializedPressedButtons);
+
+                    // Update the form field with the list of selected seats
+                    document.getElementById('selected-seats').value = serializedSelectedSeats.trim();
                 });
             });
 
