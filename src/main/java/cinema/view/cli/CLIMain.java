@@ -69,23 +69,11 @@ public class CLIMain {
 		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
 		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
 		
-		Projection p1 = null;
-		try {
-			p1 = Cinema.getInstance().getProjection(projectionID);
-		} catch (NoProjectionException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			p1.takeSeat(0, 1);
-			p1.takeSeat(0, 2);
-		} catch (InvalidRoomSeatCoordinatesException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// EFFETTUA PAGAMENTO
+		buy(r); 
 		
-		buy(r); 		// Pagamento 
-		sendEmail(r);  // Spedizione dell'email al cliente
+		// SPEDIZIONE DELL'EMAIL AL CLIENTE, CONTENENTE IL REPORT
+		sendEmail(r); 			    
 		
 		// SALUTO DEL CLIENTE E TERMINA PROGRAMMA
 		sayGoodbye();
@@ -99,15 +87,11 @@ public class CLIMain {
 
 	
 	private static void sendEmail(Reservation r) {
+		System.out.println("-----------------------------------------------------\n");
+		System.out.println("\nSPEDIZIONE EMAIL \n");
 		//r.sendEmail();
-		System.out.print("\nAbbiamo scalato dalla tua carta inserita un ammontare pari "
-				+ "a: ");
-		System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
-		System.out.println("Il prezzo mostrato comprende sia lo sconto" 
-			   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
-			  + " lo sconto\ndell'eventuale coupon applicato.");
-		System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
-				+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
+		System.out.println("Controlla le tue email ricevute, a breve ne riceverai una "
+				+ "con allegato un pdf contenente il resoconto della tua prenotazione.\n");
 	}
 
 	
@@ -115,10 +99,16 @@ public class CLIMain {
 		boolean end = false;
 		boolean error = false;
 		System.out.println("-----------------------------------------------------\n");
-		System.out.println("\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
+		System.out.println("\nPAGAMENTO \n");
 		while (!end) {
 			try {
-				r.buy();				
+				r.buy();
+				System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
+						+ "a: ");
+				System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
+				System.out.println("Il prezzo mostrato comprende sia lo sconto" 
+					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
+					  + " lo sconto\ndell'eventuale coupon applicato.\n");
 				end = true;
 			} catch (PaymentErrorException  e) {
 				e.toString();
