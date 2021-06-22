@@ -44,8 +44,9 @@ public class CLIMain {
 	 * METODO Main, per eseguire la nostra CLI
 	 * @param args   Parametri in ingresso, nel nostro caso non servono, ne tanto meno
 	 * 				 vengono utilizzati.
+	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		// INFORMAZIONI GENERALI DEL CINEMA E BENVENUTO AL CLIENTE
 		printHeader();
 				
@@ -67,7 +68,24 @@ public class CLIMain {
 		insertPaymentCardInfo(r);	// Inserimento dati pagamento
 		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
 		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
-		buyAndSendEmail(r); 		// Pagamento e spedizione dell'email al cliente
+		
+		Projection p1 = null;
+		try {
+			p1 = Cinema.getInstance().getProjection(projectionID);
+		} catch (NoProjectionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			p1.takeSeat(0, 1);
+			p1.takeSeat(0, 2);
+		} catch (InvalidRoomSeatCoordinatesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		buy(r); 		// Pagamento 
+		sendEmail(r);  // Spedizione dell'email al cliente
 		
 		// SALUTO DEL CLIENTE E TERMINA PROGRAMMA
 		sayGoodbye();
@@ -79,23 +97,28 @@ public class CLIMain {
 		System.out.println("-----------------------------------------------------\n");
 	}
 
+	
+	private static void sendEmail(Reservation r) {
+		//r.sendEmail();
+		System.out.print("\nAbbiamo scalato dalla tua carta inserita un ammontare pari "
+				+ "a: ");
+		System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
+		System.out.println("Il prezzo mostrato comprende sia lo sconto" 
+			   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
+			  + " lo sconto\ndell'eventuale coupon applicato.");
+		System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
+				+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
+	}
 
-	private static void buyAndSendEmail(Reservation r) {
+	
+	private static void buy(Reservation r){
 		boolean end = false;
+		boolean error = false;
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("\n4- PAGAMENTO E SPEDIZIONE EMAIL \n");
 		while (!end) {
 			try {
-				r.buy();
-				//r.sendEmail();
-				System.out.print("\nAbbiamo scalato dalla tua carta inserita un ammontare pari "
-						+ "a: ");
-				System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
-				System.out.println("Il prezzo mostrato comprende sia lo sconto" 
-					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
-					  + " lo sconto\ndell'eventuale coupon applicato.");
-				System.out.println("\nControlla le tue email ricevute, a breve ne riceverai una "
-						+ "con allegato un pdf contenente il resoconto della tua prenotazione.");
+				r.buy();				
 				end = true;
 			} catch (PaymentErrorException  e) {
 				e.toString();
@@ -105,16 +128,17 @@ public class CLIMain {
 				end = true;
 			} catch (SeatAlreadyTakenException e) {
 				e.toString();
-				System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
-				showProjectionSeats(r);
-				addSeatsToReservation(r);
-				/* TODO: Migliorare questo percorso, chiedendo ad esempio se l'utente
-				 * è interessato proseguire con la prenotazione o se vuole pagare
-				 * per i posti che ha già occupato. */
-			}
+				error = true;
+			}	
+		}
+		if(error) {
+			System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
+			showProjectionSeats(r);
+			addSeatsToReservation(r);
+			buy(r);
+			insertSpectatorsInfo(r);
 		}
 	}
-
 
 
 	private static void insertCouponInfo(Reservation r) {
@@ -145,8 +169,11 @@ public class CLIMain {
 	}
 
 
-
 	private static void insertSpectatorsInfo(Reservation r) {
+		try {
+			r.setNumberPeopleOverMaxAge(0);
+			r.setNumberPeopleUntilMinAge(0);
+		} catch (InvalidNumberPeopleValueException e1){}	
 		boolean end = false;
 		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
 		while (!end) {
@@ -261,6 +288,7 @@ public class CLIMain {
 		}
 	}
 
+	
 	private static void addSeatsToReservation(Reservation r) {
 		boolean end = false;
 		do {
