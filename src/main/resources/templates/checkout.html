@@ -21,17 +21,31 @@
                 Scegli il tuo posto in sala
             </h3>
         </div>
-        <div>
-            <span style="display: block; overflow-x: auto;">
-                <div class="text-center pb-4">
-                    <img src="/static/img/screen.svg" class="img-fluid">
-                </div>
+        <div class="d-flex justify-content-center">
+            <div style="display: block; overflow-x: auto;">
                 <table class="table table-borderless">
                     <tbody>
+                        <tr class="p-0 m-0">
+                            <th class="p-0 m-0"></th>
+                            <th class="pb-2 m-0 text-center" colspan="@(projection.getRoom().getNumberCols())">
+                                <img src="/static/img/screen.svg" width="500px" class="img-fluid" alt="Schermo della sala" data-bs-toggle="tooltip" data-placement="top" title="Schermo della sala">
+                            </th>
+                        </tr>
+                        <tr class="p-0 m-0">
+                            <th class="p-0 m-0"></th>
+                            @for (int j = 1; j <= projection.getRoom().getNumberCols(); j++) {
+                                <th class="p-1 m-1 text-center">
+                                    @(j)
+                                </th>
+                            }
+                        </tr>
                         @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
                             <tr class="p-0 m-0">
+                                <th class="px-2 py-1 m-1 text-center">
+                                    @(Room.rowIndexToRowLetter(i))
+                                </th>
                                 @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
-                                    <td class="p-0 m-0 text-center">
+                                    <td class="p-1 m-1 text-center">
                                         @{
                                             String seatIcon = "";
                                             String seatStatus = "";
@@ -56,7 +70,7 @@
                         }
                     </tbody>
                 </table>
-            </span>
+            </div>
         </div>
         <div class="text-end mt-3 mb-5">
             <a class="btn btn-primary" href="#checkout-details" role="button" id="go-to-checkout">
