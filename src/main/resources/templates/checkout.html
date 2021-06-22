@@ -21,6 +21,17 @@
                 Scegli il tuo posto in sala
             </h3>
         </div>
+        <div class="container mb-4">
+            <div class="alert alert-secondary d-flex align-items-center" role="alert">
+                <h1 class="my-3 ms-3 me-4">
+                    <span class="fa fa-info-circle"></span>
+                </h1>
+                <div>
+                    Seleziona uno o pi&ugrave; posti da prenotare tra quelli liberi in sala (poltroncine verdi: <img src="/static/img/seat-available.svg" alt="Posto libero" style="height: 1.5em;">).<br>
+                    Potrai poi procedere al checkout, acquistando i biglietti che ti saranno spediti via e-mail una volta effettuata la prenotazione.
+                </div>
+            </div>
+        </div>
         <link rel="prefetch" href="/static/img/seat-selected.svg">
         <div class="d-flex justify-content-center">
             <div style="display: block; overflow-x: auto;">
@@ -35,14 +46,14 @@
                         <tr class="p-0 m-0">
                             <th class="p-0 m-0"></th>
                             @for (int j = 1; j <= projection.getRoom().getNumberCols(); j++) {
-                                <th class="p-1 m-1 text-center">
+                                <th class="p-1 m-1 text-center align-middle">
                                     @(j)
                                 </th>
                             }
                         </tr>
                         @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
                             <tr class="p-0 m-0">
-                                <th class="px-2 py-1 m-1 text-center">
+                                <th class="px-2 py-1 m-1 text-center align-middle">
                                     @(Room.rowIndexToRowLetter(i))
                                 </th>
                                 @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
@@ -64,7 +75,7 @@
 
                                             }
                                         }
-                                        <img id="seat-@(i)-@(j)" status="@(seatStatus)" @if(clickable){class="seat"} src="@(seatIcon)" width="45px" alt="Sedia @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" data-bs-toggle="tooltip" data-placement="top" title="Sedia @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" @if(clickable){style="cursor: pointer;"}>
+                                        <img id="seat-@(i)-@(j)" status="@(seatStatus)" @if(clickable){class="seat"} src="@(seatIcon)" width="45px" alt="Posto @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" data-bs-toggle="tooltip" data-placement="top" title="Posto @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" @if(clickable){style="cursor: pointer;"}>
                                     </td>
                                 }
                             </tr>
