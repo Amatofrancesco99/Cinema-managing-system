@@ -104,11 +104,13 @@ public class CLIMain {
 				e.toString();
 				end = true;
 			} catch (SeatAlreadyTakenException e) {
-				System.out.println("\nSiamo spiacenti: ");
 				e.toString();
-				/* TODO: Scelta se vuole occupare altri posti o se pagare solo i posti
-				* che ha prenotato */
-				System.out.println("\nInserisci altri posti alla tua prenotazione...");
+				System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
+				showProjectionSeats(r);
+				addSeatsToReservation(r);
+				/* TODO: Migliorare questo percorso, chiedendo ad esempio se l'utente
+				 * è interessato proseguire con la prenotazione o se vuole pagare
+				 * per i posti che ha già occupato. */
 			}
 		}
 	}
