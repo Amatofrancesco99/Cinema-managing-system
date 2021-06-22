@@ -130,8 +130,7 @@ public class Reservation {
 			}
 			if (!findDuplicate) {
 				seats.add(projection.getPhysicalSeat(row, col));
-			}
-			if (findDuplicate) {
+			} else {
 				throw new SeatTakenTwiceException(row,col);
 			}
 		}
