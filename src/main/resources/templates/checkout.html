@@ -85,7 +85,7 @@
             </div>
         </div>
         <div class="text-end mt-3 mb-5">
-            <a class="btn btn-primary" href="#checkout-details" role="button" id="go-to-checkout">
+            <a class="btn btn-primary disabled" role="button" id="go-to-checkout">
                 Procedi all'acquisto dei biglietti
             </a>
         </div>
@@ -271,6 +271,17 @@
 
                     // Update the form field with the list of selected seats
                     document.getElementById('selected-seats').value = serializedSelectedSeats.trim();
+
+                    // Enable/disable the button used to go to the checkout form based on the number of selected seats
+                    if (serializedSelectedSeats == '') {
+                        document.getElementById('go-to-checkout').classList.add('disabled');
+                        document.getElementById('go-to-checkout').classList.remove('invisible');
+
+                        // If there are no seats selected, hide the collapsible checkout form
+                        checkoutDetailsCollapse.hide();
+                    } else {
+                        document.getElementById('go-to-checkout').classList.remove('disabled');
+                    }
                 });
             });
 
@@ -280,10 +291,15 @@
                 toggle: false
             });
 
-            // Show the checkout form only when the buyer has chosen the seats
+            // Show the checkout form only when the buyer has chosen at least one seat
             document.getElementById('go-to-checkout').addEventListener('click', function() {
-                this.classList.add('invisible');
+                document.getElementById('go-to-checkout').classList.add('invisible');
                 checkoutDetailsCollapse.show();
+            });
+
+            // Move the href to the checkout details section as soon as its transition finishes
+            document.getElementById('checkout-details').addEventListener('shown.bs.collapse', function() {
+                document.location.href = '#checkout-details';
             });
 
             // Set the text shown when a form field is invalid
