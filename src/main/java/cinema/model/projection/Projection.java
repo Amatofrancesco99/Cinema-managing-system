@@ -3,7 +3,6 @@ package cinema.model.projection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import cinema.model.money.Money;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.Movie;
 import cinema.model.cinema.PhysicalSeat;
@@ -36,7 +35,7 @@ public class Projection implements Comparable<Projection> {
 	private Movie movie;
 	private Room room;
 	private LocalDateTime dateTime;
-	private Money price;
+	private double price;
 	private ArrayList<ArrayList<ProjectionSeat>> seats;
 	
 	
@@ -48,7 +47,7 @@ public class Projection implements Comparable<Projection> {
 	 * @param price
 	 * @param room
 	 */
-	public Projection(int id, Movie movie, LocalDateTime dateTime, Money price, Room room) {
+	public Projection(int id, Movie movie, LocalDateTime dateTime, double price, Room room) {
 		this.id = id;
 		this.movie = movie;
 		this.dateTime = dateTime;
@@ -181,8 +180,7 @@ public class Projection implements Comparable<Projection> {
 				+ " " + this.getDateTime().getYear() + "   "
 				+ "Ora: " + String.format("%02d", this.getDateTime().getHour()) 
 				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
-				+ "Prezzo: " + this.getPrice().getAmount() + " "
-				+ this.getPrice().getCurrency().toString() + "\n" 
+				+ "Prezzo: " + this.getPrice() + "€" + "\n" 
 				+ "Posti disponibili: " + availableSeats + "\n";
 	}
 }

@@ -32,7 +32,6 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import cinema.model.money.Money;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
@@ -166,12 +165,12 @@ public class Reservation {
 	 * 
 	 * @return total  Ammontare di denaro da pagare
 	 */
-	public Money getTotal() {
-		Money total = new CinemaDiscount().getTotal(this);
+	public double getTotal() {
+		double total = new CinemaDiscount().getTotal(this);
 		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
 		// il totale dell'importo di sconto di questo coupon
 		if (getCoupon() != null) {
-			total = new Money(total.getAmount() - getCoupon().getDiscount().getAmount(), total.getCurrency());
+			total -= getCoupon().getDiscount();
 		}
 		return total;
 	}  
@@ -181,8 +180,8 @@ public class Reservation {
 	 * METODO per farsi dare il totale della prenotazione, senza sconti
 	 * @return total  Ammontare di denaro
 	 */
-	public Money getFullPrice() {
-		return new Money(getNSeats() * this.projection.getPrice().getAmount(), projection.getPrice().getCurrency());
+	public double getFullPrice() {
+		return getNSeats() * this.projection.getPrice();
 	}  
 	
 	
@@ -302,8 +301,8 @@ public class Reservation {
 		        }
 		        
 		        //totale della prenotazione
-		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal().getAmount()
-		        				   + " " + this.getTotal().getCurrency().toString(), subFont3);
+		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal()
+		        				   + "€ ", subFont3);
 		        totalP.setSpacingBefore(80);
 		        totalP.setAlignment(Element.ALIGN_RIGHT);
 		        totalP.setIndentationRight(55);

@@ -1,6 +1,5 @@
 package cinema.model.reservation.discount.types;
 
-import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidAgeException;
@@ -33,27 +32,27 @@ public class DiscountAge implements ReservationDiscountStrategy{
 	 * restituire il nuovo totale, dato lo sconto
 	 */
 	@Override
-	public Money getTotal(Reservation r) {
+	public double getTotal(Reservation r) {
 		double totalPrice = 0;
 		if (r.getNumberPeopleUntilMinAge() == 0) {
 			if (r.getNumberPeopleOverMaxAge() == 0) {
-				totalPrice += r.getProjection().getPrice().getAmount()*r.getNSeats();
-				return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
+				totalPrice += r.getProjection().getPrice()*r.getNSeats();
+				return totalPrice;
 			}
 			else {
-				totalPrice += r.getProjection().getPrice().getAmount()*r.getNumberPeopleOverMaxAge()*(1 - percentage);
+				totalPrice += r.getProjection().getPrice()*r.getNumberPeopleOverMaxAge()*(1 - percentage);
 			}
 		}
 		else {
-			totalPrice += r.getProjection().getPrice().getAmount()*r.getNumberPeopleUntilMinAge()*(1 - percentage);
+			totalPrice += r.getProjection().getPrice()*r.getNumberPeopleUntilMinAge()*(1 - percentage);
 		}
 		if (r.getNumberPeopleUntilMinAge() != 0) {
 			if (r.getNumberPeopleOverMaxAge() != 0) {
-				totalPrice += r.getProjection().getPrice().getAmount()*r.getNumberPeopleOverMaxAge()*(1 - percentage);
+				totalPrice += r.getProjection().getPrice()*r.getNumberPeopleOverMaxAge()*(1 - percentage);
 			}
 		}
-		totalPrice += (r.getNSeats() - r.getNumberPeopleOverMaxAge() - r.getNumberPeopleUntilMinAge()) * r.getProjection().getPrice().getAmount();
-		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
+		totalPrice += (r.getNSeats() - r.getNumberPeopleOverMaxAge() - r.getNumberPeopleUntilMinAge()) * r.getProjection().getPrice();
+		return totalPrice;
 	}
 	
 	

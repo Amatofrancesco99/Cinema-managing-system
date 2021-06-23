@@ -1,6 +1,5 @@
 package cinema.model.payment;
 
-import cinema.model.money.Money;
 
 /** BREVE DESCRIZIONE PAYMENT
  * 
@@ -12,5 +11,5 @@ import cinema.model.money.Money;
 
 public interface Payment {
 	
-	public boolean decreaseMoney(Money amount);
+	public boolean decreaseMoney(double amount);
 }

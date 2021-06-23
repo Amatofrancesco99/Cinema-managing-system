@@ -106,7 +106,7 @@ public class CLIMain {
 				myCinema.buyReservation(r);
 				System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
 						+ "a: ");
-				System.out.print(myCinema.getReservationTotalAmount(r) + " " + myCinema.getReservationTotalCurrency(r) + "\n");
+				System.out.print(myCinema.getReservationTotalAmount(r) + "€ " + "\n");
 				System.out.println("Il prezzo mostrato comprende sia lo sconto" 
 					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 					  + " lo sconto\ndell'eventuale coupon applicato.\n");

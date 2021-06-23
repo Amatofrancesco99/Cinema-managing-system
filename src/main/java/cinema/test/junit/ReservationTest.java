@@ -11,7 +11,6 @@ import org.junit.Test;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
-import cinema.model.money.Money;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 
@@ -59,7 +58,7 @@ public class ReservationTest {
 				genres, directors, cast, 5, 182,
 				"https://images-na.ssl-images-amazon.com/images/I/71HyTegC0SL._AC_SY879_.jpg",
 				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
-		r.setProjection(new Projection(109, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),	room));
+		r.setProjection(new Projection(109, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5,	room));
 		
 		r.addSeat(0, 0);
 		r.addSeat(0, 1);

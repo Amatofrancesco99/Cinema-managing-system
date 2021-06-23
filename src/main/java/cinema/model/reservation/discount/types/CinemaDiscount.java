@@ -1,6 +1,5 @@
 package cinema.model.reservation.discount.types;
 
-import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 
@@ -16,8 +15,8 @@ import cinema.model.reservation.discount.ReservationDiscountStrategy;
 public class CinemaDiscount implements ReservationDiscountStrategy {
 
 	@Override
-	public Money getTotal(Reservation r) {
-		Money total = new DiscountAge().getTotal(r);
+	public double getTotal(Reservation r) {
+		double total = new DiscountAge().getTotal(r);
 		return total;
 	}
 

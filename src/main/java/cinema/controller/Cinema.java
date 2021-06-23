@@ -10,8 +10,6 @@ import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
-import cinema.model.money.Money;
-import cinema.model.money.util.TypeOfCurrency;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
 import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
@@ -194,51 +192,51 @@ public class Cinema {
 		}
 
 		// Test projections
-		Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5),
+		Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), 12.5,
 				rooms.get(0));
-		Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5),
+		Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), 12.5,
 				rooms.get(0));
-		Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5),
+		Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), 12.5,
 				rooms.get(0));
-		Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),
+		Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5,
 				rooms.get(0));
-		Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5),
+		Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), 12.5,
 				rooms.get(0));
-		Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5),
+		Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), 12.5,
 				rooms.get(0));
-		Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
+		Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), 12.5,
 				rooms.get(0));
 		Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"),
-				new Money(12.5), rooms.get(1));
+				12.5, rooms.get(1));
 		Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T23:30:00"),
-				new Money(12.5), rooms.get(1));
+				12.5, rooms.get(1));
 		Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T19:00:00"),
-				new Money(12.5), rooms.get(1));
+				12.5, rooms.get(1));
 		Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
-				new Money(12.5), rooms.get(1));
+				12.5, rooms.get(1));
 		Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
-				new Money(8.5), rooms.get(1));
+				8.5, rooms.get(1));
 		Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-06-06T22:30:00"),
-				new Money(8.5), rooms.get(0));
+				8.5, rooms.get(0));
 		Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-06-02T23:30:00"),
-				new Money(8.5), rooms.get(0));
+				8.5, rooms.get(0));
 		Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-06-01T19:00:00"),
-				new Money(8.5), rooms.get(0));
+				8.5, rooms.get(0));
 		Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
-				new Money(8.5), rooms.get(0));
+				8.5, rooms.get(0));
 		Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-22T23:30:00"),
-				new Money(8.5), rooms.get(0));
+				8.5, rooms.get(0));
 		Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-21T19:00:00"),
-				new Money(8.5), rooms.get(0));
+				8.5, rooms.get(0));
 		Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-23T08:05:00"),
-				new Money(8.5), rooms.get(0));
-		Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-07-01T08:05:00"), new Money(8.5),
+				8.5, rooms.get(0));
+		Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-07-01T08:05:00"), 8.5,
 				rooms.get(0));
-		Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-07-02T23:30:00"), new Money(8.5),
+		Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-07-02T23:30:00"), 8.5,
 				rooms.get(0));
-		Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-07-01T19:00:00"), new Money(8.5),
+		Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-07-01T19:00:00"), 8.5,
 				rooms.get(0));
-		Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-07-02T08:05:00"), new Money(8.5),
+		Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-07-02T08:05:00"), 8.5,
 				rooms.get(0));
 
 		this.cinemaProjections.add(p1);
@@ -272,10 +270,10 @@ public class Cinema {
 		}
 
 		// Aggiunti due coupon di prova emessi dal cinema
-		coupons.add(new Coupon(new Money(5)));
+		coupons.add(new Coupon(5));
 		coupons.get(0).setUsed(true); // Coupon ID: 1 già utilizzato (Prova)
-		coupons.add(new Coupon(new Money(6)));
-		coupons.add(new Coupon(new Money(3.5)));
+		coupons.add(new Coupon(6));
+		coupons.add(new Coupon(3.5));
 	}
 
 	/**
@@ -726,18 +724,9 @@ public class Cinema {
 	 * @return
 	 */
 	public double getReservationTotalAmount(Reservation r) {
-		return r.getTotal().getAmount();
+		return r.getTotal();
 	}
 
-	/**
-	 * METODO per farsi dire la valuta del totale della prenotazione
-	 * 
-	 * @param r
-	 * @return
-	 */
-	public TypeOfCurrency getReservationTotalCurrency(Reservation r) {
-		return r.getTotal().getCurrency();
-	}
 
 	/**
 	 * METODO per inviare un email al cliente che ha compilato la prenotazione

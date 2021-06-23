@@ -1,6 +1,5 @@
 package cinema.model.reservation.discount.types;
 
-import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
@@ -34,14 +33,14 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	 * restituire il nuovo totale, dato lo sconto
 	 */
 	@Override
-	public Money getTotal(Reservation r) {
+	public double getTotal(Reservation r) {
 		double totalPrice = 0;
 		if(r.getNSeats() >= getNumberPeople()){
-			totalPrice+=r.getProjection().getPrice().getAmount()*(1 - percentage)*r.getNSeats();
+			totalPrice+=r.getProjection().getPrice()*(1 - percentage)*r.getNSeats();
 		}
 		else 
-			totalPrice+=r.getProjection().getPrice().getAmount()*r.getNSeats();
-		return new Money(totalPrice,r.getProjection().getPrice().getCurrency());
+			totalPrice+=r.getProjection().getPrice()*r.getNSeats();
+		return totalPrice;
 	}
 	
 	/**

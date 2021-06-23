@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
@@ -31,18 +30,18 @@ public class DiscountDay implements ReservationDiscountStrategy{
 	 * restituire il nuovo totale, dato lo sconto
 	 */
 	@Override
-	public Money getTotal(Reservation r) {
+	public double getTotal(Reservation r) {
 		double totalPrice = 0;
 		if (discount.size() > 0) {
 			for(Entry<LocalDate, Double> entry : discount.entrySet()) {
 			    if(entry.getKey().equals(r.getProjection().getDateTime().toLocalDate())){
-		            totalPrice += r.getProjection().getPrice().getAmount()*(1 - entry.getValue())*r.getNSeats();
-		            return new Money(totalPrice , r.getProjection().getPrice().getCurrency());
+		            totalPrice += r.getProjection().getPrice()*(1 - entry.getValue())*r.getNSeats();
+		            return totalPrice;
 		        }
 			}
 		}
-		totalPrice += r.getProjection().getPrice().getAmount()*r.getNSeats();
-		return new Money(totalPrice , r.getProjection().getPrice().getCurrency());
+		totalPrice += r.getProjection().getPrice()*r.getNSeats();
+		return totalPrice;
 	}
 	
 	/**

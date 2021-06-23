@@ -3,7 +3,6 @@ package cinema.model.payment.methods.paymentCard;
 import java.time.YearMonth;
 import java.util.Random;
 
-import cinema.model.money.Money;
 import cinema.model.payment.Payment;
 import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
 import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
@@ -80,7 +79,7 @@ public class PaymentCard implements Payment{
 	 * non si potesse raggiungere il gestore della carta, o se il saldo da pagare fosse superiore
 	 * rispetto al credito residuo, ecc...
 	 */
-	public boolean decreaseMoney(Money amount) {
+	public boolean decreaseMoney(double amount) {
 		int mode = 0;
 		switch(mode) {
 			case 0:

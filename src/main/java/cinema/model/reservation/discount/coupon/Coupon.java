@@ -2,7 +2,6 @@ package cinema.model.reservation.discount.coupon;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import cinema.model.money.Money;
 import lombok.*;
 
 
@@ -23,14 +22,14 @@ public class Coupon {
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0);
 	private final long progressive;
-	private Money discount;
+	private double discount;
 	private boolean used; 
 	
 	/**
 	 * COSTRUTTORE della classe
 	 * @param discount
 	 */
-	public Coupon (Money discount) {
+	public Coupon (double discount) {
 		progressive = count.incrementAndGet(); 
 		this.discount = discount;
 		used = false;

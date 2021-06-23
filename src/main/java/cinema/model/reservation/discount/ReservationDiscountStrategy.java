@@ -1,6 +1,5 @@
 package cinema.model.reservation.discount;
 
-import cinema.model.money.Money;
 import cinema.model.reservation.Reservation;
 
 
@@ -25,5 +24,5 @@ public interface ReservationDiscountStrategy {
 	 * 				  applicabile
 	 * @return Money  Ritorno del prezzo totale scontato
 	 */
-	public Money getTotal(Reservation r);
+	public double getTotal(Reservation r);
 }
