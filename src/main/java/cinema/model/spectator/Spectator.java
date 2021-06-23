@@ -1,4 +1,4 @@
-package cinema.model;
+package cinema.model.spectator;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
