@@ -156,6 +156,24 @@ public class Cinema {
 		cast = new ArrayList<>();
 		
 		
+		//SKYFALL
+		genres.add("Drammatico");
+		genres.add("Action");
+		genres.add("Spy");
+		directors.add("Sam Mendes");
+		cast.add("Daniel Craig");
+		cast.add("Judi Dench");
+		cast.add("Javier Bardem");
+		cast.add("Ben Whishaw");
+		Movie skyfall = new Movie(5, "Skyfall", "In seguito al fallimento di una missione recente, Il celebre agente segreto britannico è costretto ad essere testimone di una serie terribile di eventi: la MI6 deve trasferirsi al più presto mentre i dipendenti sotto copertura vedono le proprie identità venire rivelate. M è disperata e si rivolge a James Bond in cerca di un aiuto immediato.",
+				genres, directors, cast, 4, 143,
+				"https://www.madmass.it/wp-content/uploads/2020/03/Skyfall__poster.jpg", 
+				"https://www.youtube.com/watch?v=OnlSRBTG5Tw");
+		
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
+		
 		// AVENGERS - ENDGAME
 		genres.add("Azione");
 		genres.add("Fantascienza");
@@ -171,7 +189,7 @@ public class Cinema {
 		Movie AvengersEndgameMovie = new Movie(2, "Avengers - Endgame",
 				"Tutto riparte dalla terra devastata da Thanos e le sue gemme dell'infinito, dopo aver visto svanire in particelle infinitesimali di polvere i Guardiani della Galassia e personaggi come Spider-Man, Black Panther e Dr. Strange. Questa seconda parte evidenzia una situazione altamente drammatica, con i superstiti che non sanno darsi pace, dilaniati dal senso di colpa e dal vuoto ed incapaci di ripartire. I legami rimasti continuano a rafforzarsi, seppur in sordina, quelli che avevano portato a scontri mutano in fiducia, le amicizie si cementano, i rapporti di vecchia data si consolidano ed alcuni cercano di costruirsi una famiglia fino a cinque anni dopo, quando una \"microscopica\" particella ritrovata rimette in moto lo spirito di gruppo. Un paese in ginocchio che prova a cambiare le cose e ripristinare l'ordine, quantomeno apparente e in mezzo al prevedibile e oramai noto affiorano sorprese inaspettate. Il finale non si tinge di dark, ma in alcuni tratti è caratterizzato da toni distesi, dialoghi divertenti, personaggi quasi caricaturali senza i muscoli di \"Avengers: Infinity War\", ma tanto cervello e costruzione dell'azione come del pensiero.",
 				genres, directors, cast, 5, 182,
-				"https://images-na.ssl-images-amazon.com/images/I/71HyTegC0SL._AC_SY879_.jpg",
+				"https://www.ilcineocchio.it/cine/wp-content/uploads/2020/05/Avengers-Endgame.jpg",
 				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
 		
 		// Test room
@@ -222,6 +240,14 @@ public class Cinema {
 				rooms.get(0));
 		Projection p19 = new Projection(450, noCounrtyforOldMen, LocalDateTime.parse("2021-06-23T08:05:00"), new Money(8.5),
 				rooms.get(0));
+		Projection p20 = new Projection(350, skyfall, LocalDateTime.parse("2021-07-01T08:05:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p21 = new Projection(424, skyfall, LocalDateTime.parse("2021-07-02T23:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p22 = new Projection(487, skyfall, LocalDateTime.parse("2021-07-01T19:00:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p23 = new Projection(450, skyfall, LocalDateTime.parse("2021-07-02T08:05:00"), new Money(8.5),
+				rooms.get(0));
 		
 		this.cinemaProjections.add(p1);
 		this.cinemaProjections.add(p2);
@@ -242,6 +268,10 @@ public class Cinema {
 		this.cinemaProjections.add(p17);
 		this.cinemaProjections.add(p18);
 		this.cinemaProjections.add(p19);
+		this.cinemaProjections.add(p20);
+		this.cinemaProjections.add(p21);
+		this.cinemaProjections.add(p22);
+		this.cinemaProjections.add(p23);
 		
 		//occupare il primo posto della seconda proiezione
 		try {
