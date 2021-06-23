@@ -1,6 +1,7 @@
 package cinema.model.payment.methods.paymentCard;
 
 import java.time.YearMonth;
+import java.util.Random;
 
 import cinema.model.money.Money;
 import cinema.model.payment.Payment;
@@ -80,6 +81,14 @@ public class PaymentCard implements Payment{
 	 * rispetto al credito residuo, ecc...
 	 */
 	public boolean decreaseMoney(Money amount) {
-		return true;
+		int mode = 0;
+		switch(mode) {
+			case 0:
+				return true;
+			case 1:
+				return false;
+			default:
+				return new Random().nextBoolean();
+		}
 	}
 }
