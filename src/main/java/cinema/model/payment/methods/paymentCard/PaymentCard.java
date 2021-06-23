@@ -31,7 +31,7 @@ public class PaymentCard implements Payment{
 	private final int MIN_DIGIT = 16;
 	private String owner;
 	private String number;
-	private int ccv;
+	private String ccv;
 	private YearMonth expirationDate;
 	
 	
@@ -55,7 +55,7 @@ public class PaymentCard implements Payment{
 	public void setCCV(String ccv) throws InvalidCCVException {
 		if (ccv.length() != 3)
 			throw new InvalidCCVException();
-		else this.ccv = Integer.valueOf(ccv.replaceAll("[\\D]", ""));
+		else this.ccv = ccv.replaceAll("[\\D]", "");
 	}
 	
 	
