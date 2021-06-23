@@ -4,7 +4,6 @@ import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidAgeException;
 import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
-import lombok.Getter;
 
 /** BREVE DESCRIZIONE CLASSE DiscountAge  (Pattern Strategy)
  * 
@@ -13,7 +12,6 @@ import lombok.Getter;
  *	Questa classe rappresenta una strategia di sconto sulla prenotazione basata sull'età
  *  degli spettatori che visioneranno il film
  */
-@Getter
 public class DiscountAge implements ReservationDiscountStrategy{
 
 	
@@ -91,5 +89,17 @@ public class DiscountAge implements ReservationDiscountStrategy{
 			throw new InvalidPercentageValueException();
 		}
 		else percentage = d;
+	}
+
+	
+	/**METODO per farsi dire l'età al di sotto della quale parte lo sconto per età */
+	public int getMin_age() {
+		return min_age;
+	}
+
+	
+	/**METODO per farsi dire l'età al di sopra della quale parte lo sconto per età */
+	public int getMax_age() {
+		return max_age;
 	}
 }

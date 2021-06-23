@@ -8,7 +8,6 @@ package cinema.model.payment;
  * Interfaccia che rappresenta i metodi che uno strumento
  * di pagamento dovrebbero avere
  */
-
 public interface Payment {
 	
 	public boolean decreaseMoney(double amount);

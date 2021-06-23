@@ -11,14 +11,16 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.rythmengine.Rythm;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 public class WebGUIServer {
 
 	private int port;
 	private Servlet servlet;
-
+	
+	public WebGUIServer(int port, Servlet servlet) {
+		this.port = port;
+		this.servlet = servlet;
+	}
+	
 	public void start() throws Exception {
 		initRythm();
 		Server server = new Server(port);

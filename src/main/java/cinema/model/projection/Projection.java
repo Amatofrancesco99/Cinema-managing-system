@@ -7,7 +7,6 @@ import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.Movie;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
-import lombok.*;
 
 
 /** BREVE DESCRIZIONE CLASSE Projection
@@ -18,8 +17,6 @@ import lombok.*;
  * che servono per rappresentare una proiezione che viene
  * effettuata dal cinema.
  */
-@Data
-@AllArgsConstructor
 public class Projection implements Comparable<Projection> {
 	
 	
@@ -37,8 +34,7 @@ public class Projection implements Comparable<Projection> {
 	private LocalDateTime dateTime;
 	private double price;
 	private ArrayList<ArrayList<ProjectionSeat>> seats;
-	
-	
+
 	/**
 	 * COSTRUTTORE 
 	 * @param id
@@ -51,7 +47,7 @@ public class Projection implements Comparable<Projection> {
 		this.id = id;
 		this.movie = movie;
 		this.dateTime = dateTime;
-		this.price = price;
+		this.price = Math.round(price * 100.0)/100.0;
 		this.room = room;
 		this.seats = new ArrayList<ArrayList<ProjectionSeat>>();
 		for(int i = 0; i < room.getNumberRows(); i++) {
@@ -137,7 +133,7 @@ public class Projection implements Comparable<Projection> {
 	public PhysicalSeat getPhysicalSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
 		 return this.getSeats().get(row).get(col).getPhysicalSeat();
 	}
-	
+
 	
 	/**
 	 * METODO per farsi dare le coordinate di un posto
@@ -155,10 +151,12 @@ public class Projection implements Comparable<Projection> {
 		return null;		
 	}
 	
+	
 	@Override
 	public int compareTo(Projection p) {
 		return this.dateTime.compareTo(p.getDateTime());
 	}
+	
 	
 	/**
 	 * METODO per stampare le caratteristiche principali della classe
@@ -182,5 +180,41 @@ public class Projection implements Comparable<Projection> {
 				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
 				+ "Prezzo: " + this.getPrice() + "€" + "\n" 
 				+ "Posti disponibili: " + availableSeats + "\n";
+	}
+
+
+	/** METODO per farsi dire il prezzo della proiezione */
+	public double getPrice() {
+		return price;
+	}
+
+	
+	/** METODO per farsi dire la data e l'ora della proiezione */
+	public LocalDateTime getDateTime() {
+		return dateTime;
+	}
+
+	
+	/** METODO per farsi dire la sala della proiezione */
+	public Room getRoom() {
+		return room;
+	}
+
+	
+	/** METODO per farsi dire l'id proiezione */
+	public int getId() {
+		return id;
+	}
+	
+	
+	/** METODO per farsi dire i posti della proiezione */
+	public ArrayList<ArrayList<ProjectionSeat>> getSeats() {
+		return this.seats;
+	}
+
+
+	/** METODO per farsi dire il film della proiezione */
+	public Movie getMovie() {
+		return movie;
 	}
 }

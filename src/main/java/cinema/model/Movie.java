@@ -2,17 +2,12 @@ package cinema.model;
 
 import java.util.ArrayList; 
 
-import lombok.*;
-
 /** BREVE DESCRIZIONE CLASSE Movie
  * 
  * @author Screaming Hairy Armadillo Team
  *
  *	Questa classe comprende tutti gli attributi che compongono un film
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
 public class Movie {
 
 	/** ATTRIBUTI
@@ -38,6 +33,20 @@ public class Movie {
 	private String imageURL;
 	private String trailerURL;
 	
+
+	/** COSTRUTTORE comprendente tutti gli argomenti*/
+	public Movie (int id, String title, String description, ArrayList<String> genres, ArrayList<String> directors, ArrayList<String> cast, int rating, int duration, String imageURL, String trailerURL) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.genres = genres;
+		this.directors = directors;
+		this.cast = cast;
+		this.rating = rating;
+		this.duration = duration;
+		this.imageURL = imageURL;
+		this.trailerURL = trailerURL;
+	}
 	
 	/**
 	 * METODO per descrivere brevemente le caratteristiche principali di un film
@@ -67,4 +76,63 @@ public class Movie {
 			 + "Trailer (URL): " + this.getTrailerURL() + "\n\n";
 	}
 	
+	
+	/**METODO per farsi dire l'id di un film*/
+	public int getId() {
+		return id;
+	}
+
+	
+	/**METODO per farsi dire il titolo di un film*/
+	public String getTitle() {
+		return title;
+	}
+
+	
+	/**METODO per farsi dire la trama di un film*/
+	public String getDescription() {
+		return description;
+	}
+
+	
+	/**METODO per farsi dire i generi di un film*/
+	public ArrayList<String> getGenres() {
+		return genres;
+	}
+
+
+	/**METODO per farsi dire i direttori di un film*/
+	public ArrayList<String> getDirectors() {
+		return directors;
+	}
+
+
+	/**METODO per farsi dire il cast di un film*/
+	public ArrayList<String> getCast() {
+		return cast;
+	}
+
+
+	/**METODO per farsi dire il rating di un film*/
+	public int getRating() {
+		return rating;
+	}
+
+	
+	/**METODO per farsi dire la durata di un film*/
+	public int getDuration() {
+		return duration;
+	}
+
+	
+	/**METODO per farsi dire l'url dell'immagine di copertina del film*/
+	public String getImageURL() {
+		return imageURL;
+	}
+
+
+	/**METODO per farsi dire l'url del trailer del film*/
+	public String getTrailerURL() {
+		return trailerURL;
+	}
 }

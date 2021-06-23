@@ -1,9 +1,6 @@
 package cinema.model.cinema;
 
 import cinema.model.cinema.util.TypeOfSeat;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 /**BREVE SPIEGAZIONE CLASSE PhysicalSeat
@@ -17,14 +14,20 @@ import lombok.NoArgsConstructor;
  * Qualora fosse utile per uno specifico cinema aggiungere attributi a questa classe il 
  * programmatore è libero di aggiungerli.
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
 public class PhysicalSeat {
 	
 	/**	ATTRIBUTI
 	 * @param type  Tipo di posto
 	 */
+	@SuppressWarnings("unused")
 	private TypeOfSeat type;
 	
+	
+	/** 
+	 * COSTRUTTORE della classe
+	 * @param type
+	 */
+	public PhysicalSeat(TypeOfSeat type){
+		this.type = type;
+	}
 }

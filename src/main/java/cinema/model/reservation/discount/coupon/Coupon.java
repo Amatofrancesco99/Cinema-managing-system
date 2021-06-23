@@ -2,8 +2,6 @@ package cinema.model.reservation.discount.coupon;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import lombok.*;
-
 
 /** BREVE DESCRIZIONE CLASSE Coupon
  * 
@@ -12,7 +10,6 @@ import lombok.*;
  * Questa classe rappresenta un coupon che può essere applicato per poter effettuare
  * una detrazione del totale della prenotazione, dell'importo definito nel coupon stesso
  */
-@Data
 public class Coupon {
 	
 	/**
@@ -31,8 +28,28 @@ public class Coupon {
 	 */
 	public Coupon (double discount) {
 		progressive = count.incrementAndGet(); 
-		this.discount = discount;
+		this.discount = Math.round(discount * 100.0)/100.0;
 		used = false;
+	}
+
+	/**METODO per farsi dare il progressivo del coupon */
+	public long getProgressive() {
+		return progressive;
+	}
+
+	/**METODO per farsi dire l'ammontare di sconto del coupon */
+	public double getDiscount() {
+		return discount;
+	}
+	
+	/**METODO per farsi dare se il coupon è usato o meno */
+	public boolean isUsed() {
+		return used;
+	}
+
+	/**METODO per impostare lo stato di un coupon */
+	public void setUsed(boolean b) {
+		this.used = b;
 	}
 	
 }

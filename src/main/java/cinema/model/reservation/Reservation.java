@@ -50,7 +50,6 @@ import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
 import cinema.model.reservation.util.SeatAlreadyTakenException;
 import cinema.model.reservation.util.SeatTakenTwiceException;
-import lombok.Data;
 
 
 /**BREVE SPIEGAZIONE CLASSE RESERVATION (Facade Controller)
@@ -66,7 +65,6 @@ import lombok.Data;
  * di pagamento selezionato dall'utente.
  * Oltre la classe Cinema, forse è la seconda per importanza e per responsabilità. 
  */
-@Data
 public class Reservation {
 	
 	
@@ -84,6 +82,7 @@ public class Reservation {
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
+	@SuppressWarnings("unused")
 	private LocalDate purchaseDate;
 	private Spectator purchaser;
 	private ArrayList<PhysicalSeat> seats;
@@ -172,7 +171,7 @@ public class Reservation {
 		if (getCoupon() != null) {
 			total -= getCoupon().getDiscount();
 		}
-		return total;
+		return Math.round(total * 100.0)/100.0;
 	}  
 	
 
@@ -181,7 +180,7 @@ public class Reservation {
 	 * @return total  Ammontare di denaro
 	 */
 	public double getFullPrice() {
-		return getNSeats() * this.projection.getPrice();
+		return Math.round(getNSeats() * this.projection.getPrice() * 100.0)/100.0;
 	}  
 	
 	
@@ -513,4 +512,71 @@ public class Reservation {
 		else numberPeopleOverMaxAge = n;
 	}
 	
+	
+	/** METODO per farsi dire il coupon associato alla prenotazione*/
+	public Coupon getCoupon() {
+		return this.coupon;
+	}
+	
+	
+	/** METODO per farsi dire il numero di persone aventi un età inferiore ad un determinato
+	 * valore sono state inserite*/
+	public int getNumberPeopleUntilMinAge() {
+		return numberPeopleUntilMinAge;
+	}
+
+	
+	/** METODO per farsi dire il numero di persone aventi un età superiore ad un determinato
+	 * valore sono state inserite*/
+	public int getNumberPeopleOverMaxAge() {
+		return numberPeopleOverMaxAge;
+	}
+	
+	
+	/** METODO per impostare la locazione di memoria in cui è salvata la prenotazione*/
+	public void setReportLocation(String path) {
+		reportLocation = path;
+	}
+	
+	
+	/** METODO per farsi dire la posizione in memoria (percorso) in cui è salvata la prenotazione*/
+	public String getReportLocation() {
+		return reportLocation;
+	}
+	
+	
+	/** METODO per farsi dire il progressivo della prenotazione*/
+	public long getProgressive() {
+		return progressive;
+	}
+	
+	
+	/** METODO per farsi dire il compratore della prenotazione*/
+	public Spectator getPurchaser() {
+		return purchaser;
+	}
+	
+	
+	/** METODO per farsi dire la proiezione della prenotazione*/
+	public Projection getProjection() {
+		return projection;
+	}
+
+
+	/** METODO per impostare la proiezione della prenotazione*/
+	public void setProjection(Projection projection) {
+		this.projection = projection;
+	}
+
+	
+	/** METODO per impostare il compratore della prenotazione*/
+	public void setPurchaser(Spectator spectator) {
+		this.purchaser = spectator;
+	}
+
+
+	/** METODO per associare la carta di credito alla prenotazione*/
+	public void setPaymentCard(PaymentCard p) {
+		this.paymentCard = p;
+	}
 }

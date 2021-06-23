@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import cinema.model.cinema.util.InvalidRoomDimensionsException;
-import lombok.Data;
+import cinema.model.cinema.util.TypeOfSeat;
 
 /** BREVE DESCRIZIONE CLASSE Room
  * 
@@ -12,7 +12,6 @@ import lombok.Data;
  *	
  * Questa classe rappresenta la sala del cinema
  */
-@Data
 public class Room {
 	
 	/** ATTRIBUTI
@@ -32,7 +31,6 @@ public class Room {
 	 * 											inseriti un numero di righe o colonne valido
 	 */
 	public Room(int rows, int cols) throws InvalidRoomDimensionsException{
-
 		if(rows <= 0 || cols <= 0)
 			throw new InvalidRoomDimensionsException();
 
@@ -40,7 +38,7 @@ public class Room {
 		for(int i = 0; i < rows; i++) {
 			ArrayList<PhysicalSeat> row = new ArrayList<PhysicalSeat>();
 			for(int j = 0; j < cols; j++) {
-				row.add(new PhysicalSeat());
+				row.add(new PhysicalSeat(TypeOfSeat.NORMAL));
 			}
 			seats.add(row);
 		}
@@ -99,5 +97,14 @@ public class Room {
 	public static int rowLetterToRowIndex(String s) {
 		char letter = s.toUpperCase().charAt(0);
 		return ( Character.getNumericValue(letter) - Character.getNumericValue('A') );
+	}
+
+	
+	/** METODO per farsi dare il progressivo della sala
+	 * 
+	 * @return
+	 */
+	public long getProgressive() {
+		return progressive;
 	}
 }

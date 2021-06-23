@@ -7,7 +7,6 @@ import cinema.model.payment.Payment;
 import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
 import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
 import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
-import lombok.*;
 
 /** BREVE DESCRIZIONE PAYMENTCARD
  * 
@@ -16,8 +15,6 @@ import lombok.*;
  * Classe che rappresenta la carta di credito utilizzata per effettuare il pagamento della
  * prenotazione
  */
-@NoArgsConstructor
-@Data
 public class PaymentCard implements Payment{
 	
 	
@@ -29,11 +26,14 @@ public class PaymentCard implements Payment{
 	 * @param expirationDate	Data di scadenza (Anno/Mese)
 	 */
 	private final int MIN_DIGIT = 16;
+	@SuppressWarnings("unused")
 	private String owner;
+	@SuppressWarnings("unused")
 	private String number;
+	@SuppressWarnings("unused")
 	private String ccv;
+	@SuppressWarnings("unused")
 	private YearMonth expirationDate;
-	
 	
 	/** 
 	 * METODO per impostare il numero della carta
@@ -89,5 +89,13 @@ public class PaymentCard implements Payment{
 			default:
 				return new Random().nextBoolean();
 		}
+	}
+
+
+	/** METODO per impostare il nome del proprietario della carta
+	 * @param owner
+	 */
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 }

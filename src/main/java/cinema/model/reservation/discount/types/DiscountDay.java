@@ -18,7 +18,6 @@ import cinema.model.reservation.discount.types.util.InvalidPercentageValueExcept
  */
 public class DiscountDay implements ReservationDiscountStrategy{
 	
-	
 	/** ATTRIBUTI 
 	 * 
 	 */

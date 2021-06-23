@@ -29,7 +29,6 @@ import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
 import cinema.model.reservation.util.SeatAlreadyTakenException;
 import cinema.model.reservation.util.SeatTakenTwiceException;
-import lombok.Data;
 
 /**
  * BREVE SPIEGAZIONE CLASSE CINEMA (Pattern Singleton GoF - Pattern Controller)
@@ -42,7 +41,6 @@ import lombok.Data;
  *         presenti nel nostro dominio, andando a richiamare il metodo
  *         getIstance().
  */
-@Data
 public class Cinema {
 
 	/**
@@ -601,9 +599,6 @@ public class Cinema {
 	 */
 	public void setReservationPurchaser(Reservation r, String name, String surname, String email)
 			throws InvalidSpectatorInfoException {
-		if ((email.equals("")) || (name.equals("")) || (surname.equals(""))) {
-			throw new InvalidSpectatorInfoException();
-		}
 		r.setPurchaser(new Spectator(name, surname, email));
 	}
 
@@ -737,5 +732,40 @@ public class Cinema {
 	 */
 	public void sendAnEmail(Reservation r) {
 		r.sendEmail();
+	}
+
+	
+	/**
+	 * METODO per farsi dire il nome del cinema
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * METODO per farsi restituire l'email del cinema
+	 * @return
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	
+	/**
+	 * METODO per farsi dare il logo del cinema
+	 * @return
+	 */
+	public String getLogoURL() {
+		return logoURL;
+	}
+
+
+	/**
+	 * METODO per farsi restituire la password del cinema
+	 * @return
+	 */
+	public String getPassword() {
+		return password;
 	}
 }

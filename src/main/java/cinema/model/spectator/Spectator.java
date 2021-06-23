@@ -1,8 +1,6 @@
 package cinema.model.spectator;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
 /** BREVE DESCRIZIONE CLASSE Spectator
  * 
@@ -10,9 +8,6 @@ import lombok.NoArgsConstructor;
  *	
  * Questa classe rappresenta lo spettatore che effettua la prenotazione della visione del film
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
 public class Spectator {
 
 	/** ATTRIBUTI
@@ -22,4 +17,36 @@ public class Spectator {
 	 */
 	private String name, surname, email;
 
+	/**
+	 * COSTRUTTORE della classe
+	 * @param name
+	 * @param surname
+	 * @param email
+	 * @throws InvalidSpectatorInfoException
+	 */
+	public Spectator(String name, String surname, String email) throws InvalidSpectatorInfoException {
+		if ((email.equals("")) || (name.equals("")) || (surname.equals(""))) {
+			throw new InvalidSpectatorInfoException();
+		}
+		else {
+			this.name = name;;
+			this.surname = surname;
+			this.email = email;
+		}
+	}
+
+	/** METODO per farsi dire il nome dello spettatore */
+	public String getName() {
+		return name;
+	}
+	
+	/** METODO per farsi dire il cognome dello spettatore */
+	public String getSurname() {
+		return surname;
+	}
+	
+	/** METODO per farsi dire l'email dello spettatore */
+	public String getEmail() {
+		return email;
+	}
 }

@@ -17,7 +17,7 @@ public class CinemaDiscount implements ReservationDiscountStrategy {
 	@Override
 	public double getTotal(Reservation r) {
 		double total = new DiscountAge().getTotal(r);
-		return total;
+		return Math.round(total * 100.0)/100.0;
 	}
 
 }

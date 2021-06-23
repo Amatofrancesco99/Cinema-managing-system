@@ -1,7 +1,6 @@
 package cinema.model.projection;
 
 import cinema.model.cinema.PhysicalSeat;
-import lombok.*;
 
 /**	BREVE DESCRIZIONE CLASSE ProjectionSeat
  * 
@@ -11,9 +10,6 @@ import lombok.*;
  * Sostanzialmente sono posti fisici (presi dalla sala in cui è proiettato il film), ma
  * hanno come attributo in più il fatto che siano già stati occupati, o che siano liberi.
  */
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
 public class ProjectionSeat {
 	
 	/** ATTRIBUTI
@@ -23,5 +19,33 @@ public class ProjectionSeat {
 	private PhysicalSeat physicalSeat;
 	private boolean available;
 	
+	
+	/**
+	 * COSTRUTTORE DELLA CLASSE
+	 * @param seat
+	 * @param b
+	 */
+	public ProjectionSeat(PhysicalSeat seat, boolean b) {
+		this.physicalSeat = seat;
+		this.available = b;
+	}
+
+
+	/** METODO per farsi dire il posto fisico*/
+	public PhysicalSeat getPhysicalSeat() {
+		return physicalSeat;
+	}
+	
+	
+	/** METODO per farsi dire se il posto è libero o meno*/
+	public boolean isAvailable() {
+		return available;
+	}
+	
+	
+	/* METODO per farsi impostare lo stato di un posto*/
+	public void setAvailable(boolean status) {
+		this.available = status;
+	}
 	
 }
