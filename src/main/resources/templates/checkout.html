@@ -242,18 +242,18 @@
 
 @section(javascript) {
     <script>
-        (function() {
+        (() => {
             'use strict';
 
             // Enable tooltips on seat icons
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            var tooltipList = tooltipTriggerList.map((tooltipTriggerEl) => {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
 
             // Add the listener used to track the available/selected state to every seat icon
-            Array.from(document.getElementsByClassName('seat')).forEach(function(seat) {
-                seat.addEventListener('click', function(event) {
+            Array.from(document.getElementsByClassName('seat')).forEach((seat) => {
+                seat.addEventListener('click', (event) => {
                     // Serialized list of selected seats
                     var serializedSelectedSeats = '';
 
@@ -267,7 +267,7 @@
                     }
 
                     // Add the ids of the selected seats to the list
-                    Array.from(document.getElementsByClassName('seat')).forEach(function(item) {
+                    Array.from(document.getElementsByClassName('seat')).forEach((item) => {
                         if (item.status == 'selezionato') {
                             serializedSelectedSeats += item.id + ' ';
                         }
@@ -296,26 +296,26 @@
             });
 
             // Show the checkout form only when the buyer has chosen at least one seat
-            document.getElementById('go-to-checkout').addEventListener('click', function() {
+            document.getElementById('go-to-checkout').addEventListener('click', () => {
                 document.getElementById('go-to-checkout').classList.add('invisible');
                 checkoutDetailsCollapse.show();
             });
 
             // Move the href to the checkout details section as soon as its transition finishes
-            document.getElementById('checkout-details').addEventListener('shown.bs.collapse', function() {
+            document.getElementById('checkout-details').addEventListener('shown.bs.collapse', () => {
                 document.location.href = '#go-to-checkout';
             });
 
             // Set the text shown when a form field is invalid
             var defaultFeedback = document.querySelectorAll('.default-feedback');
-            Array.prototype.slice.call(defaultFeedback).forEach(function(div) {
+            Array.prototype.slice.call(defaultFeedback).forEach((div) => {
                 div.innerHTML = 'Questo campo &egrave; obbligatorio';
             });
 
             // Disable form submission if there are invalid form fields
             var forms = document.querySelectorAll('.needs-validation');
-            Array.prototype.slice.call(forms).forEach(function(form) {
-                form.addEventListener('submit', function(event) {
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
                     if (!form.checkValidity()) {
                         event.preventDefault();
                         event.stopPropagation();
