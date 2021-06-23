@@ -6,20 +6,20 @@
 *** 
 ## 0. CONFIGURE YOUR ENVIRONMENT
 
-### 0.0 - Download Git
+### 0.1 - Download Git
 In caso non si abbia già installato Git, andare al seguente [link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) ;  selezionare l'installazione a seconda del proprio sistema operativo. 
 
-### 0.1 - Fork this project into your own GitHub repositories & clone it
-- **0.1.1:** Effettuare il **fork** del progetto (tasto *Fork* in alto a destra).
-- **0.1.2:** Dopo di che, **dal vostro repository locale** (fork di questo progetto), cliccare sul bottone *"Code"* e copiare il link qui riportato.
-- **0.1.3:** Successivamente aprire il terminale e spostarsi in una cartella in cui fare il clone di questo progetto (ex: Temp/Progetto-F21)
-- **0.1.4:** Eseguire infine il comando:
+### 0.2 - Fork this project into your own GitHub repositories & clone it
+- **0.2.1:** Effettuare il **fork** del progetto (tasto *Fork* in alto a destra).
+- **0.2.2:** Dopo di che, **dal vostro repository locale** (fork di questo progetto), cliccare sul bottone *"Code"* e copiare il link qui riportato.
+- **0.2.3:** Successivamente aprire il terminale e spostarsi in una cartella in cui fare il clone di questo progetto (ex: Temp/Progetto-F21)
+- **0.2.4:** Eseguire infine il comando:
 
 ```
 git clone [link copiato]
 ```
 
-### 0.2 - Download Gradle
+### 0.3 - Download Gradle
 Per poter eseguire l'applicazione è necessario avere un'installazione locale di [Gradle](https://it.wikipedia.org/wiki/Gradle).
 
 Di seguito è riportato un link contenente tutte le istruzioni per poter fare il setup di Gradle sul vostro dispositivo, qualora non lo aveste già precedentemente installato.
