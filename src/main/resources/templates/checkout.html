@@ -16,20 +16,24 @@
 
 @section(content) {
     <div class="container pt-5">
-        <div class="pt-5 pb-5">
-            <h3>
+        <div class="pt-5 pb-4">
+            <h3 class="pb-3">
                 Scegli il tuo posto in sala
             </h3>
+            <h5>
+                @(movie.getTitle())
+            </h5>
+            <h6 class="text-muted">
+                Proiezione di @(projection.getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html")) <strong>@(projection.getDateTime().getDayOfMonth().format("00"))/@(projection.getDateTime().getMonthValue().format("00"))</strong> delle <strong>@(projection.getDateTime().toLocalTime().format("hh:mm"))</strong> (Sala @(projection.getRoom().getProgressive()))
+            </h6>
         </div>
-        <div class="container mb-4">
-            <div class="alert alert-secondary d-flex align-items-center" role="alert">
-                <h1 class="my-3 ms-3 me-4">
-                    <span class="fa fa-info-circle"></span>
-                </h1>
-                <div>
-                    Seleziona uno o pi&ugrave; posti da prenotare tra quelli liberi in sala (poltroncine verdi: <img src="/static/img/seat-available.svg" alt="Posto libero" style="height: 1.5em;">).<br>
-                    Potrai poi procedere al checkout, acquistando i biglietti che ti saranno spediti via e-mail una volta effettuata la prenotazione.
-                </div>
+        <div class="alert alert-secondary d-flex align-items-center mb-4" role="alert">
+            <h1 class="my-3 ms-3 me-4">
+                <span class="fa fa-info-circle"></span>
+            </h1>
+            <div>
+                Seleziona uno o pi&ugrave; posti da prenotare tra quelli liberi in sala (poltroncine verdi: <img src="/static/img/seat-available.svg" alt="Posto libero" style="height: 1.5em;">).<br>
+                Potrai poi procedere al checkout, acquistando i biglietti che ti saranno spediti via e-mail una volta effettuata la prenotazione.
             </div>
         </div>
         <link rel="prefetch" href="/static/img/seat-selected.svg">
@@ -299,7 +303,7 @@
 
             // Move the href to the checkout details section as soon as its transition finishes
             document.getElementById('checkout-details').addEventListener('shown.bs.collapse', function() {
-                document.location.href = '#checkout-details';
+                document.location.href = '#go-to-checkout';
             });
 
             // Set the text shown when a form field is invalid
