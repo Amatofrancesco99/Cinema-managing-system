@@ -38,11 +38,11 @@ import lombok.Data;
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * Questa classe è stata realizzata seguendo il pattern singleton (GoF),
- * poiché nel nostro intero progetto ci servirà solamente un istanza di
- * questa classe, la quale potrà essere raggiunta da altre classi
- * presenti nel nostro dominio, andando a richiamare il metodo
- * getIstance().
+ *         Questa classe è stata realizzata seguendo il pattern singleton (GoF),
+ *         poiché nel nostro intero progetto ci servirà solamente un istanza di
+ *         questa classe, la quale potrà essere raggiunta da altre classi
+ *         presenti nel nostro dominio, andando a richiamare il metodo
+ *         getIstance().
  */
 @Data
 public class Cinema {
@@ -64,7 +64,7 @@ public class Cinema {
 	 * @param password          Password associata all'indirizzo email
 	 * @param rooms             List: comprende tutte le sale del cinema
 	 * @param cinemaProjections List: comprende tutte le proiezioni fatte dal cinema
-	 * @param coupon			List: comprende tutti i coupon emessi dal cinema
+	 * @param coupon            List: comprende tutti i coupon emessi dal cinema
 	 */
 	private static Cinema single_instance = null;
 	private String name, city, country, zipCode, address, logoURL, email, password;
@@ -88,17 +88,17 @@ public class Cinema {
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		coupons = new ArrayList<Coupon>();
-		
+
 		// ********* TEMPORARY DATA USED FOR TESTING *********
 		// Test movie
-		
+
 		// Test movie
 		ArrayList<String> genres, directors, cast;
 		genres = new ArrayList<>();
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
-		
-		// DRUK 
+
+		// DRUK
 		genres.add("Drammatico");
 		genres.add("Commedia");
 		directors.add("Thomas Vinterberg");
@@ -106,18 +106,16 @@ public class Cinema {
 		cast.add("Thomas Bo Larsen");
 		cast.add("Lars Ranthe");
 		cast.add("Magnus Millang");
-		Movie DrukMovie = new Movie(1, "Druk - Un altro giro",
+		Movie drukMovie = new Movie(1, "Druk - Un altro giro",
 				"C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?",
-				genres, directors, cast, 4, 117,
-				"https://200mghercianos.files.wordpress.com/2020/12/another-round-druk-thomas-vinteberg-filme-critica-mostra-sp-poster-1.jpg",
+				genres, directors, cast, 4, 117, "druk-un-altro-giro.jpg",
 				"https://www.youtube.com/watch?v=hFbDh58QHzw");
-		
+
 		genres = new ArrayList<>();
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
-		
-		
-		//PULP FICTION
+
+		// PULP FICTION
 		genres.add("Drammatico");
 		genres.add("Thriller");
 		directors.add("Quentin Tarantino");
@@ -126,16 +124,14 @@ public class Cinema {
 		cast.add("Samuel L. Jackson");
 		cast.add("Bruce Willis");
 		cast.add("Steve Buscemi");
-		Movie pulpFiction = new Movie(3, "Pulp Fiction", "Un killer si innamora della moglie del suo capo, un pugile rinnega la sua promessa e una coppia tenta una rapina che va rapidamente fuori controllo.",
-				genres, directors, cast, 5, 154,
-				"https://images-na.ssl-images-amazon.com/images/I/71zSZQzlK%2BL._AC_SL1200_.jpg", 
-				"https://www.youtube.com/watch?v=s7EdQ4FqbhY");
-		
+		Movie pulpFictionMovie = new Movie(3, "Pulp Fiction",
+				"Un killer si innamora della moglie del suo capo, un pugile rinnega la sua promessa e una coppia tenta una rapina che va rapidamente fuori controllo.",
+				genres, directors, cast, 5, 154, "pulp-fiction.jpg", "https://www.youtube.com/watch?v=s7EdQ4FqbhY");
+
 		genres = new ArrayList<>();
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
-		
-		
+
 		// NO COUNTRY FOR OLD MEN
 		genres.add("Thriller");
 		genres.add("Crime");
@@ -146,17 +142,16 @@ public class Cinema {
 		cast.add("Tommy Lee Jones");
 		cast.add("Josh Brolin");
 		cast.add("Kelly Mcdonald");
-		Movie noCounrtyforOldMen = new Movie(4, "Non è un paese per vecchi", "Texas, 1980. Mentre è a caccia nei territori selvaggi al confine con il Messico, Llewelyn Moss, un saldatore texano reduce dalla guerra del Vietnam, si imbatte in quel che resta di un regolamento di conti tra bande locali per una partita di droga. In mezzo ai numerosi cadaveri, Moss trova un'ingente somma di denaro che si porta a casa, con l'intento di assicurarsi un futuro migliore per sé e la giovane moglie, Carla Jean.",
-				genres, directors, cast, 4, 122,
-				"https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTeL_QKTOBJ8-ccb9vaZE1310GwPSu_sABaxndAasV3toHRUMtW", 
+		Movie noCountryForOldMenMovie = new Movie(4, "Non è un paese per vecchi",
+				"Texas, 1980. Mentre è a caccia nei territori selvaggi al confine con il Messico, Llewelyn Moss, un saldatore texano reduce dalla guerra del Vietnam, si imbatte in quel che resta di un regolamento di conti tra bande locali per una partita di droga. In mezzo ai numerosi cadaveri, Moss trova un'ingente somma di denaro che si porta a casa, con l'intento di assicurarsi un futuro migliore per sé e la giovane moglie, Carla Jean.",
+				genres, directors, cast, 4, 122, "non-e-un-paese-per-vecchi.jpg",
 				"https://www.youtube.com/watch?v=38A__WT3-o0");
-		
+
 		genres = new ArrayList<>();
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
-		
-		
-		//SKYFALL
+
+		// SKYFALL
 		genres.add("Drammatico");
 		genres.add("Action");
 		genres.add("Spy");
@@ -165,15 +160,14 @@ public class Cinema {
 		cast.add("Judi Dench");
 		cast.add("Javier Bardem");
 		cast.add("Ben Whishaw");
-		Movie skyfall = new Movie(5, "Skyfall", "In seguito al fallimento di una missione recente, Il celebre agente segreto britannico è costretto ad essere testimone di una serie terribile di eventi: la MI6 deve trasferirsi al più presto mentre i dipendenti sotto copertura vedono le proprie identità venire rivelate. M è disperata e si rivolge a James Bond in cerca di un aiuto immediato.",
-				genres, directors, cast, 4, 143,
-				"https://www.madmass.it/wp-content/uploads/2020/03/Skyfall__poster.jpg", 
-				"https://www.youtube.com/watch?v=OnlSRBTG5Tw");
-		
+		Movie skyfallMovie = new Movie(5, "Skyfall",
+				"In seguito al fallimento di una missione recente, Il celebre agente segreto britannico è costretto ad essere testimone di una serie terribile di eventi: la MI6 deve trasferirsi al più presto mentre i dipendenti sotto copertura vedono le proprie identità venire rivelate. M è disperata e si rivolge a James Bond in cerca di un aiuto immediato.",
+				genres, directors, cast, 4, 143, "skyfall.jpg", "https://www.youtube.com/watch?v=OnlSRBTG5Tw");
+
 		genres = new ArrayList<>();
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
-		
+
 		// AVENGERS - ENDGAME
 		genres.add("Azione");
 		genres.add("Fantascienza");
@@ -186,69 +180,67 @@ public class Cinema {
 		cast.add("Chris Hemsworth");
 		cast.add("Scarlett Johansson");
 		cast.add("Jeremy Renner");
-		Movie AvengersEndgameMovie = new Movie(2, "Avengers - Endgame",
+		Movie avengersEndgameMovie = new Movie(2, "Avengers - Endgame",
 				"Tutto riparte dalla terra devastata da Thanos e le sue gemme dell'infinito, dopo aver visto svanire in particelle infinitesimali di polvere i Guardiani della Galassia e personaggi come Spider-Man, Black Panther e Dr. Strange. Questa seconda parte evidenzia una situazione altamente drammatica, con i superstiti che non sanno darsi pace, dilaniati dal senso di colpa e dal vuoto ed incapaci di ripartire. I legami rimasti continuano a rafforzarsi, seppur in sordina, quelli che avevano portato a scontri mutano in fiducia, le amicizie si cementano, i rapporti di vecchia data si consolidano ed alcuni cercano di costruirsi una famiglia fino a cinque anni dopo, quando una \"microscopica\" particella ritrovata rimette in moto lo spirito di gruppo. Un paese in ginocchio che prova a cambiare le cose e ripristinare l'ordine, quantomeno apparente e in mezzo al prevedibile e oramai noto affiorano sorprese inaspettate. Il finale non si tinge di dark, ma in alcuni tratti è caratterizzato da toni distesi, dialoghi divertenti, personaggi quasi caricaturali senza i muscoli di \"Avengers: Infinity War\", ma tanto cervello e costruzione dell'azione come del pensiero.",
-				genres, directors, cast, 5, 182,
-				"https://www.ilcineocchio.it/cine/wp-content/uploads/2020/05/Avengers-Endgame.jpg",
-				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
-		
+				genres, directors, cast, 5, 182, "avengers-endgame.jpg", "https://www.youtube.com/watch?v=vqWz0ZCpYBs");
+
 		// Test room
 		ArrayList<Room> rooms = new ArrayList<Room>();
 		try {
-			rooms.add(new Room(5 , 10));
-			rooms.add(new Room(7 , 10));
+			rooms.add(new Room(5, 10));
+			rooms.add(new Room(7, 10));
 		} catch (InvalidRoomDimensionsException e) {
 			e.printStackTrace();
 		}
 
 		// Test projections
-		Projection p1 = new Projection(123, DrukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5),
+		Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p2 = new Projection(183, DrukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5),
+		Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p3 = new Projection(193, DrukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5),
+		Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p4 = new Projection(109, DrukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),
+		Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p5 = new Projection(743, DrukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5),
+		Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p6 = new Projection(233, DrukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5),
+		Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p7 = new Projection(144, DrukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
+		Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
 				rooms.get(0));
-		Projection p8 = new Projection(101, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), new Money(12.5),
-				rooms.get(1));
-		Projection p9 = new Projection(724, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(12.5),
-				rooms.get(1));
-		Projection p10 = new Projection(287, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T19:00:00"), new Money(12.5),
-				rooms.get(1));
-		Projection p11 = new Projection(150, AvengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
-				rooms.get(1));
-		Projection p12 = new Projection(344, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
-				rooms.get(1));
-		Projection p13 = new Projection(301, pulpFiction, LocalDateTime.parse("2021-06-06T22:30:00"), new Money(8.5),
+		Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"),
+				new Money(12.5), rooms.get(1));
+		Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T23:30:00"),
+				new Money(12.5), rooms.get(1));
+		Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T19:00:00"),
+				new Money(12.5), rooms.get(1));
+		Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
+				new Money(12.5), rooms.get(1));
+		Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
+				new Money(8.5), rooms.get(1));
+		Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-06-06T22:30:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-06-02T23:30:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-06-01T19:00:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-22T23:30:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-21T19:00:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-23T08:05:00"),
+				new Money(8.5), rooms.get(0));
+		Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-07-01T08:05:00"), new Money(8.5),
 				rooms.get(0));
-		Projection p14 = new Projection(324, pulpFiction, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(8.5),
+		Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-07-02T23:30:00"), new Money(8.5),
 				rooms.get(0));
-		Projection p15 = new Projection(387, pulpFiction, LocalDateTime.parse("2021-06-01T19:00:00"), new Money(8.5),
+		Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-07-01T19:00:00"), new Money(8.5),
 				rooms.get(0));
-		Projection p16 = new Projection(350, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
+		Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-07-02T08:05:00"), new Money(8.5),
 				rooms.get(0));
-		Projection p17 = new Projection(424, noCounrtyforOldMen, LocalDateTime.parse("2021-06-22T23:30:00"), new Money(8.5),
-				rooms.get(0));
-		Projection p18 = new Projection(487, noCounrtyforOldMen, LocalDateTime.parse("2021-06-21T19:00:00"), new Money(8.5),
-				rooms.get(0));
-		Projection p19 = new Projection(450, noCounrtyforOldMen, LocalDateTime.parse("2021-06-23T08:05:00"), new Money(8.5),
-				rooms.get(0));
-		Projection p20 = new Projection(350, skyfall, LocalDateTime.parse("2021-07-01T08:05:00"), new Money(8.5),
-				rooms.get(0));
-		Projection p21 = new Projection(424, skyfall, LocalDateTime.parse("2021-07-02T23:30:00"), new Money(8.5),
-				rooms.get(0));
-		Projection p22 = new Projection(487, skyfall, LocalDateTime.parse("2021-07-01T19:00:00"), new Money(8.5),
-				rooms.get(0));
-		Projection p23 = new Projection(450, skyfall, LocalDateTime.parse("2021-07-02T08:05:00"), new Money(8.5),
-				rooms.get(0));
-		
+
 		this.cinemaProjections.add(p1);
 		this.cinemaProjections.add(p2);
 		this.cinemaProjections.add(p3);
@@ -272,16 +264,16 @@ public class Cinema {
 		this.cinemaProjections.add(p21);
 		this.cinemaProjections.add(p22);
 		this.cinemaProjections.add(p23);
-		
-		//occupare il primo posto della seconda proiezione
+
+		// occupare il primo posto della seconda proiezione
 		try {
 			p2.takeSeat(0, 0);
 		} catch (InvalidRoomSeatCoordinatesException e) {
 		}
-		
+
 		// Aggiunti due coupon di prova emessi dal cinema
 		coupons.add(new Coupon(new Money(5)));
-		coupons.get(0).setUsed(true);   // Coupon ID: 1 già utilizzato (Prova)
+		coupons.get(0).setUsed(true); // Coupon ID: 1 già utilizzato (Prova)
 		coupons.add(new Coupon(new Money(6)));
 		coupons.add(new Coupon(new Money(3.5)));
 	}
@@ -289,12 +281,13 @@ public class Cinema {
 	/**
 	 * METODO STATICO per creare l'istanza della classe
 	 * 
-	 * Attenzione! Solamente una istanza potrà essere presente
-	 * La parola chiave synchronized indica che solo un thread per volta può accedere al
-	 * seguente metodo.
-	 * @return Cinema 	 Istanza della classe Cinema, se il cinema è già stato
-	 *         			 precedentemente istanziato allora il metodo restituirà l'oggetto già
-	 *        			 istanziato, viceversa procederà con l'istanziamento di quest ultimo
+	 * Attenzione! Solamente una istanza potrà essere presente La parola chiave
+	 * synchronized indica che solo un thread per volta può accedere al seguente
+	 * metodo.
+	 * 
+	 * @return Cinema Istanza della classe Cinema, se il cinema è già stato
+	 *         precedentemente istanziato allora il metodo restituirà l'oggetto già
+	 *         istanziato, viceversa procederà con l'istanziamento di quest ultimo
 	 *
 	 */
 	public static synchronized Cinema getInstance() {
@@ -304,18 +297,20 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per creare una nuova prenotazione (vuota), a partire dalla classe cinema
-	 * @return reservation 	Nuova prenotazione creata
+	 * METODO per creare una nuova prenotazione (vuota), a partire dalla classe
+	 * cinema
+	 * 
+	 * @return reservation Nuova prenotazione creata
 	 */
 	public Reservation createReservation() {
 		return new Reservation();
 	}
-	
+
 	/**
 	 * METODO per aggiungere una proiezione al cinema
 	 * 
-	 * @param p 	Proiezione da aggiungere alla lista di proiezioni di cui il cinema
-	 *          	dispone
+	 * @param p Proiezione da aggiungere alla lista di proiezioni di cui il cinema
+	 *          dispone
 	 */
 	public void addProjection(Projection p) {
 		cinemaProjections.add(p);
@@ -324,8 +319,8 @@ public class Cinema {
 	/**
 	 * METODO per rimuovere una proiezione al cinema
 	 * 
-	 * @param p 	Proiezione da rimuovere alla lista di proiezioni di cui il cinema
-	 *          	dispone
+	 * @param p Proiezione da rimuovere alla lista di proiezioni di cui il cinema
+	 *          dispone
 	 */
 	public void removeProjection(Projection p) {
 		cinemaProjections.remove(p);
@@ -334,7 +329,7 @@ public class Cinema {
 	/**
 	 * METODO per farsi restituire tutte le proiezioni di cui il cinema dispone
 	 * 
-	 * @return ArrayList<Projection>	 Insieme di tutte le proiezioni del cinema
+	 * @return ArrayList<Projection> Insieme di tutte le proiezioni del cinema
 	 */
 	public List<Projection> getProjections() {
 		return cinemaProjections;
@@ -345,11 +340,11 @@ public class Cinema {
 	 * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
 	 * tramite l'id
 	 * 
-	 * @param movieId 						 Id del film di cui si vogliono cercare le proiezioni
-	 * @return ArrayList<Projection> 		 Insieme delle proiezioni dello specifico film
-	 * @throws NoMovieException 
-	 * @throws NoMovieProjectionsException   Eccezione lanciata, qualora il cinema non
-	 *                                       abbia quel film, tra i film proiettati
+	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
+	 * @return ArrayList<Projection> Insieme delle proiezioni dello specifico film
+	 * @throws NoMovieException
+	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
+	 *                                     abbia quel film, tra i film proiettati
 	 */
 	public List<Projection> getProjections(int movieId) throws NoMovieException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
@@ -357,7 +352,7 @@ public class Cinema {
 		if (m != null) {
 			for (Projection p : cinemaProjections) {
 				if (p.getMovie().getId() == movieId) {
-				movieProjections.add(p);
+					movieProjections.add(p);
 				}
 			}
 		}
@@ -368,8 +363,8 @@ public class Cinema {
 	 * 
 	 * METODO per restituire tutti i film che il cinema sta attualmente proiettando
 	 * 
-	 * @return List<Movie>  Insieme di tutti i film che il cinema sta momentaneamente
-	 *         				proiettando
+	 * @return List<Movie> Insieme di tutti i film che il cinema sta momentaneamente
+	 *         proiettando
 	 */
 	public List<Movie> getCurrentlyAvailableMovies() {
 		List<Movie> movies = new ArrayList<Movie>();
@@ -392,9 +387,9 @@ public class Cinema {
 	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo
 	 * di un film (o una parte di esso)
 	 * 
-	 * @param query 			  Titolo del film che si vuole cercare tra le proiezioni del
-	 *              			  cinema (o una parte di esso)
-	 * @return ArrayList<Movie>   Lista dei film
+	 * @param query Titolo del film che si vuole cercare tra le proiezioni del
+	 *              cinema (o una parte di esso)
+	 * @return ArrayList<Movie> Lista dei film
 	 */
 	public List<Movie> getCurrentlyAvailableMovies(String query) {
 		List<Movie> movies = new ArrayList<Movie>();
@@ -408,10 +403,11 @@ public class Cinema {
 
 	/**
 	 * METODO per restituire un film, dato il suo Id
-	 * @param id					Id del film
-	 * @return Movie				Film trovato
-	 * @throws NoMovieException		Eccezione lanciata qualora non si trovi nessun film
-	 * 								con quell'Id
+	 * 
+	 * @param id Id del film
+	 * @return Movie Film trovato
+	 * @throws NoMovieException Eccezione lanciata qualora non si trovi nessun film
+	 *                          con quell'Id
 	 */
 	public Movie getMovie(int id) throws NoMovieException {
 		for (Projection p : cinemaProjections) {
@@ -424,10 +420,11 @@ public class Cinema {
 
 	/**
 	 * METODO per resituire una proiezione, dato il suo Id
-	 * @param id						Id della proiezione
-	 * @return Projection				Proiezione con quello specifico Id
-	 * @throws NoProjectionException	Eccezione lanciata qualora non ci sia nessuna proiezione
-	 * 									con quell'Id
+	 * 
+	 * @param id Id della proiezione
+	 * @return Projection Proiezione con quello specifico Id
+	 * @throws NoProjectionException Eccezione lanciata qualora non ci sia nessuna
+	 *                               proiezione con quell'Id
 	 */
 	public Projection getProjection(int id) throws NoProjectionException {
 		for (Projection p : cinemaProjections) {
@@ -438,29 +435,28 @@ public class Cinema {
 		throw new NoProjectionException(id);
 	}
 
-	
 	/**
 	 * METODO per resituire un coupon, dato il suo id (progressivo)
-	 * @param progressive				 Id del coupon
-	 * @return Coupon					 Coupon con quello specifico progressivo
-	 * @throws CouponNotExistsException	 Eccezione lanciata qualora non ci sia nessun coupon
-	 * 									 con quell'Id progressivo
+	 * 
+	 * @param progressive Id del coupon
+	 * @return Coupon Coupon con quello specifico progressivo
+	 * @throws CouponNotExistsException Eccezione lanciata qualora non ci sia nessun
+	 *                                  coupon con quell'Id progressivo
 	 */
 	public Coupon getCoupon(long progressive) throws CouponNotExistsException {
-		for (Coupon c: coupons) {
-			if (c.getProgressive() == progressive ) {
+		for (Coupon c : coupons) {
+			if (c.getProgressive() == progressive) {
 				return c;
 			}
 		}
 		throw new CouponNotExistsException(progressive);
 	}
-	
-	
+
 	/**
 	 * METODO per aggiungere una sala del cinema
 	 * 
-	 * @param r 	Sala del cinema da aggiungere, all'insieme delle sale del cinema
-	 *          	stesso
+	 * @param r Sala del cinema da aggiungere, all'insieme delle sale del cinema
+	 *          stesso
 	 */
 	public void addRoom(Room r) {
 		rooms.add(r);
@@ -469,8 +465,8 @@ public class Cinema {
 	/**
 	 * METODO per rimuovere una sala del cinema
 	 * 
-	 * @param r		 Sala del cinema da rimuovere, dall'insieme delle sale del cinema
-	 *          	 stesso
+	 * @param r Sala del cinema da rimuovere, dall'insieme delle sale del cinema
+	 *          stesso
 	 */
 	public void removeRoom(Room r) throws NoCinemaRoomsException {
 		if (rooms.size() > 0)
@@ -478,14 +474,14 @@ public class Cinema {
 		else
 			throw new NoCinemaRoomsException(this.name, this.city, this.address);
 	}
-	
+
 	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
 	 * 
-	 * @param city      Citta
-	 * @param country   Paese
-	 * @param zipCode   Codice comunale
-	 * @param address   Indirizzo (Via, numero civico)
+	 * @param city    Citta
+	 * @param country Paese
+	 * @param zipCode Codice comunale
+	 * @param address Indirizzo (Via, numero civico)
 	 */
 	public void setLocation(String city, String country, String zipCode, String address) {
 		this.city = city;
@@ -493,28 +489,27 @@ public class Cinema {
 		this.zipCode = zipCode;
 		this.address = address;
 	}
-	
-	
-	/** METODO per farsi dire l'età più elevata da cui il cinema effettua uno sconto sul 
-	 * totale
+
+	/**
+	 * METODO per farsi dire l'età più elevata da cui il cinema effettua uno sconto
+	 * sul totale
 	 * 
-	 * @return max_age   Età massima
+	 * @return max_age Età massima
 	 */
 	public int getMaxDiscountAge() {
 		return new DiscountAge().getMax_age();
 	}
-	
-	
-	/** METODO per farsi dire l'età più bassa da cui il cinema effettua uno sconto sul 
-	 * totale
+
+	/**
+	 * METODO per farsi dire l'età più bassa da cui il cinema effettua uno sconto
+	 * sul totale
 	 * 
-	 * @return min_age   Età minima
+	 * @return min_age Età minima
 	 */
 	public int getMinDiscountAge() {
 		return new DiscountAge().getMin_age();
 	}
-	
-	
+
 	/**
 	 * METODO per farsi dire il numero di sale di cui il cinema è composto
 	 * 
@@ -533,9 +528,9 @@ public class Cinema {
 		return address + ", " + city + " - " + zipCode + " " + country;
 	}
 
-
 	/**
 	 * METODO per impostare la proiezione di una prenotazione
+	 * 
 	 * @param r
 	 * @param projectionId
 	 * @throws NoProjectionException
@@ -543,46 +538,47 @@ public class Cinema {
 	public void setReservationProjection(Reservation r, int projectionId) throws NoProjectionException {
 		r.setProjection(getProjection(projectionId));
 	}
-	
-	
+
 	/**
-	 * METODO per farsi dire il numero di colonne della sala in cui è proiettato il 
+	 * METODO per farsi dire il numero di colonne della sala in cui è proiettato il
 	 * film della prenotazione
+	 * 
 	 * @param r
 	 * @return
 	 */
 	public int getNumberColsReservationProjection(Reservation r) {
 		return r.getProjection().getRoom().getNumberCols();
 	}
-	
-	
+
 	/**
-	 * METODO per farsi dire il numero di righe della sala in cui è proiettato il 
+	 * METODO per farsi dire il numero di righe della sala in cui è proiettato il
 	 * film della prenotazione
+	 * 
 	 * @param r
 	 * @return
 	 */
 	public int getNumberRowsReservationProjection(Reservation r) {
 		return r.getProjection().getRoom().getNumberRows();
 	}
-	
-	
+
 	/**
-	 * METODO per farsi dire se il posto della sala selezionata dalla prenotazione
-	 * è libero o meno
+	 * METODO per farsi dire se il posto della sala selezionata dalla prenotazione è
+	 * libero o meno
+	 * 
 	 * @param r
 	 * @param row
 	 * @param col
 	 * @return
 	 * @throws InvalidRoomSeatCoordinatesException
 	 */
-	public boolean checkIfReservationProjectionSeatIsAvailable (Reservation r, int row, int col) throws InvalidRoomSeatCoordinatesException {
+	public boolean checkIfReservationProjectionSeatIsAvailable(Reservation r, int row, int col)
+			throws InvalidRoomSeatCoordinatesException {
 		return r.getProjection().checkIfSeatIsAvailable(row, col);
 	}
-	
-	
+
 	/**
 	 * METODO per aggiungere un posto alla reservation
+	 * 
 	 * @param r
 	 * @param row
 	 * @param col
@@ -591,39 +587,41 @@ public class Cinema {
 	 * @throws SeatTakenTwiceException
 	 * @throws FreeAnotherPersonSeatException
 	 */
-	public void addSeatToReservation(Reservation r, int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
+	public void addSeatToReservation(Reservation r, int row, int col) throws SeatAlreadyTakenException,
+			InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
 		r.addSeat(row, col);
 	}
-	
-	
+
 	/**
 	 * METODO per aggiungere informazioni sul cliente che effettua la prenotazione
+	 * 
 	 * @param r
 	 * @param name
 	 * @param surname
 	 * @param email
-	 * @throws InvalidSpectatorInfoException 
+	 * @throws InvalidSpectatorInfoException
 	 */
-	public void setReservationPurchaser(Reservation r, String name, String surname, String email) throws InvalidSpectatorInfoException {
-		if ((email.equals(""))||(name.equals(""))||(surname.equals(""))) {
+	public void setReservationPurchaser(Reservation r, String name, String surname, String email)
+			throws InvalidSpectatorInfoException {
+		if ((email.equals("")) || (name.equals("")) || (surname.equals(""))) {
 			throw new InvalidSpectatorInfoException();
 		}
-		r.setPurchaser(new Spectator(name,surname,email));
+		r.setPurchaser(new Spectator(name, surname, email));
 	}
-	
-	
+
 	/**
 	 * METODO per impostare il nome di una carta di credito
+	 * 
 	 * @param p
 	 * @param owner
 	 */
 	public void setPaymentCardOwner(PaymentCard p, String owner) {
 		p.setOwner(owner);
 	}
-	
-	
+
 	/**
 	 * METODO per impostare il numero di una carta di credito
+	 * 
 	 * @param p
 	 * @param number
 	 * @throws InvalidCreditCardNumberException
@@ -631,21 +629,22 @@ public class Cinema {
 	public void setPaymentCardNumber(PaymentCard p, String number) throws InvalidCreditCardNumberException {
 		p.setNumber(number);
 	}
-	
-	
+
 	/**
 	 * METODO per impostare la data di scadenza di una carta di credito
+	 * 
 	 * @param p
 	 * @param expirationDate
 	 * @throws ExpiredCreditCardException
 	 */
-	public void setPaymentCardExpirationDate(PaymentCard p, YearMonth expirationDate) throws ExpiredCreditCardException {
+	public void setPaymentCardExpirationDate(PaymentCard p, YearMonth expirationDate)
+			throws ExpiredCreditCardException {
 		p.setExpirationDate(expirationDate);
 	}
-	
-	
+
 	/**
 	 * METODO per impostare il ccv di una carta di credito
+	 * 
 	 * @param p
 	 * @param ccv
 	 * @throws InvalidCCVException
@@ -653,21 +652,21 @@ public class Cinema {
 	public void setPaymentCardCCV(PaymentCard p, String ccv) throws InvalidCCVException {
 		p.setCCV(ccv);
 	}
-	
-	
+
 	/**
 	 * METODO per aggiungere alla prenotazione la carta di credito
+	 * 
 	 * @param r
 	 * @param p
 	 */
 	public void setReservationPaymentCard(Reservation r, PaymentCard p) {
 		r.setPaymentCard(p);
 	}
-	
-	
+
 	/**
-	 * METODO per impostare il numero di persone che hanno un età inferiore
-	 * ad un età minima da cui parte lo sconto per la proiezione indicata (per età)
+	 * METODO per impostare il numero di persone che hanno un età inferiore ad un
+	 * età minima da cui parte lo sconto per la proiezione indicata (per età)
+	 * 
 	 * @param r
 	 * @param n
 	 * @throws InvalidNumberPeopleValueException
@@ -675,11 +674,12 @@ public class Cinema {
 	public void setReservationNumberPeopleUntilMinAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
 		r.setNumberPeopleUntilMinAge(n);
 	}
-	
-	
+
 	/**
-	 * METODO per impostare il numero di persone che hanno un età superiore ad un età
-	 * a partire dalla quale parte lo sconto per la proiezione indicata (per età)
+	 * METODO per impostare il numero di persone che hanno un età superiore ad un
+	 * età a partire dalla quale parte lo sconto per la proiezione indicata (per
+	 * età)
+	 * 
 	 * @param r
 	 * @param n
 	 * @throws InvalidNumberPeopleValueException
@@ -687,23 +687,24 @@ public class Cinema {
 	public void setReservationNumberPeopleOverMaxAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
 		r.setNumberPeopleOverMaxAge(n);
 	}
-	
-	
+
 	/**
-	 * METODO per aggiungere alla prenotazione un eventuale coupon per un ulteriore sconto
-	 * sul totale
+	 * METODO per aggiungere alla prenotazione un eventuale coupon per un ulteriore
+	 * sconto sul totale
+	 * 
 	 * @param r
 	 * @param coupon
 	 * @throws CouponNotExistsException
 	 * @throws CouponAleadyUsedException
 	 */
-	public void setReservationCoupon(Reservation r, long coupon) throws CouponNotExistsException, CouponAleadyUsedException {
+	public void setReservationCoupon(Reservation r, long coupon)
+			throws CouponNotExistsException, CouponAleadyUsedException {
 		r.setCoupon(coupon);
 	}
-	
-	
+
 	/**
 	 * METODO per comprare una prenotazione, una volta inseriti tutti i dati
+	 * 
 	 * @param r
 	 * @throws NumberFormatException
 	 * @throws SeatAlreadyTakenException
@@ -712,35 +713,37 @@ public class Cinema {
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
 	 */
-	public void buyReservation(Reservation r) throws NumberFormatException, SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
+	public void buyReservation(Reservation r)
+			throws NumberFormatException, SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException,
+			ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
 		r.buy();
 	}
-	
-	
+
 	/**
 	 * METODO per farsi dire il totale di una prenotazione
+	 * 
 	 * @param r
-	 * @return 
+	 * @return
 	 */
 	public double getReservationTotalAmount(Reservation r) {
 		return r.getTotal().getAmount();
 	}
-	
-	
+
 	/**
 	 * METODO per farsi dire la valuta del totale della prenotazione
+	 * 
 	 * @param r
 	 * @return
 	 */
 	public TypeOfCurrency getReservationTotalCurrency(Reservation r) {
 		return r.getTotal().getCurrency();
 	}
-	
-	
+
 	/**
 	 * METODO per inviare un email al cliente che ha compilato la prenotazione
 	 * comprendente il report (documento comprendente le varie informazioni sulla
 	 * sua prenotazione: film, posti prenotati, ora, ecc...)
+	 * 
 	 * @param r
 	 */
 	public void sendAnEmail(Reservation r) {
