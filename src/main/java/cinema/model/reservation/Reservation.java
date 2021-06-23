@@ -36,7 +36,7 @@ import cinema.model.money.Money;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
-import cinema.model.Spectator;
+import cinema.model.spectator.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;

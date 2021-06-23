@@ -9,7 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import cinema.model.Movie;
-import cinema.model.Spectator;
+import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.money.Money;
 import cinema.model.projection.Projection;

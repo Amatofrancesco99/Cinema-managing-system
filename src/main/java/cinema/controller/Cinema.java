@@ -1,20 +1,36 @@
 package cinema.controller;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
 import cinema.model.Movie;
+import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.money.Money;
+import cinema.model.money.util.TypeOfCurrency;
+import cinema.model.payment.methods.paymentCard.PaymentCard;
+import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
+import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
+import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
+import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.DiscountAge;
+import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.util.FreeAnotherPersonSeatException;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
+import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
+import cinema.model.reservation.util.ReservationHasNoSeatException;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
+import cinema.model.reservation.util.SeatTakenTwiceException;
 import lombok.Data;
 
 /**
@@ -224,7 +240,6 @@ public class Cinema {
 	public static synchronized Cinema getInstance() {
 		if (single_instance == null)
 			single_instance = new Cinema();
-
 		return single_instance;
 	}
 
@@ -456,5 +471,219 @@ public class Cinema {
 	 */
 	public String getLocation() {
 		return address + ", " + city + " - " + zipCode + " " + country;
+	}
+
+
+	/**
+	 * METODO per impostare la proiezione di una prenotazione
+	 * @param r
+	 * @param projectionId
+	 * @throws NoProjectionException
+	 */
+	public void setReservationProjection(Reservation r, int projectionId) throws NoProjectionException {
+		r.setProjection(getProjection(projectionId));
+	}
+	
+	
+	/**
+	 * METODO per farsi dire il numero di colonne della sala in cui è proiettato il 
+	 * film della prenotazione
+	 * @param r
+	 * @return
+	 */
+	public int getNumberColsReservationProjection(Reservation r) {
+		return r.getProjection().getRoom().getNumberCols();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire il numero di righe della sala in cui è proiettato il 
+	 * film della prenotazione
+	 * @param r
+	 * @return
+	 */
+	public int getNumberRowsReservationProjection(Reservation r) {
+		return r.getProjection().getRoom().getNumberRows();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire se il posto della sala selezionata dalla prenotazione
+	 * è libero o meno
+	 * @param r
+	 * @param row
+	 * @param col
+	 * @return
+	 * @throws InvalidRoomSeatCoordinatesException
+	 */
+	public boolean checkIfReservationProjectionSeatIsAvailable (Reservation r, int row, int col) throws InvalidRoomSeatCoordinatesException {
+		return r.getProjection().checkIfSeatIsAvailable(row, col);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere un posto alla reservation
+	 * @param r
+	 * @param row
+	 * @param col
+	 * @throws SeatAlreadyTakenException
+	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws SeatTakenTwiceException
+	 * @throws FreeAnotherPersonSeatException
+	 */
+	public void addSeatToReservation(Reservation r, int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
+		r.addSeat(row, col);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere informazioni sul cliente che effettua la prenotazione
+	 * @param r
+	 * @param name
+	 * @param surname
+	 * @param email
+	 * @throws InvalidSpectatorInfoException 
+	 */
+	public void setReservationPurchaser(Reservation r, String name, String surname, String email) throws InvalidSpectatorInfoException {
+		if ((email.equals(""))||(name.equals(""))||(surname.equals(""))) {
+			throw new InvalidSpectatorInfoException();
+		}
+		r.setPurchaser(new Spectator(name,surname,email));
+	}
+	
+	
+	/**
+	 * METODO per impostare il nome di una carta di credito
+	 * @param p
+	 * @param owner
+	 */
+	public void setPaymentCardOwner(PaymentCard p, String owner) {
+		p.setOwner(owner);
+	}
+	
+	
+	/**
+	 * METODO per impostare il numero di una carta di credito
+	 * @param p
+	 * @param number
+	 * @throws InvalidCreditCardNumberException
+	 */
+	public void setPaymentCardNumber(PaymentCard p, String number) throws InvalidCreditCardNumberException {
+		p.setNumber(number);
+	}
+	
+	
+	/**
+	 * METODO per impostare la data di scadenza di una carta di credito
+	 * @param p
+	 * @param expirationDate
+	 * @throws ExpiredCreditCardException
+	 */
+	public void setPaymentCardExpirationDate(PaymentCard p, YearMonth expirationDate) throws ExpiredCreditCardException {
+		p.setExpirationDate(expirationDate);
+	}
+	
+	
+	/**
+	 * METODO per impostare il ccv di una carta di credito
+	 * @param p
+	 * @param ccv
+	 * @throws InvalidCCVException
+	 */
+	public void setPaymentCardCCV(PaymentCard p, String ccv) throws InvalidCCVException {
+		p.setCCV(ccv);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere alla prenotazione la carta di credito
+	 * @param r
+	 * @param p
+	 */
+	public void setReservationPaymentCard(Reservation r, PaymentCard p) {
+		r.setPaymentCard(p);
+	}
+	
+	
+	/**
+	 * METODO per impostare il numero di persone che hanno un età inferiore
+	 * ad un età minima da cui parte lo sconto per la proiezione indicata (per età)
+	 * @param r
+	 * @param n
+	 * @throws InvalidNumberPeopleValueException
+	 */
+	public void setReservationNumberPeopleUntilMinAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
+		r.setNumberPeopleUntilMinAge(n);
+	}
+	
+	
+	/**
+	 * METODO per impostare il numero di persone che hanno un età superiore ad un età
+	 * a partire dalla quale parte lo sconto per la proiezione indicata (per età)
+	 * @param r
+	 * @param n
+	 * @throws InvalidNumberPeopleValueException
+	 */
+	public void setReservationNumberPeopleOverMaxAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
+		r.setNumberPeopleOverMaxAge(n);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere alla prenotazione un eventuale coupon per un ulteriore sconto
+	 * sul totale
+	 * @param r
+	 * @param coupon
+	 * @throws CouponNotExistsException
+	 * @throws CouponAleadyUsedException
+	 */
+	public void setReservationCoupon(Reservation r, long coupon) throws CouponNotExistsException, CouponAleadyUsedException {
+		r.setCoupon(coupon);
+	}
+	
+	
+	/**
+	 * METODO per comprare una prenotazione, una volta inseriti tutti i dati
+	 * @param r
+	 * @throws NumberFormatException
+	 * @throws SeatAlreadyTakenException
+	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws ReservationHasNoSeatException
+	 * @throws ReservationHasNoPaymentCardException
+	 * @throws PaymentErrorException
+	 */
+	public void buyReservation(Reservation r) throws NumberFormatException, SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
+		r.buy();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire il totale di una prenotazione
+	 * @param r
+	 * @return 
+	 */
+	public double getReservationTotalAmount(Reservation r) {
+		return r.getTotal().getAmount();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire la valuta del totale della prenotazione
+	 * @param r
+	 * @return
+	 */
+	public TypeOfCurrency getReservationTotalCurrency(Reservation r) {
+		return r.getTotal().getCurrency();
+	}
+	
+	
+	/**
+	 * METODO per inviare un email al cliente che ha compilato la prenotazione
+	 * comprendente il report (documento comprendente le varie informazioni sulla
+	 * sua prenotazione: film, posti prenotati, ora, ecc...)
+	 * @param r
+	 */
+	public void sendAnEmail(Reservation r) {
+		r.sendEmail();
 	}
 }
