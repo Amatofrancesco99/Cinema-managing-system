@@ -89,53 +89,17 @@ public class Room {
 	 * @return char   Carattere associato a quel numero
 	 */
 	public static String rowIndexToRowLetter(int i) {
-		char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-	    if ((i > 25)||(i < 0)) {
-	        return null;
-	    }
-	    return Character.toString(alphabet[i]);
+		return ( (i >= 0 && i <= 25) ? String.valueOf((char)(i + 65)) : null);
 	}
 	
 	/**
 	 * METODO per convertire un carattere (numero di una fila), in valore numerico da 0 a 25
+	 * si considera il fatto che la fila del cinema è un carattere, quindi una string con un solo elemento
 	 * @param s  	Lettera che si vuole convertire in numero
 	 * @return int 	Numero intero della lettera dell'alfabeto
 	 */
 	public static int rowLetterToRowIndex(String s) {
-		int number = -1;
-		HashMap<String, Integer> letterToNumber = new HashMap<>();
-		letterToNumber.put("aA", 0);
-		letterToNumber.put("bB", 1);
-		letterToNumber.put("cC", 2);
-		letterToNumber.put("dD", 3);
-		letterToNumber.put("eE", 4);
-		letterToNumber.put("fF", 5);
-		letterToNumber.put("gG", 6);
-		letterToNumber.put("hH", 7);
-		letterToNumber.put("iI", 8);
-		letterToNumber.put("jJ", 9);
-		letterToNumber.put("kK", 10);
-		letterToNumber.put("lL", 11);
-		letterToNumber.put("mM", 12);
-		letterToNumber.put("nN", 13);
-		letterToNumber.put("oO", 14);
-		letterToNumber.put("pP", 15);
-		letterToNumber.put("qQ", 16);
-		letterToNumber.put("rR", 17);
-		letterToNumber.put("sS", 18);
-		letterToNumber.put("tT", 19);
-		letterToNumber.put("uU", 20);
-		letterToNumber.put("vV", 21);
-		letterToNumber.put("wW", 22);
-		letterToNumber.put("xX", 23);
-		letterToNumber.put("yY", 24);
-		letterToNumber.put("zZ", 25);
-		
-		for(Map.Entry<String,Integer> entry : letterToNumber.entrySet()) {
-		    if(entry.getKey().contains(s)){
-	            number = entry.getValue();
-	        }
-		}
-		return number;
+		char letter = s.toUpperCase().charAt(0);
+		return ( Character.getNumericValue(letter) - Character.getNumericValue('A') );
 	}
 }
