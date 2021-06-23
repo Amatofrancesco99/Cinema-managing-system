@@ -27,14 +27,6 @@ Trovate inoltre i procedimenti per l'installazione a seconda del sistema operati
 
 [Gradle installation](https://gradle.org/install/)
 
-### 0.3 - Install lombok annotations support for Eclipse
-Questo passo è richiesto solo per poter modificare i file .java del progetto tramite Eclipse senza avere feedback di warning e/o errori dall'editor.
-
-Per installare il supporto alla sintassi delle annotazioni di lombok su Eclipse, scaricare il seguente file (non è necessario inserirlo all'interno dei file del progetto): [lombok 1.18.20 (.jar)](https://projectlombok.org/downloads/lombok.jar)
-
-Una volta scaricato, eseguirlo come amministratore e seguire le istruzioni per installare il plugin per Eclipse.
-
-Al termine dell'installazione riavviare Eclipse e aggiornare la struttura del progetto per abilitare l'interprete delle annotazioni di lombok.
 
 *** 
 ## 1. WEB APPLICATION
