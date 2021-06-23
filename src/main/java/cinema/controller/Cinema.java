@@ -1,20 +1,36 @@
 package cinema.controller;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
 import cinema.model.Movie;
+import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.money.Money;
+import cinema.model.money.util.TypeOfCurrency;
+import cinema.model.payment.methods.paymentCard.PaymentCard;
+import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
+import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
+import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
+import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.DiscountAge;
+import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.util.FreeAnotherPersonSeatException;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
+import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
+import cinema.model.reservation.util.ReservationHasNoSeatException;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
+import cinema.model.reservation.util.SeatTakenTwiceException;
 import lombok.Data;
 
 /**
@@ -66,7 +82,7 @@ public class Cinema {
 		this.country = "Italia";
 		this.zipCode = "27100";
 		this.address = "Via A. Ferrata, 5";
-		this.email = "CinemaArmadillo@gmail.com";
+		this.email = "cinemaarmadillo@gmail.com";
 		this.password = "CinemaArmadillo@1999";
 		this.logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms = new ArrayList<Room>();
@@ -100,6 +116,64 @@ public class Cinema {
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
 		
+		
+		//PULP FICTION
+		genres.add("Drammatico");
+		genres.add("Thriller");
+		directors.add("Quentin Tarantino");
+		cast.add("Uma Thurman");
+		cast.add("John Travolta");
+		cast.add("Samuel L. Jackson");
+		cast.add("Bruce Willis");
+		cast.add("Steve Buscemi");
+		Movie pulpFiction = new Movie(3, "Pulp Fiction", "Un killer si innamora della moglie del suo capo, un pugile rinnega la sua promessa e una coppia tenta una rapina che va rapidamente fuori controllo.",
+				genres, directors, cast, 5, 154,
+				"https://images-na.ssl-images-amazon.com/images/I/71zSZQzlK%2BL._AC_SL1200_.jpg", 
+				"https://www.youtube.com/watch?v=s7EdQ4FqbhY");
+		
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
+		
+		
+		// NO COUNTRY FOR OLD MEN
+		genres.add("Thriller");
+		genres.add("Crime");
+		genres.add("Neo-Western");
+		directors.add("Joel Coen");
+		directors.add("Ethan Coen");
+		cast.add("Javier Bardem");
+		cast.add("Tommy Lee Jones");
+		cast.add("Josh Brolin");
+		cast.add("Kelly Mcdonald");
+		Movie noCounrtyforOldMen = new Movie(4, "Non è un paese per vecchi", "Texas, 1980. Mentre è a caccia nei territori selvaggi al confine con il Messico, Llewelyn Moss, un saldatore texano reduce dalla guerra del Vietnam, si imbatte in quel che resta di un regolamento di conti tra bande locali per una partita di droga. In mezzo ai numerosi cadaveri, Moss trova un'ingente somma di denaro che si porta a casa, con l'intento di assicurarsi un futuro migliore per sé e la giovane moglie, Carla Jean.",
+				genres, directors, cast, 4, 122,
+				"https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTeL_QKTOBJ8-ccb9vaZE1310GwPSu_sABaxndAasV3toHRUMtW", 
+				"https://www.youtube.com/watch?v=38A__WT3-o0");
+		
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
+		
+		
+		//SKYFALL
+		genres.add("Drammatico");
+		genres.add("Action");
+		genres.add("Spy");
+		directors.add("Sam Mendes");
+		cast.add("Daniel Craig");
+		cast.add("Judi Dench");
+		cast.add("Javier Bardem");
+		cast.add("Ben Whishaw");
+		Movie skyfall = new Movie(5, "Skyfall", "In seguito al fallimento di una missione recente, Il celebre agente segreto britannico è costretto ad essere testimone di una serie terribile di eventi: la MI6 deve trasferirsi al più presto mentre i dipendenti sotto copertura vedono le proprie identità venire rivelate. M è disperata e si rivolge a James Bond in cerca di un aiuto immediato.",
+				genres, directors, cast, 4, 143,
+				"https://www.madmass.it/wp-content/uploads/2020/03/Skyfall__poster.jpg", 
+				"https://www.youtube.com/watch?v=OnlSRBTG5Tw");
+		
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
+		
 		// AVENGERS - ENDGAME
 		genres.add("Azione");
 		genres.add("Fantascienza");
@@ -113,9 +187,9 @@ public class Cinema {
 		cast.add("Scarlett Johansson");
 		cast.add("Jeremy Renner");
 		Movie AvengersEndgameMovie = new Movie(2, "Avengers - Endgame",
-				"Tutto ovviamente parte dalle vicende di \"Avengers: Infinity War\". Thanos ha distrutto mezzo Universo grazie alle Gemme dell’Infinito (sei pietre e ognuna dona un particolare tipo di potere). La ricerca e la protezione di queste pietre sono state alle base degli altri film, ma ora Thanos le ha tutte ed è praticamente onnipotente. Le gemme dello Spazio, della Mente, del Potere, della Realtà, del Tempo e dell’Anima gli hanno permesso di raggiungere il suo scopo: distruggere l’universo. Tra i sopravvissuti al progetto diabolico del cattivo di turno, ci sono gli Avengers della Fase 1 (Capitan America, Thor, Vedova Nera, Occhio di Falco, Hulk e Iron Man) insieme ad Ant-Man e Captain Marvel. Lo scopo è quello ovviamente di sconfiggere Thanos e di far tornare in vita tutti quelli che non ci sono più come Spider-Man, Black Panther, Doctor Strange, Falcon, Scarlet Witch, Star-Lord, Drax, Groot, Mantis, Bucky Barnes, Nick Fury, Maria Hill, Loki, Visione e Gamora. Un mix di azione, comicità e riflessioni sul genere umano perché il film mostra il lato fragile e vulnerabile presente sia nei buoni sia nei cattivi.  Oltre ad un Robert Downey Jr in stato di grazia, spicca l’interpretazione di Chris Hemsworth che nonostante il cambiamento totale di look riesce ad essere credibile nei momenti comici e in quelli drammatici. ",
+				"Tutto riparte dalla terra devastata da Thanos e le sue gemme dell'infinito, dopo aver visto svanire in particelle infinitesimali di polvere i Guardiani della Galassia e personaggi come Spider-Man, Black Panther e Dr. Strange. Questa seconda parte evidenzia una situazione altamente drammatica, con i superstiti che non sanno darsi pace, dilaniati dal senso di colpa e dal vuoto ed incapaci di ripartire. I legami rimasti continuano a rafforzarsi, seppur in sordina, quelli che avevano portato a scontri mutano in fiducia, le amicizie si cementano, i rapporti di vecchia data si consolidano ed alcuni cercano di costruirsi una famiglia fino a cinque anni dopo, quando una \"microscopica\" particella ritrovata rimette in moto lo spirito di gruppo. Un paese in ginocchio che prova a cambiare le cose e ripristinare l'ordine, quantomeno apparente e in mezzo al prevedibile e oramai noto affiorano sorprese inaspettate. Il finale non si tinge di dark, ma in alcuni tratti è caratterizzato da toni distesi, dialoghi divertenti, personaggi quasi caricaturali senza i muscoli di \"Avengers: Infinity War\", ma tanto cervello e costruzione dell'azione come del pensiero.",
 				genres, directors, cast, 5, 182,
-				"https://images-na.ssl-images-amazon.com/images/I/71HyTegC0SL._AC_SY879_.jpg",
+				"https://www.ilcineocchio.it/cine/wp-content/uploads/2020/05/Avengers-Endgame.jpg",
 				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
 		
 		// Test room
@@ -150,6 +224,31 @@ public class Cinema {
 				rooms.get(1));
 		Projection p11 = new Projection(150, AvengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
 				rooms.get(1));
+		Projection p12 = new Projection(344, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
+				rooms.get(1));
+		Projection p13 = new Projection(301, pulpFiction, LocalDateTime.parse("2021-06-06T22:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p14 = new Projection(324, pulpFiction, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p15 = new Projection(387, pulpFiction, LocalDateTime.parse("2021-06-01T19:00:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p16 = new Projection(350, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p17 = new Projection(424, noCounrtyforOldMen, LocalDateTime.parse("2021-06-22T23:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p18 = new Projection(487, noCounrtyforOldMen, LocalDateTime.parse("2021-06-21T19:00:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p19 = new Projection(450, noCounrtyforOldMen, LocalDateTime.parse("2021-06-23T08:05:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p20 = new Projection(350, skyfall, LocalDateTime.parse("2021-07-01T08:05:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p21 = new Projection(424, skyfall, LocalDateTime.parse("2021-07-02T23:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p22 = new Projection(487, skyfall, LocalDateTime.parse("2021-07-01T19:00:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p23 = new Projection(450, skyfall, LocalDateTime.parse("2021-07-02T08:05:00"), new Money(8.5),
+				rooms.get(0));
+		
 		this.cinemaProjections.add(p1);
 		this.cinemaProjections.add(p2);
 		this.cinemaProjections.add(p3);
@@ -161,6 +260,18 @@ public class Cinema {
 		this.cinemaProjections.add(p9);
 		this.cinemaProjections.add(p10);
 		this.cinemaProjections.add(p11);
+		this.cinemaProjections.add(p12);
+		this.cinemaProjections.add(p13);
+		this.cinemaProjections.add(p14);
+		this.cinemaProjections.add(p15);
+		this.cinemaProjections.add(p16);
+		this.cinemaProjections.add(p17);
+		this.cinemaProjections.add(p18);
+		this.cinemaProjections.add(p19);
+		this.cinemaProjections.add(p20);
+		this.cinemaProjections.add(p21);
+		this.cinemaProjections.add(p22);
+		this.cinemaProjections.add(p23);
 		
 		//occupare il primo posto della seconda proiezione
 		try {
@@ -189,7 +300,6 @@ public class Cinema {
 	public static synchronized Cinema getInstance() {
 		if (single_instance == null)
 			single_instance = new Cinema();
-
 		return single_instance;
 	}
 
@@ -421,5 +531,219 @@ public class Cinema {
 	 */
 	public String getLocation() {
 		return address + ", " + city + " - " + zipCode + " " + country;
+	}
+
+
+	/**
+	 * METODO per impostare la proiezione di una prenotazione
+	 * @param r
+	 * @param projectionId
+	 * @throws NoProjectionException
+	 */
+	public void setReservationProjection(Reservation r, int projectionId) throws NoProjectionException {
+		r.setProjection(getProjection(projectionId));
+	}
+	
+	
+	/**
+	 * METODO per farsi dire il numero di colonne della sala in cui è proiettato il 
+	 * film della prenotazione
+	 * @param r
+	 * @return
+	 */
+	public int getNumberColsReservationProjection(Reservation r) {
+		return r.getProjection().getRoom().getNumberCols();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire il numero di righe della sala in cui è proiettato il 
+	 * film della prenotazione
+	 * @param r
+	 * @return
+	 */
+	public int getNumberRowsReservationProjection(Reservation r) {
+		return r.getProjection().getRoom().getNumberRows();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire se il posto della sala selezionata dalla prenotazione
+	 * è libero o meno
+	 * @param r
+	 * @param row
+	 * @param col
+	 * @return
+	 * @throws InvalidRoomSeatCoordinatesException
+	 */
+	public boolean checkIfReservationProjectionSeatIsAvailable (Reservation r, int row, int col) throws InvalidRoomSeatCoordinatesException {
+		return r.getProjection().checkIfSeatIsAvailable(row, col);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere un posto alla reservation
+	 * @param r
+	 * @param row
+	 * @param col
+	 * @throws SeatAlreadyTakenException
+	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws SeatTakenTwiceException
+	 * @throws FreeAnotherPersonSeatException
+	 */
+	public void addSeatToReservation(Reservation r, int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
+		r.addSeat(row, col);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere informazioni sul cliente che effettua la prenotazione
+	 * @param r
+	 * @param name
+	 * @param surname
+	 * @param email
+	 * @throws InvalidSpectatorInfoException 
+	 */
+	public void setReservationPurchaser(Reservation r, String name, String surname, String email) throws InvalidSpectatorInfoException {
+		if ((email.equals(""))||(name.equals(""))||(surname.equals(""))) {
+			throw new InvalidSpectatorInfoException();
+		}
+		r.setPurchaser(new Spectator(name,surname,email));
+	}
+	
+	
+	/**
+	 * METODO per impostare il nome di una carta di credito
+	 * @param p
+	 * @param owner
+	 */
+	public void setPaymentCardOwner(PaymentCard p, String owner) {
+		p.setOwner(owner);
+	}
+	
+	
+	/**
+	 * METODO per impostare il numero di una carta di credito
+	 * @param p
+	 * @param number
+	 * @throws InvalidCreditCardNumberException
+	 */
+	public void setPaymentCardNumber(PaymentCard p, String number) throws InvalidCreditCardNumberException {
+		p.setNumber(number);
+	}
+	
+	
+	/**
+	 * METODO per impostare la data di scadenza di una carta di credito
+	 * @param p
+	 * @param expirationDate
+	 * @throws ExpiredCreditCardException
+	 */
+	public void setPaymentCardExpirationDate(PaymentCard p, YearMonth expirationDate) throws ExpiredCreditCardException {
+		p.setExpirationDate(expirationDate);
+	}
+	
+	
+	/**
+	 * METODO per impostare il ccv di una carta di credito
+	 * @param p
+	 * @param ccv
+	 * @throws InvalidCCVException
+	 */
+	public void setPaymentCardCCV(PaymentCard p, String ccv) throws InvalidCCVException {
+		p.setCCV(ccv);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere alla prenotazione la carta di credito
+	 * @param r
+	 * @param p
+	 */
+	public void setReservationPaymentCard(Reservation r, PaymentCard p) {
+		r.setPaymentCard(p);
+	}
+	
+	
+	/**
+	 * METODO per impostare il numero di persone che hanno un età inferiore
+	 * ad un età minima da cui parte lo sconto per la proiezione indicata (per età)
+	 * @param r
+	 * @param n
+	 * @throws InvalidNumberPeopleValueException
+	 */
+	public void setReservationNumberPeopleUntilMinAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
+		r.setNumberPeopleUntilMinAge(n);
+	}
+	
+	
+	/**
+	 * METODO per impostare il numero di persone che hanno un età superiore ad un età
+	 * a partire dalla quale parte lo sconto per la proiezione indicata (per età)
+	 * @param r
+	 * @param n
+	 * @throws InvalidNumberPeopleValueException
+	 */
+	public void setReservationNumberPeopleOverMaxAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
+		r.setNumberPeopleOverMaxAge(n);
+	}
+	
+	
+	/**
+	 * METODO per aggiungere alla prenotazione un eventuale coupon per un ulteriore sconto
+	 * sul totale
+	 * @param r
+	 * @param coupon
+	 * @throws CouponNotExistsException
+	 * @throws CouponAleadyUsedException
+	 */
+	public void setReservationCoupon(Reservation r, long coupon) throws CouponNotExistsException, CouponAleadyUsedException {
+		r.setCoupon(coupon);
+	}
+	
+	
+	/**
+	 * METODO per comprare una prenotazione, una volta inseriti tutti i dati
+	 * @param r
+	 * @throws NumberFormatException
+	 * @throws SeatAlreadyTakenException
+	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws ReservationHasNoSeatException
+	 * @throws ReservationHasNoPaymentCardException
+	 * @throws PaymentErrorException
+	 */
+	public void buyReservation(Reservation r) throws NumberFormatException, SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
+		r.buy();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire il totale di una prenotazione
+	 * @param r
+	 * @return 
+	 */
+	public double getReservationTotalAmount(Reservation r) {
+		return r.getTotal().getAmount();
+	}
+	
+	
+	/**
+	 * METODO per farsi dire la valuta del totale della prenotazione
+	 * @param r
+	 * @return
+	 */
+	public TypeOfCurrency getReservationTotalCurrency(Reservation r) {
+		return r.getTotal().getCurrency();
+	}
+	
+	
+	/**
+	 * METODO per inviare un email al cliente che ha compilato la prenotazione
+	 * comprendente il report (documento comprendente le varie informazioni sulla
+	 * sua prenotazione: film, posti prenotati, ora, ecc...)
+	 * @param r
+	 */
+	public void sendAnEmail(Reservation r) {
+		r.sendEmail();
 	}
 }

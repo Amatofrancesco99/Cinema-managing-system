@@ -8,7 +8,6 @@ import cinema.controller.Cinema;
 import cinema.controller.util.NoMovieException;
 import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
-import cinema.model.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
@@ -22,6 +21,7 @@ import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.util.FreeAnotherPersonSeatException;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
 import cinema.model.reservation.util.ReservationHasNoSeatException;
 import cinema.model.reservation.util.SeatAlreadyTakenException;
@@ -39,6 +39,7 @@ import cinema.model.reservation.util.SeatTakenTwiceException;
 public class CLIMain {
 
 	static Scanner keyboard = new Scanner(System.in);
+	static Cinema myCinema = Cinema.getInstance();
 	
 	/**
 	 * METODO Main, per eseguire la nostra CLI
@@ -59,7 +60,7 @@ public class CLIMain {
 		
 		// CREAZIONE DI UNA NUOVA RESERVATION E INSERIMENTO DATI
 		printReservationHeader();
-		Reservation r = Cinema.getInstance().createReservation();
+		Reservation r = myCinema.createReservation();
 		int projectionID = selectProjection();	// Selezione di una specifica proiezione
 		setReservationProjection(r, projectionID);
 		showProjectionSeats(r);	 	// Disposizione posti in sala e posti già occupati
@@ -82,14 +83,14 @@ public class CLIMain {
 
 	private static void sayGoodbye() {
 		System.out.println("\n\nGrazie, a presto!\n");
-		System.out.println("-----------------------------------------------------\n");
+		System.out.println("-----------------------------------------------------");
 	}
 
 	
 	private static void sendEmail(Reservation r) {
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("\nSPEDIZIONE EMAIL \n");
-		//r.sendEmail();
+		//myCinema.sendAnEmail(r);
 		System.out.println("Controlla le tue email ricevute, a breve ne riceverai una "
 				+ "con allegato un pdf contenente il resoconto della tua prenotazione.\n");
 	}
@@ -102,10 +103,10 @@ public class CLIMain {
 		System.out.println("\nPAGAMENTO \n");
 		while (!end) {
 			try {
-				r.buy();
+				myCinema.buyReservation(r);
 				System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
 						+ "a: ");
-				System.out.print(r.getTotal().getAmount() + " " + r.getTotal().getCurrency() + "\n");
+				System.out.print(myCinema.getReservationTotalAmount(r) + " " + myCinema.getReservationTotalCurrency(r) + "\n");
 				System.out.println("Il prezzo mostrato comprende sia lo sconto" 
 					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 					  + " lo sconto\ndell'eventuale coupon applicato.\n");
@@ -143,7 +144,7 @@ public class CLIMain {
 				String couponId = keyboard.next();
 				long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
 				try {
-					r.setCoupon(coupon);
+					myCinema.setReservationCoupon(r, coupon);
 					end = true;
 				} catch (CouponNotExistsException | CouponAleadyUsedException e) {
 					e.toString();
@@ -161,27 +162,27 @@ public class CLIMain {
 
 	private static void insertSpectatorsInfo(Reservation r) {
 		try {
-			r.setNumberPeopleOverMaxAge(0);
-			r.setNumberPeopleUntilMinAge(0);
+			myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
+			myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
 		} catch (InvalidNumberPeopleValueException e1){}	
 		boolean end = false;
 		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
 		while (!end) {
 			// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
 			// sconti
-			System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (Cinema.getInstance().getMinDiscountAge()) + " anni: ");
+			System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
 			String n1 = keyboard.next();
 			int nMin = Integer.parseInt(n1);
 			try {
-				r.setNumberPeopleUntilMinAge(nMin);
+				myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
 			} catch (InvalidNumberPeopleValueException | NumberFormatException e) {
 				e.toString();
 			}
-			System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (Cinema.getInstance().getMaxDiscountAge()) + " anni: ");
+			System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
 			String n2 = keyboard.next();
 			int nMax = Integer.parseInt(n2);
 			try {
-				r.setNumberPeopleOverMaxAge(nMax);
+				myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
 				end = true;
 			} catch (InvalidNumberPeopleValueException | NumberFormatException e) {
 				e.toString();
@@ -198,7 +199,7 @@ public class CLIMain {
 			System.out.println("\nInserisci il nome del titolare della carta:  ");
 			String owner = keyboard.next();
 			System.out.println("\n");
-			p.setOwner(owner);
+			myCinema.setPaymentCardOwner(p, owner);
 			end = true;
 		}
 		end = false;
@@ -207,7 +208,7 @@ public class CLIMain {
 			String number = keyboard.next();
 			System.out.println("\n");
 			try {
-				p.setNumber(number);
+				myCinema.setPaymentCardNumber(p, number);
 				end = true;
 			} catch (InvalidCreditCardNumberException e) {
 				e.toString();
@@ -225,7 +226,7 @@ public class CLIMain {
 			catch(Exception e) {}
 			try {
 				if (expirationDate != null)
-					p.setExpirationDate(expirationDate);
+					myCinema.setPaymentCardExpirationDate(p, expirationDate);
 					end = true;
 			} catch (ExpiredCreditCardException e) {
 				e.toString();
@@ -239,13 +240,13 @@ public class CLIMain {
 			String ccv = keyboard.next();
 			System.out.println("\n");
 			try {
-				p.setCCV(ccv);
+				myCinema.setPaymentCardCCV(p, ccv);
 				end = true;
 			} catch (InvalidCCVException e) {
 				e.toString();
 			}
 		}	
-		r.setPaymentCard(p);
+		myCinema.setReservationPaymentCard(r, p);
 	}
 
 
@@ -268,12 +269,11 @@ public class CLIMain {
 			String email = "";
 			email = keyboard.next();
 			
-			if ((email.equals(""))||(name.equals(""))||(surname.equals(""))) {
-				System.err.println("Ops...I tuoi dati anagrafici inseriti sembrano essere mancanti.");
-			}
-			else {
-				r.setPurchaser(new Spectator(name,surname,email));
+			try {
+				myCinema.setReservationPurchaser(r, name, surname, email);
 				end = true;
+			} catch (InvalidSpectatorInfoException e) {
+				e.toString();
 			}
 		}
 	}
@@ -296,7 +296,7 @@ public class CLIMain {
 				catch (Exception e) {
 				}
 				try {
-					r.addSeat(riga, colonna);
+					myCinema.addSeatToReservation(r, riga, colonna);
 					validSeat = true;
 				} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException e) {
 					e.toString();
@@ -320,10 +320,10 @@ public class CLIMain {
 			System.out.println("Disposizione sala e posti liberi.");
 			System.out.println("I posti segnati con i trattini sono già occupati.\n");
 			System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
-			for (int i = 0; i < r.getProjection().getRoom().getNumberRows(); i++) {
-				for (int j = 0; j < r.getProjection().getRoom().getNumberCols(); j++) {
+			for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
+				for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
 					try {
-						if (!r.getProjection().checkIfSeatIsAvailable(i, j)){
+						if (!myCinema.checkIfReservationProjectionSeatIsAvailable(r, i, j)){
 							System.out.print(" ------ ");
 						}
 						else 
@@ -339,7 +339,7 @@ public class CLIMain {
 	private static void setReservationProjection(Reservation r, int projectionId) {
 		System.out.println("\n");
 		try {
-			r.setProjection(Cinema.getInstance().getProjection(projectionId));
+			myCinema.setReservationProjection(r, projectionId);
 		} catch (NoProjectionException e) {
 			e.toString();
 		}
@@ -355,7 +355,7 @@ public class CLIMain {
 			try {
 				projectionId = Integer.parseInt(keyboard.nextLine());
 				try {
-					Cinema.getInstance().getProjection(projectionId);
+					myCinema.getProjection(projectionId);
 					end = true;
 				} catch (NoProjectionException e) {
 				}
@@ -376,11 +376,11 @@ public class CLIMain {
 
 	private static void printMovieProjections(int movieID) {
 		try {
-			Cinema.getInstance().getProjections(movieID);
+			myCinema.getProjections(movieID);
 			System.out.println("Maggiori dettagli sul film\n");
-			System.out.println(Cinema.getInstance().getProjections(movieID).get(0).getMovie().getDetailedDescription());
+			System.out.println(myCinema.getProjections(movieID).get(0).getMovie().getDetailedDescription());
 			System.out.println("Proiezioni previste\n");
-			for (Projection p : Cinema.getInstance().getProjections(movieID)) {
+			for (Projection p : myCinema.getProjections(movieID)) {
 				System.out.println(p.getId() + ")");
 				System.out.println(p.toString());
 			}
@@ -400,7 +400,7 @@ public class CLIMain {
 			try {
 				filmId = Integer.parseInt(keyboard.nextLine());
 				try {
-					Cinema.getInstance().getProjections(filmId);
+					myCinema.getProjections(filmId);
 					end = true;
 				} catch (NoMovieException e) {
 				}
@@ -416,9 +416,9 @@ public class CLIMain {
 
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
-		System.out.println(Cinema.getInstance().getName().toUpperCase()+"\n");
-		System.out.println("Puoi trovarci in: " + Cinema.getInstance().getLocation() + "\n");
-		System.out.println("Contattaci: " + Cinema.getInstance().getEmail() + "\n\n");
+		System.out.println(myCinema.getName().toUpperCase()+"\n");
+		System.out.println("Puoi trovarci in: " + myCinema.getLocation() + "\n");
+		System.out.println("Contattaci: " + myCinema.getEmail() + "\n\n");
 		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.out.println("-----------------------------------------------------\n");
 	}
@@ -426,7 +426,7 @@ public class CLIMain {
 	
 	private static void printCurrentlyAvailableMovies() {
 		System.out.println("FILM ATTUALMENTE PROIETTATI \n");
-		for (Movie m : Cinema.getInstance().getCurrentlyAvailableMovies()) {
+		for (Movie m : myCinema.getCurrentlyAvailableMovies()) {
 			System.out.println(m.getId() + ")");
 			System.out.println(m.getDefaultDescription());
 		}
