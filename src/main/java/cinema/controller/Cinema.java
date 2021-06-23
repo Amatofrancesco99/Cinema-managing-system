@@ -66,7 +66,7 @@ public class Cinema {
 		this.country = "Italia";
 		this.zipCode = "27100";
 		this.address = "Via A. Ferrata, 5";
-		this.email = "CinemaArmadillo@gmail.com";
+		this.email = "cinemaarmadillo@gmail.com";
 		this.password = "CinemaArmadillo@1999";
 		this.logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms = new ArrayList<Room>();
@@ -100,6 +100,25 @@ public class Cinema {
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
 		
+		
+		//PULP FICTION
+		genres.add("Drammatico");
+		genres.add("Thriller");
+		directors.add("Quentin Tarantino");
+		cast.add("Uma Thurman");
+		cast.add("John Travolta");
+		cast.add("Samuel L. Jackson");
+		cast.add("Bruce Willis");
+		cast.add("Steve Buscemi");
+		Movie pulpFiction = new Movie(3, "Pulp Fiction", "Un killer si innamora della moglie del suo capo, un pugile rinnega la sua promessa e una coppia tenta una rapina che va rapidamente fuori controllo.",
+				genres, directors, cast, 5, 154,
+				"https://images-na.ssl-images-amazon.com/images/I/71zSZQzlK%2BL._AC_SL1200_.jpg", 
+				"https://www.youtube.com/watch?v=s7EdQ4FqbhY");
+		
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
+		
 		// AVENGERS - ENDGAME
 		genres.add("Azione");
 		genres.add("Fantascienza");
@@ -113,7 +132,7 @@ public class Cinema {
 		cast.add("Scarlett Johansson");
 		cast.add("Jeremy Renner");
 		Movie AvengersEndgameMovie = new Movie(2, "Avengers - Endgame",
-				"Tutto ovviamente parte dalle vicende di \"Avengers: Infinity War\". Thanos ha distrutto mezzo Universo grazie alle Gemme dell’Infinito (sei pietre e ognuna dona un particolare tipo di potere). La ricerca e la protezione di queste pietre sono state alle base degli altri film, ma ora Thanos le ha tutte ed è praticamente onnipotente. Le gemme dello Spazio, della Mente, del Potere, della Realtà, del Tempo e dell’Anima gli hanno permesso di raggiungere il suo scopo: distruggere l’universo. Tra i sopravvissuti al progetto diabolico del cattivo di turno, ci sono gli Avengers della Fase 1 (Capitan America, Thor, Vedova Nera, Occhio di Falco, Hulk e Iron Man) insieme ad Ant-Man e Captain Marvel. Lo scopo è quello ovviamente di sconfiggere Thanos e di far tornare in vita tutti quelli che non ci sono più come Spider-Man, Black Panther, Doctor Strange, Falcon, Scarlet Witch, Star-Lord, Drax, Groot, Mantis, Bucky Barnes, Nick Fury, Maria Hill, Loki, Visione e Gamora. Un mix di azione, comicità e riflessioni sul genere umano perché il film mostra il lato fragile e vulnerabile presente sia nei buoni sia nei cattivi.  Oltre ad un Robert Downey Jr in stato di grazia, spicca l’interpretazione di Chris Hemsworth che nonostante il cambiamento totale di look riesce ad essere credibile nei momenti comici e in quelli drammatici. ",
+				"Tutto riparte dalla terra devastata da Thanos e le sue gemme dell'infinito, dopo aver visto svanire in particelle infinitesimali di polvere i Guardiani della Galassia e personaggi come Spider-Man, Black Panther e Dr. Strange. Questa seconda parte evidenzia una situazione altamente drammatica, con i superstiti che non sanno darsi pace, dilaniati dal senso di colpa e dal vuoto ed incapaci di ripartire. I legami rimasti continuano a rafforzarsi, seppur in sordina, quelli che avevano portato a scontri mutano in fiducia, le amicizie si cementano, i rapporti di vecchia data si consolidano ed alcuni cercano di costruirsi una famiglia fino a cinque anni dopo, quando una \"microscopica\" particella ritrovata rimette in moto lo spirito di gruppo. Un paese in ginocchio che prova a cambiare le cose e ripristinare l'ordine, quantomeno apparente e in mezzo al prevedibile e oramai noto affiorano sorprese inaspettate. Il finale non si tinge di dark, ma in alcuni tratti è caratterizzato da toni distesi, dialoghi divertenti, personaggi quasi caricaturali senza i muscoli di \"Avengers: Infinity War\", ma tanto cervello e costruzione dell'azione come del pensiero.",
 				genres, directors, cast, 5, 182,
 				"https://images-na.ssl-images-amazon.com/images/I/71HyTegC0SL._AC_SY879_.jpg",
 				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
@@ -150,6 +169,17 @@ public class Cinema {
 				rooms.get(1));
 		Projection p11 = new Projection(150, AvengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(12.5),
 				rooms.get(1));
+		Projection p12 = new Projection(344, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
+				rooms.get(1));
+		Projection p13 = new Projection(301, pulpFiction, LocalDateTime.parse("2021-06-06T22:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p14 = new Projection(324, pulpFiction, LocalDateTime.parse("2021-06-02T23:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p15 = new Projection(387, pulpFiction, LocalDateTime.parse("2021-06-01T19:00:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p16 = new Projection(350, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
+				rooms.get(0));
+		
 		this.cinemaProjections.add(p1);
 		this.cinemaProjections.add(p2);
 		this.cinemaProjections.add(p3);
@@ -161,6 +191,11 @@ public class Cinema {
 		this.cinemaProjections.add(p9);
 		this.cinemaProjections.add(p10);
 		this.cinemaProjections.add(p11);
+		this.cinemaProjections.add(p12);
+		this.cinemaProjections.add(p13);
+		this.cinemaProjections.add(p14);
+		this.cinemaProjections.add(p15);
+		this.cinemaProjections.add(p16);
 		
 		//occupare il primo posto della seconda proiezione
 		try {
