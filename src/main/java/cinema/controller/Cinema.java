@@ -135,6 +135,27 @@ public class Cinema {
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
 		
+		
+		// NO COUNTRY FOR OLD MEN
+		genres.add("Thriller");
+		genres.add("Crime");
+		genres.add("Neo-Western");
+		directors.add("Joel Coen");
+		directors.add("Ethan Coen");
+		cast.add("Javier Bardem");
+		cast.add("Tommy Lee Jones");
+		cast.add("Josh Brolin");
+		cast.add("Kelly Mcdonald");
+		Movie noCounrtyforOldMen = new Movie(4, "Non è un paese per vecchi", "Texas, 1980. Mentre è a caccia nei territori selvaggi al confine con il Messico, Llewelyn Moss, un saldatore texano reduce dalla guerra del Vietnam, si imbatte in quel che resta di un regolamento di conti tra bande locali per una partita di droga. In mezzo ai numerosi cadaveri, Moss trova un'ingente somma di denaro che si porta a casa, con l'intento di assicurarsi un futuro migliore per sé e la giovane moglie, Carla Jean.",
+				genres, directors, cast, 4, 122,
+				"https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTeL_QKTOBJ8-ccb9vaZE1310GwPSu_sABaxndAasV3toHRUMtW", 
+				"https://www.youtube.com/watch?v=38A__WT3-o0");
+		
+		genres = new ArrayList<>();
+		directors = new ArrayList<>();
+		cast = new ArrayList<>();
+		
+		
 		// AVENGERS - ENDGAME
 		genres.add("Azione");
 		genres.add("Fantascienza");
@@ -195,6 +216,12 @@ public class Cinema {
 				rooms.get(0));
 		Projection p16 = new Projection(350, pulpFiction, LocalDateTime.parse("2021-06-03T08:05:00"), new Money(8.5),
 				rooms.get(0));
+		Projection p17 = new Projection(424, noCounrtyforOldMen, LocalDateTime.parse("2021-06-22T23:30:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p18 = new Projection(487, noCounrtyforOldMen, LocalDateTime.parse("2021-06-21T19:00:00"), new Money(8.5),
+				rooms.get(0));
+		Projection p19 = new Projection(450, noCounrtyforOldMen, LocalDateTime.parse("2021-06-23T08:05:00"), new Money(8.5),
+				rooms.get(0));
 		
 		this.cinemaProjections.add(p1);
 		this.cinemaProjections.add(p2);
@@ -212,6 +239,9 @@ public class Cinema {
 		this.cinemaProjections.add(p14);
 		this.cinemaProjections.add(p15);
 		this.cinemaProjections.add(p16);
+		this.cinemaProjections.add(p17);
+		this.cinemaProjections.add(p18);
+		this.cinemaProjections.add(p19);
 		
 		//occupare il primo posto della seconda proiezione
 		try {
