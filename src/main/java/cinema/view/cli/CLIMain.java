@@ -39,7 +39,7 @@ import cinema.model.reservation.util.SeatTakenTwiceException;
 public class CLIMain {
 
 	static Scanner keyboard = new Scanner(System.in);
-	static Cinema myCinema = Cinema.getInstance();
+	static Cinema myCinema = new Cinema();
 	
 	/**
 	 * METODO Main, per eseguire la nostra CLI
@@ -416,9 +416,9 @@ public class CLIMain {
 
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
-		System.out.println(myCinema.getName().toUpperCase()+"\n");
-		System.out.println("Puoi trovarci in: " + myCinema.getLocation() + "\n");
-		System.out.println("Contattaci: " + myCinema.getEmail() + "\n\n");
+		System.out.println(Cinema.getName().toUpperCase()+"\n");
+		System.out.println("Puoi trovarci in: " + Cinema.getLocation() + "\n");
+		System.out.println("Contattaci: " + Cinema.getEmail() + "\n\n");
 		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.out.println("-----------------------------------------------------\n");
 	}

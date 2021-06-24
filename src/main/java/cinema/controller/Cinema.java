@@ -31,23 +31,23 @@ import cinema.model.reservation.util.SeatAlreadyTakenException;
 import cinema.model.reservation.util.SeatTakenTwiceException;
 
 /**
- * BREVE SPIEGAZIONE CLASSE CINEMA (Pattern Singleton GoF - Pattern Controller)
+ * BREVE SPIEGAZIONE CLASSE CINEMA ( Pattern Controller)
  * 
  * @author Screaming Hairy Armadillo Team
  *
- *         Questa classe è stata realizzata seguendo il pattern singleton (GoF),
- *         poiché nel nostro intero progetto ci servirà solamente un istanza di
- *         questa classe, la quale potrà essere raggiunta da altre classi
- *         presenti nel nostro dominio, andando a richiamare il metodo
- *         getIstance().
+ * Questa classe rappresenta il controller del nostro progetto, ossia la classe che consente 
+ * alla vista di poter eseguire operazioni utili, senza dover conoscere la logica di dominio.
+ * Essa è molto utile poiché qualora si usino interfacce diverse, come nel nostro caso
+ * (CLI e GUI) gli stessi metodi della CLI saranno presenti nella GUI, chiaramente cambierà
+ * il modo di gestire situazioni particolari, ma comunque permette di rendere
+ * migliore, tra le altre cose, la modificabilità del codice, l'high coesion ed
+ * il low coupling. 
  */
 public class Cinema {
-
+	
 	/**
 	 * ATTRIBUTI
 	 * 
-	 * @param single_istance    Poiché una sola istanza della classe potrà essere
-	 *                          presente
 	 * @param name              Nome
 	 * @param city              Città
 	 * @param country           Paese
@@ -62,25 +62,32 @@ public class Cinema {
 	 * @param cinemaProjections List: comprende tutte le proiezioni fatte dal cinema
 	 * @param coupon            List: comprende tutti i coupon emessi dal cinema
 	 */
-	private static Cinema single_instance = null;
-	private String name, city, country, zipCode, address, logoURL, email, password;
+	private static String name;
+	private static String city;
+	private static String country;
+	private static String zipCode;
+	private static String address;
+	private static String logoURL;
+	private static String email;
+	private static String password;
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
 	private List<Coupon> coupons;
 
+	
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
 	 * cinema
 	 */
-	private Cinema() {
-		this.name = "Cinema Armadillo";
-		this.city = "Pavia (PV)";
-		this.country = "Italia";
-		this.zipCode = "27100";
-		this.address = "Via A. Ferrata, 5";
-		this.email = "cinemaarmadillo@gmail.com";
-		this.password = "CinemaArmadillo@1999";
-		this.logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
+	public Cinema() {
+		name = "Cinema Armadillo";
+		city = "Pavia (PV)";
+		country = "Italia";
+		zipCode = "27100";
+		address = "Via A. Ferrata, 5";
+		email = "cinemaarmadillo@gmail.com";
+		password = "CinemaArmadillo@1999";
+		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		coupons = new ArrayList<Coupon>();
@@ -274,23 +281,6 @@ public class Cinema {
 		coupons.add(new Coupon(3.5));
 	}
 
-	/**
-	 * METODO STATICO per creare l'istanza della classe
-	 * 
-	 * Attenzione! Solamente una istanza potrà essere presente La parola chiave
-	 * synchronized indica che solo un thread per volta può accedere al seguente
-	 * metodo.
-	 * 
-	 * @return Cinema Istanza della classe Cinema, se il cinema è già stato
-	 *         precedentemente istanziato allora il metodo restituirà l'oggetto già
-	 *         istanziato, viceversa procederà con l'istanziamento di quest ultimo
-	 *
-	 */
-	public static synchronized Cinema getInstance() {
-		if (single_instance == null)
-			single_instance = new Cinema();
-		return single_instance;
-	}
 
 	/**
 	 * METODO per creare una nuova prenotazione (vuota), a partire dalla classe
@@ -302,6 +292,7 @@ public class Cinema {
 		return new Reservation();
 	}
 
+	
 	/**
 	 * METODO per aggiungere una proiezione al cinema
 	 * 
@@ -312,6 +303,7 @@ public class Cinema {
 		cinemaProjections.add(p);
 	}
 
+	
 	/**
 	 * METODO per rimuovere una proiezione al cinema
 	 * 
@@ -322,6 +314,7 @@ public class Cinema {
 		cinemaProjections.remove(p);
 	}
 
+	
 	/**
 	 * METODO per farsi restituire tutte le proiezioni di cui il cinema dispone
 	 * 
@@ -331,6 +324,7 @@ public class Cinema {
 		return cinemaProjections;
 	}
 
+	
 	/**
 	 * 
 	 * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
@@ -355,6 +349,7 @@ public class Cinema {
 		return movieProjections;
 	}
 
+	
 	/**
 	 * 
 	 * METODO per restituire tutti i film che il cinema sta attualmente proiettando
@@ -379,6 +374,7 @@ public class Cinema {
 		return movies;
 	}
 
+	
 	/**
 	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo
 	 * di un film (o una parte di esso)
@@ -397,6 +393,7 @@ public class Cinema {
 		return movies;
 	}
 
+	
 	/**
 	 * METODO per restituire un film, dato il suo Id
 	 * 
@@ -414,6 +411,7 @@ public class Cinema {
 		throw new NoMovieException(id);
 	}
 
+	
 	/**
 	 * METODO per resituire una proiezione, dato il suo Id
 	 * 
@@ -431,6 +429,7 @@ public class Cinema {
 		throw new NoProjectionException(id);
 	}
 
+	
 	/**
 	 * METODO per resituire un coupon, dato il suo id (progressivo)
 	 * 
@@ -447,7 +446,8 @@ public class Cinema {
 		}
 		throw new CouponNotExistsException(progressive);
 	}
-
+	
+	
 	/**
 	 * METODO per aggiungere una sala del cinema
 	 * 
@@ -458,6 +458,7 @@ public class Cinema {
 		rooms.add(r);
 	}
 
+	
 	/**
 	 * METODO per rimuovere una sala del cinema
 	 * 
@@ -468,9 +469,10 @@ public class Cinema {
 		if (rooms.size() > 0)
 			rooms.remove(r);
 		else
-			throw new NoCinemaRoomsException(this.name, this.city, this.address);
+			throw new NoCinemaRoomsException(name, city, address);
 	}
 
+	
 	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
 	 * 
@@ -479,6 +481,7 @@ public class Cinema {
 	 * @param zipCode Codice comunale
 	 * @param address Indirizzo (Via, numero civico)
 	 */
+	@SuppressWarnings("static-access")
 	public void setLocation(String city, String country, String zipCode, String address) {
 		this.city = city;
 		this.country = country;
@@ -486,6 +489,7 @@ public class Cinema {
 		this.address = address;
 	}
 
+	
 	/**
 	 * METODO per farsi dire l'età più elevata da cui il cinema effettua uno sconto
 	 * sul totale
@@ -496,6 +500,7 @@ public class Cinema {
 		return new DiscountAge().getMax_age();
 	}
 
+	
 	/**
 	 * METODO per farsi dire l'età più bassa da cui il cinema effettua uno sconto
 	 * sul totale
@@ -506,6 +511,7 @@ public class Cinema {
 		return new DiscountAge().getMin_age();
 	}
 
+	
 	/**
 	 * METODO per farsi dire il numero di sale di cui il cinema è composto
 	 * 
@@ -515,15 +521,17 @@ public class Cinema {
 		return rooms.size();
 	}
 
+	
 	/**
 	 * METODO per farsi dire le informazioni del luogo in cui il cinema è situato
 	 * 
 	 * @return location
 	 */
-	public String getLocation() {
+	public static String getLocation() {
 		return address + ", " + city + " - " + zipCode + " " + country;
 	}
 
+	
 	/**
 	 * METODO per impostare la proiezione di una prenotazione
 	 * 
@@ -535,6 +543,7 @@ public class Cinema {
 		r.setProjection(getProjection(projectionId));
 	}
 
+	
 	/**
 	 * METODO per farsi dire il numero di colonne della sala in cui è proiettato il
 	 * film della prenotazione
@@ -546,6 +555,7 @@ public class Cinema {
 		return r.getProjection().getRoom().getNumberCols();
 	}
 
+	
 	/**
 	 * METODO per farsi dire il numero di righe della sala in cui è proiettato il
 	 * film della prenotazione
@@ -557,6 +567,7 @@ public class Cinema {
 		return r.getProjection().getRoom().getNumberRows();
 	}
 
+	
 	/**
 	 * METODO per farsi dire se il posto della sala selezionata dalla prenotazione è
 	 * libero o meno
@@ -572,6 +583,7 @@ public class Cinema {
 		return r.getProjection().checkIfSeatIsAvailable(row, col);
 	}
 
+	
 	/**
 	 * METODO per aggiungere un posto alla reservation
 	 * 
@@ -588,6 +600,7 @@ public class Cinema {
 		r.addSeat(row, col);
 	}
 
+	
 	/**
 	 * METODO per aggiungere informazioni sul cliente che effettua la prenotazione
 	 * 
@@ -602,6 +615,7 @@ public class Cinema {
 		r.setPurchaser(new Spectator(name, surname, email));
 	}
 
+	
 	/**
 	 * METODO per impostare il nome di una carta di credito
 	 * 
@@ -612,6 +626,7 @@ public class Cinema {
 		p.setOwner(owner);
 	}
 
+	
 	/**
 	 * METODO per impostare il numero di una carta di credito
 	 * 
@@ -623,6 +638,7 @@ public class Cinema {
 		p.setNumber(number);
 	}
 
+	
 	/**
 	 * METODO per impostare la data di scadenza di una carta di credito
 	 * 
@@ -635,6 +651,7 @@ public class Cinema {
 		p.setExpirationDate(expirationDate);
 	}
 
+	
 	/**
 	 * METODO per impostare il ccv di una carta di credito
 	 * 
@@ -646,6 +663,7 @@ public class Cinema {
 		p.setCCV(ccv);
 	}
 
+	
 	/**
 	 * METODO per aggiungere alla prenotazione la carta di credito
 	 * 
@@ -656,6 +674,7 @@ public class Cinema {
 		r.setPaymentCard(p);
 	}
 
+	
 	/**
 	 * METODO per impostare il numero di persone che hanno un età inferiore ad un
 	 * età minima da cui parte lo sconto per la proiezione indicata (per età)
@@ -668,6 +687,7 @@ public class Cinema {
 		r.setNumberPeopleUntilMinAge(n);
 	}
 
+	
 	/**
 	 * METODO per impostare il numero di persone che hanno un età superiore ad un
 	 * età a partire dalla quale parte lo sconto per la proiezione indicata (per
@@ -681,6 +701,7 @@ public class Cinema {
 		r.setNumberPeopleOverMaxAge(n);
 	}
 
+	
 	/**
 	 * METODO per aggiungere alla prenotazione un eventuale coupon per un ulteriore
 	 * sconto sul totale
@@ -690,11 +711,16 @@ public class Cinema {
 	 * @throws CouponNotExistsException
 	 * @throws CouponAleadyUsedException
 	 */
-	public void setReservationCoupon(Reservation r, long coupon)
+	public void setReservationCoupon(Reservation r, long progressive)
 			throws CouponNotExistsException, CouponAleadyUsedException {
-		r.setCoupon(coupon);
+		Coupon coupon = getCoupon(progressive);
+		if (coupon.isUsed() == true) {
+			throw new CouponAleadyUsedException(progressive);
+		}
+		else r.setCoupon(coupon);
 	}
-
+	
+	
 	/**
 	 * METODO per comprare una prenotazione, una volta inseriti tutti i dati
 	 * 
@@ -712,6 +738,7 @@ public class Cinema {
 		r.buy();
 	}
 
+	
 	/**
 	 * METODO per farsi dire il totale di una prenotazione
 	 * 
@@ -739,7 +766,7 @@ public class Cinema {
 	 * METODO per farsi dire il nome del cinema
 	 * @return
 	 */
-	public String getName() {
+	public static String getName() {
 		return name;
 	}
 
@@ -747,7 +774,7 @@ public class Cinema {
 	 * METODO per farsi restituire l'email del cinema
 	 * @return
 	 */
-	public String getEmail() {
+	public static String getEmail() {
 		return email;
 	}
 
@@ -756,7 +783,7 @@ public class Cinema {
 	 * METODO per farsi dare il logo del cinema
 	 * @return
 	 */
-	public String getLogoURL() {
+	public static String getLogoURL() {
 		return logoURL;
 	}
 
@@ -765,7 +792,7 @@ public class Cinema {
 	 * METODO per farsi restituire la password del cinema
 	 * @return
 	 */
-	public String getPassword() {
+	public static String getPassword() {
 		return password;
 	}
 }

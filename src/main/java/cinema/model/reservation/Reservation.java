@@ -41,8 +41,6 @@ import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.reservation.discount.coupon.Coupon;
-import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
-import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.*;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.util.FreeAnotherPersonSeatException;
@@ -52,11 +50,11 @@ import cinema.model.reservation.util.SeatAlreadyTakenException;
 import cinema.model.reservation.util.SeatTakenTwiceException;
 
 
-/**BREVE SPIEGAZIONE CLASSE RESERVATION (Facade Controller)
+/**BREVE SPIEGAZIONE CLASSE RESERVATION
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * Questa classe (Facade Controller), rappresenta la prenotazione effettiva che viene fatta
+ * Questa classe, rappresenta la prenotazione effettiva che viene fatta
  * una volta selezionato il film che si vuole visionare e l'ora (Proiezione).
  * Tramite questa classe riusciamo a creare la prenotazione e tutte le sue informazioni, 
  * generare un file .pdf contenente tutte le informazioni della prenotazione stessa (sala,
@@ -186,17 +184,10 @@ public class Reservation {
 	
 	/**
 	 * METODO per aggiungere un coupon dato il suo progressivo
-	 * @param progressive				  Id del coupon
-	 * @throws CouponNotExistsException	  Eccezione lanciata qualora non esista un coupon
-	 * 									  con quell'id
-	 * @throws CouponAleadyUsedException 
+	 * @param coupon				 Coupon
 	 */
-	public void setCoupon(long progressive) throws CouponNotExistsException, CouponAleadyUsedException {
-		Coupon coupon = Cinema.getInstance().getCoupon(progressive);
-		if (coupon.isUsed() == true) {
-			throw new CouponAleadyUsedException(progressive);
-		}
-		else this.coupon = coupon;
+	public void setCoupon(Coupon coupon) {
+		this.coupon = coupon;
 	}
 	
 	
@@ -244,19 +235,19 @@ public class Reservation {
 	            bg.setAbsolutePosition(-600f, -500f);
 	            
 	            // creazione di una nuova immagine con il logo del cinema
-	            String imageUrl = Cinema.getInstance().getLogoURL();
+	            String imageUrl = Cinema.getLogoURL();
 	            Image image = Image.getInstance(new URL(imageUrl));
 	            image.scalePercent(20f);
 	            image.setAbsolutePosition(250f, 715f);
 		        
 	            // creare un titolo per il report
-		        Paragraph titleP = new Paragraph(Cinema.getInstance().getName() + "\n", catFont);
+		        Paragraph titleP = new Paragraph(Cinema.getName() + "\n", catFont);
 		        titleP.setSpacingBefore(80);
 		        titleP.setAlignment(Element.ALIGN_CENTER);
 		        
 		        // creare informazioni sul nome del cinema 
-		        Paragraph infoCinemaP = new Paragraph(Cinema.getInstance().getLocation() 
-		        		+ "\n" + Cinema.getInstance().getEmail() + "\n", smallFont);
+		        Paragraph infoCinemaP = new Paragraph(Cinema.getLocation() 
+		        		+ "\n" + Cinema.getEmail() + "\n", smallFont);
 		        infoCinemaP.setSpacingBefore(10);
 		        infoCinemaP.setAlignment(Element.ALIGN_CENTER);
 		        
@@ -344,8 +335,8 @@ public class Reservation {
 		
 		// Stabilire le informazioni sul sender ed il receiver dell'email
 		String to = this.getPurchaser().getEmail(); //receiver email
-		final String user = Cinema.getInstance().getEmail(); //sender email (cinema)
-		final String password = Cinema.getInstance().getPassword(); //sender password
+		final String user = Cinema.getEmail(); //sender email (cinema)
+		final String password = Cinema.getPassword(); //sender password
 		   
 		// Stabilire le proprietà dell'email
 		Properties properties = System.getProperties();  

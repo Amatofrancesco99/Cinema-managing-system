@@ -26,7 +26,7 @@ public class WebGUIServlet extends HttpServlet {
 	private Cinema cinema;
 
 	public WebGUIServlet() {
-		this.cinema = Cinema.getInstance();
+		this.cinema = new Cinema();
 	}
 
 	@Override
