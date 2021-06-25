@@ -173,7 +173,7 @@ public class Reservation {
 		if (getCoupon() != null) {
 			total -= getCoupon().getDiscount();
 		}
-		return Math.round(total * 100.0)/100.0;
+		return  Math.round(total * 100.0)/100.0;
 	}  
 	
 
@@ -295,7 +295,7 @@ public class Reservation {
 		        }
 		        
 		        //totale della prenotazione
-		        Paragraph totalP = new Paragraph("TOTALE:  " + this.getTotal()
+		        Paragraph totalP = new Paragraph("TOTALE:  " + String.format("%.02f",this.getTotal())
 		        				   + "€ ", subFont3);
 		        totalP.setSpacingBefore(80);
 		        totalP.setAlignment(Element.ALIGN_RIGHT);
