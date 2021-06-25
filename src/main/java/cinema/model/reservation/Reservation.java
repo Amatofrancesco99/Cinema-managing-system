@@ -42,7 +42,6 @@ import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
-import cinema.model.reservation.discount.types.*;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;

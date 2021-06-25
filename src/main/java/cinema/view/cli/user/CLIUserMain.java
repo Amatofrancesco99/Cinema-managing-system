@@ -1,4 +1,4 @@
-package cinema.view.cli;
+package cinema.view.cli.user;
 
 import java.time.YearMonth;
 import java.util.InputMismatchException;
@@ -36,7 +36,7 @@ import cinema.model.reservation.util.SeatTakenTwiceException;
  *  web, ma tramite Command Line Interface (CLI)... chiaramente la resa grafica non sarà
  *  la stessa.
  */
-public class CLIMain {
+public class CLIUserMain {
 
 	static Scanner keyboard = new Scanner(System.in);
 	static Cinema myCinema = new Cinema();
