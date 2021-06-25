@@ -71,11 +71,11 @@ Tramite un browser (preferibilmente Chrome) inserisci nella barra di ricerca que
 
 *** 
 ## 2. APPLICAZIONE CLI - SPETTATORE
-Attraverso un IDE (che supporti Java), esegui la classe CLIMain.java, presente nel percorso qui sotto riportato:
+Attraverso un IDE (che supporti Java), esegui la classe CLIUserMain.java, presente nel percorso qui sotto riportato:
 - [src/main/java/cinema/view/cli/user/CLIUserMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java)
 
 
 ***
 ### 3. APPLICAZIONE CLI - ADMIN
-Attraverso un IDE (che supporti Java), esegui la classe CLIMain.java, presente nel percorso qui sotto riportato:
+Attraverso un IDE (che supporti Java), esegui la classe CLIAdminMain.java, presente nel percorso qui sotto riportato:
 - [src/main/java/cinema/view/cli/admin/CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java)
