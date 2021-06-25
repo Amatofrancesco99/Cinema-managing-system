@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import cinema.controller.Cinema;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
@@ -33,7 +34,7 @@ public class ReservationTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		r = new Reservation();
+		r = new Cinema().createReservation();
 		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		Room room = new Room(3,3);
 		

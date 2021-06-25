@@ -40,6 +40,7 @@ import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.types.*;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
@@ -77,6 +78,7 @@ public class Reservation {
 	 *@param coupon			 Coupon che può essere usato nella prenotazione
 	 *@param numberPeopleUntilMinAge   Numero di persone che hanno un'età inferiore ad un età min
 	 *@param numberPeopleOverMaxAge    Numero di persone che hanno un'età superiore ad un età max
+	 *@param rd				 Strategia di sconto applicata
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
@@ -91,13 +93,15 @@ public class Reservation {
 	private int numberPeopleUntilMinAge;
 	private int numberPeopleOverMaxAge;
 	private int countTakenSeat = 0;
+	private ReservationDiscountStrategy rd;
+	
 	
 	/**
 	 * COSTRUTTORE della classe, esso una volta invocato genera una prenotazione con un
 	 * progressivo che si auto-incrementa e la data di creazione corrisponde alla data di
 	 * sistema in cui viene invocato il costruttore stesso
 	 */
-	public Reservation () {
+	public Reservation (ReservationDiscountStrategy rd) {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
@@ -105,6 +109,7 @@ public class Reservation {
 		reportLocation = null;
 		numberPeopleUntilMinAge = 0;
 		numberPeopleOverMaxAge = 0;
+		this.rd = rd;
 	}
 	
 	
@@ -163,7 +168,7 @@ public class Reservation {
 	 * @return total  Ammontare di denaro da pagare
 	 */
 	public double getTotal() {
-		double total = new CinemaDiscount().getTotal(this);
+		double total = rd.getTotal(this);
 		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
 		// il totale dell'importo di sconto di questo coupon
 		if (getCoupon() != null) {
@@ -569,5 +574,11 @@ public class Reservation {
 	/** METODO per associare la carta di credito alla prenotazione*/
 	public void setPaymentCard(PaymentCard p) {
 		this.paymentCard = p;
+	}
+	
+	
+	/**METODO per farsi dire la strategia della reservation*/
+	public ReservationDiscountStrategy getStrategy() {
+		return rd;
 	}
 }

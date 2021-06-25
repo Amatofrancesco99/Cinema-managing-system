@@ -1,9 +1,9 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidAgeException;
 import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 /** BREVE DESCRIZIONE CLASSE DiscountAge  (Pattern Strategy)
  * 
@@ -12,9 +12,9 @@ import cinema.model.reservation.discount.types.util.InvalidPercentageValueExcept
  *	Questa classe rappresenta una strategia di sconto sulla prenotazione basata sull'età
  *  degli spettatori che visioneranno il film
  */
-public class DiscountAge implements ReservationDiscountStrategy{
+public class DiscountAge extends Discount{
 
-	
+
 	/** ATTRIBUTI
 	 * @param MIN_AGE	  Età al di sotto della quale lo sconto è valido
 	 * @param MAX_AGE	  Età al di sopra della quale lo sconto è valido
@@ -24,6 +24,15 @@ public class DiscountAge implements ReservationDiscountStrategy{
 	private int max_age = 80;
 	private double percentage = 0.15;
 	
+	
+	/**
+	 * COSTRUTTORE 
+	 * @param type
+	 */
+	public DiscountAge() {
+		super(TypeOfDiscounts.AGE);
+	}
+
 	
 	/**
 	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
 /** BREVE DESCRIZIONE CLASSE DiscontDay	 (Pattern Strategy)
@@ -16,13 +16,21 @@ import cinema.model.reservation.discount.types.util.InvalidPercentageValueExcept
  *  Questa classe rappresenta una strategia di sconto sulla prenotazione basata sul giorno
  *  in cui gli spettatori che visioneranno il film
  */
-public class DiscountDay implements ReservationDiscountStrategy{
+public class DiscountDay extends Discount{
 	
 	/** ATTRIBUTI 
 	 * 
 	 */
 	private HashMap<LocalDate, Double> discount = new HashMap<>();
 	
+	/**
+	 * COSTRUTTORE 
+	 * @param type
+	 */
+	public DiscountDay() {
+		super(TypeOfDiscounts.DAY);
+	}
+
 	
 	/**
 	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi

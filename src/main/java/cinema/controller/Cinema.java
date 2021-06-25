@@ -21,8 +21,12 @@ import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
+import cinema.model.reservation.discount.types.Discount;
 import cinema.model.reservation.discount.types.DiscountAge;
+import cinema.model.reservation.discount.types.DiscountDay;
+import cinema.model.reservation.discount.types.DiscountNumberSpectators;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
@@ -45,6 +49,7 @@ import cinema.model.reservation.util.SeatTakenTwiceException;
  */
 public class Cinema {
 	
+	
 	/**
 	 * ATTRIBUTI
 	 * 
@@ -61,6 +66,8 @@ public class Cinema {
 	 * @param rooms             List: comprende tutte le sale del cinema
 	 * @param cinemaProjections List: comprende tutte le proiezioni fatte dal cinema
 	 * @param coupon            List: comprende tutti i coupon emessi dal cinema
+	 * @param cinemaDiscount    Sconto attivo
+	 * @param allDiscounts      Tutti gli sconti applicabili
 	 */
 	private static String name;
 	private static String city;
@@ -73,7 +80,9 @@ public class Cinema {
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
 	private List<Coupon> coupons;
-
+	private Discount cinemaDiscount;
+	private ArrayList<Discount> allDiscounts;
+	
 	
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
@@ -91,6 +100,11 @@ public class Cinema {
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		coupons = new ArrayList<Coupon>();
+		cinemaDiscount = new DiscountAge();
+		allDiscounts = new ArrayList<Discount>();
+		allDiscounts.add(new DiscountAge());
+		allDiscounts.add(new DiscountDay());
+		allDiscounts.add(new DiscountNumberSpectators());
 
 		// ********* TEMPORARY DATA USED FOR TESTING *********
 		// Test movie
@@ -289,7 +303,7 @@ public class Cinema {
 	 * @return reservation Nuova prenotazione creata
 	 */
 	public Reservation createReservation() {
-		return new Reservation();
+		return new Reservation(cinemaDiscount);
 	}
 
 	
@@ -770,6 +784,7 @@ public class Cinema {
 		return name;
 	}
 
+	
 	/**
 	 * METODO per farsi restituire l'email del cinema
 	 * @return
@@ -794,5 +809,39 @@ public class Cinema {
 	 */
 	public static String getPassword() {
 		return password;
+	}
+	
+	
+	/**
+	 * METODO per settare la strategia
+	 * @param td
+	 */
+	public void setCinemaDiscountStrategy(TypeOfDiscounts td) {
+		for(Discount d : allDiscounts) {
+			if(d.getTypeOfDiscount() == td)
+				cinemaDiscount = d;
+		}
+			
+	}
+	
+	
+	/**
+	 * METODO per aggiungere una strategia di sconto alla lista 
+	 * @param d
+	 */
+	public void addDiscount(Discount d) {
+		allDiscounts.add(d);
+	}
+	
+	
+	/**
+	 * METODO per rimuovere una strategia di sconto dalla lista, dato il suo tipo
+	 * @param td
+	 */
+	public void removeDiscount(TypeOfDiscounts td) {
+		for(Discount d : allDiscounts) {
+			if(d.getTypeOfDiscount() == td)
+				allDiscounts.remove(d);
+		}
 	}
 }

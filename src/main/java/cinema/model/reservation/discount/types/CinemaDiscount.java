@@ -11,12 +11,14 @@ import cinema.model.reservation.discount.ReservationDiscountStrategy;
  * Questa classe rappresenta una strategia scontistica, implementata dal cinema stesso.
  * Qualora l'amministratore di sistema voglia cambiare strategia basta che cambi il metodo
  * richiamato.
+ * 
+ * !!!!!!!!DA ELIMINARE PROBABILMENTE!!!!!!!!
  */
 public class CinemaDiscount implements ReservationDiscountStrategy {
-
+	
 	@Override
 	public double getTotal(Reservation r) {
-		double total = new DiscountAge().getTotal(r);
+		double total = r.getStrategy().getTotal(r);
 		return Math.round(total * 100.0)/100.0;
 	}
 

@@ -1,9 +1,9 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
 /** BREVE DESCRIZIONE CLASSE DiscountNumberSpectator  (Pattern Strategy)
@@ -14,9 +14,10 @@ import cinema.model.reservation.discount.types.util.InvalidPercentageValueExcept
  *  sconto comitiva, ovvero a seconda di quante persone fanno parte di quella 
  *  specifica prenotazione (si può anche vedere come numero di posti che sono stati occupati).
  */
-public class DiscountNumberSpectators implements ReservationDiscountStrategy {
+public class DiscountNumberSpectators extends Discount{
 
-	
+
+
 	/** ATTRIBUTI
 	 * @param NUMBER_PEOPLE 	Numero di persone minimo, al di sopra del quale lo sconto
 	 * 							comitiva sarà valido
@@ -25,6 +26,15 @@ public class DiscountNumberSpectators implements ReservationDiscountStrategy {
 	private int numberPeople = 5;
 	private double percentage = 0.15;
 	
+		
+	/**
+	 * COSTRUTTORE 
+	 * @param type
+	 */
+	public DiscountNumberSpectators() {
+		super(TypeOfDiscounts.NUMBER);
+	}
+
 	
 	/**
 	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi
