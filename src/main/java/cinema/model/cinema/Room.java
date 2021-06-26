@@ -107,4 +107,12 @@ public class Room {
 	public long getProgressive() {
 		return progressive;
 	}
+	
+	
+	/** METODO per stampare le caratteristiche della sala*/
+	@Override
+	public String toString() {
+		return  "Sala n°: " + progressive + 
+				"  Posti: " + getNumberSeats();
+	}
 }

@@ -4,8 +4,16 @@ import java.util.Scanner;
 
 import cinema.controller.Cinema;
 import cinema.controller.util.DiscountNotFoundException;
+import cinema.controller.util.NoMovieException;
 import cinema.controller.util.PasswordTooShortException;
+import cinema.controller.util.ProjectionIDAlreadyUsedException;
+import cinema.controller.util.RoomNotExistsException;
 import cinema.controller.util.WrongAdminPasswordException;
+import cinema.model.Movie;
+import cinema.model.cinema.Room;
+import cinema.model.projection.Projection;
+import cinema.model.projection.util.InvalidPriceException;
+import cinema.model.projection.util.InvalidProjectionIdException;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIAdminMain
@@ -35,13 +43,14 @@ public class CLIAdminMain {
 		// CAMBIO PROPRIETA' STRATEGIA / SELEZIONE STRATEGIA APPLICATA
 		handleDiscounts();
 		
-		// INSERIMENTO NUOVE PROIEZIONI (OPZIONALE) TODO
-		insertNewProjections();
+		// INSERIMENTO NUOVE PROIEZIONI (OPZIONALE)
+		insertOrRemoveProjections();
 		
 		// SALUTO DELL'ADMIN E TERMINA PROGRAMMA
 		sayGoodbye();
 	}
 
+	
 	private static void handleDiscounts() {
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("GESTIONE SCONTI\n");
@@ -51,6 +60,7 @@ public class CLIAdminMain {
 		changeNewReservationsDiscountStrategy();
 	}
 
+	
 	/*
 	private static void changeDiscountsProperties() {
 		System.out.println("Vuoi cambiare le proprietà di una strategia già esistente? (Y/N)");
@@ -89,15 +99,136 @@ public class CLIAdminMain {
 		}
 	} */
 
+	
 	private static void sayGoodbye() {
 		System.out.println("\n\nGrazie, a presto!");
 		System.out.println("-----------------------------------------------------");
 	}
 
-	private static void insertNewProjections() {
-		
+	
+	private static void insertOrRemoveProjections() {
+		System.out.println("-----------------------------------------------------\n");
+		System.out.println("INSERIMENTO/RIMOZIONE NUOVE PROIEZIONI\n");
+		insertNewProjections();
 	}
 
+	
+	private static void insertNewProjections() {
+		System.out.println("Vuoi inserire nuove proiezioni? (Y/N)");
+		boolean end = false;
+		while (!end) {
+			String choice = keyboard.nextLine();
+			if (choice.toUpperCase().equals("N")) {
+				end = true;
+			}
+			if (!choice.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
+				System.out.println("Scelta non valida...\n");
+			}
+			if (choice.toUpperCase().equals("Y")) {
+				boolean insertingEnd = false;
+				while (!insertingEnd) {
+					Projection p = new Projection();
+					selectProjectionID(p);
+					selectProjectionMovie(p);
+					selectProjectionRoom(p);
+					selectProjectionDateTime(p);
+					selectProjectionPrice(p);
+					insertingEnd = true;
+					System.out.println("\n\nVuoi inserire nuove proiezioni? (Y/N) ");
+					String c = keyboard.nextLine();
+					if (c.toUpperCase().equals("N")) {
+						insertingEnd = true;
+						end = true;
+					}
+					if (!c.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
+						System.out.println("Scelta non valida...\n");
+					}
+					if (c.toUpperCase().equals("Y")) {
+					}
+				}
+			}
+		}
+	}
+
+	
+	private static void selectProjectionDateTime(Projection p) {
+		//TODO
+	}
+
+
+	private static void selectProjectionPrice(Projection p) {
+		boolean end = false;
+		while(!end) {
+			System.out.println("\nInserisci il prezzo della proiezione: ");
+			String n = keyboard.next();
+			double price = Double.parseDouble(n);
+			try {
+				myCinema.setProjectionPrice(p,price);
+				end = true;
+			} catch (InvalidPriceException e) {
+				e.toString();
+			}
+		}
+	}
+
+
+	private static void selectProjectionRoom(Projection p) {
+		System.out.println("\n\nLista delle sale del cinema: ");
+		for (Room r : myCinema.getAllRooms())
+			System.out.println(r.toString());
+		boolean end = false;
+		while(!end) {
+			System.out.println("\nInserisci il numero della sala da associare alla proiezione: ");
+			String n = keyboard.next();
+			int roomId = Integer.parseInt(n);
+			try {
+				myCinema.setProjectionRoom(p,roomId);
+				end = true;
+			} catch (RoomNotExistsException e) {
+				e.toString();
+			}
+		}
+	}
+
+
+	private static void selectProjectionMovie(Projection p) {
+		System.out.println("\n\nLista dei film disponibili: ");
+		// TODO: change this method with   myCinema.getAllMovies()
+		for (Movie m: myCinema.getCurrentlyAvailableMovies()) {
+			System.out.println((m.getId()) + ") ");
+			System.out.println(m.getDetailedDescription());
+		}
+		boolean end = false;
+		while(!end) {
+			System.out.println("Inserisci l'id del film da associare alla proiezione: ");
+			String n = keyboard.next();
+			int movieId = Integer.parseInt(n);
+			try {
+				myCinema.setProjectionMovie(p,movieId);
+				end = true;
+			} catch (NoMovieException e) {
+				e.toString();
+			}
+		}
+	}
+
+	
+	private static void selectProjectionID(Projection p) {
+		boolean end = false;
+		while (!end) {
+			System.out.println("\nInserisci l'id della proiezione da inserire: ");
+			String n = keyboard.next();
+			int projectionId = Integer.parseInt(n);
+			try {
+				myCinema.setProjectionID(p, projectionId);
+				end = true;
+			} catch (ProjectionIDAlreadyUsedException | InvalidProjectionIdException e) {
+				e.toString();
+			}
+		}
+	}
+
+	
 	private static void changeNewReservationsDiscountStrategy() {
 		System.out.println("Vuoi cambiare la strategia di sconto delle prossime\nprenotazioni"
 				+ " effettuate? (Y/N)");
@@ -136,6 +267,7 @@ public class CLIAdminMain {
 		}
 	}
 
+	
 	private static void changePassword() {
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("GESTIONE PASSWORD\n");
@@ -167,6 +299,7 @@ public class CLIAdminMain {
 		}
 	}
 
+	
 	private static void welcomeAndLogin() {
 		System.out.println("BENVENUTO ADMIN");
 		boolean end = false;
@@ -192,6 +325,7 @@ public class CLIAdminMain {
 		}
 	}
 
+	
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println(Cinema.getName().toUpperCase()+"\n");

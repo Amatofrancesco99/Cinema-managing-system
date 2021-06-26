@@ -17,6 +17,8 @@ import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberExce
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
+import cinema.model.projection.util.InvalidPriceException;
+import cinema.model.projection.util.InvalidProjectionIdException;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
@@ -111,8 +113,7 @@ public class Cinema {
 
 
 		// ********* TEMPORARY DATA USED FOR TESTING *********
-		// Test movie
-
+		
 		// Test movie
 		ArrayList<String> genres, directors, cast;
 		genres = new ArrayList<>();
@@ -206,10 +207,9 @@ public class Cinema {
 				genres, directors, cast, 5, 182, "avengers-endgame.jpg", "https://www.youtube.com/watch?v=vqWz0ZCpYBs");
 
 		// Test room
-		ArrayList<Room> rooms = new ArrayList<Room>();
 		try {
-			rooms.add(new Room(5, 10));
-			rooms.add(new Room(7, 10));
+			addRoom(new Room(5, 10));
+			addRoom(new Room(7, 10));
 		} catch (InvalidRoomDimensionsException e) {
 			e.printStackTrace();
 		}
@@ -344,6 +344,54 @@ public class Cinema {
 
 	
 	/**
+	 * METODO per impostare l'id di una proiezione
+	 * @param newProjection
+	 * @param id
+	 * @throws ProjectionIDAlreadyUsedException
+	 * @throws InvalidProjectionIdException
+	 */
+	public void setProjectionID(Projection newProjection, int id) throws ProjectionIDAlreadyUsedException, InvalidProjectionIdException {
+		for (Projection p: cinemaProjections) {
+			if (p.getId() == id) throw new ProjectionIDAlreadyUsedException(id);
+		}
+		newProjection.setId(id);
+	}
+	
+	
+	/** METODO per associare ad una proiezione un film
+	 * 
+	 * @param p
+	 * @param movie
+	 * @throws NoMovieException 
+	 */
+	public void setProjectionMovie(Projection p, int movieId) throws NoMovieException {
+		p.setMovie(getMovie(movieId));
+	}
+	
+	
+	/** METODO per associare alla proiezione una sala 
+	 * 
+	 * @param p
+	 * @param roomId
+	 * @throws RoomNotExistsException
+	 */
+	public void setProjectionRoom(Projection p, long roomId) throws RoomNotExistsException {
+		p.setRoom(getRoom(roomId));
+	}
+	
+	
+	/** METODO per associare alla proiezione un prezzo
+	 * 
+	 * @param p
+	 * @param price
+	 * @throws InvalidPriceException
+	 */
+	public void setProjectionPrice(Projection p, double price) throws InvalidPriceException {
+		p.setPrice(price);
+	}
+	
+	
+	/**
 	 * 
 	 * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
 	 * tramite l'id
@@ -396,6 +444,13 @@ public class Cinema {
 		else throw new MovieNoLongerProjectedException(this.getMovie(movieId));
 	}
 
+	
+	/*METODO per farci dare tutte i film inerenti ad un anno specifico*/
+	public ArrayList<Movie> getAllMovies(int year){
+		// TODO with persistence
+		return null;
+	}
+	
 	
 	/**
 	 * 
@@ -595,6 +650,33 @@ public class Cinema {
 		return rooms.size();
 	}
 
+	
+	/**
+	 * METODO per farsi dire tutte le sale del cinema
+	 * 
+	 * @return rooms
+	 */
+	public List<Room> getAllRooms(){
+		ArrayList<Room> allCinemaRooms = new ArrayList<Room>();
+		for (int i=0; i< rooms.size();i++) {
+			allCinemaRooms.add(rooms.get(i));
+		}
+		return allCinemaRooms;
+	}
+	
+	
+	/** METODO per farsi dire dal cinema la sala, dato l'id
+	 * 
+	 * @return
+	 * @throws RoomNotExistsException 
+	 */
+	public Room getRoom(long roomId) throws RoomNotExistsException {
+		for(Room r: rooms) {
+			if (r.getProgressive() == roomId)
+				return r;
+		}
+		throw new RoomNotExistsException(roomId);
+	}
 	
 	/**
 	 * METODO per farsi dire le informazioni del luogo in cui il cinema è situato

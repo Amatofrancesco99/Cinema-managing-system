@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.projection.util.InvalidPriceException;
+import cinema.model.projection.util.InvalidProjectionIdException;
 import cinema.model.Movie;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
@@ -58,8 +60,56 @@ public class Projection implements Comparable<Projection> {
 			seats.add(row);
 		}
 	}
+
 	
+	/* COSTRUTTORE DI DEFAULT */
+	public Projection() {
+		this.seats = new ArrayList<ArrayList<ProjectionSeat>>();
+	}
+
 	
+	/*METODO per impostare l'id di una proiezione */
+	public void setId(int id) throws InvalidProjectionIdException {
+		if (id < 0) throw new InvalidProjectionIdException();
+		this.id = id;
+	}
+
+	
+	/*METODO per associare un film alla proiezione */
+	public void setMovie(Movie movie) {
+		this.movie = movie;
+	}
+
+
+	/*METODO per aggiungere la sala in cui è proiettato il film*/
+	public void setRoom(Room room) {
+		this.room = room;
+		if (seats.size() != 0) {
+			seats.removeAll(seats);
+		}
+		for(int i = 0; i < room.getNumberRows(); i++) {
+			ArrayList<ProjectionSeat> row = new ArrayList<ProjectionSeat>();
+			for(int j = 0; j < room.getNumberCols(); j++) {
+				row.add(new ProjectionSeat(room.getSeat(i, j), true));
+			}
+			seats.add(row);
+		}
+	}
+
+
+	/*METODO per aggiungere la data della proiezione*/
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
+	}
+
+
+	/*METODO per aggiungere il prezzo alla proiezione*/
+	public void setPrice(double price) throws InvalidPriceException {
+		if (price <= 0) throw new InvalidPriceException();
+		this.price = Math.round(price * 100.0)/100.0;
+	}
+
+
 	/**
 	 * METODO che serve per verificare se un posto specifico
 	 * è libero.
