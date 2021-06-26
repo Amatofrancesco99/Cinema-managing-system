@@ -362,6 +362,35 @@ public class Cinema {
 		}
 		return movieProjections;
 	}
+	
+	
+	/**
+	 * 
+	 * METODO per restituire le proiezioni attualmente realizzate da un cinema, inerenti uno specifico film
+	 * tramite l'id
+	 * 
+	 * @param movieId Id del film di cui si vogliono cercare le proiezioni attualmente disponibili
+	 * @return ArrayList<Projection> Insieme delle proiezioni attualmente disponibili dello specifico film
+	 * @throws NoMovieException
+	 * @throws MovieNoLongerProjectedException  Eccezione lanciata qualora il film inserito
+	 * 											non abbia proiezioni attualmente disponibili
+	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
+	 *                                     abbia quel film, tra i film proiettati
+	 */
+	public List<Projection> getCurrentlyAvailableProjections(int movieId) throws NoMovieException, MovieNoLongerProjectedException {
+		List<Projection> movieProjections = new ArrayList<Projection>();
+		Movie m = getMovie(movieId);
+		if (m != null) {
+			for (Projection p : cinemaProjections) {
+				if ((p.getMovie().getId() == movieId) && 
+				   (p.getDateTime().isAfter(LocalDateTime.now()))){
+					movieProjections.add(p);
+				}
+			}
+		}
+		if (movieProjections.size() != 0) return movieProjections;
+		else throw new MovieNoLongerProjectedException(this.getMovie(movieId));
+	}
 
 	
 	/**
@@ -374,15 +403,18 @@ public class Cinema {
 	public List<Movie> getCurrentlyAvailableMovies() {
 		List<Movie> movies = new ArrayList<Movie>();
 		for (Projection p : cinemaProjections) {
-			boolean alreadyExists = false;
-			for (Movie m : movies) {
-				if (p.getMovie().getId() == m.getId()) {
-					alreadyExists = true;
-					break;
+			if (p.getDateTime().isAfter(LocalDateTime.now()))
+			{
+				boolean alreadyExists = false;
+				for (Movie m : movies) {
+					if (p.getMovie().getId() == m.getId()) {
+						alreadyExists = true;
+						break;
+					}
 				}
-			}
-			if (!alreadyExists) {
-				movies.add(p.getMovie());
+				if (!alreadyExists) {
+					movies.add(p.getMovie());
+				}
 			}
 		}
 		return movies;
@@ -443,6 +475,30 @@ public class Cinema {
 		throw new NoProjectionException(id);
 	}
 
+	
+	/**
+	 * METODO per resituire una proiezione, se attualmente proiettata, dato il suo Id
+	 * 
+	 * @param id Id della proiezione che si vuole verificare se sia disponibile
+	 * @return Projection Proiezione con quello specifico Id, attualmente proiettata
+	 * @throws NoProjectionException Eccezione lanciata qualora non ci sia nessuna
+	 *                               proiezione con quell'Id
+	 * @throws ProjectionIsNoLongerProjectedException   Eccezione lanciata qualora la data
+	 * 													della proiezione inserita sia 
+	 * 													inferiore alla data odierna
+ 	 */
+	public Projection getCurrentlyAvailableProjection(int id) throws NoProjectionException, ProjectionIsNoLongerProjectedException {
+		for (Projection p : cinemaProjections) {
+			if ((p.getId() == id) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
+				return p;
+			}
+			if ((p.getId() == id) && (p.getDateTime().isBefore(LocalDateTime.now()))) {
+				throw new ProjectionIsNoLongerProjectedException(id);
+			}
+		}
+		throw new NoProjectionException(id);
+	}
+	
 	
 	/**
 	 * METODO per resituire un coupon, dato il suo id (progressivo)

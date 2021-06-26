@@ -5,8 +5,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import cinema.controller.Cinema;
+import cinema.controller.util.MovieNoLongerProjectedException;
 import cinema.controller.util.NoMovieException;
 import cinema.controller.util.NoProjectionException;
+import cinema.controller.util.ProjectionIsNoLongerProjectedException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
@@ -32,9 +34,12 @@ import cinema.model.reservation.util.SeatTakenTwiceException;
  * 
  * @author Screaming Hairy Armadillo Team
  *
- *  Questa classe permette di testare le stesse funzionalità offerte dall'interfaccia
- *  web, ma tramite Command Line Interface (CLI)... chiaramente la resa grafica non sarà
- *  la stessa.
+ *  Questa classe permette allo spettatore di poter effettuare le operazioni principali 
+ *  (visualizzare i film attualmente proiettati, visualizzare le proiezioni dei film,
+ *  selezione di posti per la prenotazione della visione in sala, inserimento dati per
+ *  poter effettuare sconti, pagamento e invio email da parte del cinema dell'avvenuta
+ *  prenotazione con tutte le informazioni utili). Chiaramante la resa grafica della 
+ *  WEBGui è molto più elevata, anche se le funzionalità sono le stesse.
  */
 public class CLIUserMain {
 
@@ -355,9 +360,10 @@ public class CLIUserMain {
 			try {
 				projectionId = Integer.parseInt(keyboard.nextLine());
 				try {
-					myCinema.getProjection(projectionId);
+					myCinema.getCurrentlyAvailableProjection(projectionId);
 					end = true;
-				} catch (NoProjectionException e) {
+				} catch (NoProjectionException | ProjectionIsNoLongerProjectedException e) {
+					e.toString();
 				}
 			}
 			catch (InputMismatchException | NumberFormatException e){
@@ -376,17 +382,17 @@ public class CLIUserMain {
 
 	private static void printMovieProjections(int movieID) {
 		try {
-			myCinema.getProjections(movieID);
+			myCinema.getCurrentlyAvailableProjections(movieID);
 			System.out.println("Maggiori dettagli sul film\n");
-			System.out.println(myCinema.getProjections(movieID).get(0).getMovie().getDetailedDescription());
+			System.out.println(myCinema.getCurrentlyAvailableProjections(movieID).get(0).getMovie().getDetailedDescription());
 			System.out.println("Proiezioni previste\n");
-			for (Projection p : myCinema.getProjections(movieID)) {
+			for (Projection p : myCinema.getCurrentlyAvailableProjections(movieID)) {
 				System.out.println(p.getId() + ")");
 				System.out.println(p.toString());
 			}
-		} catch (NoMovieException e) {
-			e.toString();
-		}
+		} catch (NoMovieException | MovieNoLongerProjectedException e) {
+			e.toString(); 
+		}		
 	}
 
 
@@ -400,9 +406,10 @@ public class CLIUserMain {
 			try {
 				filmId = Integer.parseInt(keyboard.nextLine());
 				try {
-					myCinema.getProjections(filmId);
+					myCinema.getCurrentlyAvailableProjections(filmId);
 					end = true;
-				} catch (NoMovieException e) {
+				} catch (NoMovieException | MovieNoLongerProjectedException e) {
+					e.toString();
 				}
 			}
 			catch (InputMismatchException | NumberFormatException e){
