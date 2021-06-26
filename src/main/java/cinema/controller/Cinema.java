@@ -904,6 +904,20 @@ public class Cinema {
 		}
 	}
 	
+	
+	/**
+	 * METODO per farsi dire tutte le tipologie di sconto applicabili
+	 * @param td
+	 */
+	public ArrayList<TypeOfDiscounts> getAllDiscountStrategy() {
+		ArrayList<TypeOfDiscounts> allTypeOfDiscounts = new ArrayList<TypeOfDiscounts>();
+		for (Discount d: this.allDiscounts) {
+			if (!allTypeOfDiscounts.contains(d.getTypeOfDiscount())) {
+				allTypeOfDiscounts.add(d.getTypeOfDiscount());
+			}
+		}
+		return allTypeOfDiscounts;
+	}
 
 	/** METODO per farsi dire la password dell'admin */
 	public String getAdminPassword() {
@@ -912,7 +926,10 @@ public class Cinema {
 	
 	
 	/* METODO per cambiare la password dell'admin */
-	public void setPassword(String newAdminPassword) {
+	public void setPassword(String newAdminPassword) throws PasswordTooShortException {
+		if (newAdminPassword.length() < 5) {
+			throw new PasswordTooShortException();
+		}
 		adminPassword = newAdminPassword;
 	}
 	
