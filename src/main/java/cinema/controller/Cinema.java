@@ -105,9 +105,9 @@ public class Cinema {
 		coupons = new ArrayList<Coupon>();
 		cinemaDiscount = new DiscountAge();
 		allDiscounts = new ArrayList<Discount>();
-		allDiscounts.add(new DiscountAge());
-		allDiscounts.add(new DiscountDay());
-		allDiscounts.add(new DiscountNumberSpectators());
+		addDiscount(new DiscountAge());
+		addDiscount(new DiscountDay());
+		addDiscount(new DiscountNumberSpectators());
 
 		// ********* TEMPORARY DATA USED FOR TESTING *********
 		// Test movie
@@ -886,10 +886,15 @@ public class Cinema {
 	
 	/**
 	 * METODO per aggiungere una strategia di sconto alla lista 
+	 * Non si può aggiungere uno sconto di una tipologià già esistente
 	 * @param d
 	 */
 	public void addDiscount(Discount d) {
-		allDiscounts.add(d);
+		boolean alreadyExists = false;
+		for (TypeOfDiscounts td : getAllDiscountStrategy()) {
+			if (d.getTypeOfDiscount().equals(td)) alreadyExists = true;
+		}
+		if (!alreadyExists) allDiscounts.add(d);
 	}
 	
 	
