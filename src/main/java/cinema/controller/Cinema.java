@@ -63,6 +63,7 @@ public class Cinema {
 	 *                          diversi dati riferiti alla specifica prenotazione,
 	 *                          effettuata da quest ultimo
 	 * @param password          Password associata all'indirizzo email
+	 * @param adminPassword     Password dell'amministratore del cinema
 	 * @param rooms             List: comprende tutte le sale del cinema
 	 * @param cinemaProjections List: comprende tutte le proiezioni fatte dal cinema
 	 * @param coupon            List: comprende tutti i coupon emessi dal cinema
@@ -77,6 +78,7 @@ public class Cinema {
 	private static String logoURL;
 	private static String email;
 	private static String password;
+	private static String adminPassword;
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
 	private List<Coupon> coupons;
@@ -96,6 +98,7 @@ public class Cinema {
 		address = "Via A. Ferrata, 5";
 		email = "cinemaarmadillo@gmail.com";
 		password = "CinemaArmadillo@1999";
+		adminPassword = "admin";
 		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
@@ -899,5 +902,30 @@ public class Cinema {
 			if(d.getTypeOfDiscount() == td)
 				allDiscounts.remove(d);
 		}
+	}
+	
+
+	/** METODO per farsi dire la password dell'admin */
+	public String getAdminPassword() {
+		return adminPassword;
+	}
+	
+	
+	/* METODO per cambiare la password dell'admin */
+	public void setPassword(String newAdminPassword) {
+		adminPassword = newAdminPassword;
+	}
+	
+	
+	/** METODO per effettuare il login per l'amministratore
+	 * 
+	 * @param password   Password inserita
+	 * @return			 Esito del login
+	 * @throws WrongAdminPasswordException	  Eccezione lanciata qualora si inserisca una
+	 * 										  password errata nella fase di login
+	 */
+	public void login(String password) throws WrongAdminPasswordException {
+		if (getAdminPassword().equals(password)) ;
+		else throw new WrongAdminPasswordException();
 	}
 }
