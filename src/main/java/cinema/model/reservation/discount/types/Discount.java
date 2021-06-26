@@ -3,6 +3,7 @@ package cinema.model.reservation.discount.types;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
+
 /** BREVE DESCRIZIONE CLASSE DiscontDay	 (Pattern Strategy)
  * 
  * @author Screaming Hairy Armadillo Team
@@ -30,4 +31,8 @@ public abstract class Discount implements ReservationDiscountStrategy{
 	public TypeOfDiscounts getTypeOfDiscount(){
 		return type;
 	}
+	
+	
+	/**METODO per farsi restituire le caratteristiche di uno sconto*/
+	public abstract String toString();
 }

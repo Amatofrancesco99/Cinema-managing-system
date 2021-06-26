@@ -82,4 +82,13 @@ public class DiscountNumberSpectators extends Discount{
 	public int getNumberPeople() {
 		return numberPeople;
 	}
+
+
+	/**METODO per farsi restituire le caratteristiche dello sconto comitiva*/
+	@Override
+	public String toString() {
+		return  "[ " + this.getTypeOfDiscount() + " ]" + "\n" +
+				"Numero di persone al di sopra del quale parte lo sconto è valido: " + numberPeople 
+				+ "\n" + "Percentuale di sconto applicata: " + percentage;
+	}
 }

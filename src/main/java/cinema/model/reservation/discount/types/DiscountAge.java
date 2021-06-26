@@ -111,4 +111,14 @@ public class DiscountAge extends Discount{
 	public int getMax_age() {
 		return max_age;
 	}
+
+
+	/**METODO per farsi restituire le caratteristiche dello sconto per età*/
+	@Override
+	public String toString() {
+		return "[ " + this.getTypeOfDiscount() + " ]" + "\n" +
+			   "Età al di sotto della quale lo sconto è valido: " + min_age + "\n" +
+			   "Età al di sopra della quale lo sconto è valido: " + max_age + "\n" +
+			   "Percentuale di sconto applicata: " + percentage;
+	}
 }

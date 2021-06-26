@@ -63,4 +63,22 @@ public class DiscountDay extends Discount{
 		}
 		else discount.put(date, d);
 	}
+
+
+	/**METODO per farsi restituire le caratteristiche dello sconto per giornata*/
+	@Override
+	public String toString() {
+		return "[ " + this.getTypeOfDiscount() + " ]" + "\n" +
+				"Giorni e percentuale di sconti nelle specifiche giornate: \n" +
+				discountsToString(discount);
+	}
+	
+	private String discountsToString(HashMap<LocalDate, Double> discount) {
+		String output = "";
+		for(Entry<LocalDate, Double> entry : discount.entrySet()) {
+			output += "Giorno: " + entry.getKey();
+			output += "  Sconto: " + entry.getValue()*100 + "%\n";
+		}
+		return output;
+	}		  
 }

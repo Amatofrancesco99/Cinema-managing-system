@@ -109,6 +109,7 @@ public class Cinema {
 		addDiscount(new DiscountDay());
 		addDiscount(new DiscountNumberSpectators());
 
+
 		// ********* TEMPORARY DATA USED FOR TESTING *********
 		// Test movie
 
@@ -874,13 +875,10 @@ public class Cinema {
 	/**
 	 * METODO per settare la strategia
 	 * @param td
+	 * @throws DiscountNotFoundException 
 	 */
-	public void setCinemaDiscountStrategy(TypeOfDiscounts td) {
-		for(Discount d : allDiscounts) {
-			if(d.getTypeOfDiscount() == td)
-				cinemaDiscount = d;
-		}
-			
+	public void setCinemaDiscountStrategy(TypeOfDiscounts td) throws DiscountNotFoundException {
+		cinemaDiscount = this.getDiscountByStrategy(td);
 	}
 	
 	
@@ -901,12 +899,10 @@ public class Cinema {
 	/**
 	 * METODO per rimuovere una strategia di sconto dalla lista, dato il suo tipo
 	 * @param td
+	 * @throws DiscountNotFoundException 
 	 */
-	public void removeDiscount(TypeOfDiscounts td) {
-		for(Discount d : allDiscounts) {
-			if(d.getTypeOfDiscount() == td)
-				allDiscounts.remove(d);
-		}
+	public void removeDiscount(TypeOfDiscounts td) throws DiscountNotFoundException {
+		allDiscounts.remove(getDiscountByStrategy(td));
 	}
 	
 	
@@ -924,6 +920,30 @@ public class Cinema {
 		return allTypeOfDiscounts;
 	}
 
+	
+	/**
+	 * METODO per farsi dare uno sconto data la sua strategia
+	 * @param t
+	 * @return
+	 * @throws DiscountNotFoundException 
+	 */
+	public Discount getDiscountByStrategy(TypeOfDiscounts t) throws DiscountNotFoundException {
+		Discount discount = null;
+		for (Discount d : allDiscounts) {
+			if (d.getTypeOfDiscount() == t) {
+				 discount = d;
+			}
+		}
+		if (discount == null) throw new DiscountNotFoundException(t);
+		else return discount;
+	}
+	
+	
+	public String getDiscountStrategyDescription(TypeOfDiscounts t) throws DiscountNotFoundException {
+		return getDiscountByStrategy(t).toString();
+	}
+	
+	
 	/** METODO per farsi dire la password dell'admin */
 	public String getAdminPassword() {
 		return adminPassword;
