@@ -605,6 +605,14 @@ public class Cinema {
 	}
 	
 	
+	/** METODO per creare un nuovo coupon dalla classe cinema */
+	public long createCoupon(double price) {
+		Coupon c = new Coupon(price);
+		coupons.add(c);
+		return c.getProgressive();
+	}
+	
+	
 	/**
 	 * METODO per aggiungere una sala del cinema
 	 * 

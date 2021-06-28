@@ -42,6 +42,7 @@ import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.util.FreeAnotherPersonSeatException;
 import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
@@ -81,7 +82,6 @@ public class Reservation {
 	 */
 	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
-	@SuppressWarnings("unused")
 	private LocalDate purchaseDate;
 	private Spectator purchaser;
 	private ArrayList<PhysicalSeat> seats;
@@ -106,6 +106,7 @@ public class Reservation {
 		seats = new ArrayList<PhysicalSeat>();
 		paymentCard = null;
 		reportLocation = null;
+		coupon = null;
 		numberPeopleUntilMinAge = 0;
 		numberPeopleOverMaxAge = 0;
 		this.rd = rd;
@@ -189,9 +190,15 @@ public class Reservation {
 	/**
 	 * METODO per aggiungere un coupon dato il suo progressivo
 	 * @param coupon				 Coupon
+	 * @throws CouponAleadyUsedException 
 	 */
-	public void setCoupon(Coupon coupon) {
-		this.coupon = coupon;
+	public void setCoupon(Coupon coupon) throws CouponAleadyUsedException {
+		if (coupon == null) ;
+		else {
+			if (!coupon.isUsed())
+				this.coupon = coupon;
+			else throw new CouponAleadyUsedException(coupon.getProgressive());
+		}
 	}
 	
 	
@@ -558,6 +565,12 @@ public class Reservation {
 	}
 
 
+	/** METODO per restituire la data in cui è stata creata la prenotazione */
+	public LocalDate getDate() {
+		return purchaseDate;
+	}
+	
+	
 	/** METODO per impostare la proiezione della prenotazione*/
 	public void setProjection(Projection projection) {
 		this.projection = projection;

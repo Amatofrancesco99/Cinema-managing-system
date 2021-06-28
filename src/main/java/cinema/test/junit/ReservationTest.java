@@ -2,6 +2,7 @@ package cinema.test.junit;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -9,15 +10,24 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import cinema.controller.Cinema;
+import cinema.controller.util.ReservationNotExistsException;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.payment.methods.paymentCard.PaymentCard;
+import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
+import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.util.FreeAnotherPersonSeatException;
+import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
+import cinema.model.reservation.util.ReservationHasNoSeatException;
 import cinema.model.reservation.util.SeatAlreadyTakenException;
+import cinema.model.reservation.util.SeatTakenTwiceException;
 
 
 /** BREVE DESCRIZIONE CLASSE ReservationTest
@@ -46,6 +56,7 @@ public class ReservationTest {
 
 	private static Reservation r;
 	private static Cinema myCinema = new Cinema();
+	private static ArrayList<Projection> projections;
 	
 	/** 
 	 * METODO per poter effettuare l'impostazione del nostro sistema, creando gli input
@@ -80,13 +91,34 @@ public class ReservationTest {
 				genres, directors, cast, 5, 182,
 				"https://images-na.ssl-images-amazon.com/images/I/71HyTegC0SL._AC_SY879_.jpg",
 				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
-		r.setProjection(new Projection(109, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5,	room));
+		
+		projections = new ArrayList<Projection>();
+		projections.add(new Projection(109, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5,	room));
+		r.setProjection(projections.get(0));
 		
 		r.addSeat(0, 0);
 		r.addSeat(0, 1);
 		r.addSeat(0, 2);
 	}
 
+	
+	// Test sull'assegnamento progressivo di una prenotazione
+	@Test
+	public void testProgressiveAssignment() throws ReservationNotExistsException {
+		final int STOP = 3;
+		for (int i = 1; i < STOP; i++) {
+			myCinema.createReservation();
+		}
+		assertEquals(STOP, myCinema.getReservation(STOP).getProgressive());
+	}
+	
+	
+	// Test data di creazione nuova prenotazione
+	@Test
+	public void testPurchaseDate() throws ReservationNotExistsException {
+		assertEquals(LocalDate.now(),myCinema.getReservation(myCinema.createReservation()).getDate());
+	}
+	
 	
 	// Test di occupazione posti, qualora ce ne fossero alcuni già occupati da qualcun altro
 	@Test
@@ -108,16 +140,65 @@ public class ReservationTest {
 	}
 	
 	
+	// Test di occupazione dei posti (scegliere un posto non presente in sala)
+	@Test
+	public void testRoomSeatNotExists() {
+		int error = 0;
+		int nCols = r.getProjection().getRoom().getNumberCols();
+		int nRows = r.getProjection().getRoom().getNumberRows();
+		try {
+			r.addSeat(nRows + 2 , nCols + 8);
+		} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException
+				| FreeAnotherPersonSeatException e) {
+			error ++;
+		}
+		assertEquals(1,error);
+	}
+	
+	
+	// Test sui coupon
+	@Test
+	public void testCoupon() {
+		// Coupon utilizzato una sola volta
+		long c1 = myCinema.createCoupon(2);
+		try {
+			r.setCoupon(myCinema.getCoupon(c1));
+			assertEquals(23 , r.getFullPrice() - myCinema.getCoupon(c1).getDiscount(),0);
+		} catch (CouponNotExistsException | CouponAleadyUsedException e) {
+			e.toString();
+		}
+		try {
+			r.setPaymentCard(new PaymentCard());
+			r.buy();
+		} catch (NumberFormatException | SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException
+				| ReservationHasNoSeatException | ReservationHasNoPaymentCardException | PaymentErrorException e) {
+			e.toString();
+		}
+		
+		// Cerco di riutilizzare lo stesso coupon in due reservation diverse
+		try {
+			Reservation newReservation = myCinema.getReservation(myCinema.createReservation());
+			newReservation.setProjection(projections.get(0));
+			newReservation.addSeat(2, 2); // occupo un nuovo posto
+			newReservation.setCoupon(myCinema.getCoupon(c1));
+			assertEquals(12.50, newReservation.getTotal(),0);
+		} catch (ReservationNotExistsException | CouponNotExistsException | SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException | CouponAleadyUsedException e) {
+			e.toString();
+		}
+		
+	}
+	
+	
 	// Test sui prezzi, usando lo sconto per età
 	@Test
-	public void testPrices() {
-		assertEquals(12.50*2, r.getFullPrice(),0.25);
+	public void testPrices() throws CouponAleadyUsedException {
+		assertEquals(12.50*2, r.getFullPrice(),0);
 		// uso lo sconto per età
 		try {
 			r.setNumberPeopleUntilMinAge(1);
 			r.setNumberPeopleOverMaxAge(0);
 		} catch (InvalidNumberPeopleValueException e) {}
-		assertEquals((12.50*2 - 1.875),r.getTotal(),0.25);
+		assertEquals(12.50*2 - 1.87 - r.getCoupon().getDiscount(),r.getTotal(),0);
 	}
 	
 	
