@@ -1,12 +1,10 @@
 package cinema.model.payment.methods.paymentCard;
 
-import java.time.YearMonth;
+import java.time.YearMonth; 
 import java.util.Random;
 
 import cinema.model.payment.Payment;
-import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
-import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
-import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
+import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 
 /** BREVE DESCRIZIONE PAYMENTCARD
  * 
@@ -25,48 +23,49 @@ public class PaymentCard implements Payment{
 	 * @param ccv		 		Codice
 	 * @param expirationDate	Data di scadenza (Anno/Mese)
 	 */
-	private final int MIN_DIGIT = 16;
+	private static final int CREDIT_CARD_NUMBER_OF_DIGITS = 16;
+	private static final int CVV_NUMBER_OF_DIGITS = 3;
 	@SuppressWarnings("unused")
 	private String owner;
 	@SuppressWarnings("unused")
 	private String number;
 	@SuppressWarnings("unused")
-	private String ccv;
+	private String cvv;
 	@SuppressWarnings("unused")
 	private YearMonth expirationDate;
 	
 	/** 
 	 * METODO per impostare il numero della carta
 	 * @param number
-	 * @throws InvalidCreditCardNumberException
+	 * @throws PaymentCardException
 	 */
-	public void setNumber(String number) throws InvalidCreditCardNumberException {
-		if (number.length() != MIN_DIGIT)
-			throw new InvalidCreditCardNumberException();
-		else this.number = number.replaceAll("[\\D]", "");
+	public void setNumber(String number) throws PaymentCardException {
+		if (number.length() != CREDIT_CARD_NUMBER_OF_DIGITS)
+			throw new PaymentCardException("Il numero della carta di credito inserito non è valido, sono richieste " + CREDIT_CARD_NUMBER_OF_DIGITS + " cifre.");
+		else this.number = number;
 	}
 	
 	
 	/**
 	 * METODO per inserire il CCV della carta
 	 * @param ccv
-	 * @throws InvalidCCVException
+	 * @throws PaymentCardException
 	 */
-	public void setCCV(String ccv) throws InvalidCCVException {
-		if (ccv.length() != 3)
-			throw new InvalidCCVException();
-		else this.ccv = ccv.replaceAll("[\\D]", "");
+	public void setCvv(String cvv) throws PaymentCardException {
+		if(cvv.length() != CVV_NUMBER_OF_DIGITS)
+			throw new PaymentCardException("Il CVV inserito non è valido, sono richieste " + CVV_NUMBER_OF_DIGITS + " cifre.");
+		this.cvv = cvv;	
 	}
 	
 	
 	/**
 	 * METODO per impostare la data di scadenza (Anno/Mese) della carta di credito
 	 * @param expirationDate
-	 * @throws ExpiredCreditCardException
+	 * @throws PaymentCardException
 	 */
-	public void setExpirationDate(YearMonth expirationDate) throws ExpiredCreditCardException {
+	public void setExpirationDate(YearMonth expirationDate) throws PaymentCardException {
 		if (!(expirationDate.isAfter(YearMonth.now())))
-			throw new ExpiredCreditCardException();
+			throw new PaymentCardException("La carta di credito inserita è scaduta.");
 		else this.expirationDate = expirationDate;
 	}
 	

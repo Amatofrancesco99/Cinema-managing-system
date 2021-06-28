@@ -11,9 +11,7 @@ import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomDimensionsException;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
-import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
-import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
-import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
+import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
@@ -835,7 +833,7 @@ public class Cinema {
 	 * @param number
 	 * @throws InvalidCreditCardNumberException
 	 */
-	public void setPaymentCardNumber(PaymentCard p, String number) throws InvalidCreditCardNumberException {
+	public void setPaymentCardNumber(PaymentCard p, String number) throws PaymentCardException {
 		p.setNumber(number);
 	}
 
@@ -848,7 +846,7 @@ public class Cinema {
 	 * @throws ExpiredCreditCardException
 	 */
 	public void setPaymentCardExpirationDate(PaymentCard p, YearMonth expirationDate)
-			throws ExpiredCreditCardException {
+			throws PaymentCardException {
 		p.setExpirationDate(expirationDate);
 	}
 
@@ -860,8 +858,8 @@ public class Cinema {
 	 * @param ccv
 	 * @throws InvalidCCVException
 	 */
-	public void setPaymentCardCCV(PaymentCard p, String ccv) throws InvalidCCVException {
-		p.setCCV(ccv);
+	public void setPaymentCardCvv(PaymentCard p, String cvv) throws PaymentCardException {
+		p.setCvv(cvv);
 	}
 
 	

@@ -14,9 +14,7 @@ import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
-import cinema.model.payment.methods.paymentCard.util.ExpiredCreditCardException;
-import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
-import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
+import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
@@ -217,8 +215,8 @@ public class CLIUserMain {
 			try {
 				myCinema.setPaymentCardNumber(p, number);
 				end = true;
-			} catch (InvalidCreditCardNumberException e) {
-				e.toString();
+			} catch (PaymentCardException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 		end = false;
@@ -235,22 +233,21 @@ public class CLIUserMain {
 				if (expirationDate != null)
 					myCinema.setPaymentCardExpirationDate(p, expirationDate);
 					end = true;
-			} catch (ExpiredCreditCardException e) {
-				e.toString();
-				System.out.println("...Inserisci una nuova carta...");
+			} catch (PaymentCardException e) {
+				System.out.println(e.getMessage());
 				insertPaymentCardInfo(r);
 			}
 		}
 		end = false;
 		while (!end) {
-			System.out.println("\nInserisci il ccv: ");
-			String ccv = keyboard.next();
+			System.out.println("\nInserisci il cvv: ");
+			String cvv = keyboard.next();
 			System.out.println("\n");
 			try {
-				myCinema.setPaymentCardCCV(p, ccv);
+				myCinema.setPaymentCardCvv(p, cvv);
 				end = true;
-			} catch (InvalidCCVException e) {
-				e.toString();
+			} catch (PaymentCardException e) {
+				System.out.println(e.getMessage());
 			}
 		}	
 		try {
