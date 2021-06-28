@@ -18,6 +18,7 @@ import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.InvalidPriceException;
+import cinema.model.projection.util.InvalidProjectionDateTimeException;
 import cinema.model.projection.util.InvalidProjectionIdException;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
@@ -377,6 +378,16 @@ public class Cinema {
 	 */
 	public void setProjectionRoom(Projection p, long roomId) throws RoomNotExistsException {
 		p.setRoom(getRoom(roomId));
+	}
+	
+	/** METODO per impostare la data e l'ora di una proiezione
+	 * 
+	 * @param p
+	 * @param projectionDateTime
+	 * @throws InvalidProjectionDateTimeException
+	 */
+	public void setProjectionDateTime(Projection p, LocalDateTime projectionDateTime) throws InvalidProjectionDateTimeException {
+		p.setDateTime(projectionDateTime);
 	}
 	
 	

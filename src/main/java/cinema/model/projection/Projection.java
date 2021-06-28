@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.projection.util.InvalidPriceException;
+import cinema.model.projection.util.InvalidProjectionDateTimeException;
 import cinema.model.projection.util.InvalidProjectionIdException;
 import cinema.model.Movie;
 import cinema.model.cinema.PhysicalSeat;
@@ -62,26 +63,29 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	
-	/* COSTRUTTORE DI DEFAULT */
+	/** COSTRUTTORE DI DEFAULT */
 	public Projection() {
 		this.seats = new ArrayList<ArrayList<ProjectionSeat>>();
 	}
 
 	
-	/*METODO per impostare l'id di una proiezione */
+	/**	METODO per impostare l'id di una proiezione
+	 * @param id
+	 * @throws InvalidProjectionIdException
+	 */
 	public void setId(int id) throws InvalidProjectionIdException {
 		if (id < 0) throw new InvalidProjectionIdException();
 		this.id = id;
 	}
 
 	
-	/*METODO per associare un film alla proiezione */
+	/** METODO per associare un film alla proiezione */
 	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
 
 
-	/*METODO per aggiungere la sala in cui è proiettato il film*/
+	/** METODO per aggiungere la sala in cui è proiettato il film*/
 	public void setRoom(Room room) {
 		this.room = room;
 		if (seats.size() != 0) {
@@ -97,13 +101,22 @@ public class Projection implements Comparable<Projection> {
 	}
 
 
-	/*METODO per aggiungere la data della proiezione*/
-	public void setDateTime(LocalDateTime dateTime) {
+	/** METODO per aggiungere la data della proiezione
+	 * @param dateTime
+	 * @throws InvalidProjectionDateTimeException
+	 */
+	public void setDateTime(LocalDateTime dateTime) throws InvalidProjectionDateTimeException {
+		if (dateTime.isBefore(LocalDateTime.now()))
+			throw new InvalidProjectionDateTimeException();
 		this.dateTime = dateTime;
 	}
 
 
-	/*METODO per aggiungere il prezzo alla proiezione*/
+	/** METODO per aggiungere il prezzo alla proiezione
+	 * 
+	 * @param price
+	 * @throws InvalidPriceException
+	 */
 	public void setPrice(double price) throws InvalidPriceException {
 		if (price <= 0) throw new InvalidPriceException();
 		this.price = Math.round(price * 100.0)/100.0;
