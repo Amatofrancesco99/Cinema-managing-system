@@ -219,51 +219,51 @@ public class Cinema {
 		}
 
 		// Test projections
-		Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-06-04T22:30:00"), 12.5,
+		Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-08-01T22:30:00"), 12.5,
 				rooms.get(0));
-		Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-06-01T20:15:00"), 12.5,
+		Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-08-02T20:15:00"), 12.5,
 				rooms.get(0));
-		Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-06-01T22:30:00"), 12.5,
+		Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-08-03T22:30:00"), 12.5,
 				rooms.get(0));
-		Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5,
+		Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-08-04T22:30:00"), 12.5,
 				rooms.get(0));
-		Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-06-02T23:30:00"), 12.5,
+		Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-08-05T23:30:00"), 12.5,
 				rooms.get(0));
-		Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-06-02T19:00:00"), 12.5,
+		Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-08-05T19:00:00"), 12.5,
 				rooms.get(0));
-		Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-06-03T08:05:00"), 12.5,
+		Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-08-04T08:05:00"), 12.5,
 				rooms.get(0));
-		Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"),
+		Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T22:30:00"),
 				12.5, rooms.get(1));
-		Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T23:30:00"),
+		Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T23:30:00"),
 				12.5, rooms.get(1));
-		Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-06-02T19:00:00"),
+		Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T19:00:00"),
 				12.5, rooms.get(1));
-		Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
+		Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-08-03T08:05:00"),
 				12.5, rooms.get(1));
-		Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
+		Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"),
 				8.5, rooms.get(1));
-		Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-06-06T22:30:00"),
+		Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-08-06T22:30:00"),
 				8.5, rooms.get(0));
-		Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-06-02T23:30:00"),
+		Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-08-02T23:30:00"),
 				8.5, rooms.get(0));
-		Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-06-01T19:00:00"),
+		Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-08-01T19:00:00"),
 				8.5, rooms.get(0));
-		Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-06-03T08:05:00"),
+		Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"),
 				8.5, rooms.get(0));
-		Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-22T23:30:00"),
+		Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-22T23:30:00"),
 				8.5, rooms.get(0));
-		Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-21T19:00:00"),
+		Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-21T19:00:00"),
 				8.5, rooms.get(0));
-		Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-06-23T08:05:00"),
+		Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-23T08:05:00"),
 				8.5, rooms.get(0));
-		Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-07-01T08:05:00"), 8.5,
+		Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-08-01T08:05:00"), 8.5,
 				rooms.get(0));
-		Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-07-02T23:30:00"), 8.5,
+		Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
 				rooms.get(0));
-		Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-07-01T19:00:00"), 8.5,
+		Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
 				rooms.get(0));
-		Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-07-02T08:05:00"), 8.5,
+		Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-08-02T08:05:00"), 8.5,
 				rooms.get(0));
 
 		this.cinemaProjections.add(p1);
@@ -490,7 +490,7 @@ public class Cinema {
 	public List<Movie> getCurrentlyAvailableMovies() {
 		List<Movie> movies = new ArrayList<Movie>();
 		for (Projection p : cinemaProjections) {
-			if (p.getDateTime().isAfter(LocalDateTime.now()))
+			if ((p.getDateTime()!=null) && (p.getDateTime().isAfter(LocalDateTime.now())))
 			{
 				boolean alreadyExists = false;
 				for (Movie m : movies) {
