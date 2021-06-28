@@ -34,7 +34,7 @@ public class ReservationTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		r = new Cinema().createReservation();
+		r = new Cinema().getReservation(new Cinema().createReservation());
 		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		Room room = new Room(3,3);
 		

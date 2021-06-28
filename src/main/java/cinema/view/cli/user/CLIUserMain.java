@@ -9,6 +9,7 @@ import cinema.controller.util.MovieNoLongerProjectedException;
 import cinema.controller.util.NoMovieException;
 import cinema.controller.util.NoProjectionException;
 import cinema.controller.util.ProjectionIsNoLongerProjectedException;
+import cinema.controller.util.ReservationNotExistsException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
@@ -18,7 +19,6 @@ import cinema.model.payment.methods.paymentCard.util.InvalidCCVException;
 import cinema.model.payment.methods.paymentCard.util.InvalidCreditCardNumberException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
-import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
 import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
 import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
@@ -65,7 +65,7 @@ public class CLIUserMain {
 		
 		// CREAZIONE DI UNA NUOVA RESERVATION E INSERIMENTO DATI
 		printReservationHeader();
-		Reservation r = myCinema.createReservation();
+		long r = myCinema.createReservation();
 		int projectionID = selectProjection();	// Selezione di una specifica proiezione
 		setReservationProjection(r, projectionID);
 		showProjectionSeats(r);	 	// Disposizione posti in sala e posti già occupati
@@ -92,7 +92,7 @@ public class CLIUserMain {
 	}
 
 	
-	private static void sendEmail(Reservation r) {
+	private static void sendEmail(long r) {
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("\nSPEDIZIONE EMAIL \n");
 		//myCinema.sendAnEmail(r);
@@ -101,7 +101,7 @@ public class CLIUserMain {
 	}
 
 	
-	private static void buy(Reservation r){
+	private static void buy(long r){
 		boolean end = false;
 		boolean error = false;
 		System.out.println("-----------------------------------------------------\n");
@@ -125,7 +125,9 @@ public class CLIUserMain {
 			} catch (SeatAlreadyTakenException e) {
 				e.toString();
 				error = true;
-			}	
+			} catch (NumberFormatException | ReservationNotExistsException e) {
+				e.toString();
+			} 
 		}
 		if(error) {
 			System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
@@ -137,7 +139,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertCouponInfo(Reservation r) {
+	private static void insertCouponInfo(long r) {
 		boolean end = false;
 		System.out.println("\n\n3.4- INSERIMENTO COUPON \n");
 		while (!end) {
@@ -151,7 +153,7 @@ public class CLIUserMain {
 				try {
 					myCinema.setReservationCoupon(r, coupon);
 					end = true;
-				} catch (CouponNotExistsException | CouponAleadyUsedException e) {
+				} catch (CouponNotExistsException | CouponAleadyUsedException | ReservationNotExistsException e) {
 					e.toString();
 				}
 			}
@@ -165,11 +167,11 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertSpectatorsInfo(Reservation r) {
+	private static void insertSpectatorsInfo(long r) {
 		try {
 			myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
 			myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
-		} catch (InvalidNumberPeopleValueException e1){}	
+		} catch (InvalidNumberPeopleValueException | ReservationNotExistsException e1){}	
 		boolean end = false;
 		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
 		while (!end) {
@@ -180,7 +182,7 @@ public class CLIUserMain {
 			int nMin = Integer.parseInt(n1);
 			try {
 				myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
-			} catch (InvalidNumberPeopleValueException | NumberFormatException e) {
+			} catch (InvalidNumberPeopleValueException | NumberFormatException | ReservationNotExistsException e) {
 				e.toString();
 			}
 			System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
@@ -189,14 +191,14 @@ public class CLIUserMain {
 			try {
 				myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
 				end = true;
-			} catch (InvalidNumberPeopleValueException | NumberFormatException e) {
+			} catch (InvalidNumberPeopleValueException | NumberFormatException | ReservationNotExistsException e) {
 				e.toString();
 			}		
 		}
 	}
 
 
-	private static void insertPaymentCardInfo(Reservation r) {
+	private static void insertPaymentCardInfo(long r) {
 		boolean end = false;
 		PaymentCard p = new PaymentCard();
 		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
@@ -251,11 +253,15 @@ public class CLIUserMain {
 				e.toString();
 			}
 		}	
-		myCinema.setReservationPaymentCard(r, p);
+		try {
+			myCinema.setReservationPaymentCard(r, p);
+		} catch (ReservationNotExistsException e) {
+			e.toString();
+		}
 	}
 
 
-	private static void insertPersonalData(Reservation r) {
+	private static void insertPersonalData(long r) {
 		boolean end = false;
 		System.out.println("\n3.1- INSERIMENTO DATI PERSONALI \n");
 		while (!end) {
@@ -277,14 +283,14 @@ public class CLIUserMain {
 			try {
 				myCinema.setReservationPurchaser(r, name, surname, email);
 				end = true;
-			} catch (InvalidSpectatorInfoException e) {
+			} catch (InvalidSpectatorInfoException | ReservationNotExistsException e) {
 				e.toString();
 			}
 		}
 	}
 
 	
-	private static void addSeatsToReservation(Reservation r) {
+	private static void addSeatsToReservation(long r) {
 		boolean end = false;
 		do {
 			boolean validSeat = false;
@@ -303,7 +309,7 @@ public class CLIUserMain {
 				try {
 					myCinema.addSeatToReservation(r, riga, colonna);
 					validSeat = true;
-				} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException e) {
+				} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException | ReservationNotExistsException e) {
 					e.toString();
 				} 
 			} while (!validSeat);
@@ -320,32 +326,34 @@ public class CLIUserMain {
 	}
 
 
-	private static void showProjectionSeats(Reservation r) {
+	private static void showProjectionSeats(long r) {
 			System.out.println("\n2- SELEZIONE POSTO/I\n");
 			System.out.println("Disposizione sala e posti liberi.");
 			System.out.println("I posti segnati con i trattini sono già occupati.\n");
 			System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
-			for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
-				for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
-					try {
-						if (!myCinema.checkIfReservationProjectionSeatIsAvailable(r, i, j)){
-							System.out.print(" ------ ");
-						}
-						else 
-							System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
-					} catch (InvalidRoomSeatCoordinatesException e) {
-				  }
+			try {
+				for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
+					for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
+						try {
+							if (!myCinema.checkIfReservationProjectionSeatIsAvailable(r, i, j)){
+								System.out.print(" ------ ");
+							}
+							else 
+								System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
+						} catch (InvalidRoomSeatCoordinatesException e) {
+					  }
+					}
+					System.out.println("");
 				}
-				System.out.println("");
-			}
+			} catch (ReservationNotExistsException e) {}
 	}
 
 
-	private static void setReservationProjection(Reservation r, int projectionId) {
+	private static void setReservationProjection(long r, int projectionId) {
 		System.out.println("\n");
 		try {
 			myCinema.setReservationProjection(r, projectionId);
-		} catch (NoProjectionException e) {
+		} catch (NoProjectionException | ReservationNotExistsException e) {
 			e.toString();
 		}
 	}

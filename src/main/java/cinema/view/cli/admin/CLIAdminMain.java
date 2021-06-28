@@ -86,7 +86,7 @@ public class CLIAdminMain {
 					System.out.println("Inserisci il numero della proiezione che vuoi rimuovere: ");
 					int projectionId = Integer.parseInt(keyboard.nextLine());
 					try {
-						myCinema.removeProjection(myCinema.getProjection(projectionId));
+						myCinema.removeProjection(projectionId);
 					} catch (NoProjectionException e) {
 						e.toString();
 					}
@@ -132,13 +132,11 @@ public class CLIAdminMain {
 			if (choice.toUpperCase().equals("Y")) {
 				boolean insertingEnd = false;
 				while (!insertingEnd) {
-					Projection p = new Projection();
-					selectProjectionID(p);
+					int p = selectProjectionID();
 					selectProjectionMovie(p);
 					selectProjectionRoom(p);
 					selectProjectionDateTime(p);
 					selectProjectionPrice(p);
-					myCinema.addProjection(p);
 					insertingEnd = true;
 					System.out.println("\n\nVuoi inserire nuove proiezioni? (Y/N) ");
 					String c = keyboard.nextLine();
@@ -157,7 +155,7 @@ public class CLIAdminMain {
 	}
 
 	
-	private static void selectProjectionDateTime(Projection p) {
+	private static void selectProjectionDateTime(int p) {
 		boolean end = false;
 		LocalDateTime projectionDateTime = null;
 		while (!end) {
@@ -180,14 +178,14 @@ public class CLIAdminMain {
 					myCinema.setProjectionDateTime(p,projectionDateTime);
 					end = true;
 				}
-			} catch (InvalidProjectionDateTimeException e) {
+			} catch (InvalidProjectionDateTimeException | NoProjectionException e) {
 				e.toString();
 			}
 		}
 	}
 
 
-	private static void selectProjectionPrice(Projection p) {
+	private static void selectProjectionPrice(int p) {
 		boolean end = false;
 		while(!end) {
 			System.out.println("\nInserisci il prezzo della proiezione: ");
@@ -196,14 +194,14 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionPrice(p,price);
 				end = true;
-			} catch (InvalidPriceException e) {
+			} catch (InvalidPriceException | NoProjectionException e) {
 				e.toString();
 			}
 		}
 	}
 
 
-	private static void selectProjectionRoom(Projection p) {
+	private static void selectProjectionRoom(int p) {
 		System.out.println("\n\nLista delle sale del cinema: ");
 		for (Room r : myCinema.getAllRooms())
 			System.out.println(r.toString());
@@ -215,14 +213,14 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionRoom(p,roomId);
 				end = true;
-			} catch (RoomNotExistsException e) {
+			} catch (RoomNotExistsException | NoProjectionException e) {
 				e.toString();
 			}
 		}
 	}
 
 
-	private static void selectProjectionMovie(Projection p) {
+	private static void selectProjectionMovie(int p) {
 		System.out.println("\n\nLista dei film disponibili: ");
 		// TODO: change this method with something like:
 		// 		 myCinema.getAllMovies(int thisYear or a limited range)
@@ -238,26 +236,28 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionMovie(p,movieId);
 				end = true;
-			} catch (NoMovieException e) {
+			} catch (NoMovieException | NoProjectionException e) {
 				e.toString();
 			}
 		}
 	}
 
 	
-	private static void selectProjectionID(Projection p) {
+	private static int selectProjectionID() {
 		boolean end = false;
+		int projectionId = -1;
 		while (!end) {
 			System.out.println("\nInserisci l'id della proiezione da inserire: ");
 			String n = keyboard.next();
-			int projectionId = Integer.parseInt(n);
+			projectionId = Integer.parseInt(n);
 			try {
-				myCinema.setProjectionID(p, projectionId);
+				myCinema.createProjectionWithID(projectionId);
 				end = true;
 			} catch (ProjectionIDAlreadyUsedException | InvalidProjectionIdException e) {
 				e.toString();
 			}
 		}
+		return projectionId;
 	}
 
 	

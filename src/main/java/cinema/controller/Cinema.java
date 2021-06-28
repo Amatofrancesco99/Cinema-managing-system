@@ -56,22 +56,23 @@ public class Cinema {
 	/**
 	 * ATTRIBUTI
 	 * 
-	 * @param name              Nome
-	 * @param city              Città
-	 * @param country           Paese
-	 * @param zipCode           Codice comunale
-	 * @param address           Indirizzo (Via, numero civico)
-	 * @param logoURL           Logo del cinema
-	 * @param email             E-mail, utile per inviare report al cliente con i
-	 *                          diversi dati riferiti alla specifica prenotazione,
-	 *                          effettuata da quest ultimo
-	 * @param password          Password associata all'indirizzo email
-	 * @param adminPassword     Password dell'amministratore del cinema
-	 * @param rooms             List: comprende tutte le sale del cinema
-	 * @param cinemaProjections List: comprende tutte le proiezioni fatte dal cinema
-	 * @param coupon            List: comprende tutti i coupon emessi dal cinema
-	 * @param cinemaDiscount    Sconto attivo
-	 * @param allDiscounts      Tutti gli sconti applicabili
+	 * @param name              	Nome
+	 * @param city              	Città
+	 * @param country           	Paese
+	 * @param zipCode           	Codice comunale
+	 * @param address           	Indirizzo (Via, numero civico)
+	 * @param logoURL           	Logo del cinema
+	 * @param email             	E-mail, utile per inviare report al cliente con i
+	 *                          	diversi dati riferiti alla specifica prenotazione,
+	 *                          	effettuata da quest ultimo
+	 * @param password          	Password associata all'indirizzo email
+	 * @param adminPassword     	Password dell'amministratore del cinema
+	 * @param rooms             	List: comprende tutte le sale del cinema
+	 * @param cinemaProjections 	List: comprende tutte le proiezioni fatte dal cinema
+	 * @param cinemaReservations 	List: comprende tutte le prenotazioni del cinema
+	 * @param coupon            	List: comprende tutti i coupon emessi dal cinema
+	 * @param cinemaDiscount    	Sconto attivo
+	 * @param allDiscounts      	Tutti gli sconti applicabili
 	 */
 	private static String name;
 	private static String city;
@@ -84,6 +85,7 @@ public class Cinema {
 	private static String adminPassword;
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
+	private List<Reservation> cinemaReservations;
 	private List<Coupon> coupons;
 	private Discount cinemaDiscount;
 	private ArrayList<Discount> allDiscounts;
@@ -105,6 +107,7 @@ public class Cinema {
 		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
+		cinemaReservations = new ArrayList<Reservation>();
 		coupons = new ArrayList<Coupon>();
 		cinemaDiscount = new DiscountAge();
 		allDiscounts = new ArrayList<Discount>();
@@ -209,8 +212,8 @@ public class Cinema {
 
 		// Test room
 		try {
-			addRoom(new Room(5, 10));
-			addRoom(new Room(7, 10));
+			addCinemaRoom(5, 10);
+			addCinemaRoom(7, 10);
 		} catch (InvalidRoomDimensionsException e) {
 			e.printStackTrace();
 		}
@@ -307,19 +310,25 @@ public class Cinema {
 	 * 
 	 * @return reservation Nuova prenotazione creata
 	 */
-	public Reservation createReservation() {
-		return new Reservation(cinemaDiscount);
+	public long createReservation() {
+		Reservation r = new Reservation(cinemaDiscount);
+		cinemaReservations.add(r);
+		return r.getProgressive();
 	}
 
 	
-	/**
-	 * METODO per aggiungere una proiezione al cinema
+	/** METODO per farsi dare una prenotazione, dato il suo id
 	 * 
-	 * @param p Proiezione da aggiungere alla lista di proiezioni di cui il cinema
-	 *          dispone
+	 * @param progressive
+	 * @return
+	 * @throws ReservationNotExistsException
 	 */
-	public void addProjection(Projection p) {
-		cinemaProjections.add(p);
+	public Reservation getReservation(long progressive) throws ReservationNotExistsException {
+		for (Reservation r : cinemaReservations) {
+			if (r.getProgressive() == progressive)
+				return r;
+		}
+		throw new ReservationNotExistsException(progressive);
 	}
 
 	
@@ -328,9 +337,10 @@ public class Cinema {
 	 * 
 	 * @param p Proiezione da rimuovere alla lista di proiezioni di cui il cinema
 	 *          dispone
+	 * @throws NoProjectionException 
 	 */
-	public void removeProjection(Projection p) {
-		cinemaProjections.remove(p);
+	public void removeProjection(int p) throws NoProjectionException {
+		cinemaProjections.remove(getProjection(p));
 	}
 
 	
@@ -351,11 +361,13 @@ public class Cinema {
 	 * @throws ProjectionIDAlreadyUsedException
 	 * @throws InvalidProjectionIdException
 	 */
-	public void setProjectionID(Projection newProjection, int id) throws ProjectionIDAlreadyUsedException, InvalidProjectionIdException {
+	public void createProjectionWithID(int id) throws ProjectionIDAlreadyUsedException, InvalidProjectionIdException {
 		for (Projection p: cinemaProjections) {
 			if (p.getId() == id) throw new ProjectionIDAlreadyUsedException(id);
 		}
-		newProjection.setId(id);
+		Projection p = new Projection();
+		p.setId(id);
+		cinemaProjections.add(p);
 	}
 	
 	
@@ -364,9 +376,10 @@ public class Cinema {
 	 * @param p
 	 * @param movie
 	 * @throws NoMovieException 
+	 * @throws NoProjectionException 
 	 */
-	public void setProjectionMovie(Projection p, int movieId) throws NoMovieException {
-		p.setMovie(getMovie(movieId));
+	public void setProjectionMovie(int p, int movieId) throws NoMovieException, NoProjectionException {
+		getProjection(p).setMovie(getMovie(movieId));
 	}
 	
 	
@@ -375,19 +388,22 @@ public class Cinema {
 	 * @param p
 	 * @param roomId
 	 * @throws RoomNotExistsException
+	 * @throws NoProjectionException 
 	 */
-	public void setProjectionRoom(Projection p, long roomId) throws RoomNotExistsException {
-		p.setRoom(getRoom(roomId));
+	public void setProjectionRoom(int p, long roomId) throws RoomNotExistsException, NoProjectionException {
+		getProjection(p).setRoom(getRoom(roomId));
 	}
+	
 	
 	/** METODO per impostare la data e l'ora di una proiezione
 	 * 
 	 * @param p
 	 * @param projectionDateTime
 	 * @throws InvalidProjectionDateTimeException
+	 * @throws NoProjectionException 
 	 */
-	public void setProjectionDateTime(Projection p, LocalDateTime projectionDateTime) throws InvalidProjectionDateTimeException {
-		p.setDateTime(projectionDateTime);
+	public void setProjectionDateTime(int p, LocalDateTime projectionDateTime) throws InvalidProjectionDateTimeException, NoProjectionException {
+		getProjection(p).setDateTime(projectionDateTime);
 	}
 	
 	
@@ -396,9 +412,10 @@ public class Cinema {
 	 * @param p
 	 * @param price
 	 * @throws InvalidPriceException
+	 * @throws NoProjectionException 
 	 */
-	public void setProjectionPrice(Projection p, double price) throws InvalidPriceException {
-		p.setPrice(price);
+	public void setProjectionPrice(int p, double price) throws InvalidPriceException, NoProjectionException {
+		getProjection(p).setPrice(price);
 	}
 	
 	
@@ -593,9 +610,10 @@ public class Cinema {
 	 * 
 	 * @param r Sala del cinema da aggiungere, all'insieme delle sale del cinema
 	 *          stesso
+	 * @throws InvalidRoomDimensionsException 
 	 */
-	public void addRoom(Room r) {
-		rooms.add(r);
+	public void addCinemaRoom(int row, int col) throws InvalidRoomDimensionsException {
+		rooms.add(new Room(row,col));
 	}
 
 	
@@ -604,10 +622,11 @@ public class Cinema {
 	 * 
 	 * @param r Sala del cinema da rimuovere, dall'insieme delle sale del cinema
 	 *          stesso
+	 * @throws RoomNotExistsException 
 	 */
-	public void removeRoom(Room r) throws NoCinemaRoomsException {
+	public void removeRoom(long r) throws NoCinemaRoomsException, RoomNotExistsException {
 		if (rooms.size() > 0)
-			rooms.remove(r);
+			rooms.remove(getRoom(r));
 		else
 			throw new NoCinemaRoomsException(name, city, address);
 	}
@@ -689,6 +708,7 @@ public class Cinema {
 		throw new RoomNotExistsException(roomId);
 	}
 	
+	
 	/**
 	 * METODO per farsi dire le informazioni del luogo in cui il cinema è situato
 	 * 
@@ -705,9 +725,10 @@ public class Cinema {
 	 * @param r
 	 * @param projectionId
 	 * @throws NoProjectionException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationProjection(Reservation r, int projectionId) throws NoProjectionException {
-		r.setProjection(getProjection(projectionId));
+	public void setReservationProjection(long r, int projectionId) throws NoProjectionException, ReservationNotExistsException {
+		getReservation(r).setProjection(getProjection(projectionId));
 	}
 
 	
@@ -717,9 +738,10 @@ public class Cinema {
 	 * 
 	 * @param r
 	 * @return
+	 * @throws ReservationNotExistsException 
 	 */
-	public int getNumberColsReservationProjection(Reservation r) {
-		return r.getProjection().getRoom().getNumberCols();
+	public int getNumberColsReservationProjection(long r) throws ReservationNotExistsException {
+		return getReservation(r).getProjection().getRoom().getNumberCols();
 	}
 
 	
@@ -729,9 +751,10 @@ public class Cinema {
 	 * 
 	 * @param r
 	 * @return
+	 * @throws ReservationNotExistsException 
 	 */
-	public int getNumberRowsReservationProjection(Reservation r) {
-		return r.getProjection().getRoom().getNumberRows();
+	public int getNumberRowsReservationProjection(long r) throws ReservationNotExistsException {
+		return getReservation(r).getProjection().getRoom().getNumberRows();
 	}
 
 	
@@ -744,10 +767,11 @@ public class Cinema {
 	 * @param col
 	 * @return
 	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws ReservationNotExistsException 
 	 */
-	public boolean checkIfReservationProjectionSeatIsAvailable(Reservation r, int row, int col)
-			throws InvalidRoomSeatCoordinatesException {
-		return r.getProjection().checkIfSeatIsAvailable(row, col);
+	public boolean checkIfReservationProjectionSeatIsAvailable(long r, int row, int col)
+			throws InvalidRoomSeatCoordinatesException, ReservationNotExistsException {
+		return getReservation(r).getProjection().checkIfSeatIsAvailable(row, col);
 	}
 
 	
@@ -761,10 +785,11 @@ public class Cinema {
 	 * @throws InvalidRoomSeatCoordinatesException
 	 * @throws SeatTakenTwiceException
 	 * @throws FreeAnotherPersonSeatException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void addSeatToReservation(Reservation r, int row, int col) throws SeatAlreadyTakenException,
-			InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
-		r.addSeat(row, col);
+	public void addSeatToReservation(long r, int row, int col) throws SeatAlreadyTakenException,
+			InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException, ReservationNotExistsException {
+		getReservation(r).addSeat(row, col);
 	}
 
 	
@@ -776,10 +801,11 @@ public class Cinema {
 	 * @param surname
 	 * @param email
 	 * @throws InvalidSpectatorInfoException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationPurchaser(Reservation r, String name, String surname, String email)
-			throws InvalidSpectatorInfoException {
-		r.setPurchaser(new Spectator(name, surname, email));
+	public void setReservationPurchaser(long r, String name, String surname, String email)
+			throws InvalidSpectatorInfoException, ReservationNotExistsException {
+		getReservation(r).setPurchaser(new Spectator(name, surname, email));
 	}
 
 	
@@ -836,9 +862,10 @@ public class Cinema {
 	 * 
 	 * @param r
 	 * @param p
+	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationPaymentCard(Reservation r, PaymentCard p) {
-		r.setPaymentCard(p);
+	public void setReservationPaymentCard(long r, PaymentCard p) throws ReservationNotExistsException {
+		getReservation(r).setPaymentCard(p);
 	}
 
 	
@@ -849,9 +876,10 @@ public class Cinema {
 	 * @param r
 	 * @param n
 	 * @throws InvalidNumberPeopleValueException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationNumberPeopleUntilMinAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
-		r.setNumberPeopleUntilMinAge(n);
+	public void setReservationNumberPeopleUntilMinAge(long r, int n) throws InvalidNumberPeopleValueException, ReservationNotExistsException {
+		getReservation(r).setNumberPeopleUntilMinAge(n);
 	}
 
 	
@@ -863,9 +891,10 @@ public class Cinema {
 	 * @param r
 	 * @param n
 	 * @throws InvalidNumberPeopleValueException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationNumberPeopleOverMaxAge(Reservation r, int n) throws InvalidNumberPeopleValueException {
-		r.setNumberPeopleOverMaxAge(n);
+	public void setReservationNumberPeopleOverMaxAge(long r, int n) throws InvalidNumberPeopleValueException, ReservationNotExistsException {
+		getReservation(r).setNumberPeopleOverMaxAge(n);
 	}
 
 	
@@ -877,14 +906,15 @@ public class Cinema {
 	 * @param coupon
 	 * @throws CouponNotExistsException
 	 * @throws CouponAleadyUsedException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationCoupon(Reservation r, long progressive)
-			throws CouponNotExistsException, CouponAleadyUsedException {
+	public void setReservationCoupon(long r, long progressive)
+			throws CouponNotExistsException, CouponAleadyUsedException, ReservationNotExistsException {
 		Coupon coupon = getCoupon(progressive);
 		if (coupon.isUsed() == true) {
 			throw new CouponAleadyUsedException(progressive);
 		}
-		else r.setCoupon(coupon);
+		else getReservation(r).setCoupon(coupon);
 	}
 	
 	
@@ -898,11 +928,12 @@ public class Cinema {
 	 * @throws ReservationHasNoSeatException
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
+	 * @throws ReservationNotExistsException 
 	 */
-	public void buyReservation(Reservation r)
+	public void buyReservation(long r)
 			throws NumberFormatException, SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException,
-			ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
-		r.buy();
+			ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException, ReservationNotExistsException {
+		getReservation(r).buy();
 	}
 
 	
@@ -911,9 +942,10 @@ public class Cinema {
 	 * 
 	 * @param r
 	 * @return
+	 * @throws ReservationNotExistsException 
 	 */
-	public double getReservationTotalAmount(Reservation r) {
-		return r.getTotal();
+	public double getReservationTotalAmount(long r) throws ReservationNotExistsException {
+		return getReservation(r).getTotal();
 	}
 
 
@@ -923,9 +955,10 @@ public class Cinema {
 	 * sua prenotazione: film, posti prenotati, ora, ecc...)
 	 * 
 	 * @param r
+	 * @throws ReservationNotExistsException 
 	 */
-	public void sendAnEmail(Reservation r) {
-		r.sendEmail();
+	public void sendAnEmail(long r) throws ReservationNotExistsException {
+		getReservation(r).sendEmail();
 	}
 
 	
