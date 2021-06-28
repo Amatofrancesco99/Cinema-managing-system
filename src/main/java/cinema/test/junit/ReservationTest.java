@@ -13,6 +13,7 @@ import cinema.controller.Cinema;
 import cinema.controller.util.ReservationNotExistsException;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
@@ -67,7 +68,6 @@ public class ReservationTest {
 	public static void setUpBeforeClass() throws Exception {
 		myCinema.setCinemaDiscountStrategy(TypeOfDiscounts.AGE);
 		r = myCinema.getReservation(myCinema.createReservation());
-		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		Room room = new Room(3,3);
 		
 		ArrayList<String> genres, directors, cast;
@@ -102,7 +102,7 @@ public class ReservationTest {
 	}
 
 	
-	// Test sull'assegnamento progressivo di una prenotazione
+	/** Test sull'assegnamento progressivo di una prenotazione */
 	@Test
 	public void testProgressiveAssignment() throws ReservationNotExistsException {
 		final int STOP = 3;
@@ -113,14 +113,14 @@ public class ReservationTest {
 	}
 	
 	
-	// Test data di creazione nuova prenotazione
+	/** Test data di creazione nuova prenotazione */
 	@Test
 	public void testPurchaseDate() throws ReservationNotExistsException {
 		assertEquals(LocalDate.now(),myCinema.getReservation(myCinema.createReservation()).getDate());
 	}
 	
 	
-	// Test di occupazione posti, qualora ce ne fossero alcuni già occupati da qualcun altro
+	/** Test di occupazione posti, qualora ce ne fossero alcuni già occupati da qualcun altro */
 	@Test
 	public void testAlreadyTakenSeat() {
 		int error = 0;
@@ -140,7 +140,7 @@ public class ReservationTest {
 	}
 	
 	
-	// Test di occupazione dei posti (scegliere un posto non presente in sala)
+	/** Test di occupazione dei posti (scegliere un posto non presente in sala) */
 	@Test
 	public void testRoomSeatNotExists() {
 		int error = 0;
@@ -156,7 +156,7 @@ public class ReservationTest {
 	}
 	
 	
-	// Test sui coupon
+	/** Test sui coupon */
 	@Test
 	public void testCoupon() {
 		// Coupon utilizzato una sola volta
@@ -189,7 +189,7 @@ public class ReservationTest {
 	}
 	
 	
-	// Test sui prezzi, usando lo sconto per età
+	/** Test sui prezzi, usando lo sconto per età */
 	@Test
 	public void testPrices() throws CouponAleadyUsedException {
 		assertEquals(12.50*2, r.getFullPrice(),0);
@@ -202,9 +202,36 @@ public class ReservationTest {
 	}
 	
 	
-	// Test invio email
+	/** Test qualora si inserisca un numero di persone che hanno un età inferiore ad un
+	* età minima da cui partono gli sconti superiore al numero di persone della prenotazione
+	* stessa */
+	@Test 
+	public void testOnOtherSpectatorInfo() {
+		int error = 1;
+		try {
+			r.setNumberPeopleOverMaxAge(10);
+			r.setNumberPeopleUntilMinAge(-2);
+		} catch (InvalidNumberPeopleValueException e) {
+			error ++;
+		}
+		assertEquals(2,error);
+	}
+	
+	
+	/** Test di creazione del report */
+	public void testCreateReport() {
+		assertEquals(true, r.createReport());
+	}
+	
+	
+	/** Test invio email 
+	 * @throws InvalidSpectatorInfoException */
 	@Test
-	public void testSendEmail() {
-		// assertEquals(true, r.sendEmail());
+	public void testSendEmail() throws InvalidSpectatorInfoException {
+		// cambia i campi qui sotto, specialmente l'email, per poter testare l'invio
+		// del report contenente tutte le informazioni sulla prenotazione alla tua casella
+		// di posta personale
+		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
+		assertEquals(true, r.sendEmail());
 	}
 }
