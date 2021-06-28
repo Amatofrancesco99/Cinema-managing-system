@@ -12,29 +12,50 @@ import cinema.controller.Cinema;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
+import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.util.SeatAlreadyTakenException;
+
 
 /** BREVE DESCRIZIONE CLASSE ReservationTest
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * Le stesse osservazioni che abbiamo fatto sulla classe CinemaTest, all'interno del medesimo
- * package di questa classe, valgono ora (sia per quanto riguarda la descrizione, sia per quanto
- * riguarda la descrizione dei diversi metodi).
+ * Questa classe nasce con lo scopo specifico di effettuare il test di unità (tramite JUnit),
+ * ossia test effettuati su una classe specifica e dei suoi metodi, provando differenti
+ * input e verificando gli output in maniera automatica (confrontando i risultati attesi
+ * con quelli ottenuti), sulla classe Reservation, presente all'interno del model package.
+ * Anche se l'implementazione reale prevede l'utilizzo di dati presenti su un DB, per
+ * sfruttare il principio di persistenza dei dati (ad esempio dei Film, delle Sale, delle
+ * Proiezioni, ecc...) sono utilizzati oggetti istanza "finti" (mock), ossia oggetti
+ * che hanno la stessa interfaccia di oggetti esterni realmente utilizzati e che simulano le
+ * loro funzionalità. 
+ * Questo per evitare di dover effettuare attività preliminari di inserimento dati 
+ * all'interno del DB, il che potrebbe comportare eventuali problematiche (perdita dei dati), 
+ * un evento non molto gradito e una perdita di tempo, visto che i dati inseriti non sarebbero
+ * quelli veri, ma quelli ottenuti di fronte ad errori di inserimento da parte di utenti
+ * non particolarmente attenti/istruiti.
+ * Chiaramente potrebbe essere utile fare sessioni di "istruzioni" a chi vendiamo il 
+ * software, per poter fare in modo tale che inseriscano valori corretti all'interno del DB.
+ * 
  */
 public class ReservationTest {
 
 	private static Reservation r;
+	private static Cinema myCinema = new Cinema();
+	
 	/** 
 	 * METODO per poter effettuare l'impostazione del nostro sistema, creando gli input
 	 * e gli output previsti.
-	 * 
 	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		r = new Cinema().getReservation(new Cinema().createReservation());
+		myCinema.setCinemaDiscountStrategy(TypeOfDiscounts.AGE);
+		r = myCinema.getReservation(myCinema.createReservation());
 		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		Room room = new Room(3,3);
 		
@@ -67,17 +88,42 @@ public class ReservationTest {
 	}
 
 	
-	/**
-	 * METODO per effettuare il test sulla classe, usando gli oggetti istanziati e usando
-	 * questi ultimi all'interno di metodi specifici della classe presa in considerazione.
-	 * Inoltre viene effettuata l'asserzione, ossia viene confrontato il risultato previsto
-	 * con quello ottenuto dalla chiamata del metodo specifico.
-	 * Se l'asserzione è vera il test ha avuto successo, viceversa ha fallito.
-	 */
+	// Test di occupazione posti, qualora ce ne fossero alcuni già occupati da qualcun altro
 	@Test
-	public void test() {
-		// Test invio email
-		assertEquals(true, r.sendEmail());
+	public void testAlreadyTakenSeat() {
+		int error = 0;
+		try {
+			r.getProjection().takeSeat(0, 0);
+			r.takeSeat();
+		} catch (InvalidRoomSeatCoordinatesException | SeatAlreadyTakenException e) {
+			error = 1;
+		}
+		assertEquals(1, error);
+		
+		// Libero il posto usato per test
+		try {
+			r.getProjection().freeSeat(0, 0);
+		} catch (InvalidRoomSeatCoordinatesException e) {
+		}
 	}
-
+	
+	
+	// Test sui prezzi, usando lo sconto per età
+	@Test
+	public void testPrices() {
+		assertEquals(12.50*2, r.getFullPrice(),0.25);
+		// uso lo sconto per età
+		try {
+			r.setNumberPeopleUntilMinAge(1);
+			r.setNumberPeopleOverMaxAge(0);
+		} catch (InvalidNumberPeopleValueException e) {}
+		assertEquals((12.50*2 - 1.875),r.getTotal(),0.25);
+	}
+	
+	
+	// Test invio email
+	@Test
+	public void testSendEmail() {
+		// assertEquals(true, r.sendEmail());
+	}
 }

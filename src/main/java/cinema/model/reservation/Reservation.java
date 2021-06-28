@@ -435,7 +435,7 @@ public class Reservation {
 	 * @throws InvalidRoomSeatCoordinatesException
 	 * @throws SeatAlreadyTakenException
 	 */
-	private void takeSeat() throws InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException {		
+	public void takeSeat() throws InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException {		
 		for (int i = countTakenSeat; i<seats.size(); i++) {
 			String coordinates = projection.getSeatCoordinates(seats.get(i));
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
@@ -458,7 +458,7 @@ public class Reservation {
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
 	 */
-	private boolean pay() throws ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
+	public boolean pay() throws ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
 		if (getNSeats() > 0)
 		{
 			if (paymentCard == null) {
