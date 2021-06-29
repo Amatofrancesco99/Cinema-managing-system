@@ -32,9 +32,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">
+                        <a href="/movie-details?id=@(movie.getId())#" class="btn btn-primary" id="modal-alert-close-button" role="button">
                             Chiudi
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -368,9 +368,9 @@
                        data: $('#buy-form').serialize()
                     }).done((response) => {
                         if (response == 'ok') {
-                            showAlert(true, 'Acquisto effettuato', 'Acquisto effettuato correttamente.<br>Riceverai un\'e-mail a breve con la ricevuta di prenotazione da presentare all\'ingresso');
+                            showAlert(true, 'Acquisto completato. Grazie!', 'Acquisto effettuato correttamente.<br>Riceverai un\'e-mail a breve con la ricevuta di prenotazione da presentare all\'ingresso.');
                         } else {
-                            showAlert(false, 'Errore durante l\'acquisto', 'Impossibile effettuare l\'acquisto.');
+                            showAlert(false, 'Errore durante l\'acquisto', 'Errore durante il completamento dell\'acquisto.');
                         }
                     }).fail(() => {
                         // Alert the user if something went wrong during the request

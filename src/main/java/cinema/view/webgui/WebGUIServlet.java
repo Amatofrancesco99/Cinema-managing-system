@@ -147,13 +147,12 @@ public class WebGUIServlet extends HttpServlet {
 		String ccExpiration = req.getParameter("cc-expiration");
 		String ccCvv = req.getParameter("cc-cvv");
 
-		YearMonth ccExpirationDate = YearMonth.parse(ccExpiration, DateTimeFormatter.ofPattern("MM/yy"));
+		String response = "ok";
 
-		// Temporary test
 		try {
+			YearMonth ccExpirationDate = YearMonth.parse(ccExpiration, DateTimeFormatter.ofPattern("MM/yy"));
 			cinema.setReservationPurchaser(reservationId, name, surname, email);
 			cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
-
 			cinema.buyReservation(reservationId);
 			Thread emailThread = new Thread() {
 				@Override
@@ -168,8 +167,9 @@ public class WebGUIServlet extends HttpServlet {
 			};
 			emailThread.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			response = "error";
 		}
+		resp.getWriter().write(Rythm.render(response));
 	}
 
 }
