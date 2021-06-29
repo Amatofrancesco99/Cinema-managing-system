@@ -1,7 +1,7 @@
 @import cinema.controller.Cinema
 @import cinema.model.Movie
 @import cinema.model.cinema.Room
-@import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+@import cinema.model.cinema.util.RoomException;
 @import cinema.model.projection.Projection
 @import java.time.format.DateTimeFormatter
 @import java.time.format.TextStyle
@@ -75,7 +75,7 @@
                                                     seatIcon = "/static/img/seat-unavailable.svg";
                                                     seatStatus = "non disponibile";
                                                 }
-                                            } catch(InvalidRoomSeatCoordinatesException e) {
+                                            } catch(RoomException e) {
 
                                             }
                                         }
