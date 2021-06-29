@@ -16,9 +16,9 @@ import org.rythmengine.Rythm;
 
 import cinema.controller.Cinema;
 import cinema.controller.util.NoMovieException;
-import cinema.controller.util.NoProjectionException;
 import cinema.model.Movie;
 import cinema.model.projection.Projection;
+import cinema.model.projection.util.ProjectionException;
 
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
@@ -51,13 +51,13 @@ public class WebGUIServlet extends HttpServlet {
 			} else {
 				renderError(req, resp);
 			}
-		} catch (NoMovieException | NoProjectionException e) {
+		} catch (NoMovieException | ProjectionException e) {
 			renderError(req, resp);
 		}
 	}
 
 	protected void renderCheckout(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException, NoProjectionException {
+			throws ServletException, IOException, ProjectionException {
 		Projection projection = cinema.getProjection(Integer.parseInt(req.getParameter("id")));
 		resp.getWriter().write(Rythm.render("checkout.html", cinema, projection.getMovie(), projection));
 	}

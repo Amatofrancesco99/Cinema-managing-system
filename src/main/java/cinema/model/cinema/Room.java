@@ -1,9 +1,9 @@
 package cinema.model.cinema;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import cinema.model.cinema.util.InvalidRoomDimensionsException;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.cinema.util.TypeOfSeat;
 
 /** BREVE DESCRIZIONE CLASSE Room
@@ -30,9 +30,9 @@ public class Room {
 	 * @throws InvalidRoomDimensionsException	Eccezione lanciata qualora non siano
 	 * 											inseriti un numero di righe o colonne valido
 	 */
-	public Room(int rows, int cols) throws InvalidRoomDimensionsException{
+	public Room(int rows, int cols) throws RoomException{
 		if(rows <= 0 || cols <= 0)
-			throw new InvalidRoomDimensionsException();
+			throw new RoomException("La stanza deve contenere almeno un posto.");
 
 		seats = new ArrayList<ArrayList<PhysicalSeat>>();
 		for(int i = 0; i < rows; i++) {

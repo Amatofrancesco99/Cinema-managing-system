@@ -14,8 +14,8 @@ public class DiscountNotFoundException extends Exception {
 	/** 
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
-	public DiscountNotFoundException(TypeOfDiscounts td) {
-		System.out.println("Non è stato trovato nessuno sconto che applica la strategia " + td);
+	public DiscountNotFoundException(String message) {
+		super(message);
 	}
 
 }

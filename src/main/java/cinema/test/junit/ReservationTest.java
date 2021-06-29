@@ -1,6 +1,6 @@
 package cinema.test.junit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.*;  
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,25 +10,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import cinema.controller.Cinema;
-import cinema.controller.util.ReservationNotExistsException;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
-import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
-import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.discount.coupon.util.CouponException;
+import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
-import cinema.model.reservation.util.FreeAnotherPersonSeatException;
-import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
-import cinema.model.reservation.util.ReservationHasNoSeatException;
-import cinema.model.reservation.util.SeatAlreadyTakenException;
-import cinema.model.reservation.util.SeatTakenTwiceException;
+import cinema.model.reservation.util.SeatAvailabilityException;
+import cinema.model.reservation.util.ReservationException;
 
 
 /** BREVE DESCRIZIONE CLASSE ReservationTest
@@ -104,7 +99,7 @@ public class ReservationTest {
 	
 	/** Test sull'assegnamento progressivo di una prenotazione */
 	@Test
-	public void testProgressiveAssignment() throws ReservationNotExistsException {
+	public void testProgressiveAssignment() throws ReservationException {
 		final int STOP = 3;
 		for (int i = 1; i < STOP; i++) {
 			myCinema.createReservation();
@@ -115,7 +110,7 @@ public class ReservationTest {
 	
 	/** Test data di creazione nuova prenotazione */
 	@Test
-	public void testPurchaseDate() throws ReservationNotExistsException {
+	public void testPurchaseDate() throws ReservationException {
 		assertEquals(LocalDate.now(),myCinema.getReservation(myCinema.createReservation()).getDate());
 	}
 	
@@ -127,7 +122,7 @@ public class ReservationTest {
 		try {
 			r.getProjection().takeSeat(0, 0);
 			r.takeSeat();
-		} catch (InvalidRoomSeatCoordinatesException | SeatAlreadyTakenException e) {
+		} catch (RoomException | SeatAvailabilityException e) {
 			error = 1;
 		}
 		assertEquals(1, error);
@@ -135,7 +130,7 @@ public class ReservationTest {
 		// Libero il posto usato per test
 		try {
 			r.getProjection().freeSeat(0, 0);
-		} catch (InvalidRoomSeatCoordinatesException e) {
+		} catch (RoomException e) {
 		}
 	}
 	
@@ -148,8 +143,7 @@ public class ReservationTest {
 		int nRows = r.getProjection().getRoom().getNumberRows();
 		try {
 			r.addSeat(nRows + 2 , nCols + 8);
-		} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException
-				| FreeAnotherPersonSeatException e) {
+		} catch (RoomException | SeatAvailabilityException e) {
 			error ++;
 		}
 		assertEquals(1,error);
@@ -164,14 +158,14 @@ public class ReservationTest {
 		try {
 			r.setCoupon(myCinema.getCoupon(c1));
 			assertEquals(23 , r.getFullPrice() - myCinema.getCoupon(c1).getDiscount(),0);
-		} catch (CouponNotExistsException | CouponAleadyUsedException e) {
+		} catch (CouponException e) {
 			e.toString();
 		}
 		try {
 			r.setPaymentCard(new PaymentCard());
 			r.buy();
-		} catch (NumberFormatException | SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException
-				| ReservationHasNoSeatException | ReservationHasNoPaymentCardException | PaymentErrorException e) {
+		} catch (NumberFormatException | SeatAvailabilityException | RoomException
+				| ReservationException | PaymentErrorException e) {
 			e.toString();
 		}
 		
@@ -182,7 +176,7 @@ public class ReservationTest {
 			newReservation.addSeat(2, 2); // occupo un nuovo posto
 			newReservation.setCoupon(myCinema.getCoupon(c1));
 			assertEquals(12.50, newReservation.getTotal(),0);
-		} catch (ReservationNotExistsException | CouponNotExistsException | SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException | CouponAleadyUsedException e) {
+		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException e) {
 			e.toString();
 		}
 		
@@ -191,13 +185,13 @@ public class ReservationTest {
 	
 	/** Test sui prezzi, usando lo sconto per età */
 	@Test
-	public void testPrices() throws CouponAleadyUsedException {
+	public void testPrices() throws CouponException {
 		assertEquals(12.50*2, r.getFullPrice(),0);
 		// uso lo sconto per età
 		try {
-			r.setNumberPeopleUntilMinAge(1);
+			r.setNumberPeopleUnderMinAge(1);
 			r.setNumberPeopleOverMaxAge(0);
-		} catch (InvalidNumberPeopleValueException e) {}
+		} catch (DiscountException e) {}
 		assertEquals(12.50*2 - 1.87 - r.getCoupon().getDiscount(),r.getTotal(),0);
 	}
 	
@@ -210,8 +204,8 @@ public class ReservationTest {
 		int error = 1;
 		try {
 			r.setNumberPeopleOverMaxAge(10);
-			r.setNumberPeopleUntilMinAge(-2);
-		} catch (InvalidNumberPeopleValueException e) {
+			r.setNumberPeopleUnderMinAge(-2);
+		} catch (DiscountException e) {
 			error ++;
 		}
 		assertEquals(2,error);

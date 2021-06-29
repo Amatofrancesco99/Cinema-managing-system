@@ -3,10 +3,8 @@ package cinema.model.projection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
-import cinema.model.projection.util.InvalidPriceException;
-import cinema.model.projection.util.InvalidProjectionDateTimeException;
-import cinema.model.projection.util.InvalidProjectionIdException;
+import cinema.model.cinema.util.RoomException;
+import cinema.model.projection.util.ProjectionException;
 import cinema.model.Movie;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
@@ -73,8 +71,9 @@ public class Projection implements Comparable<Projection> {
 	 * @param id
 	 * @throws InvalidProjectionIdException
 	 */
-	public void setId(int id) throws InvalidProjectionIdException {
-		if (id < 0) throw new InvalidProjectionIdException();
+	public void setId(int id) throws ProjectionException {
+		if (id < 0)
+			throw new ProjectionException("L'ID della proiezione deve essere non negativo");
 		this.id = id;
 	}
 
@@ -105,9 +104,9 @@ public class Projection implements Comparable<Projection> {
 	 * @param dateTime
 	 * @throws InvalidProjectionDateTimeException
 	 */
-	public void setDateTime(LocalDateTime dateTime) throws InvalidProjectionDateTimeException {
+	public void setDateTime(LocalDateTime dateTime) throws ProjectionException {
 		if (dateTime.isBefore(LocalDateTime.now()))
-			throw new InvalidProjectionDateTimeException();
+			throw new ProjectionException("La data della proiezione non può essere nel passato.");
 		this.dateTime = dateTime;
 	}
 
@@ -117,8 +116,9 @@ public class Projection implements Comparable<Projection> {
 	 * @param price
 	 * @throws InvalidPriceException
 	 */
-	public void setPrice(double price) throws InvalidPriceException {
-		if (price <= 0) throw new InvalidPriceException();
+	public void setPrice(double price) throws ProjectionException {
+		if (price <= 0)
+			throw new ProjectionException("Il prezzo del biglietto per una proiezione non può essere negativo.");
 		this.price = Math.round(price * 100.0)/100.0;
 	}
 
@@ -130,11 +130,11 @@ public class Projection implements Comparable<Projection> {
 	 * @return				True: libero, False: occupato
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
-	public boolean checkIfSeatIsAvailable(int row, int col) throws InvalidRoomSeatCoordinatesException {
+	public boolean checkIfSeatIsAvailable(int row, int col) throws RoomException {
 		try {
 			return seats.get(row).get(col).isAvailable();
 		}catch (IndexOutOfBoundsException e) {
-			throw new InvalidRoomSeatCoordinatesException(row, col);
+			throw new RoomException("Il posto selezionato (" + Room.rowIndexToRowLetter(row) +"-"+ (col + 1) +" non esiste.");
 		}
 	}
 	
@@ -144,7 +144,7 @@ public class Projection implements Comparable<Projection> {
 	 * @return int  Numero di posti disponibili/liberi
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
-	public int getNumberAvailableSeat() throws InvalidRoomSeatCoordinatesException {
+	public int getNumberAvailableSeat() throws RoomException {
 		int availableSeats = 0;
 		for (int i = 0 ; i < this.getRoom().getNumberRows() ; i++) {
 			for (int j = 0 ; j < this.getRoom().getNumberCols() ; j++) {
@@ -163,7 +163,7 @@ public class Projection implements Comparable<Projection> {
 	 * @return esito 		Esito occupazione del posto
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
-	public boolean takeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
+	public boolean takeSeat(int row, int col) throws RoomException {
 			if (checkIfSeatIsAvailable(row, col)) {
 				seats.get(row).get(col).setAvailable(false);
 				return true;
@@ -178,7 +178,7 @@ public class Projection implements Comparable<Projection> {
 	 * @return esito 		Esito rilascio del posto
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
-	public boolean freeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
+	public boolean freeSeat(int row, int col) throws RoomException {
 		if(!checkIfSeatIsAvailable(row, col)) {
 			seats.get(row).get(col).setAvailable(true);
 			return true;
@@ -193,7 +193,7 @@ public class Projection implements Comparable<Projection> {
 	 * @return 		 		Posto fisico
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
-	public PhysicalSeat getPhysicalSeat(int row, int col) throws InvalidRoomSeatCoordinatesException {
+	public PhysicalSeat getPhysicalSeat(int row, int col) throws RoomException {
 		 return this.getSeats().get(row).get(col).getPhysicalSeat();
 	}
 
@@ -204,7 +204,7 @@ public class Projection implements Comparable<Projection> {
 	 * @return			Coordinate
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
-	public String getSeatCoordinates(PhysicalSeat s) throws InvalidRoomSeatCoordinatesException {
+	public String getSeatCoordinates(PhysicalSeat s) throws RoomException {
 		for(int i=0; i < room.getNumberRows(); i++) {
 			for(int j=0; j < room.getNumberCols(); j++) {
 				if(getPhysicalSeat(i,j) == s)
@@ -231,7 +231,7 @@ public class Projection implements Comparable<Projection> {
 		try { 
 			availableSeats = this.getNumberAvailableSeat();
 		}
-		catch (InvalidRoomSeatCoordinatesException e) {
+		catch (RoomException e) {
 		}
 		
 		return "Sala n°: " + this.getRoom().getProgressive() + "\n"

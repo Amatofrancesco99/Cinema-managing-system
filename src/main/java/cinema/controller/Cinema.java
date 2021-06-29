@@ -8,32 +8,25 @@ import java.util.List;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.InvalidRoomDimensionsException;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
-import cinema.model.projection.util.InvalidPriceException;
-import cinema.model.projection.util.InvalidProjectionDateTimeException;
-import cinema.model.projection.util.InvalidProjectionIdException;
+import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
-import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
-import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
+import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.Discount;
 import cinema.model.reservation.discount.types.DiscountAge;
 import cinema.model.reservation.discount.types.DiscountDay;
 import cinema.model.reservation.discount.types.DiscountNumberSpectators;
-import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
+import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
-import cinema.model.reservation.util.FreeAnotherPersonSeatException;
+import cinema.model.reservation.util.ReservationException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
-import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
-import cinema.model.reservation.util.ReservationHasNoSeatException;
-import cinema.model.reservation.util.SeatAlreadyTakenException;
-import cinema.model.reservation.util.SeatTakenTwiceException;
+import cinema.model.reservation.util.SeatAvailabilityException;
 
 /**
  * BREVE SPIEGAZIONE CLASSE CINEMA ( Pattern Controller)
@@ -212,7 +205,7 @@ public class Cinema {
 		try {
 			addCinemaRoom(5, 10);
 			addCinemaRoom(7, 10);
-		} catch (InvalidRoomDimensionsException e) {
+		} catch (RoomException e) {
 			e.printStackTrace();
 		}
 
@@ -291,7 +284,7 @@ public class Cinema {
 		// occupare il primo posto della seconda proiezione
 		try {
 			p2.takeSeat(0, 0);
-		} catch (InvalidRoomSeatCoordinatesException e) {
+		} catch (RoomException e) {
 		}
 
 		// Aggiunti due coupon di prova emessi dal cinema
@@ -321,12 +314,12 @@ public class Cinema {
 	 * @return
 	 * @throws ReservationNotExistsException
 	 */
-	public Reservation getReservation(long progressive) throws ReservationNotExistsException {
+	public Reservation getReservation(long progressive) throws ReservationException {
 		for (Reservation r : cinemaReservations) {
 			if (r.getProgressive() == progressive)
 				return r;
 		}
-		throw new ReservationNotExistsException(progressive);
+		throw new ReservationException("La prenotazione "+ progressive +" non esiste.");
 	}
 
 	
@@ -337,7 +330,7 @@ public class Cinema {
 	 *          dispone
 	 * @throws NoProjectionException 
 	 */
-	public void removeProjection(int p) throws NoProjectionException {
+	public void removeProjection(int p) throws ProjectionException {
 		cinemaProjections.remove(getProjection(p));
 	}
 
@@ -359,9 +352,10 @@ public class Cinema {
 	 * @throws ProjectionIDAlreadyUsedException
 	 * @throws InvalidProjectionIdException
 	 */
-	public void createProjectionWithID(int id) throws ProjectionIDAlreadyUsedException, InvalidProjectionIdException {
+	public void createProjectionWithID(int id) throws ProjectionException {
 		for (Projection p: cinemaProjections) {
-			if (p.getId() == id) throw new ProjectionIDAlreadyUsedException(id);
+			if (p.getId() == id)
+				throw new ProjectionException("La proiezione con id " + id + " non esiste.");
 		}
 		Projection p = new Projection();
 		p.setId(id);
@@ -376,7 +370,7 @@ public class Cinema {
 	 * @throws NoMovieException 
 	 * @throws NoProjectionException 
 	 */
-	public void setProjectionMovie(int p, int movieId) throws NoMovieException, NoProjectionException {
+	public void setProjectionMovie(int p, int movieId) throws NoMovieException, ProjectionException {
 		getProjection(p).setMovie(getMovie(movieId));
 	}
 	
@@ -388,7 +382,7 @@ public class Cinema {
 	 * @throws RoomNotExistsException
 	 * @throws NoProjectionException 
 	 */
-	public void setProjectionRoom(int p, long roomId) throws RoomNotExistsException, NoProjectionException {
+	public void setProjectionRoom(int p, long roomId) throws RoomException, ProjectionException {
 		getProjection(p).setRoom(getRoom(roomId));
 	}
 	
@@ -400,7 +394,7 @@ public class Cinema {
 	 * @throws InvalidProjectionDateTimeException
 	 * @throws NoProjectionException 
 	 */
-	public void setProjectionDateTime(int p, LocalDateTime projectionDateTime) throws InvalidProjectionDateTimeException, NoProjectionException {
+	public void setProjectionDateTime(int p, LocalDateTime projectionDateTime) throws ProjectionException, ProjectionException {
 		getProjection(p).setDateTime(projectionDateTime);
 	}
 	
@@ -412,7 +406,7 @@ public class Cinema {
 	 * @throws InvalidPriceException
 	 * @throws NoProjectionException 
 	 */
-	public void setProjectionPrice(int p, double price) throws InvalidPriceException, NoProjectionException {
+	public void setProjectionPrice(int p, double price) throws ProjectionException, ProjectionException {
 		getProjection(p).setPrice(price);
 	}
 	
@@ -455,7 +449,7 @@ public class Cinema {
 	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
 	 *                                     abbia quel film, tra i film proiettati
 	 */
-	public List<Projection> getCurrentlyAvailableProjections(int movieId) throws NoMovieException, MovieNoLongerProjectedException {
+	public List<Projection> getCurrentlyAvailableProjections(int movieId) throws NoMovieException, ProjectionException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
 		Movie m = getMovie(movieId);
 		if (m != null) {
@@ -466,8 +460,10 @@ public class Cinema {
 				}
 			}
 		}
-		if (movieProjections.size() != 0) return movieProjections;
-		else throw new MovieNoLongerProjectedException(this.getMovie(movieId));
+		if (movieProjections.size() != 0)
+			return movieProjections;
+		else
+			throw new ProjectionException("Il film \""+ this.getMovie(movieId).getTitle() + "\" non è più in programmazione.");
 	}
 
 	
@@ -539,7 +535,7 @@ public class Cinema {
 				return p.getMovie();
 			}
 		}
-		throw new NoMovieException(id);
+		throw new NoMovieException("Il film con id " + id + " non esiste.");
 	}
 
 	
@@ -551,13 +547,13 @@ public class Cinema {
 	 * @throws NoProjectionException Eccezione lanciata qualora non ci sia nessuna
 	 *                               proiezione con quell'Id
 	 */
-	public Projection getProjection(int id) throws NoProjectionException {
+	public Projection getProjection(int id) throws ProjectionException {
 		for (Projection p : cinemaProjections) {
 			if (p.getId() == id) {
 				return p;
 			}
 		}
-		throw new NoProjectionException(id);
+		throw new ProjectionException("La proiezione con id " + id + " non esiste.");
 	}
 
 	
@@ -572,16 +568,16 @@ public class Cinema {
 	 * 													della proiezione inserita sia 
 	 * 													inferiore alla data odierna
  	 */
-	public Projection getCurrentlyAvailableProjection(int id) throws NoProjectionException, ProjectionIsNoLongerProjectedException {
+	public Projection getCurrentlyAvailableProjection(int id) throws ProjectionException {
 		for (Projection p : cinemaProjections) {
 			if ((p.getId() == id) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
 				return p;
 			}
 			if ((p.getId() == id) && (p.getDateTime().isBefore(LocalDateTime.now()))) {
-				throw new ProjectionIsNoLongerProjectedException(id);
+				throw new ProjectionException("La proiezione selezionata con ID " + id + " non è più disponibile.");
 			}
 		}
-		throw new NoProjectionException(id);
+		throw new ProjectionException("La proiezione con id " + id + " non esiste.");
 	}
 	
 	
@@ -593,13 +589,13 @@ public class Cinema {
 	 * @throws CouponNotExistsException Eccezione lanciata qualora non ci sia nessun
 	 *                                  coupon con quell'Id progressivo
 	 */
-	public Coupon getCoupon(long progressive) throws CouponNotExistsException {
+	public Coupon getCoupon(long progressive) throws CouponException {
 		for (Coupon c : coupons) {
 			if (c.getProgressive() == progressive) {
 				return c;
 			}
 		}
-		throw new CouponNotExistsException(progressive);
+		throw new CouponException("Il coupon " + progressive + " non esiste.");
 	}
 	
 	
@@ -618,23 +614,8 @@ public class Cinema {
 	 *          stesso
 	 * @throws InvalidRoomDimensionsException 
 	 */
-	public void addCinemaRoom(int row, int col) throws InvalidRoomDimensionsException {
+	public void addCinemaRoom(int row, int col) throws RoomException {
 		rooms.add(new Room(row,col));
-	}
-
-	
-	/**
-	 * METODO per rimuovere una sala del cinema
-	 * 
-	 * @param r Sala del cinema da rimuovere, dall'insieme delle sale del cinema
-	 *          stesso
-	 * @throws RoomNotExistsException 
-	 */
-	public void removeRoom(long r) throws NoCinemaRoomsException, RoomNotExistsException {
-		if (rooms.size() > 0)
-			rooms.remove(getRoom(r));
-		else
-			throw new NoCinemaRoomsException(name, city, address);
 	}
 
 	
@@ -706,12 +687,12 @@ public class Cinema {
 	 * @return
 	 * @throws RoomNotExistsException 
 	 */
-	public Room getRoom(long roomId) throws RoomNotExistsException {
+	public Room getRoom(long roomId) throws RoomException {
 		for(Room r: rooms) {
 			if (r.getProgressive() == roomId)
 				return r;
 		}
-		throw new RoomNotExistsException(roomId);
+		throw new RoomException("La sala con id " + roomId + " non è presente all'interno del cinema.");
 	}
 	
 	
@@ -733,7 +714,7 @@ public class Cinema {
 	 * @throws NoProjectionException
 	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationProjection(long r, int projectionId) throws NoProjectionException, ReservationNotExistsException {
+	public void setReservationProjection(long r, int projectionId) throws ProjectionException, ReservationException {
 		getReservation(r).setProjection(getProjection(projectionId));
 	}
 
@@ -746,7 +727,7 @@ public class Cinema {
 	 * @return
 	 * @throws ReservationNotExistsException 
 	 */
-	public int getNumberColsReservationProjection(long r) throws ReservationNotExistsException {
+	public int getNumberColsReservationProjection(long r) throws ReservationException {
 		return getReservation(r).getProjection().getRoom().getNumberCols();
 	}
 
@@ -759,7 +740,7 @@ public class Cinema {
 	 * @return
 	 * @throws ReservationNotExistsException 
 	 */
-	public int getNumberRowsReservationProjection(long r) throws ReservationNotExistsException {
+	public int getNumberRowsReservationProjection(long r) throws ReservationException {
 		return getReservation(r).getProjection().getRoom().getNumberRows();
 	}
 
@@ -776,7 +757,7 @@ public class Cinema {
 	 * @throws ReservationNotExistsException 
 	 */
 	public boolean checkIfReservationProjectionSeatIsAvailable(long r, int row, int col)
-			throws InvalidRoomSeatCoordinatesException, ReservationNotExistsException {
+			throws RoomException, ReservationException {
 		return getReservation(r).getProjection().checkIfSeatIsAvailable(row, col);
 	}
 
@@ -793,8 +774,7 @@ public class Cinema {
 	 * @throws FreeAnotherPersonSeatException
 	 * @throws ReservationNotExistsException 
 	 */
-	public void addSeatToReservation(long r, int row, int col) throws SeatAlreadyTakenException,
-			InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException, ReservationNotExistsException {
+	public void addSeatToReservation(long r, int row, int col) throws SeatAvailabilityException, RoomException, ReservationException {
 		getReservation(r).addSeat(row, col);
 	}
 
@@ -810,7 +790,7 @@ public class Cinema {
 	 * @throws ReservationNotExistsException 
 	 */
 	public void setReservationPurchaser(long r, String name, String surname, String email)
-			throws InvalidSpectatorInfoException, ReservationNotExistsException {
+			throws InvalidSpectatorInfoException, ReservationException {
 		getReservation(r).setPurchaser(new Spectator(name, surname, email));
 	}
 
@@ -870,7 +850,7 @@ public class Cinema {
 	 * @param p
 	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationPaymentCard(long r, PaymentCard p) throws ReservationNotExistsException {
+	public void setReservationPaymentCard(long r, PaymentCard p) throws ReservationException {
 		getReservation(r).setPaymentCard(p);
 	}
 
@@ -884,8 +864,8 @@ public class Cinema {
 	 * @throws InvalidNumberPeopleValueException
 	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationNumberPeopleUntilMinAge(long r, int n) throws InvalidNumberPeopleValueException, ReservationNotExistsException {
-		getReservation(r).setNumberPeopleUntilMinAge(n);
+	public void setReservationNumberPeopleUntilMinAge(long r, int n) throws DiscountException, ReservationException {
+		getReservation(r).setNumberPeopleUnderMinAge(n);
 	}
 
 	
@@ -899,7 +879,7 @@ public class Cinema {
 	 * @throws InvalidNumberPeopleValueException
 	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationNumberPeopleOverMaxAge(long r, int n) throws InvalidNumberPeopleValueException, ReservationNotExistsException {
+	public void setReservationNumberPeopleOverMaxAge(long r, int n) throws DiscountException, ReservationException {
 		getReservation(r).setNumberPeopleOverMaxAge(n);
 	}
 
@@ -915,10 +895,10 @@ public class Cinema {
 	 * @throws ReservationNotExistsException 
 	 */
 	public void setReservationCoupon(long r, long progressive)
-			throws CouponNotExistsException, CouponAleadyUsedException, ReservationNotExistsException {
+			throws CouponException, ReservationException {
 		Coupon coupon = getCoupon(progressive);
 		if (coupon.isUsed() == true) {
-			throw new CouponAleadyUsedException(progressive);
+			throw new CouponException("Il coupon " + progressive + " è già stato usato.");
 		}
 		else getReservation(r).setCoupon(coupon);
 	}
@@ -937,8 +917,7 @@ public class Cinema {
 	 * @throws ReservationNotExistsException 
 	 */
 	public void buyReservation(long r)
-			throws NumberFormatException, SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException,
-			ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException, ReservationNotExistsException {
+			throws NumberFormatException, SeatAvailabilityException, RoomException, ReservationException, PaymentErrorException, ReservationException {
 		getReservation(r).buy();
 	}
 
@@ -950,7 +929,7 @@ public class Cinema {
 	 * @return
 	 * @throws ReservationNotExistsException 
 	 */
-	public double getReservationTotalAmount(long r) throws ReservationNotExistsException {
+	public double getReservationTotalAmount(long r) throws ReservationException {
 		return getReservation(r).getTotal();
 	}
 
@@ -963,7 +942,7 @@ public class Cinema {
 	 * @param r
 	 * @throws ReservationNotExistsException 
 	 */
-	public void sendAnEmail(long r) throws ReservationNotExistsException {
+	public void sendAnEmail(long r) throws ReservationException {
 		getReservation(r).sendEmail();
 	}
 
@@ -1022,9 +1001,11 @@ public class Cinema {
 	public void addDiscount(Discount d) {
 		boolean alreadyExists = false;
 		for (TypeOfDiscounts td : getAllDiscountStrategy()) {
-			if (d.getTypeOfDiscount().equals(td)) alreadyExists = true;
+			if (d.getTypeOfDiscount().equals(td))
+				alreadyExists = true;
 		}
-		if (!alreadyExists) allDiscounts.add(d);
+		if (!alreadyExists)
+			allDiscounts.add(d);
 	}
 	
 	
@@ -1066,7 +1047,8 @@ public class Cinema {
 				 discount = d;
 			}
 		}
-		if (discount == null) throw new DiscountNotFoundException(t);
+		if (discount == null)
+			throw new DiscountNotFoundException("Non è stato trovato nessuno sconto che applica la strategia " + t);
 		else return discount;
 	}
 	
@@ -1083,9 +1065,9 @@ public class Cinema {
 	
 	
 	/* METODO per cambiare la password dell'admin */
-	public void setPassword(String newAdminPassword) throws PasswordTooShortException {
+	public void setPassword(String newAdminPassword) throws PasswordException {
 		if (newAdminPassword.length() < 5) {
-			throw new PasswordTooShortException();
+			throw new PasswordException("La password inserita è troppo corta");
 		}
 		adminPassword = newAdminPassword;
 	}
@@ -1098,8 +1080,8 @@ public class Cinema {
 	 * @throws WrongAdminPasswordException	  Eccezione lanciata qualora si inserisca una
 	 * 										  password errata nella fase di login
 	 */
-	public void login(String password) throws WrongAdminPasswordException {
+	public void login(String password) throws PasswordException {
 		if (getAdminPassword().equals(password)) ;
-		else throw new WrongAdminPasswordException();
+		else throw new PasswordException("la passwordo inserita è errata.");
 	}
 }

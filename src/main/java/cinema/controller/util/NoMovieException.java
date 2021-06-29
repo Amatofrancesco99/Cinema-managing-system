@@ -12,8 +12,8 @@ public class NoMovieException extends Exception {
 	/** 
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
-	public NoMovieException(int id) {
-		System.out.println("Il film con id " + id + " non esiste.");
+	public NoMovieException(String message) {
+		super(message);
 	}
 	
 }

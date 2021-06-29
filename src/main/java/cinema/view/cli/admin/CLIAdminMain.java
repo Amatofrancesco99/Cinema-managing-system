@@ -6,17 +6,12 @@ import java.util.Scanner;
 import cinema.controller.Cinema;
 import cinema.controller.util.DiscountNotFoundException;
 import cinema.controller.util.NoMovieException;
-import cinema.controller.util.NoProjectionException;
-import cinema.controller.util.PasswordTooShortException;
-import cinema.controller.util.ProjectionIDAlreadyUsedException;
-import cinema.controller.util.RoomNotExistsException;
-import cinema.controller.util.WrongAdminPasswordException;
+import cinema.controller.util.PasswordException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
-import cinema.model.projection.util.InvalidPriceException;
-import cinema.model.projection.util.InvalidProjectionDateTimeException;
-import cinema.model.projection.util.InvalidProjectionIdException;
+import cinema.model.projection.util.ProjectionException;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIAdminMain
@@ -87,8 +82,8 @@ public class CLIAdminMain {
 					int projectionId = Integer.parseInt(keyboard.nextLine());
 					try {
 						myCinema.removeProjection(projectionId);
-					} catch (NoProjectionException e) {
-						e.toString();
+					} catch (ProjectionException e) {
+						System.out.println(e.getMessage());
 					}
 					System.out.println("\n\nVuoi rimuovere altre proiezioni? (Y/N) ");
 					String c = keyboard.nextLine();
@@ -172,14 +167,16 @@ public class CLIAdminMain {
 			int minute = Integer.parseInt(parts2[1]);
 			try {
 				projectionDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
-			} catch (Exception e) {}
+			} catch (Exception e) {
+				
+			}
 			try {
 				if (projectionDateTime != null) {
 					myCinema.setProjectionDateTime(p,projectionDateTime);
 					end = true;
 				}
-			} catch (InvalidProjectionDateTimeException | NoProjectionException e) {
-				e.toString();
+			} catch (ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -194,8 +191,8 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionPrice(p,price);
 				end = true;
-			} catch (InvalidPriceException | NoProjectionException e) {
-				e.toString();
+			} catch (ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -213,8 +210,8 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionRoom(p,roomId);
 				end = true;
-			} catch (RoomNotExistsException | NoProjectionException e) {
-				e.toString();
+			} catch (RoomException | ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -236,8 +233,8 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionMovie(p,movieId);
 				end = true;
-			} catch (NoMovieException | NoProjectionException e) {
-				e.toString();
+			} catch (NoMovieException | ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -253,8 +250,8 @@ public class CLIAdminMain {
 			try {
 				myCinema.createProjectionWithID(projectionId);
 				end = true;
-			} catch (ProjectionIDAlreadyUsedException | InvalidProjectionIdException e) {
-				e.toString();
+			} catch (ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 		return projectionId;
@@ -287,7 +284,7 @@ public class CLIAdminMain {
 							try {
 								myCinema.setCinemaDiscountStrategy(myCinema.getAllDiscountStrategy().get(i));
 							} catch (DiscountNotFoundException e) {
-								e.toString();
+								System.out.println(e.getMessage());
 							}
 							changeEnd = true;
 							end = true;
@@ -324,9 +321,8 @@ public class CLIAdminMain {
 						myCinema.setPassword(newPassword);
 						changePasswordEnd = true;
 						end = true;
-					} catch (PasswordTooShortException e) {
-						e.toString();
-						System.out.println();
+					} catch (PasswordException e) {
+						System.out.println(e.getMessage());
 					}
 				}
 			}
@@ -344,9 +340,9 @@ public class CLIAdminMain {
 			try {
 				myCinema.login(password);
 				end = true;
-			} catch (WrongAdminPasswordException e) {
+			} catch (PasswordException e) {
 				attempt++;
-				e.toString();
+				System.out.println(e.getMessage());
 			}
 			/* Se non ricordo la password per più di N volte allora la cambio
 			* e faccio il login nuovamente 

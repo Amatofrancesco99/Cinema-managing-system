@@ -1,6 +1,6 @@
 package cinema.model.reservation;
 
-import java.io.FileOutputStream;
+import java.io.FileOutputStream;  
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,16 +39,13 @@ import cinema.model.spectator.Spectator;
 import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
-import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
-import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
-import cinema.model.reservation.util.FreeAnotherPersonSeatException;
-import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
-import cinema.model.reservation.util.ReservationHasNoSeatException;
-import cinema.model.reservation.util.SeatAlreadyTakenException;
-import cinema.model.reservation.util.SeatTakenTwiceException;
+import cinema.model.reservation.discount.coupon.util.CouponException;
+import cinema.model.reservation.discount.types.util.DiscountException;
+import cinema.model.reservation.util.SeatAvailabilityException;
+import cinema.model.reservation.util.ReservationException;
 
 
 /**BREVE SPIEGAZIONE CLASSE RESERVATION
@@ -121,7 +118,7 @@ public class Reservation {
 	 * @throws SeatTakenTwiceException 
 	 * @throws FreeAnotherPersonSeatException 
 	*/
-	public void addSeat(int row, int col) throws SeatAlreadyTakenException, InvalidRoomSeatCoordinatesException, SeatTakenTwiceException, FreeAnotherPersonSeatException {
+	public void addSeat(int row, int col) throws SeatAvailabilityException, RoomException{
 		boolean findDuplicate = false;
 		if (projection.checkIfSeatIsAvailable(row, col)) {
 			for (PhysicalSeat s : seats) {
@@ -132,10 +129,10 @@ public class Reservation {
 			if (!findDuplicate) {
 				seats.add(projection.getPhysicalSeat(row, col));
 			} else {
-				throw new SeatTakenTwiceException(row,col);
+				throw new SeatAvailabilityException("Il posto " + Room.rowIndexToRowLetter(row) + "-" + ( col + 1 ) + " è già stato selezionato.");
 			}
 		}
-		else throw new SeatAlreadyTakenException(row,col);
+		else throw new SeatAvailabilityException("Il posto " + Room.rowIndexToRowLetter(row) + "-" + ( col + 1 ) + " è già occupato.");
 	}
 	
 	
@@ -145,7 +142,7 @@ public class Reservation {
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 * @throws FreeAnotherPersonSeatException 
 	*/
-	public void removeSeat(int row, int col) throws InvalidRoomSeatCoordinatesException, FreeAnotherPersonSeatException {
+	public void removeSeat(int row, int col) throws RoomException, SeatAvailabilityException {
 		try {
 			if(!projection.checkIfSeatIsAvailable(row, col)) 
 				seats.remove(projection.getPhysicalSeat(row, col));		
@@ -155,7 +152,7 @@ public class Reservation {
 			// mia prenotazione allora il seat.remove(...) lancerà un eccezione, che noi
 			// gestiamo stampando una stringa che informi il cliente che non può liberare
 			// posti occupati da altre persone
-			throw new FreeAnotherPersonSeatException();
+			throw new SeatAvailabilityException("Il posto che si sta tentando di liberare non è nella propria prenotazione.");
 		}
 	}
 	
@@ -192,12 +189,12 @@ public class Reservation {
 	 * @param coupon				 Coupon
 	 * @throws CouponAleadyUsedException 
 	 */
-	public void setCoupon(Coupon coupon) throws CouponAleadyUsedException {
+	public void setCoupon(Coupon coupon) throws CouponException {
 		if (coupon == null) ;
 		else {
 			if (!coupon.isUsed())
 				this.coupon = coupon;
-			else throw new CouponAleadyUsedException(coupon.getProgressive());
+			else throw new CouponException("Il coupon " + coupon.getProgressive() + " è già stato usato.");
 		}
 	}
 	
@@ -326,7 +323,7 @@ public class Reservation {
 	            // generazione del file andata a buon fine
 	            return true;
 	        } catch (Exception e) {
-	        	e.toString();
+	        	System.out.println(e.getMessage());
 	        	return false;
 	        }
 	}
@@ -431,7 +428,7 @@ public class Reservation {
 	 * @throws SeatAlreadyTakenException 
 	 * @throws NumberFormatException 
 	 */
-	public boolean buy() throws SeatAlreadyTakenException, NumberFormatException, InvalidRoomSeatCoordinatesException, ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException{
+	public boolean buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException, PaymentErrorException{
 		takeSeat();
 		return pay();
 	}
@@ -442,7 +439,7 @@ public class Reservation {
 	 * @throws InvalidRoomSeatCoordinatesException
 	 * @throws SeatAlreadyTakenException
 	 */
-	public void takeSeat() throws InvalidRoomSeatCoordinatesException, SeatAlreadyTakenException {		
+	public void takeSeat() throws RoomException, SeatAvailabilityException {		
 		for (int i = countTakenSeat; i<seats.size(); i++) {
 			String coordinates = projection.getSeatCoordinates(seats.get(i));
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
@@ -451,7 +448,7 @@ public class Reservation {
 				countTakenSeat++;
 			else {
 				seats.remove(seats.get(i));
-				throw new SeatAlreadyTakenException(row,col);
+				throw new SeatAvailabilityException("Il posto " + Room.rowIndexToRowLetter(row) + "-" + ( col + 1 ) + " è già occupato.");
 			}
 		}
 		
@@ -465,16 +462,16 @@ public class Reservation {
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
 	 */
-	public boolean pay() throws ReservationHasNoSeatException, ReservationHasNoPaymentCardException, PaymentErrorException {
+	public boolean pay() throws ReservationException, PaymentErrorException {
 		if (getNSeats() > 0)
 		{
 			if (paymentCard == null) {
-				throw new ReservationHasNoPaymentCardException();
+				throw new ReservationException("La prenotazione non ha associata nessuna carta di credito.");
 			}
 			else {
 				//Payment simulation
 				if (paymentCard.decreaseMoney(getTotal()) == false) {
-					throw new PaymentErrorException();
+					throw new PaymentErrorException("Il pagamento non è andato a buon fine.");
 				}
 				else {
 					if (getCoupon() != null) {
@@ -486,7 +483,7 @@ public class Reservation {
 				}
 			}
 		}
-		else throw new ReservationHasNoSeatException();
+		else throw new ReservationException("Nessun posto è stato selezionato.");
 	}
 	
 	/**
@@ -494,11 +491,12 @@ public class Reservation {
 	 * @param n				Numero di persone
 	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public void setNumberPeopleUntilMinAge(int n) throws InvalidNumberPeopleValueException {
-		if ((n + getNumberPeopleOverMaxAge() > this.getNSeats()) || (n < 0)) {
-			throw new InvalidNumberPeopleValueException();
-		}
-		else numberPeopleUntilMinAge = n;
+	public void setNumberPeopleUnderMinAge(int n) throws DiscountException {
+		if(n < 0)
+			throw new DiscountException("Il nuero di persone non può essere negativo.");
+		if (n + getNumberPeopleOverMaxAge() > this.getNSeats())
+			throw new DiscountException("Il numero di persone sotto età supera il numero di biglietti che si intende comprare.");
+		numberPeopleUntilMinAge = n;
 	}
 	
 	
@@ -507,11 +505,12 @@ public class Reservation {
 	 * @param n				Numero di persone
 	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public void setNumberPeopleOverMaxAge(int n) throws InvalidNumberPeopleValueException {
-		if ((n + getNumberPeopleUntilMinAge() > this.getNSeats()) || (n < 0)) {
-			throw new InvalidNumberPeopleValueException();
-		}
-		else numberPeopleOverMaxAge = n;
+	public void setNumberPeopleOverMaxAge(int n) throws DiscountException {
+		if(n < 0)
+			throw new DiscountException("Il numero di persone non può essere negativo.");
+		if (n + getNumberPeopleUntilMinAge() > this.getNSeats())
+			throw new DiscountException("Il numero di persone sopra l'età supera il numero di biglietti che si intende comprare.");
+		numberPeopleOverMaxAge = n;
 	}
 	
 	

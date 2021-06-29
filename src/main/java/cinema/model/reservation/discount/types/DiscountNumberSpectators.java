@@ -1,8 +1,7 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
-import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
@@ -57,24 +56,11 @@ public class DiscountNumberSpectators extends Discount{
 	 * @param n			Numero di persone minimo
 	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public void setNumberPeople(int n) throws InvalidNumberPeopleValueException {
+	public void setNumberPeople(int n) throws DiscountException {
 		if (n > 0) {
 			this.numberPeople = n;
 		}
-		else throw new InvalidNumberPeopleValueException();
-	}
-	
-	
-	/**
-	 * METODO per settare il nuovo sconto in base al numero di persone
-	 * @param f		      Percentuale di sconto da applicare
-	 * @throws InvalidPercentageValueException 
-	 */
-	public void setPercentage(double d) throws InvalidPercentageValueException {
-		if ((d <= 0) || (d >= 1)){
-			throw new InvalidPercentageValueException();
-		}
-		else percentage = d;
+		else throw new DiscountException("Il numero di persone sopra il quale applicare lo sconto deve essere maggiore di zero.");
 	}
 	
 	

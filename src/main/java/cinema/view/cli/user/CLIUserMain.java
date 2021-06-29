@@ -5,27 +5,20 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import cinema.controller.Cinema;
-import cinema.controller.util.MovieNoLongerProjectedException;
 import cinema.controller.util.NoMovieException;
-import cinema.controller.util.NoProjectionException;
-import cinema.controller.util.ProjectionIsNoLongerProjectedException;
-import cinema.controller.util.ReservationNotExistsException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.InvalidRoomSeatCoordinatesException;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
-import cinema.model.reservation.discount.coupon.util.CouponAleadyUsedException;
-import cinema.model.reservation.discount.coupon.util.CouponNotExistsException;
-import cinema.model.reservation.discount.types.util.InvalidNumberPeopleValueException;
-import cinema.model.reservation.util.FreeAnotherPersonSeatException;
+import cinema.model.projection.util.ProjectionException;
+import cinema.model.reservation.discount.coupon.util.CouponException;
+import cinema.model.reservation.discount.types.util.DiscountException;
+import cinema.model.reservation.util.ReservationException;
+import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
-import cinema.model.reservation.util.ReservationHasNoPaymentCardException;
-import cinema.model.reservation.util.ReservationHasNoSeatException;
-import cinema.model.reservation.util.SeatAlreadyTakenException;
-import cinema.model.reservation.util.SeatTakenTwiceException;
 
 
 /** BREVE DESCRIZIONE CLASSE CLIMain
@@ -114,18 +107,12 @@ public class CLIUserMain {
 					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 					  + " lo sconto\ndell'eventuale coupon applicato.\n");
 				end = true;
-			} catch (PaymentErrorException  e) {
-				e.toString();
-			}
-			catch (ReservationHasNoSeatException | ReservationHasNoPaymentCardException | InvalidRoomSeatCoordinatesException e) {
-				e.toString();
+			} catch (PaymentErrorException | NumberFormatException | ReservationException  e) {
+				System.out.println(e.getMessage());
+			} catch (RoomException | SeatAvailabilityException e) {
+				System.out.println(e.getMessage());
 				end = true;
-			} catch (SeatAlreadyTakenException e) {
-				e.toString();
-				error = true;
-			} catch (NumberFormatException | ReservationNotExistsException e) {
-				e.toString();
-			} 
+			}
 		}
 		if(error) {
 			System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
@@ -143,7 +130,7 @@ public class CLIUserMain {
 		while (!end) {
 			// Aggiungi un coupon alla tua prenotazione
 			System.out.println("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
-			String usaCoupon = keyboard.next();
+			String usaCoupon = keyboard.next().toUpperCase();
 			if (usaCoupon.equals("Y")) {
 				System.out.println("Inserisci il codice del coupon:  ");
 				String couponId = keyboard.next();
@@ -151,8 +138,8 @@ public class CLIUserMain {
 				try {
 					myCinema.setReservationCoupon(r, coupon);
 					end = true;
-				} catch (CouponNotExistsException | CouponAleadyUsedException | ReservationNotExistsException e) {
-					e.toString();
+				} catch (CouponException | ReservationException e) {
+					System.out.println(e.getMessage());
 				}
 			}
 			if ((!usaCoupon.equals("Y"))&&(!usaCoupon.equals("N"))){
@@ -169,7 +156,7 @@ public class CLIUserMain {
 		try {
 			myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
 			myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
-		} catch (InvalidNumberPeopleValueException | ReservationNotExistsException e1){}	
+		} catch (DiscountException | ReservationException e1){}	
 		boolean end = false;
 		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
 		while (!end) {
@@ -180,8 +167,8 @@ public class CLIUserMain {
 			int nMin = Integer.parseInt(n1);
 			try {
 				myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
-			} catch (InvalidNumberPeopleValueException | NumberFormatException | ReservationNotExistsException e) {
-				e.toString();
+			} catch (DiscountException | NumberFormatException | ReservationException e) {
+				System.out.println(e.getMessage());
 			}
 			System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
 			String n2 = keyboard.next();
@@ -189,8 +176,8 @@ public class CLIUserMain {
 			try {
 				myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
 				end = true;
-			} catch (InvalidNumberPeopleValueException | NumberFormatException | ReservationNotExistsException e) {
-				e.toString();
+			} catch (DiscountException | NumberFormatException | ReservationException e) {
+				System.out.println(e.getMessage());
 			}		
 		}
 	}
@@ -228,7 +215,9 @@ public class CLIUserMain {
 			try {
 				expirationDate = YearMonth.parse(expD);
 			}
-			catch(Exception e) {}
+			catch(Exception e) {
+				
+			}
 			try {
 				if (expirationDate != null)
 					myCinema.setPaymentCardExpirationDate(p, expirationDate);
@@ -240,7 +229,7 @@ public class CLIUserMain {
 		}
 		end = false;
 		while (!end) {
-			System.out.println("\nInserisci il cvv: ");
+			System.out.println("\nInserisci il CVV: ");
 			String cvv = keyboard.next();
 			System.out.println("\n");
 			try {
@@ -252,8 +241,8 @@ public class CLIUserMain {
 		}	
 		try {
 			myCinema.setReservationPaymentCard(r, p);
-		} catch (ReservationNotExistsException e) {
-			e.toString();
+		} catch (ReservationException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -280,8 +269,8 @@ public class CLIUserMain {
 			try {
 				myCinema.setReservationPurchaser(r, name, surname, email);
 				end = true;
-			} catch (InvalidSpectatorInfoException | ReservationNotExistsException e) {
-				e.toString();
+			} catch (InvalidSpectatorInfoException | ReservationException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -306,12 +295,12 @@ public class CLIUserMain {
 				try {
 					myCinema.addSeatToReservation(r, riga, colonna);
 					validSeat = true;
-				} catch (SeatAlreadyTakenException | InvalidRoomSeatCoordinatesException | SeatTakenTwiceException | FreeAnotherPersonSeatException | ReservationNotExistsException e) {
-					e.toString();
+				} catch (SeatAvailabilityException | RoomException | ReservationException e) {
+					System.out.println(e.getMessage());
 				} 
 			} while (!validSeat);
 			System.out.println("\nVuoi occupare altri posti? (Y/N):");
-			String occupaAltri = keyboard.next();
+			String occupaAltri = keyboard.next().toUpperCase();
 			if (occupaAltri.contains("N")) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
 				end = true;
@@ -337,12 +326,14 @@ public class CLIUserMain {
 							}
 							else 
 								System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
-						} catch (InvalidRoomSeatCoordinatesException e) {
-					  }
+						} catch (RoomException e) {
+						}
 					}
 					System.out.println("");
 				}
-			} catch (ReservationNotExistsException e) {}
+			} catch (ReservationException e) {
+				
+			}
 	}
 
 
@@ -350,8 +341,8 @@ public class CLIUserMain {
 		System.out.println("\n");
 		try {
 			myCinema.setReservationProjection(r, projectionId);
-		} catch (NoProjectionException | ReservationNotExistsException e) {
-			e.toString();
+		} catch (ProjectionException | ReservationException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -367,8 +358,8 @@ public class CLIUserMain {
 				try {
 					myCinema.getCurrentlyAvailableProjection(projectionId);
 					end = true;
-				} catch (NoProjectionException | ProjectionIsNoLongerProjectedException e) {
-					e.toString();
+				} catch (ProjectionException e) {
+					System.out.println(e.getMessage());
 				}
 			}
 			catch (InputMismatchException | NumberFormatException e){
@@ -395,8 +386,8 @@ public class CLIUserMain {
 				System.out.println(p.getId() + ")");
 				System.out.println(p.toString());
 			}
-		} catch (NoMovieException | MovieNoLongerProjectedException e) {
-			e.toString(); 
+		} catch (NoMovieException | ProjectionException e) {
+			System.out.println(e.getMessage());
 		}		
 	}
 
@@ -413,8 +404,8 @@ public class CLIUserMain {
 				try {
 					myCinema.getCurrentlyAvailableProjections(filmId);
 					end = true;
-				} catch (NoMovieException | MovieNoLongerProjectedException e) {
-					e.toString();
+				} catch (NoMovieException | ProjectionException e) {
+					System.out.println(e.getMessage());
 				}
 			}
 			catch (InputMismatchException | NumberFormatException e){

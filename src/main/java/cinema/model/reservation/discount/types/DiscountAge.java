@@ -1,8 +1,7 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.types.util.InvalidAgeException;
-import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 /** BREVE DESCRIZIONE CLASSE DiscountAge  (Pattern Strategy)
@@ -68,11 +67,11 @@ public class DiscountAge extends Discount{
 	 * @param min_age
 	 * @throws InvalidMinAgeException 
 	 */
-	public void setMin_Age(int min_age) throws InvalidAgeException {
+	public void setMin_Age(int min_age) throws DiscountException {
 		if (min_age >= 0) {
 			this.min_age = min_age;
 		}
-		else throw new InvalidAgeException();
+		else throw new DiscountException("L'età minima deve essere un numero maggior di zero.");
 	}
 	
 	/**
@@ -80,26 +79,13 @@ public class DiscountAge extends Discount{
 	 * @param max_age
 	 * @throws InvalidMaxAgeException 
 	 */
-	public void setMax_Age(int max_age) throws InvalidAgeException {
+	public void setMax_Age(int max_age) throws DiscountException {
 		if (max_age >= 0) {
 			this.max_age = max_age;
 		}
-		else throw new InvalidAgeException();
+		else throw new DiscountException("L'età massima deve essere maggiore di zero.");
 	}
 	
-	
-	/**
-	 * METODO per settare il nuovo sconto 
-	 * @param f		      Percentuale di sconto da applicare
-	 * @throws InvalidPercentageValueException 
-	 */
-	public void setPercentage(double d) throws InvalidPercentageValueException {
-		if ((d <= 0) || (d >= 1)){
-			throw new InvalidPercentageValueException();
-		}
-		else percentage = d;
-	}
-
 	
 	/**METODO per farsi dire l'età al di sotto della quale parte lo sconto per età */
 	public int getMin_age() {

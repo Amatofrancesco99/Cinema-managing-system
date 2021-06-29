@@ -26,7 +26,7 @@ public class Spectator {
 	 */
 	public Spectator(String name, String surname, String email) throws InvalidSpectatorInfoException {
 		if ((email.equals("")) || (name.equals("")) || (surname.equals(""))) {
-			throw new InvalidSpectatorInfoException();
+			throw new InvalidSpectatorInfoException("I dati personali richiesti sono mancanti.");
 		}
 		else {
 			this.name = name;;

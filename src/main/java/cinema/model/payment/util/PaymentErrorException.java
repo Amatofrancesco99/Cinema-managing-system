@@ -13,8 +13,8 @@ public class PaymentErrorException extends Exception {
 	/** 
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
-	public PaymentErrorException() {
-		System.out.println("Il pagamento non è andato a buon fine.");
+	public PaymentErrorException(String message) {
+		super(message);
 	}
 	
 }

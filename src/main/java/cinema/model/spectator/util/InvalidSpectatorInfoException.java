@@ -14,7 +14,7 @@ public class InvalidSpectatorInfoException extends Exception {
 	/** 
 	 * METODO utilizzato per stampare le informazioni dell'eccezione
 	 */
-	public InvalidSpectatorInfoException() {
-		System.err.println("Ops...I tuoi dati anagrafici inseriti sembrano essere mancanti.");
+	public InvalidSpectatorInfoException(String message) {
+		super(message);
 	}
 }

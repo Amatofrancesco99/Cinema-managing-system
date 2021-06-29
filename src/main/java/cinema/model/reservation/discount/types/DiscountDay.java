@@ -1,11 +1,11 @@
 package cinema.model.reservation.discount.types;
 
-import java.time.LocalDate;
+import java.time.LocalDate; 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.types.util.InvalidPercentageValueException;
+import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
@@ -49,19 +49,6 @@ public class DiscountDay extends Discount{
 		}
 		totalPrice += r.getProjection().getPrice()*r.getNSeats();
 		return totalPrice;
-	}
-	
-	/**
-	 * METODO per aggiungere una nuova data con uno sconto
-	 * @param d				Giorno di validità dello sconto
-	 * @param f				Valore dello sconto
-	 * @throws InvalidPercentageValueException 
-	 */
-	public void addDiscount(LocalDate date, double d) throws InvalidPercentageValueException {
-		if ((d <= 0) || (d > 1)){
-			throw new InvalidPercentageValueException();
-		}
-		else discount.put(date, d);
 	}
 
 
