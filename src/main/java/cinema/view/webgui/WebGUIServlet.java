@@ -150,7 +150,7 @@ public class WebGUIServlet extends HttpServlet {
 		String response = "ok";
 
 		try {
-			YearMonth ccExpirationDate = YearMonth.parse(ccExpiration, DateTimeFormatter.ofPattern("MM/yy"));
+			YearMonth ccExpirationDate = YearMonth.parse(ccExpiration, DateTimeFormatter.ofPattern("yyyy-MM"));
 			cinema.setReservationPurchaser(reservationId, name, surname, email);
 			cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
 			cinema.buyReservation(reservationId);
@@ -160,7 +160,7 @@ public class WebGUIServlet extends HttpServlet {
 					try {
 						cinema.sendAnEmail(reservationId);
 					} catch (ReservationException exception) {
-						// If an error occurred during the send process, it is not handled (the
+						// If an error occurred during the sending process, it is not handled (the
 						// spectator will notify the cinema to fix the issue)
 					}
 				}
