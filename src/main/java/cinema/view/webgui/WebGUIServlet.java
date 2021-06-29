@@ -17,8 +17,11 @@ import org.rythmengine.Rythm;
 import cinema.controller.Cinema;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
+import cinema.model.reservation.util.ReservationException;
+import cinema.model.reservation.util.SeatAvailabilityException;
 
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
@@ -48,6 +51,8 @@ public class WebGUIServlet extends HttpServlet {
 				renderMovieDetails(req, resp);
 			} else if (req.getPathInfo().equals("/checkout")) {
 				renderCheckout(req, resp);
+			} else if (req.getPathInfo().equals("/update-seat-status")) {
+				handleUpdateSeatStatus(req, resp);
 			} else {
 				renderError(req, resp);
 			}
@@ -59,7 +64,14 @@ public class WebGUIServlet extends HttpServlet {
 	protected void renderCheckout(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, ProjectionException {
 		Projection projection = cinema.getProjection(Integer.parseInt(req.getParameter("id")));
-		resp.getWriter().write(Rythm.render("checkout.html", cinema, projection.getMovie(), projection));
+		long reservationId = cinema.createReservation();
+		try {
+			cinema.setReservationProjection(reservationId, projection.getId());
+		} catch (ProjectionException | ReservationException e) {
+			renderError(req, resp);
+			return;
+		}
+		resp.getWriter().write(Rythm.render("checkout.html", cinema, projection.getMovie(), projection, reservationId));
 	}
 
 	protected void renderError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -96,6 +108,27 @@ public class WebGUIServlet extends HttpServlet {
 			schedule.get(schedule.size() - 1).add(projection);
 		}
 		resp.getWriter().write(Rythm.render("movie-details.html", cinema, movie, schedule));
+	}
+
+	protected void handleUpdateSeatStatus(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+		String[] splittedSeat = req.getParameter("seat-id").split("-");
+		int row = Integer.parseInt(splittedSeat[1]);
+		int col = Integer.parseInt(splittedSeat[2]);
+		String response = "ok";
+		try {
+			if (req.getParameter("seat-status").equals("selezionato")) {
+				cinema.addSeatToReservation(reservationId, row, col);
+			} else if (req.getParameter("seat-status").equals("disponibile")) {
+				cinema.removeSeatFromReservation(reservationId, row, col);
+			} else {
+				response = "invalid parameter";
+			}
+		} catch (RoomException | SeatAvailabilityException | ReservationException e) {
+			response = "error";
+		}
+		resp.getWriter().write(Rythm.render(response));
 	}
 
 }

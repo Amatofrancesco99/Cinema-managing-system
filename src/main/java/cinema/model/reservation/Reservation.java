@@ -140,21 +140,12 @@ public class Reservation {
 	/**
 	 * METODO per rimuovere un posto dalla reservation
 	 * @param row, col		Coordinate posto sala da liberare
+	 * @throws RoomException 
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 * @throws FreeAnotherPersonSeatException 
 	*/
-	public void removeSeat(int row, int col) throws RoomException, SeatAvailabilityException {
-		try {
-			if(!projection.checkIfSeatIsAvailable(row, col)) 
-				seats.remove(projection.getPhysicalSeat(row, col));		
-			}
-		catch (Exception e) {
-			// Qualora il posto che sto cercando di rimuovere non fa parte dei posti della
-			// mia prenotazione allora il seat.remove(...) lancerà un eccezione, che noi
-			// gestiamo stampando una stringa che informi il cliente che non può liberare
-			// posti occupati da altre persone
-			throw new SeatAvailabilityException("Il posto che si sta tentando di liberare non è nella propria prenotazione.");
-		}
+	public void removeSeat(int row, int col) throws RoomException {
+		seats.remove(projection.getPhysicalSeat(row, col));
 	}
 	
 	

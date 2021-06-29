@@ -772,8 +772,27 @@ public class Cinema {
 	 * @throws FreeAnotherPersonSeatException
 	 * @throws ReservationNotExistsException 
 	 */
-	public void addSeatToReservation(long r, int row, int col) throws SeatAvailabilityException, RoomException, ReservationException {
+	public void addSeatToReservation(long r, int row, int col) throws RoomException, SeatAvailabilityException, ReservationException {
 		getReservation(r).addSeat(row, col);
+	}
+	
+	/**
+	 * METODO per rimuovere un posto dalla reservation
+	 * 
+	 * @param r
+	 * @param row
+	 * @param col
+	 * @throws ReservationException 
+	 * @throws SeatAvailabilityException 
+	 * @throws RoomException 
+	 * @throws SeatAlreadyTakenException
+	 * @throws InvalidRoomSeatCoordinatesException
+	 * @throws SeatTakenTwiceException
+	 * @throws FreeAnotherPersonSeatException
+	 * @throws ReservationNotExistsException 
+	 */
+	public void removeSeatFromReservation(long r, int row, int col) throws RoomException, ReservationException {
+		getReservation(r).removeSeat(row, col);
 	}
 
 	
