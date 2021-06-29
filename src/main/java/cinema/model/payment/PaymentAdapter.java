@@ -1,6 +1,5 @@
 package cinema.model.payment;
 
-
 /** BREVE DESCRIZIONE PAYMENT
  * 
  * @author Screaming HairyArmadillo Team
@@ -8,7 +7,8 @@ package cinema.model.payment;
  * Interfaccia che rappresenta i metodi che uno strumento
  * di pagamento dovrebbero avere
  */
-public interface Payment {
+public interface PaymentAdapter {
 	
-	public boolean decreaseMoney(double amount);
+	public boolean pay(double amount);
+
 }

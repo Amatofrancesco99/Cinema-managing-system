@@ -33,6 +33,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import cinema.model.payment.GreatNorthernAccountingAdapter;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
@@ -475,7 +476,7 @@ public class Reservation {
 			}
 			else {
 				//Payment simulation
-				if (paymentCard.decreaseMoney(getTotal()) == false) {
+				if (new GreatNorthernAccountingAdapter(paymentCard).pay(getTotal()) == false) {
 					throw new PaymentErrorException("Il pagamento non è andato a buon fine.");
 				}
 				else {
