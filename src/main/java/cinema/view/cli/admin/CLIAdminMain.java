@@ -268,19 +268,17 @@ public class CLIAdminMain {
 			String choice = keyboard.nextLine();
 			if (choice.toUpperCase().equals("N")) {
 				end = true;
-			}
-			if (!choice.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
+			} else if (!choice.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
 				System.out.println("Scelta non valida...\n");
-			}
-			if (choice.toUpperCase().equals("Y")) {
+			} else if (choice.toUpperCase().equals("Y")) {
 				System.out.println("Selezione disponibile: ");
 				System.out.println(myCinema.getAllDiscountStrategy());
 				boolean changeEnd = false;
 				while (!changeEnd) {
 					System.out.println("Inserisci una tra queste strategie: ");
-					String newStrategyName = keyboard.nextLine();
+					String newStrategyName = keyboard.nextLine().toUpperCase();
 					for (int i = 0; i < myCinema.getAllDiscountStrategy().size(); i++) {
-						if (newStrategyName.toUpperCase().equals(myCinema.getAllDiscountStrategy().get(i).toString())) {
+						if (newStrategyName.equals(myCinema.getAllDiscountStrategy().get(i).toString())) {
 							try {
 								myCinema.setCinemaDiscountStrategy(myCinema.getAllDiscountStrategy().get(i));
 							} catch (DiscountNotFoundException e) {
@@ -305,14 +303,12 @@ public class CLIAdminMain {
 		System.out.println("Vuoi cambiare la password? (Y/N): ");
 		boolean end = false;
 		while (!end) {
-			String choice = keyboard.nextLine();
-			if (choice.toUpperCase().equals("N")) {
+			String choice = keyboard.nextLine().toUpperCase();
+			if (choice.equals("N")) {
 				end = true;
-			}
-			if (!choice.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
+			} else if (!choice.equals("N") && (!choice.toUpperCase().equals("Y"))) {
 				System.out.println("Scelta non valida...\n");
-			}
-			if (choice.toUpperCase().equals("Y")) {
+			} else if (choice.equals("Y")) {
 				boolean changePasswordEnd = false;
 				while (!changePasswordEnd) {
 					System.out.println("Inserisci la nuova password: ");

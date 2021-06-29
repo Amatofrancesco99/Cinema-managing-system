@@ -107,9 +107,9 @@ public class CLIUserMain {
 					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 					  + " lo sconto\ndell'eventuale coupon applicato.\n");
 				end = true;
-			} catch (PaymentErrorException | NumberFormatException | ReservationException  e) {
+			} catch (PaymentErrorException | NumberFormatException  e) {
 				System.out.println(e.getMessage());
-			} catch (RoomException | SeatAvailabilityException e) {
+			} catch (RoomException | ReservationException | SeatAvailabilityException e) {
 				System.out.println(e.getMessage());
 				end = true;
 			}
@@ -141,11 +141,9 @@ public class CLIUserMain {
 				} catch (CouponException | ReservationException e) {
 					System.out.println(e.getMessage());
 				}
-			}
-			if ((!usaCoupon.equals("Y"))&&(!usaCoupon.equals("N"))){
+			} else if ((!usaCoupon.equals("Y")) && (!usaCoupon.equals("N"))){
 				System.out.println("Scelta non valida...");
-			}
-			if (usaCoupon.equals("N")) {
+			} else if (usaCoupon.equals("N")) {
 				end = true;
 			}
 		}
@@ -156,7 +154,9 @@ public class CLIUserMain {
 		try {
 			myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
 			myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
-		} catch (DiscountException | ReservationException e1){}	
+		} catch (DiscountException | ReservationException e){
+			
+		}	
 		boolean end = false;
 		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
 		while (!end) {
@@ -183,31 +183,31 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertPaymentCardInfo(long r) {
+	private static void insertPaymentCardInfo(long r) { //PROBLEMA RICORSIONE
 		boolean end = false;
 		PaymentCard p = new PaymentCard();
-		System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
-		while (!end) {
-			System.out.println("\nInserisci il nome del titolare della carta:  ");
-			String owner = keyboard.next();
-			System.out.println("\n");
-			myCinema.setPaymentCardOwner(p, owner);
-			end = true;
-		}
-		end = false;
-		while (!end) {
-			System.out.println("\nInserisci il numero della carta: ");
-			String number = keyboard.next();
-			System.out.println("\n");
-			try {
-				myCinema.setPaymentCardNumber(p, number);
+		while(!end) {
+			System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
+			while (!end) {
+				System.out.println("\nInserisci il nome del titolare della carta:  ");
+				String owner = keyboard.next();
+				System.out.println("\n");
+				myCinema.setPaymentCardOwner(p, owner);
 				end = true;
-			} catch (PaymentCardException e) {
-				System.out.println(e.getMessage());
 			}
-		}
-		end = false;
-		while (!end) {
+			end = false;
+			while (!end) {
+				System.out.println("\nInserisci il numero della carta: ");
+				String number = keyboard.next();
+				System.out.println("\n");
+				try {
+					myCinema.setPaymentCardNumber(p, number);
+					end = true;
+				} catch (PaymentCardException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			end = false;
 			System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
 			String expD = keyboard.next();
 			System.out.println("\n");
@@ -216,7 +216,7 @@ public class CLIUserMain {
 				expirationDate = YearMonth.parse(expD);
 			}
 			catch(Exception e) {
-				
+				System.out.println("La data inserita non è valida.");
 			}
 			try {
 				if (expirationDate != null)
@@ -224,7 +224,6 @@ public class CLIUserMain {
 					end = true;
 			} catch (PaymentCardException e) {
 				System.out.println(e.getMessage());
-				insertPaymentCardInfo(r);
 			}
 		}
 		end = false;
@@ -304,8 +303,7 @@ public class CLIUserMain {
 			if (occupaAltri.contains("N")) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
 				end = true;
-			}
-			if ((!occupaAltri.equals("Y"))&&(!occupaAltri.equals("N"))){
+			} else if ((!occupaAltri.equals("Y"))&&(!occupaAltri.equals("N"))){
 				System.out.println("Scelta non valida...");
 			}
 		} while (!end);
@@ -321,18 +319,18 @@ public class CLIUserMain {
 				for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
 					for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
 						try {
-							if (!myCinema.checkIfReservationProjectionSeatIsAvailable(r, i, j)){
+							if (!myCinema.checkIfReservationProjectionSeatIsAvailable(r, i, j))
 								System.out.print(" ------ ");
-							}
 							else 
 								System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
 						} catch (RoomException e) {
+							System.out.println(e.getMessage());
 						}
 					}
 					System.out.println("");
 				}
 			} catch (ReservationException e) {
-				
+				System.out.println(e.getMessage());
 			}
 	}
 
@@ -363,7 +361,7 @@ public class CLIUserMain {
 				}
 			}
 			catch (InputMismatchException | NumberFormatException e){
-				System.err.println("\nInserisci solamente caratteri numerici.\n");
+				System.out.println("\nInserisci solamente caratteri numerici.\n");
 			}
 		}
 		return projectionId;
@@ -409,7 +407,7 @@ public class CLIUserMain {
 				}
 			}
 			catch (InputMismatchException | NumberFormatException e){
-				System.err.println("\nInserisci solamente caratteri numerici.\n");
+				System.out.println("\nInserisci solamente caratteri numerici.\n");
 			}
 			System.out.println("\n");
 		}
