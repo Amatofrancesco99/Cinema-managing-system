@@ -193,14 +193,14 @@ public class Reservation {
 	
 	/**
 	 * METODO per creare un report, in formato .pdf, contenente tutte le informazioni 
-	 * inerenti la prenotazione stessa.
+	 * inerenti la prenotazione.
 	 * @return esitoCreazione   Qualora il file venisse creato senza problemi il valore restituito
 	 * 					 		assume valore true, viceversa false (boolean).
 	 */
 	public boolean createReport() {
-		// setting della posizione in cui il report sarà salvato
-		String FILE = "./src/main/java/cinema/model/reservation/savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
-		 
+		// posizione in cui il report sarà salvato
+		String FILE = "./savedReports/Reservation_"+Long.toString(getProgressive())+".pdf";
+		
 		// impostazione dei caratteri che verranno utilizzati nel report
 		Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 33,
 	            Font.BOLD);
