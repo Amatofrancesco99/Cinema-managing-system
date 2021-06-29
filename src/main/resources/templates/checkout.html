@@ -17,6 +17,28 @@
 
 @section(content) {
     <div class="container pt-5">
+        <div class="modal fade" id="modal-alert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-alert-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-alert-label"></h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-alert-component" class="alert d-flex align-items-center my-2" role="alert">
+                            <h1 class="my-1 ms-3 me-4">
+                                <span id="modal-alert-icon" class="fa"></span>
+                            </h1>
+                            <div id="modal-alert-body"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">
+                            Chiudi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="pt-5 pb-4">
             <h3 class="pb-3">
                 Scegli il tuo posto in sala
@@ -144,7 +166,7 @@
                             </strong>
                         </li>
                     </ul>
-                    <form action="/apply-promo-code#" method="post" class="card p-2 needs-validation" novalidate>
+                    <form id="promo-code-form" action="/apply-promo-code#" method="post" class="card p-2 needs-validation" novalidate>
                         <div class="input-group has-validation">
                             <input type="text" class="form-control" placeholder="Codice promozionale" required>
                             <button type="submit" class="btn btn-secondary">
@@ -156,7 +178,7 @@
                     </form>
                 </div>
                 <div class="col-md-7 col-lg-8">
-                    <form action="/buy#" method="post" class="needs-validation" novalidate>
+                    <form id="buy-form" action="/buy#" method="post" class="needs-validation" novalidate>
                         <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
                         <div class="row g-3">
                             <h4 class="mb-3">
@@ -295,12 +317,12 @@
                         },
                     }).done((response) => {
                         // Alert the user if the seat status couldn't be updated
-                        if (response != "ok") {
-                            alert('Impossibile aggiornare lo stato del posto');
+                        if (response != 'ok') {
+                            showAlert(false, 'Errore di rete', 'Impossibile aggiornare lo stato del posto selezionato, riprova pi&ugrave; tardi.');
                         }
                     }).fail(() => {
                         // Alert the user if something went wrong during the update
-                        alert('Impossibile raggiungere il server (errore di rete)');
+                        showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server.');
                     });
                 });
             });
@@ -328,17 +350,44 @@
                 div.innerHTML = 'Questo campo &egrave; obbligatorio';
             });
 
-            // Disable form submission if there are invalid form fields
-            var forms = document.querySelectorAll('.needs-validation');
-            Array.prototype.slice.call(forms).forEach((form) => {
-                form.addEventListener('submit', (event) => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
-            });
+            $('#promo-code-form')[0].addEventListener('submit', (event) => {
+                if (!event.target.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                event.target.classList.add('was-validated');
+            }, false);
+
+            $('#buy-form')[0].addEventListener('submit', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                if (event.target.checkValidity()) {
+                    $.ajax({
+                       type: 'POST',
+                       url: $('#buy-form').attr('action'),
+                       data: $('#buy-form').serialize()
+                    }).done((response) => {
+                        if (response == 'ok') {
+                            showAlert(true, 'Acquisto effettuato', 'Acquisto effettuato correttamente.<br>Riceverai un\'e-mail a breve con la ricevuta di prenotazione da presentare all\'ingresso');
+                        } else {
+                            showAlert(false, 'Errore durante l\'acquisto', 'Impossibile effettuare l\'acquisto.');
+                        }
+                    }).fail(() => {
+                        // Alert the user if something went wrong during the request
+                        showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server.');
+                    });
+                }
+                event.target.classList.add('was-validated');
+            }, false);
+
+            function showAlert(success, title, body) {
+                $('#modal-alert-component').addClass(success ? 'alert-success' : 'alert-warning');
+                $('#modal-alert-icon').addClass(success ? 'fa-check-circle' : 'fa-exclamation-circle');
+                $('#modal-alert-label').html(title);
+                $('#modal-alert-body').html(body);
+                var alert = new bootstrap.Modal($('#modal-alert')[0]);
+                alert.show();
+            }
         })();
     </script>
 }

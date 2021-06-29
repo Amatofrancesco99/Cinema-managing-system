@@ -56,7 +56,7 @@ public class WebGUIServlet extends HttpServlet {
 			} else if (req.getPathInfo().equals("/update-seat-status")) {
 				handleUpdateSeatStatus(req, resp);
 			} else if (req.getPathInfo().equals("/buy")) {
-				renderBuy(req, resp);
+				handleBuy(req, resp);
 			} else {
 				renderError(req, resp);
 			}
@@ -135,7 +135,7 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render(response));
 	}
 
-	protected void renderBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void handleBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
 
 		String name = req.getParameter("name");
@@ -151,11 +151,25 @@ public class WebGUIServlet extends HttpServlet {
 
 		// Temporary test
 		try {
-		cinema.setReservationPurchaser(reservationId, name, surname, email);
-		cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
-		
-		cinema.buyReservation(reservationId);
-		cinema.sendAnEmail(reservationId);}catch(Exception e) {e.printStackTrace();}
+			cinema.setReservationPurchaser(reservationId, name, surname, email);
+			cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
+
+			cinema.buyReservation(reservationId);
+			Thread emailThread = new Thread() {
+				@Override
+				public void run() {
+					try {
+						cinema.sendAnEmail(reservationId);
+					} catch (ReservationException exception) {
+						// If an error occurred during the send process, it is not handled (the
+						// spectator will notify the cinema to fix the issue)
+					}
+				}
+			};
+			emailThread.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
