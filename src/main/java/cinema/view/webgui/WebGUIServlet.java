@@ -2,6 +2,8 @@ package cinema.view.webgui;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,6 +55,8 @@ public class WebGUIServlet extends HttpServlet {
 				renderCheckout(req, resp);
 			} else if (req.getPathInfo().equals("/update-seat-status")) {
 				handleUpdateSeatStatus(req, resp);
+			} else if (req.getPathInfo().equals("/buy")) {
+				renderBuy(req, resp);
 			} else {
 				renderError(req, resp);
 			}
@@ -129,6 +133,29 @@ public class WebGUIServlet extends HttpServlet {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));
+	}
+
+	protected void renderBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+
+		String name = req.getParameter("name");
+		String surname = req.getParameter("surname");
+		String email = req.getParameter("e-mail");
+
+		String ccName = req.getParameter("cc-name");
+		String ccNumber = req.getParameter("cc-number");
+		String ccExpiration = req.getParameter("cc-expiration");
+		String ccCvv = req.getParameter("cc-cvv");
+
+		YearMonth ccExpirationDate = YearMonth.parse(ccExpiration, DateTimeFormatter.ofPattern("MM/yy"));
+
+		// Temporary test
+		try {
+		cinema.setReservationPurchaser(reservationId, name, surname, email);
+		cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
+		
+		cinema.buyReservation(reservationId);
+		cinema.sendAnEmail(reservationId);}catch(Exception e) {e.printStackTrace();}
 	}
 
 }

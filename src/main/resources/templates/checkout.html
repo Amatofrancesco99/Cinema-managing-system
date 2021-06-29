@@ -157,7 +157,6 @@
                 </div>
                 <div class="col-md-7 col-lg-8">
                     <form action="/buy#" method="post" class="needs-validation" novalidate>
-                        <input type="hidden" id="selected-seats" name="selected-seats" value="">
                         <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
                         <div class="row g-3">
                             <h4 class="mb-3">
@@ -256,9 +255,6 @@
             // Add the listener used to track the available/selected state to every seat icon
             Array.from(document.getElementsByClassName('seat')).forEach((seat) => {
                 seat.addEventListener('click', (event) => {
-                    // Serialized list of selected seats
-                    var serializedSelectedSeats = '';
-
                     // Toggle the seat status between available and selected
                     if (event.target.status == 'selezionato') {
                         event.target.status = 'disponibile';
@@ -268,18 +264,17 @@
                         event.target.src = '/static/img/seat-selected.svg';
                     }
 
-                    // Add the ids of the selected seats to the list
-                    Array.from(document.getElementsByClassName('seat')).forEach((item) => {
+                    var atLeastOneSeatIsSelected = false;
+                    // Check if at least one seat is selected
+                    Array.from(document.getElementsByClassName('seat')).some((item) => {
                         if (item.status == 'selezionato') {
-                            serializedSelectedSeats += item.id + ' ';
+                            atLeastOneSeatIsSelected = true;
                         }
+                        return atLeastOneSeatIsSelected;
                     });
 
-                    // Update the form field with the list of selected seats
-                    document.getElementById('selected-seats').value = serializedSelectedSeats.trim();
-
                     // Enable/disable the button used to go to the checkout form based on the number of selected seats
-                    if (serializedSelectedSeats == '') {
+                    if (!atLeastOneSeatIsSelected) {
                         document.getElementById('go-to-checkout').classList.add('disabled');
                         document.getElementById('go-to-checkout').classList.remove('invisible');
 
