@@ -16,7 +16,6 @@ import cinema.model.spectator.Spectator;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
-import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;

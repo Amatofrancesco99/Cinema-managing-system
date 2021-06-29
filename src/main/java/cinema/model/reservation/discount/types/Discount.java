@@ -17,6 +17,7 @@ public abstract class Discount implements ReservationDiscountStrategy{
 	 * @param type		Tipo di sconto.
 	 */
 	private TypeOfDiscounts type;
+	@SuppressWarnings("unused")
 	private double percentage = 0.15; //TODO: mettere nel costruttore l'assegnazione della percentuale
 	
 	

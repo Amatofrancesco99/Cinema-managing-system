@@ -45,4 +45,20 @@ public class PaymentCard implements Payment{
 				return new Random().nextBoolean();
 		}
 	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public String getCvv() {
+		return cvv;
+	}
+
+	public YearMonth getExpirationDate() {
+		return expirationDate;
+	}
 }

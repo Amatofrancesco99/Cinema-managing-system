@@ -1,6 +1,5 @@
 package cinema.controller.util;
 
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 /** BREVE DESCRIZIONE CLASSE MovieNoLongerProjectedException
  * 
