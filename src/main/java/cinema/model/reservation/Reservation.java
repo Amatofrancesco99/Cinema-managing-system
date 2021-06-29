@@ -89,7 +89,6 @@ public class Reservation {
 	private Coupon coupon;
 	private int numberPeopleUntilMinAge;
 	private int numberPeopleOverMaxAge;
-	private int countTakenSeat = 0;
 	private ReservationDiscountStrategy rd;
 	
 	
@@ -429,9 +428,15 @@ public class Reservation {
 	 * @throws SeatAlreadyTakenException 
 	 * @throws NumberFormatException 
 	 */
-	public boolean buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException, PaymentErrorException{
+	public void buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException, PaymentErrorException{
 		takeSeat();
-		return pay();
+		try {
+			pay();
+		} catch (ReservationException | PaymentErrorException e) {
+			freeAllSeats();
+			seats.removeAll(seats);
+			throw e;
+		}
 	}
 	
 	
@@ -441,18 +446,17 @@ public class Reservation {
 	 * @throws SeatAlreadyTakenException
 	 */
 	public void takeSeat() throws RoomException, SeatAvailabilityException {		
-		for (int i = countTakenSeat; i<seats.size(); i++) {
+		for (int i = 0; i<seats.size(); i++) {
 			String coordinates = projection.getSeatCoordinates(seats.get(i));
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
-			if (projection.takeSeat(row, col))
-				countTakenSeat++;
+			if (projection.takeSeat(row, col));	
 			else {
-				seats.remove(seats.get(i));
-				throw new SeatAvailabilityException("Il posto " + Room.rowIndexToRowLetter(row) + "-" + ( col + 1 ) + " è già occupato.");
+				freeAllSeats();
+				seats.removeAll(seats);
+				throw new SeatAvailabilityException("Uno dei posti selezionati è già stato occupato.");
 			}
 		}
-		
 	}
 	
 	
@@ -463,7 +467,7 @@ public class Reservation {
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
 	 */
-	public boolean pay() throws ReservationException, PaymentErrorException {
+	public void pay() throws ReservationException, PaymentErrorException {
 		if (getNSeats() > 0)
 		{
 			if (paymentCard == null) {
@@ -480,12 +484,27 @@ public class Reservation {
 						// chiaramente se un coupon è stato associato alla prenotazione
 						this.coupon.setUsed(true);
 					}
-					return true;
 				}
 			}
 		}
 		else throw new ReservationException("Nessun posto è stato selezionato.");
 	}
+	
+	
+	/**
+	 * METODO per liberare tutti i posti
+	 * @throws RoomException
+	 */
+	public void freeAllSeats() throws RoomException {
+		for (int i = 0; i<seats.size(); i++) {
+			String coordinates = projection.getSeatCoordinates(seats.get(i));
+			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
+			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
+			if (projection.checkIfSeatIsAvailable(row, col)) 
+				projection.freeSeat(row, col);		
+		}
+	}
+	
 	
 	/**
 	 * METODO per settare il numero di persone che hanno un'età inferiore ad un età minima
@@ -494,7 +513,7 @@ public class Reservation {
 	 */
 	public void setNumberPeopleUnderMinAge(int n) throws DiscountException {
 		if(n < 0)
-			throw new DiscountException("Il nuero di persone non può essere negativo.");
+			throw new DiscountException("Il numero di persone non può essere negativo.");
 		if (n + getNumberPeopleOverMaxAge() > this.getNSeats())
 			throw new DiscountException("Il numero di persone sotto età supera il numero di biglietti che si intende comprare.");
 		numberPeopleUntilMinAge = n;

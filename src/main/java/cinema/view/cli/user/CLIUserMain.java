@@ -64,8 +64,13 @@ public class CLIUserMain {
 		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
 		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
 		
-		// EFFETTUA PAGAMENTO
-		buy(r); 
+		// EFFETTUA PAGAMENTO, SE QUALCOSA VA STORTO INSERISCO DI NUOVO 
+		while(!buy(r)) {
+			showProjectionSeats(r);	 	
+			addSeatsToReservation(r);
+			insertPaymentCardInfo(r);	
+			insertSpectatorsInfo(r);
+		}
 		
 		// SPEDIZIONE DELL'EMAIL AL CLIENTE, CONTENENTE IL REPORT
 		sendEmail(r); 			    
@@ -90,9 +95,8 @@ public class CLIUserMain {
 	}
 
 	
-	private static void buy(long r){
+	private static boolean buy(long r){
 		boolean end = false;
-		boolean error = false;
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("\nPAGAMENTO \n");
 		while (!end) {
@@ -105,20 +109,12 @@ public class CLIUserMain {
 					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 					  + " lo sconto\ndell'eventuale coupon applicato.\n");
 				end = true;
-			} catch (PaymentErrorException | NumberFormatException  e) {
+			} catch (PaymentErrorException | ReservationException | SeatAvailabilityException | RoomException | NumberFormatException  e) {
 				System.out.println(e.getMessage());
-			} catch (RoomException | ReservationException | SeatAvailabilityException e) {
-				System.out.println(e.getMessage());
-				end = true;
+				return false;	
 			}
 		}
-		if(error) {
-			System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
-			showProjectionSeats(r);
-			addSeatsToReservation(r);
-			insertSpectatorsInfo(r);
-			buy(r);
-		}
+		return true;
 	}
 
 
