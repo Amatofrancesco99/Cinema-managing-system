@@ -3,6 +3,7 @@ package cinema.model.reservation;
 import java.io.FileOutputStream;  
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -583,13 +584,17 @@ public class Reservation {
 
 
 	/** METODO per associare la carta di credito alla prenotazione*/
-	public void setPaymentCard(PaymentCard p) {
-		this.paymentCard = p;
+	public void setPaymentCard(String number, String owner, String cvv, YearMonth expirationDate) {
+		this.paymentCard = new PaymentCard(number, owner, cvv, expirationDate);
 	}
 	
 	
 	/**METODO per farsi dire la strategia della reservation*/
 	public ReservationDiscountStrategy getStrategy() {
 		return rd;
+	}
+	
+	public PaymentCard getPaymentCard() {
+		return this.paymentCard;
 	}
 }

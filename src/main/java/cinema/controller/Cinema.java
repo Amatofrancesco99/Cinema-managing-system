@@ -9,8 +9,6 @@ import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
-import cinema.model.payment.methods.paymentCard.PaymentCard;
-import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
@@ -794,41 +792,7 @@ public class Cinema {
 		getReservation(r).setPurchaser(new Spectator(name, surname, email));
 	}
 
-	
-	/**
-	 * METODO per impostare il nome di una carta di credito
-	 * 
-	 * @param p
-	 * @param owner
-	 */
-	public void setPaymentCardOwner(PaymentCard p, String owner) {
-		p.setOwner(owner);
-	}
 
-	
-	/**
-	 * METODO per impostare il numero di una carta di credito
-	 * 
-	 * @param p
-	 * @param number
-	 * @throws InvalidCreditCardNumberException
-	 */
-	public void setPaymentCardNumber(PaymentCard p, String number) throws PaymentCardException {
-		p.setNumber(number);
-	}
-
-	
-	/**
-	 * METODO per impostare la data di scadenza di una carta di credito
-	 * 
-	 * @param p
-	 * @param expirationDate
-	 * @throws ExpiredCreditCardException
-	 */
-	public void setPaymentCardExpirationDate(PaymentCard p, YearMonth expirationDate)
-			throws PaymentCardException {
-		p.setExpirationDate(expirationDate);
-	}
 
 	
 	/**
@@ -836,22 +800,11 @@ public class Cinema {
 	 * 
 	 * @param p
 	 * @param ccv
+	 * @throws ReservationException 
 	 * @throws InvalidCCVException
 	 */
-	public void setPaymentCardCvv(PaymentCard p, String cvv) throws PaymentCardException {
-		p.setCvv(cvv);
-	}
-
-	
-	/**
-	 * METODO per aggiungere alla prenotazione la carta di credito
-	 * 
-	 * @param r
-	 * @param p
-	 * @throws ReservationNotExistsException 
-	 */
-	public void setReservationPaymentCard(long r, PaymentCard p) throws ReservationException {
-		getReservation(r).setPaymentCard(p);
+	public void setReservationPaymentCard(long r, String number, String owner, String cvv, YearMonth expirationDate) throws ReservationException {
+		getReservation(r).setPaymentCard(number, owner, cvv, expirationDate);
 	}
 
 	

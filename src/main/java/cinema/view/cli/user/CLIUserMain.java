@@ -1,6 +1,6 @@
 package cinema.view.cli.user;
 
-import java.time.YearMonth;
+import java.time.YearMonth; 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -9,8 +9,6 @@ import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
-import cinema.model.payment.methods.paymentCard.PaymentCard;
-import cinema.model.payment.methods.paymentCard.util.PaymentCardException;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
@@ -118,8 +116,8 @@ public class CLIUserMain {
 			System.out.println("\n\nInserisci altri posti alla tua prenotazione...");
 			showProjectionSeats(r);
 			addSeatsToReservation(r);
-			buy(r);
 			insertSpectatorsInfo(r);
+			buy(r);
 		}
 	}
 
@@ -183,65 +181,39 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertPaymentCardInfo(long r) { //PROBLEMA RICORSIONE
+	private static void insertPaymentCardInfo(long r) {
 		boolean end = false;
-		PaymentCard p = new PaymentCard();
 		while(!end) {
 			System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
-			while (!end) {
-				System.out.println("\nInserisci il nome del titolare della carta:  ");
-				String owner = keyboard.next();
-				System.out.println("\n");
-				myCinema.setPaymentCardOwner(p, owner);
-				end = true;
-			}
-			end = false;
-			while (!end) {
-				System.out.println("\nInserisci il numero della carta: ");
-				String number = keyboard.next();
-				System.out.println("\n");
-				try {
-					myCinema.setPaymentCardNumber(p, number);
-					end = true;
-				} catch (PaymentCardException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			end = false;
-			System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
-			String expD = keyboard.next();
+			System.out.println("\nInserisci il nome del titolare della carta:  ");
+			String owner = keyboard.next();
+			System.out.println("\n");
+			System.out.println("\nInserisci il numero della carta: ");
+			String number = keyboard.next();
 			System.out.println("\n");
 			YearMonth expirationDate = null;
-			try {
-				expirationDate = YearMonth.parse(expD);
+			boolean validDate = false;
+			while(!validDate) {
+				System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
+				String expD = keyboard.next();
+				System.out.println("\n");
+				try {
+					expirationDate = YearMonth.parse(expD);
+					validDate = true;
+				}
+				catch(Exception e) {
+					System.out.println("La data inserita non è valida.");
+				}
 			}
-			catch(Exception e) {
-				System.out.println("La data inserita non è valida.");
-			}
-			try {
-				if (expirationDate != null)
-					myCinema.setPaymentCardExpirationDate(p, expirationDate);
-					end = true;
-			} catch (PaymentCardException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-		end = false;
-		while (!end) {
 			System.out.println("\nInserisci il CVV: ");
 			String cvv = keyboard.next();
 			System.out.println("\n");
+			end = true;
 			try {
-				myCinema.setPaymentCardCvv(p, cvv);
-				end = true;
-			} catch (PaymentCardException e) {
+				myCinema.setReservationPaymentCard(r, number, owner, cvv, expirationDate);
+			} catch (ReservationException e) {
 				System.out.println(e.getMessage());
 			}
-		}	
-		try {
-			myCinema.setReservationPaymentCard(r, p);
-		} catch (ReservationException e) {
-			System.out.println(e.getMessage());
 		}
 	}
 

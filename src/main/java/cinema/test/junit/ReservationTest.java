@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
@@ -162,7 +163,7 @@ public class ReservationTest {
 			e.toString();
 		}
 		try {
-			r.setPaymentCard(new PaymentCard());
+			r.setPaymentCard("1234567890123456", "TestOwnerName", "123", YearMonth.of(2022, 01));
 			r.buy();
 		} catch (NumberFormatException | SeatAvailabilityException | RoomException
 				| ReservationException | PaymentErrorException e) {
