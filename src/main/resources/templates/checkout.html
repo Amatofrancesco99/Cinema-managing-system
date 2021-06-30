@@ -134,10 +134,10 @@
                     <ul class="list-group mb-3">
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
-                                <h6 class="my-0">
-                                    Biglietti
-                                </h6>
-                                <small id="n-seats" class="text-muted"></small>
+                                <h6 id="n-seats" class="my-0"></h6>
+                                <small class="text-muted">
+                                    @(movie.getTitle())
+                                </small>
                             </div>
                             <span id="full-price" class="text-muted"></span>
                         </li>
@@ -149,12 +149,12 @@
                                 <small id="type-of-discount"></small>
                             </div>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between bg-light">
+                        <li id="coupon-code-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
                             <div class="text-success">
                                 <h6 class="my-0">
                                     Codice promozionale
                                 </h6>
-                                <!--<small id="">CODICE123</small>-->
+                                <small id="coupon-code"></small>
                             </div>
                             <span id="coupon-discount" class="text-success"></span>
                         </li>
@@ -400,11 +400,15 @@
                 }).done((response) => {
                     var splittedResponse = response.replaceAll('.', ',').split('\n');
                     if (splittedResponse[0] == 'ok') {
-                        $('#n-seats').html(splittedResponse[1] + ' x');
+                        $('#n-seats').html(splittedResponse[1] + ' x Biglietto cinema');
                         $('#full-price').html(splittedResponse[2] + ' &euro;');
                         $('#type-of-discount').html(splittedResponse[3]);
-                        $('#coupon-discount').html('- ' + splittedResponse[4] + ' &euro;');
-                        $('#total-amount').html(splittedResponse[5] + ' &euro;');
+                        $('#coupon-code').html(splittedResponse[4]);
+                        $('#coupon-discount').html('- ' + splittedResponse[5] + ' &euro;');
+                        $('#total-amount').html(splittedResponse[6] + ' &euro;');
+                        if (splittedResponse[5] != '0,0') {
+                            $('#coupon-code-shopping-cart-entry').removeClass('d-none');
+                        }
                     } else {
                         // Alert the user if something went wrong during the update to the shopping cart
                         showAlert(false, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');

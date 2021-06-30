@@ -148,6 +148,11 @@ public class WebGUIServlet extends HttpServlet {
 			responseTokens.add(String.valueOf(cinema.getReservationNSeats(reservationId)));
 			responseTokens.add(String.valueOf(cinema.getReservationFullPrice(reservationId)));
 			responseTokens.add(cinema.getReservationTypeOfDiscount(reservationId));
+			try {
+				responseTokens.add(cinema.getReservationCouponCode(reservationId));
+			} catch (NullPointerException exception) {
+				responseTokens.add("no coupon");
+			}
 			responseTokens.add(String.valueOf(cinema.getReservationCouponDiscount(reservationId)));
 			responseTokens.add(String.valueOf(cinema.getReservationTotalAmount(reservationId)));
 		} catch (ReservationException e) {

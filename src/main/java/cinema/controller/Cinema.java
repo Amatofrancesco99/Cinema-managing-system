@@ -280,11 +280,12 @@ public class Cinema {
 
 		// Aggiunti due coupon di prova emessi dal cinema
 		try {
-			createCoupon("SCONTO-PRIMAVERA",5);
+			createCoupon("SCONTO-PRIMAVERA", 5);
 			coupons.get(0).setUsed(true); // Coupon ID: SCONTO-PRIMAVERA già utilizzato (Prova)
-			createCoupon("PLUTO123",2);
-			createCoupon("PAPERINO123",3.5);
-		} catch (CouponException e) { }
+			createCoupon("PLUTO123", 2);
+			createCoupon("PAPERINO123", 3.5);
+		} catch (CouponException e) {
+		}
 	}
 
 	/**
@@ -586,8 +587,11 @@ public class Cinema {
 		throw new CouponException("Il coupon " + code + " non esiste.");
 	}
 
-	/** METODO per creare un nuovo coupon dalla classe cinema 
-	 * @throws CouponException */
+	/**
+	 * METODO per creare un nuovo coupon dalla classe cinema
+	 * 
+	 * @throws CouponException
+	 */
 	public String createCoupon(String code, double price) throws CouponException {
 		for (Coupon c : coupons) {
 			if (c.getCode().equals(code)) {
@@ -844,13 +848,12 @@ public class Cinema {
 	 * @throws CouponAleadyUsedException
 	 * @throws ReservationNotExistsException
 	 */
-	public void setReservationCoupon(long r, String code)
-			throws CouponException, ReservationException {
+	public void setReservationCoupon(long r, String code) throws CouponException, ReservationException {
 		Coupon coupon = getCoupon(code);
 		if (coupon.isUsed() == true) {
 			throw new CouponException("Il coupon " + code + " è già stato usato.");
-		}
-		else getReservation(r).setCoupon(coupon);
+		} else
+			getReservation(r).setCoupon(coupon);
 	}
 
 	/**
@@ -1049,6 +1052,10 @@ public class Cinema {
 		} catch (NullPointerException exception) {
 			return 0.0;
 		}
+	}
+
+	public String getReservationCouponCode(long r) throws ReservationException {
+		return getReservation(r).getCoupon().getCode();
 	}
 
 }
