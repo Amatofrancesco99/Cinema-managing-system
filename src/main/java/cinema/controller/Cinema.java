@@ -288,12 +288,11 @@ public class Cinema {
 
 		// Aggiunti due coupon di prova emessi dal cinema
 		try {
-			coupons.add(new Coupon("SCONTO-PRIMAVERA",5));
+			createCoupon("SCONTO-PRIMAVERA",5);
 			coupons.get(0).setUsed(true); // Coupon ID: SCONTO-PRIMAVERA già utilizzato (Prova)
-			coupons.add(new Coupon("PLUTO123",2));
-			coupons.add(new Coupon("PAPERINO123",3.5));
-		} catch (CouponException e) {
-		}
+			createCoupon("PLUTO123",2);
+			createCoupon("PAPERINO123",3.5);
+		} catch (CouponException e) { }
 	}
 
 
@@ -604,6 +603,11 @@ public class Cinema {
 	/** METODO per creare un nuovo coupon dalla classe cinema 
 	 * @throws CouponException */
 	public String createCoupon(String code, double price) throws CouponException {
+		for (Coupon c : coupons) {
+			if (c.getCode().equals(code)) {
+				throw new CouponException("Il coupon " + code + " è già stato creato.");
+			}
+		}
 		Coupon c = new Coupon(code, price);
 		coupons.add(c);
 		return c.getCode();
