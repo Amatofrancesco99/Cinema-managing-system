@@ -284,6 +284,7 @@ public class Cinema {
 			coupons.get(0).setUsed(true); // Coupon ID: SCONTO-PRIMAVERA già utilizzato (Prova)
 			createCoupon("PLUTO123", 2);
 			createCoupon("PAPERINO123", 3.5);
+			createCoupon("SCONTONE50", 50.0);
 		} catch (CouponException e) {
 		}
 	}

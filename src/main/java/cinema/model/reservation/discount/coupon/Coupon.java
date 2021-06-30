@@ -27,7 +27,7 @@ public class Coupon {
 	 * @param discount
 	 * @throws CouponException 
 	 */
-	public Coupon (String code, double discount) throws CouponException {
+	public Coupon(String code, double discount) throws CouponException {
 		if (code.length() < MIN_COUPON_CHARACTERS) {
 			throw new CouponException("Il coupon che si sta cercando di creare è troppo corto (almeno 8 cifre)." );
 		}

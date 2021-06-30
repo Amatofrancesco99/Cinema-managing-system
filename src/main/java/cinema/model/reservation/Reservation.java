@@ -135,7 +135,11 @@ public class Reservation {
 		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
 		// il totale dell'importo di sconto di questo coupon
 		if (getCoupon() != null) {
-			total -= getCoupon().getDiscount();
+			if (total > getCoupon().getDiscount()) {
+				total -= getCoupon().getDiscount();
+			} else {
+				total = 0.0;
+			}
 		}
 		return  Math.round(total * 100.0)/100.0;
 	}  
