@@ -22,6 +22,7 @@ import cinema.model.Movie;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
+import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 
@@ -57,12 +58,14 @@ public class WebGUIServlet extends HttpServlet {
 				handleUpdateSeatStatus(req, resp);
 			} else if (req.getPathInfo().equals("/get-checkout-info")) {
 				handleGetCheckoutInfo(req, resp);
+			} else if (req.getPathInfo().equals("/apply-coupon")) {
+				handleApplyCoupon(req, resp);
 			} else if (req.getPathInfo().equals("/buy")) {
 				handleBuy(req, resp);
 			} else {
 				renderError(req, resp);
 			}
-		} catch (NoMovieException | ProjectionException e) {
+		} catch (NoMovieException | ProjectionException exception) {
 			renderError(req, resp);
 		}
 	}
@@ -131,7 +134,7 @@ public class WebGUIServlet extends HttpServlet {
 			} else {
 				response = "invalid parameter";
 			}
-		} catch (RoomException | SeatAvailabilityException | ReservationException e) {
+		} catch (RoomException | SeatAvailabilityException | ReservationException exception) {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));
@@ -155,11 +158,26 @@ public class WebGUIServlet extends HttpServlet {
 			}
 			responseTokens.add(String.valueOf(cinema.getReservationCouponDiscount(reservationId)));
 			responseTokens.add(String.valueOf(cinema.getReservationTotalAmount(reservationId)));
-		} catch (ReservationException e) {
+		} catch (ReservationException exception) {
 			responseTokens.clear();
 			responseTokens.add("error");
 		}
 		resp.getWriter().write(Rythm.render(String.join("\n", responseTokens)));
+	}
+
+	protected void handleApplyCoupon(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+		String couponCode = req.getParameter("coupon-code");
+
+		String response = "ok";
+
+		try {
+			cinema.setReservationCoupon(reservationId, couponCode);
+		} catch (CouponException | ReservationException exception) {
+			response = "error";
+		}
+		resp.getWriter().write(Rythm.render(String.join("\n", response)));
 	}
 
 	protected void handleBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -182,7 +200,7 @@ public class WebGUIServlet extends HttpServlet {
 			cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
 			cinema.buyReservation(reservationId);
 			cinema.sendReservationEmail(reservationId);
-		} catch (Exception e) {
+		} catch (Exception exception) {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));

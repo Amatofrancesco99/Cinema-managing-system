@@ -152,7 +152,7 @@
                         <li id="coupon-code-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
                             <div class="text-success">
                                 <h6 class="my-0">
-                                    Codice promozionale
+                                    Codice coupon
                                 </h6>
                                 <small id="coupon-code"></small>
                             </div>
@@ -165,15 +165,21 @@
                             <strong id="total-amount"></strong>
                         </li>
                     </ul>
-                    <form id="promo-code-form" action="/apply-promo-code#" method="post" class="card p-2 needs-validation" novalidate>
+                    <form id="promo-code-form" action="/apply-coupon#" method="post" class="card p-2 needs-validation" novalidate>
+                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
                         <div class="input-group has-validation">
-                            <input type="text" class="form-control" placeholder="Codice promozionale" required>
-                            <button type="submit" class="btn btn-secondary">
+                            <input type="text" id="coupon-code" name="coupon-code" class="form-control" placeholder="Codice coupon" required>
+                            <button class="btn btn-secondary" type="submit">
                                 Applica
                             </button>
                             <div class="invalid-feedback default-feedback"></div>
                         </div>
                         <div class="invalid-feedback default-feedback"></div>
+                        <div class="mt-1">
+                            <small class="text-muted">
+                                I coupon non sono cumulabili
+                            </small>
+                        </div>
                     </form>
                 </div>
                 <div class="col-md-7 col-lg-8">
@@ -215,10 +221,12 @@
                                     Titolare della carta di credito
                                 </label>
                                 <input type="text" class="form-control" id="cc-name" name="cc-name" placeholder="Mario Rossi" required>
-                                <small class="text-muted">
-                                    Nome completo scritto sulla carta
-                                </small>
                                 <div class="invalid-feedback default-feedback"></div>
+                                <div class="mt-1">
+                                    <small class="text-muted">
+                                        Nome completo scritto sulla carta
+                                    </small>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="cc-number" class="form-label">
@@ -316,10 +324,10 @@
                         }
                     }).done((response) => {
                         // Alert the user if the seat status couldn't be updated
-                        if (response != 'ok') {
-                            showAlert(false, 'Errore di rete', 'Impossibile aggiornare lo stato del posto selezionato, riprova pi&ugrave; tardi.');
-                        } else {
+                        if (response == 'ok') {
                             updateShoppingCart();
+                        } else {
+                            showAlert(false, 'Errore di rete', 'Impossibile aggiornare lo stato del posto selezionato, riprova pi&ugrave; tardi.');
                         }
                     }).fail(() => {
                         // Alert the user if something went wrong during the update
@@ -352,9 +360,24 @@
             });
 
             $('#promo-code-form')[0].addEventListener('submit', (event) => {
-                if (!event.target.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
+                event.preventDefault();
+                event.stopPropagation();
+                if (event.target.checkValidity()) {
+                    $.ajax({
+                       type: 'POST',
+                       url: $('#promo-code-form').attr('action'),
+                       data: $('#promo-code-form').serialize()
+                    }).done((response) => {
+                        if (response == 'ok') {
+                            updateShoppingCart();
+                            $('#promo-code-form').addClass('d-none');
+                        } else {
+                            showAlert(false, 'Errore durante l\'inserimento del coupon', 'Errore durante l\'inserimento del coupon.');
+                        }
+                    }).fail(() => {
+                        // Alert the user if something went wrong during the request
+                        showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server.');
+                    });
                 }
                 event.target.classList.add('was-validated');
             }, false);
