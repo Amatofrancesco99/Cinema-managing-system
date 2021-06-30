@@ -135,36 +135,34 @@
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
                                 <h6 class="my-0">
-                                    Product name
+                                    Biglietti
                                 </h6>
-                                <small class="text-muted">
-                                    Brief description
-                                </small>
+                                <small id="n-seats" class="text-muted"></small>
                             </div>
-                            <span class="text-muted">
-                                12,00 &euro;
-                            </span>
+                            <span id="full-price" class="text-muted"></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between bg-light">
                             <div class="text-success">
                                 <h6 class="my-0">
-                                    Promo code
+                                    Sconto attivo
                                 </h6>
-                                <small>
-                                    EXAMPLECODE
-                                </small>
+                                <small id="type-of-discount"></small>
                             </div>
-                            <span class="text-success">
-                                - 5,00 &euro;
-                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between bg-light">
+                            <div class="text-success">
+                                <h6 class="my-0">
+                                    Codice promozionale
+                                </h6>
+                                <!--<small id="">CODICE123</small>-->
+                            </div>
+                            <span id="coupon-discount" class="text-success"></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span>
                                 Totale (EUR)
                             </span>
-                            <strong>
-                                7,00 &euro;
-                            </strong>
+                            <strong id="total-amount"></strong>
                         </li>
                     </ul>
                     <form id="promo-code-form" action="/apply-promo-code#" method="post" class="card p-2 needs-validation" novalidate>
@@ -314,12 +312,14 @@
                         data: { 
                             'reservation-id': document.getElementById('reservation-id').value,
                             'seat-id': event.target.id,
-                            'seat-status': event.target.status,
-                        },
+                            'seat-status': event.target.status
+                        }
                     }).done((response) => {
                         // Alert the user if the seat status couldn't be updated
                         if (response != 'ok') {
                             showAlert(false, 'Errore di rete', 'Impossibile aggiornare lo stato del posto selezionato, riprova pi&ugrave; tardi.');
+                        } else {
+                            updateShoppingCart();
                         }
                     }).fail(() => {
                         // Alert the user if something went wrong during the update
@@ -388,6 +388,31 @@
                 $('#modal-alert-body').html(body);
                 var alert = new bootstrap.Modal($('#modal-alert')[0]);
                 alert.show();
+            }
+
+            function updateShoppingCart() {
+                $.ajax({
+                    type: 'POST',
+                    url: 'get-checkout-info',
+                    data: { 
+                        'reservation-id': document.getElementById('reservation-id').value
+                    }
+                }).done((response) => {
+                    var splittedResponse = response.replaceAll('.', ',').split('\n');
+                    if (splittedResponse[0] == 'ok') {
+                        $('#n-seats').html(splittedResponse[1] + ' x');
+                        $('#full-price').html(splittedResponse[2] + ' &euro;');
+                        $('#type-of-discount').html(splittedResponse[3]);
+                        $('#coupon-discount').html('- ' + splittedResponse[4] + ' &euro;');
+                        $('#total-amount').html(splittedResponse[5] + ' &euro;');
+                    } else {
+                        // Alert the user if something went wrong during the update to the shopping cart
+                        showAlert(false, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
+                    }
+                }).fail(() => {
+                    // Alert the user if something went wrong during the request
+                    showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server.');
+                });
             }
         })();
     </script>
