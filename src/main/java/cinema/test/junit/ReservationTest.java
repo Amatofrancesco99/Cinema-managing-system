@@ -22,6 +22,8 @@ import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.handlers.ReportHandler;
+import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
@@ -214,7 +216,11 @@ public class ReservationTest {
 	
 	/** Test di creazione del report */
 	public void testCreateReport() {
-		assertEquals(true, r.createReport());
+		try {
+			ReportHandler.createReport(r);
+		} catch (HandlerException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	
@@ -226,6 +232,10 @@ public class ReservationTest {
 		// del report contenente tutte le informazioni sulla prenotazione alla tua casella
 		// di posta personale
 		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
-		assertEquals(true, r.sendEmail());
+		try {
+			r.sendEmail();
+		} catch (HandlerException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

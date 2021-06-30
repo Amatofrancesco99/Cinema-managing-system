@@ -22,6 +22,7 @@ import cinema.model.Movie;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
+import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 
@@ -159,7 +160,7 @@ public class WebGUIServlet extends HttpServlet {
 				public void run() {
 					try {
 						cinema.sendAnEmail(reservationId);
-					} catch (ReservationException exception) {
+					} catch (ReservationException | HandlerException exception) {
 						// If an error occurred during the sending process, it is not handled (the
 						// spectator will notify the cinema to fix the issue)
 					}

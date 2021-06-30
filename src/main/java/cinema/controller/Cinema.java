@@ -22,6 +22,7 @@ import cinema.model.reservation.discount.types.DiscountDay;
 import cinema.model.reservation.discount.types.DiscountNumberSpectators;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.reservation.util.SeatAvailabilityException;
@@ -912,9 +913,10 @@ public class Cinema {
 	 * sua prenotazione: film, posti prenotati, ora, ecc...)
 	 * 
 	 * @param r
+	 * @throws HandlerException 
 	 * @throws ReservationNotExistsException 
 	 */
-	public void sendAnEmail(long r) throws ReservationException {
+	public void sendAnEmail(long r) throws ReservationException, HandlerException {
 		getReservation(r).sendEmail();
 	}
 
