@@ -142,7 +142,10 @@ public class ReservationTest {
 	@Test
 	public void testCoupon() {
 		// Coupon utilizzato una sola volta
-		long c1 = myCinema.createCoupon(2);
+		String c1 = null;
+		try {
+			c1 = myCinema.createCoupon("PROVA123",2);
+		} catch (CouponException e1) { }
 		try {
 			r.setCoupon(myCinema.getCoupon(c1));
 			assertEquals(23 , r.getFullPrice() - myCinema.getCoupon(c1).getDiscount(),0);

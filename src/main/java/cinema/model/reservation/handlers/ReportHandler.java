@@ -41,70 +41,30 @@ public class ReportHandler {
 	 * @throws HandlerException 
 	 */
 	public static void createReport(Reservation r) throws HandlerException {
-		// posizione in cui il report sarà salvato
-		String FILE = "./savedReports/Reservation_"+Long.toString(r.getProgressive())+".pdf";
-		
-		// impostazione dei font che verranno utilizzati nel report
-		HashMap<String,Font> allFonts = createAllFonts();
-
-		// tentativo di generazione del report
-		generateReport(FILE,allFonts,r);
+		String FILE = "./savedReports/Reservation_"+Long.toString(r.getProgressive())+".pdf";	// posizione in cui il report sarà salvato
+		HashMap<String,Font> allFonts = createAllFonts();	// impostazione dei font che verranno utilizzati nel report
+		generateReport(FILE,allFonts,r);					// tentativo di generazione del report
 	}
 
 	
 	/** METODO per la creazione del report*/
 	private static void generateReport(String FILE, HashMap<String,Font> allFonts, Reservation r) throws HandlerException {
 		try {
-			// generazione di un documento vuoto e apertura di quest ultimo
-			Document document = createEmptyDocument(FILE);
+			Document document = createEmptyDocument(FILE);		// generazione di un documento vuoto e apertura di quest ultimo
 			document.open();
-			
-			// aggiungere le proprietà al documento
-			addDocumentProperties(document,r);
-	        
-	        // creazione di un colore di background per il nostro report (giallognolo)
-	        String imageBG = "https://i.pinimg.com/originals/00/25/03/002503946c0a59d4ae800ab05a037fda.jpg";
-	        
-	        // creare una nuova immagine di quel colore e setting delle sue dimensioni
-	        Image bg = createReportBackgroundImage(imageBG);
-            
-            // creazione di una nuova immagine con il logo del cinema
-	        Image image = createReportLogoImage();
-         
-            // creare un paragrafo contenente il titolo del cinema
-	        Paragraph titleP = createReportTitleParagraph(allFonts);
-	        
-	        // creare un paragrafo contenente alcune proprietà del cinema
-	        Paragraph infoCinemaP = createCinemaInfoParagraph(allFonts);
-	        
-	        // creare un paragrafo contenente il titolo del film associato alla prenotazione
-	        Paragraph filmP = createFilmTitleParagraph(allFonts,r);
-	        
-	        // creazione di un paragrafo contenente alcune informazioni riassuntive sul 
-	        // film che si vuole visionare
-	        Paragraph infoFilmP = createFilmPropertiesParagraph(allFonts, r);
-	        
-	        // creazione di informazioni sulla prenotazione
-	        Paragraph infoReservationP = createReservationPropertiesParagraph(allFonts, r);
-	        
-	        // generazione di una tabella 
-	        PdfPTable table = createEmptyTable();
-
-	        // aggiungere alla tabella i posti selezionati
-	        insertFieldsIntoTable(table, r);
-	        
-	        //totale della prenotazione
-	        Paragraph totalP = createTotalParagraph(allFonts, r);
-	        
-	        // aggiunte al documento tutte le informazioni precedentemente create
-	        addAllInfoToDocument(document, bg, image, titleP, infoCinemaP, filmP, infoFilmP, infoReservationP, table, totalP);
-	        
-	        // Chiusura del documento
-            document.close();
-            
-            // se tutto va bene aggiungo il report alla cartella contenente tutti i report
-            // emessi dal cinema
-            r.setReportLocation(FILE);
+			addDocumentProperties(document,r);									// aggiungere le proprietà al documenti
+	        Image image = createReportLogoImage();								// creazione di una nuova immagine con il logo del cinema
+	        Paragraph titleP = createReportTitleParagraph(allFonts);			// creare un paragrafo contenente il titolo del cinema
+	        Paragraph infoCinemaP = createCinemaInfoParagraph(allFonts);		// creare un paragrafo contenente alcune proprietà del cinema
+	        Paragraph filmP = createFilmTitleParagraph(allFonts,r);				// creare un paragrafo contenente il titolo del film associato alla prenotazioni
+	        Paragraph infoFilmP = createFilmPropertiesParagraph(allFonts, r);	// creazione di un paragrafo contenente alcune informazioni riassuntive sul film che si vuole visionare
+	        Paragraph infoReservationP = createReservationPropertiesParagraph(allFonts, r); 	// creazione di informazioni sulla prenotazione
+	        PdfPTable table = createEmptyTable();					// generazione di una tabella
+	        insertFieldsIntoTable(table, r);						// aggiungere alla tabella i posti selezionati
+	        Paragraph totalP = createTotalParagraph(allFonts, r);	//totale della prenotazione
+	        addAllInfoToDocument(document, image, titleP, infoCinemaP, filmP, infoFilmP, infoReservationP, table, totalP); // aggiunte al documento tutte le informazioni precedentemente create
+            document.close();	// Chiusura del documento
+            r.setReportLocation(FILE);	// se tutto va bene aggiungo il report alla cartella contenente tutti i report emessi dal cinema
         } catch (Exception e) {
         	throw new HandlerException("Si è verificato un problema nella generazione del report.");
         }
@@ -114,7 +74,6 @@ public class ReportHandler {
 	/** METODO per aggiungere al documento tutte le informazioni e paragrafi generati 
 	 * precedentemente
 	 * @param document
-	 * @param bg
 	 * @param image
 	 * @param titleP
 	 * @param infoCinemaP
@@ -125,9 +84,8 @@ public class ReportHandler {
 	 * @param totalP
 	 * @throws DocumentException
 	 */
-	private static void addAllInfoToDocument(Document document, Image bg, Image image, Paragraph titleP, Paragraph infoCinemaP, Paragraph filmP, Paragraph infoFilmP, Paragraph infoReservationP, PdfPTable table, Paragraph totalP) throws DocumentException {
-		document.add(bg);
-        document.add(image);
+	private static void addAllInfoToDocument(Document document, Image image, Paragraph titleP, Paragraph infoCinemaP, Paragraph filmP, Paragraph infoFilmP, Paragraph infoReservationP, PdfPTable table, Paragraph totalP) throws DocumentException {
+		document.add(image);
         document.add(titleP);
         document.add(infoCinemaP);
         document.add(filmP);
@@ -146,7 +104,7 @@ public class ReportHandler {
 	 */
 	private static Paragraph createTotalParagraph(HashMap<String, Font> allFonts, Reservation r) {
         Paragraph totalP = new Paragraph("TOTALE:  " + String.format("%.02f",r.getTotal())
-		   + "€ ", allFonts.get("subFont3"));
+		   + " EUR ", allFonts.get("subFont3"));
         totalP.setSpacingBefore(80);
         totalP.setAlignment(Element.ALIGN_RIGHT);
         totalP.setIndentationRight(55);
@@ -192,16 +150,12 @@ public class ReportHandler {
 	 * @return
 	 */
 	private static Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph infoReservationP = new Paragraph("Sala n°:  " + r.getProjection().getRoom().getProgressive()
+		Paragraph infoReservationP = new Paragraph("Cliente: " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + "\n"
+				+ "Sala " + r.getProjection().getRoom().getProgressive()
 				+ "\t\t\t\t\t\t\tData:  " + r.getProjection().getDateTime().getDayOfWeek().toString().toLowerCase()
-				+ " " + r.getProjection().getDateTime().getDayOfMonth()
-				+ " " + r.getProjection().getDateTime().getMonth().toString().toLowerCase()
-				+ " " + r.getProjection().getDateTime().getYear()
-				+ " \t\t\t\t\t\tOra: " + String.format("%02d", r.getProjection().getDateTime().getHour()) 
-				+ ":" + String.format("%02d", r.getProjection().getDateTime().getMinute())
-				+ " \t\t\t\t\t\tCliente: " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname(),
-				allFonts.get("subFont2"));
-				infoReservationP.setSpacingBefore(30);
+				+ " " + r.getProjection().getDateTime().getDayOfMonth() + " " + r.getProjection().getDateTime().getMonth().toString().toLowerCase() + " " + r.getProjection().getDateTime().getYear()
+				+ " \t\t\t\t\t\tOra: " + String.format("%02d", r.getProjection().getDateTime().getHour()) + ":" + String.format("%02d", r.getProjection().getDateTime().getMinute()), allFonts.get("subFont2"));
+		infoReservationP.setSpacingBefore(30);
 		return infoReservationP;
 	}
 
@@ -277,21 +231,6 @@ public class ReportHandler {
 	}
 
 
-	/** METODO per creare una nuova immagine di un colore specifico e settare le dimensioni
-	 * 
-	 * @param imageBG
-	 * @throws BadElementException
-	 * @throws MalformedURLException
-	 * @throws IOException
-	 */
-	private static Image createReportBackgroundImage(String imageBG) throws BadElementException, MalformedURLException, IOException {
-        Image bg = Image.getInstance(new URL(imageBG));
-        bg.scalePercent(100f);
-        bg.setAbsolutePosition(-600f, -500f);
-        return bg;
-	}
-
-
 	/** METODO per aggiungere i metadati al documento
 	 * 
 	 * @param document
@@ -326,16 +265,13 @@ public class ReportHandler {
 	 */
 	private static HashMap<String,Font> createAllFonts() {
 		HashMap<String,Font> allFonts = new HashMap<String,Font>();
-		Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 33,
-	            Font.BOLD);
-		Font subFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
-	            Font.BOLD);
-		Font subFont2 = new Font(Font.FontFamily.TIMES_ROMAN, 14,
-	            Font.NORMAL);
-		Font subFont3 = new Font(Font.FontFamily.TIMES_ROMAN, 18,
-	            Font.NORMAL);
-		Font smallFont = new Font(Font.FontFamily.TIMES_ROMAN, 14,
-	            Font.ITALIC);
+		
+		Font catFont = new Font(Font.FontFamily.HELVETICA, 33, Font.BOLD);
+		Font subFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
+		Font subFont2 = new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL);
+		Font subFont3 = new Font(Font.FontFamily.HELVETICA, 18,Font.NORMAL);
+		Font smallFont = new Font(Font.FontFamily.HELVETICA, 14, Font.ITALIC);
+		
 		allFonts.put("catFont", catFont);
 		allFonts.put("subFont", subFont);
 		allFonts.put("subFont2", subFont2);

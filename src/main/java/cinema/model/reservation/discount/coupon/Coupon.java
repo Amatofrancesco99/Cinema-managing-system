@@ -1,6 +1,6 @@
 package cinema.model.reservation.discount.coupon;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import cinema.model.reservation.discount.coupon.util.CouponException;
 
 
 /** BREVE DESCRIZIONE CLASSE Coupon
@@ -13,28 +13,34 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Coupon {
 	
 	/**
-	 * @param number     Numero di coupon, univoco (reso tale grazie al progressivo)
+	 * @param code       Codice del coupon
 	 * @param discount   Sconto del coupon
 	 * @param used		 Lo sconto è già stato utilizzato? (True = sì, False = no )
 	 */
-	private static final AtomicInteger count = new AtomicInteger(0);
-	private final long progressive;
+	private final int MIN_COUPON_CHARACTERS = 8;
+	private final String code;
 	private double discount;
 	private boolean used; 
 	
 	/**
 	 * COSTRUTTORE della classe
 	 * @param discount
+	 * @throws CouponException 
 	 */
-	public Coupon (double discount) {
-		progressive = count.incrementAndGet(); 
-		this.discount = Math.round(discount * 100.0)/100.0;
-		used = false;
+	public Coupon (String code, double discount) throws CouponException {
+		if (code.length() < MIN_COUPON_CHARACTERS) {
+			throw new CouponException("Il coupon che si sta cercando di creare è troppo corto (almeno 8 cifre)." );
+		}
+		else {
+			this.code = code;
+			this.discount = Math.round(discount * 100.0)/100.0;
+			used = false;
+		}
 	}
 
 	/**METODO per farsi dare il progressivo del coupon */
-	public long getProgressive() {
-		return progressive;
+	public String getCode() {
+		return code;
 	}
 
 	/**METODO per farsi dire l'ammontare di sconto del coupon */
