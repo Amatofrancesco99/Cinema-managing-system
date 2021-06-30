@@ -22,7 +22,7 @@ public class GreatNorthernAccountingAdapter implements PaymentAdapter{
 	 * rispetto al credito residuo, ecc...
 	 */
 	@Override
-	public boolean pay(double amount) { //POSSIBILE DA SPOSTARE IN PAY
+	public boolean pay(double amount) {
 		int mode = 0;
 		switch(mode) {
 			case 0:

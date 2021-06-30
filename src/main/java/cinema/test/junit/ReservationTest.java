@@ -128,27 +128,13 @@ public class ReservationTest {
 			error = 1;
 		}
 		assertEquals(1, error);
-		
-		// Libero il posto usato per test
+		// Libero il posto usato per test e ritorno alla situazione di prima (rioccupo i posti)
 		try {
 			r.getProjection().freeSeat(0, 0);
-		} catch (RoomException e) {
-		}
-	}
-	
-	
-	/** Test di occupazione dei posti (scegliere un posto non presente in sala) */
-	@Test
-	public void testRoomSeatNotExists() {
-		int error = 0;
-		int nCols = r.getProjection().getRoom().getNumberCols();
-		int nRows = r.getProjection().getRoom().getNumberRows();
-		try {
-			r.addSeat(nRows + 2 , nCols + 8);
+			r.addSeat(0, 1);
+			r.addSeat(0, 2);
 		} catch (RoomException | SeatAvailabilityException e) {
-			error ++;
-		}
-		assertEquals(1,error);
+		}	
 	}
 	
 	
@@ -170,7 +156,6 @@ public class ReservationTest {
 				| ReservationException | PaymentErrorException e) {
 			e.toString();
 		}
-		
 		// Cerco di riutilizzare lo stesso coupon in due reservation diverse
 		try {
 			Reservation newReservation = myCinema.getReservation(myCinema.createReservation());
@@ -180,8 +165,7 @@ public class ReservationTest {
 			assertEquals(12.50, newReservation.getTotal(),0);
 		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException e) {
 			e.toString();
-		}
-		
+		}	
 	}
 	
 	
@@ -198,19 +182,33 @@ public class ReservationTest {
 	}
 	
 	
+	/** Test di occupazione dei posti (scegliere un posto non presente in sala) */
+	@Test
+	public void testRoomSeatNotExists() {	
+		int error = 0;
+		int nCols = r.getProjection().getRoom().getNumberCols();
+		int nRows = r.getProjection().getRoom().getNumberRows();
+		try {
+			r.addSeat(nRows + 2 , nCols + 8);
+		} catch (RoomException | SeatAvailabilityException e) {
+			error ++;
+		}
+		assertEquals(1,error);
+	}
+	
+	
 	/** Test qualora si inserisca un numero di persone che hanno un età inferiore ad un
 	* età minima da cui partono gli sconti superiore al numero di persone della prenotazione
 	* stessa */
 	@Test 
 	public void testOnOtherSpectatorInfo() {
-		int error = 1;
+		int error = 0;
 		try {
 			r.setNumberPeopleOverMaxAge(10);
-			r.setNumberPeopleUnderMinAge(-2);
 		} catch (DiscountException e) {
 			error ++;
 		}
-		assertEquals(2,error);
+		assertEquals(1,error);
 	}
 	
 	
@@ -233,6 +231,9 @@ public class ReservationTest {
 		// di posta personale
 		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		try {
+			/* notare ci sono tre posti nell'email inviata 
+			* (ogni classe di test chiama setUpBeforeClass(), prima di iniziare)
+			*/
 			r.sendEmail();
 		} catch (HandlerException e) {
 			System.out.println(e.getMessage());
