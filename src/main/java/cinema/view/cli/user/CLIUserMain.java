@@ -14,6 +14,7 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
+import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
@@ -89,9 +90,13 @@ public class CLIUserMain {
 	private static void sendEmail(long r) {
 		System.out.println("-----------------------------------------------------\n");
 		System.out.println("\nSPEDIZIONE EMAIL \n");
-		//myCinema.sendAnEmail(r);
-		System.out.println("Controlla le tue email ricevute, a breve ne riceverai una "
-				+ "con allegato un pdf contenente il resoconto della tua prenotazione.\n");
+		try {
+			myCinema.sendReservationEmail(r);
+			System.out.println("Controlla le tue email ricevute, a breve ne riceverai una "
+					+ "con allegato un pdf contenente il resoconto della tua prenotazione.\n");
+		} catch (ReservationException | HandlerException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	
