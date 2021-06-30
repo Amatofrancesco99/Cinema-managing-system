@@ -149,12 +149,12 @@
                                 <small id="type-of-discount"></small>
                             </div>
                         </li>
-                        <li id="coupon-code-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
+                        <li id="coupon-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
                             <div class="text-success">
                                 <h6 class="my-0">
                                     Codice coupon
                                 </h6>
-                                <small id="coupon-code"></small>
+                                <small id="coupon-code-shopping-cart-entry"></small>
                             </div>
                             <span id="coupon-discount" class="text-success"></span>
                         </li>
@@ -169,7 +169,7 @@
                         <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
                         <div class="input-group has-validation">
                             <input type="text" id="coupon-code" name="coupon-code" class="form-control" placeholder="Codice coupon" required>
-                            <button class="btn btn-secondary" type="submit">
+                            <button id="coupon-code-button" class="btn btn-secondary" type="submit">
                                 Applica
                             </button>
                             <div class="invalid-feedback default-feedback"></div>
@@ -370,7 +370,8 @@
                     }).done((response) => {
                         if (response == 'ok') {
                             updateShoppingCart();
-                            $('#promo-code-form').addClass('d-none');
+                            $('#coupon-code').attr('disabled', true);
+                            $('#coupon-code-button').attr('disabled', true);
                         } else {
                             showAlert(false, 'Errore durante l\'inserimento del coupon', 'Errore durante l\'inserimento del coupon.');
                         }
@@ -436,11 +437,11 @@
                                 $('#type-of-discount').html('Sconto per giorno');
                                 break;
                         }
-                        $('#coupon-code').html(splittedResponse[4]);
+                        $('#coupon-code-shopping-cart-entry').html(splittedResponse[4]);
                         $('#coupon-discount').html('- ' + splittedResponse[5] + ' &euro;');
                         $('#total-amount').html(splittedResponse[6] + ' &euro;');
                         if (splittedResponse[4] != 'no coupon') {
-                            $('#coupon-code-shopping-cart-entry').removeClass('d-none');
+                            $('#coupon-shopping-cart-entry').removeClass('d-none');
                         }
                     } else {
                         // Alert the user if something went wrong during the update to the shopping cart
