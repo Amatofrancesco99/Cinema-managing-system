@@ -22,7 +22,6 @@ import cinema.model.Movie;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
-import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 
@@ -155,18 +154,7 @@ public class WebGUIServlet extends HttpServlet {
 			cinema.setReservationPurchaser(reservationId, name, surname, email);
 			cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
 			cinema.buyReservation(reservationId);
-			Thread emailThread = new Thread() {
-				@Override
-				public void run() {
-					try {
-						cinema.sendAnEmail(reservationId);
-					} catch (ReservationException | HandlerException exception) {
-						// If an error occurred during the sending process, it is not handled (the
-						// spectator will notify the cinema to fix the issue)
-					}
-				}
-			};
-			emailThread.start();
+			cinema.sendReservationEmail(reservationId);
 		} catch (Exception e) {
 			response = "error";
 		}

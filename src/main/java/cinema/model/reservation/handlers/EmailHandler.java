@@ -39,25 +39,36 @@ public class EmailHandler {
 	 * 								quest ultimo.
 	 */
 	public static void sendEmail(Reservation r) throws HandlerException {
-		// prima di inviare l'email verifico che il report sia già stato generato, 
-		// se non è ancora stato generato lo genero
-		if (r.getReportLocation() == null) {
-			ReportHandler.createReport(r);
-		}
-		
-		// Stabilire le informazioni sul sender ed il receiver dell'email
-		String to = r.getPurchaser().getEmail(); //receiver email
-		final String user = Cinema.getEmail(); //sender email (cinema)
-		final String password = Cinema.getPassword(); //sender password
-		   
-		// Configurazione delle proprietà dell'email
-		Properties properties = setUpMainProperties(user, password);
+	    Thread emailThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					// prima di inviare l'email verifico che il report sia già stato generato, 
+					// se non è ancora stato generato lo genero
+					if (r.getReportLocation() == null) {
+						ReportHandler.createReport(r);
+					}
+					
+					// Stabilire le informazioni sul sender ed il receiver dell'email
+					String to = r.getPurchaser().getEmail(); //receiver email
+					final String user = Cinema.getEmail(); //sender email (cinema)
+					final String password = Cinema.getPassword(); //sender password
+					   
+					// Configurazione delle proprietà dell'email
+					Properties properties = setUpMainProperties(user, password);
 
-	    // Generazione di una nuova sessione mail
-	    Session session = startNewSession(user,password,properties);
-		   
-	    //Tentativo di composizione del messaggio ed invio dell'email  
-	    createMessageAndSendEmail(session,user,to,r);
+				    // Generazione di una nuova sessione mail
+				    Session session = startNewSession(user,password,properties);
+					   
+				    //Tentativo di composizione del messaggio ed invio dell'email  
+				    createMessageAndSendEmail(session,user,to,r);
+				} catch (HandlerException exception) {
+					// If an error occurred during the sending process, it is not handled (the
+					// spectator will notify the cinema to fix the issue)
+				}
+			}
+		};
+		emailThread.start();
 	}
 
 	
