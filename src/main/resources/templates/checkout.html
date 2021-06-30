@@ -1,8 +1,9 @@
 @import cinema.controller.Cinema
 @import cinema.model.Movie
 @import cinema.model.cinema.Room
-@import cinema.model.cinema.util.RoomException;
+@import cinema.model.cinema.util.RoomException
 @import cinema.model.projection.Projection
+@import java.time.YearMonth
 @import java.time.format.DateTimeFormatter
 @import java.time.format.TextStyle
 
@@ -232,7 +233,7 @@
                                 <label for="cc-expiration" class="form-label">
                                     Scadenza
                                 </label>
-                                <input type="month" class="form-control" id="cc-expiration" name="cc-expiration" placeholder="2023-01" required>
+                                <input type="month" class="form-control" id="cc-expiration" name="cc-expiration" min="@(YearMonth.now().toString())" placeholder="2023-01" required>
                                 <div class="invalid-feedback default-feedback"></div>
                             </div>
                             <div class="col-md-2">
