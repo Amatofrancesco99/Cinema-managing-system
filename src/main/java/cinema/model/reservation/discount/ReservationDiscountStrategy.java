@@ -1,6 +1,7 @@
 package cinema.model.reservation.discount;
 
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
 /** BREVE DESCRIZIONE CLASSE ReservationDiscountStrategy (Pattern Strategy + Pattern Composite)
@@ -25,4 +26,7 @@ public interface ReservationDiscountStrategy {
 	 * @return Money  Ritorno del prezzo totale scontato
 	 */
 	public double getTotal(Reservation r);
+	
+	public TypeOfDiscounts getTypeOfDiscount();
+
 }

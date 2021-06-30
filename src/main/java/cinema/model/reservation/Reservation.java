@@ -17,6 +17,7 @@ import cinema.model.reservation.discount.ReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.handlers.EmailHandler;
 import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.SeatAvailabilityException;
@@ -71,7 +72,7 @@ public class Reservation {
 	 * progressivo che si auto-incrementa e la data di creazione corrisponde alla data di
 	 * sistema in cui viene invocato il costruttore stesso
 	 */
-	public Reservation (ReservationDiscountStrategy rd) {
+	public Reservation(ReservationDiscountStrategy rd) {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
@@ -390,5 +391,9 @@ public class Reservation {
 	/** METODO per associare la carta di credito alla prenotazione*/
 	public void setPaymentCard(String number, String owner, String cvv, YearMonth expirationDate) {
 		this.paymentCard = new PaymentCard(number, owner, cvv, expirationDate);
+	}
+	
+	public TypeOfDiscounts getTypeOfDiscount() {
+		return rd.getTypeOfDiscount();
 	}
 }

@@ -1,7 +1,6 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.discount.ReservationDiscountStrategy;
-import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
@@ -17,9 +16,6 @@ public abstract class Discount implements ReservationDiscountStrategy{
 	 * @param type		Tipo di sconto.
 	 */
 	private TypeOfDiscounts type;
-	@SuppressWarnings("unused")
-	private double percentage = 0.15; //TODO: mettere nel costruttore l'assegnazione della percentuale
-	
 	
 	/**
 	 * COSTRUTTORE 
@@ -38,18 +34,5 @@ public abstract class Discount implements ReservationDiscountStrategy{
 	
 	/**METODO per farsi restituire le caratteristiche di uno sconto*/
 	public abstract String toString();
-	
-	/**
-	 * METODO per settare il nuovo sconto 
-	 * @param f		      Percentuale di sconto da applicare
-	 * @throws InvalidPercentageValueException 
-	 */
-	public void setPercentage(double d) throws DiscountException {
-		if(d < 0)
-			throw new DiscountException("La percentuale dello sconto deve essere positiva.");
-		else if(d > 1)
-			throw new DiscountException("La percentuale dello sconto deve essere minore o uguale il 100%");
-		this.percentage = d;
-	}
 
 }

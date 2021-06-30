@@ -55,6 +55,8 @@ public class WebGUIServlet extends HttpServlet {
 				renderCheckout(req, resp);
 			} else if (req.getPathInfo().equals("/update-seat-status")) {
 				handleUpdateSeatStatus(req, resp);
+			} else if (req.getPathInfo().equals("/get-checkout-info")) {
+				handleGetCheckoutInfo(req, resp);
 			} else if (req.getPathInfo().equals("/buy")) {
 				handleBuy(req, resp);
 			} else {
@@ -133,6 +135,26 @@ public class WebGUIServlet extends HttpServlet {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));
+	}
+
+	protected void handleGetCheckoutInfo(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+
+		ArrayList<String> responseTokens = new ArrayList<>();
+		responseTokens.add("ok");
+
+		try {
+			responseTokens.add(String.valueOf(cinema.getReservationNSeats(reservationId)));
+			responseTokens.add(String.valueOf(cinema.getReservationFullPrice(reservationId)));
+			responseTokens.add(cinema.getReservationTypeOfDiscount(reservationId));
+			responseTokens.add(String.valueOf(cinema.getReservationCouponDiscount(reservationId)));
+			responseTokens.add(String.valueOf(cinema.getReservationTotalAmount(reservationId)));
+		} catch (ReservationException e) {
+			responseTokens.clear();
+			responseTokens.add("error");
+		}
+		resp.getWriter().write(Rythm.render(String.join("\n", responseTokens)));
 	}
 
 	protected void handleBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

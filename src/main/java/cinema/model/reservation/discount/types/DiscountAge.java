@@ -107,4 +107,19 @@ public class DiscountAge extends Discount{
 			   "Età al di sopra della quale lo sconto è valido: " + max_age + "\n" +
 			   "Percentuale di sconto applicata: " + percentage;
 	}
+	
+
+	/**
+	 * METODO per settare il nuovo sconto 
+	 * @param f		      Percentuale di sconto da applicare
+	 * @throws InvalidPercentageValueException 
+	 */
+	public void setPercentage(double d) throws DiscountException {
+		if(d < 0)
+			throw new DiscountException("La percentuale dello sconto deve essere positiva.");
+		else if(d > 1)
+			throw new DiscountException("La percentuale dello sconto deve essere minore o uguale il 100%");
+		this.percentage = d;
+	}
+
 }
