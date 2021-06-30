@@ -132,10 +132,9 @@ public class CLIUserMain {
 			String usaCoupon = keyboard.next().toUpperCase();
 			if (usaCoupon.equals("Y")) {
 				System.out.println("Inserisci il codice del coupon:  ");
-				String couponId = keyboard.next();
-				long coupon = (long) Integer.valueOf(couponId.replaceAll("[\\D]", ""));
+				String couponCode = keyboard.next();
 				try {
-					myCinema.setReservationCoupon(r, coupon);
+					myCinema.setReservationCoupon(r, couponCode);
 					end = true;
 				} catch (CouponException | ReservationException e) {
 					System.out.println(e.getMessage());

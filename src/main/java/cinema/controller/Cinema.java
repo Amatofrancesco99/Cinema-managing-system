@@ -287,10 +287,13 @@ public class Cinema {
 		}
 
 		// Aggiunti due coupon di prova emessi dal cinema
-		coupons.add(new Coupon(5));
-		coupons.get(0).setUsed(true); // Coupon ID: 1 già utilizzato (Prova)
-		coupons.add(new Coupon(6));
-		coupons.add(new Coupon(3.5));
+		try {
+			coupons.add(new Coupon("SCONTO-PRIMAVERA",5));
+			coupons.get(0).setUsed(true); // Coupon ID: SCONTO-PRIMAVERA già utilizzato (Prova)
+			coupons.add(new Coupon("PLUTO123",2));
+			coupons.add(new Coupon("PAPERINO123",3.5));
+		} catch (CouponException e) {
+		}
 	}
 
 
@@ -588,21 +591,22 @@ public class Cinema {
 	 * @throws CouponNotExistsException Eccezione lanciata qualora non ci sia nessun
 	 *                                  coupon con quell'Id progressivo
 	 */
-	public Coupon getCoupon(long progressive) throws CouponException {
+	public Coupon getCoupon(String code) throws CouponException {
 		for (Coupon c : coupons) {
-			if (c.getProgressive() == progressive) {
+			if (c.getCode().equals(code)) {
 				return c;
 			}
 		}
-		throw new CouponException("Il coupon " + progressive + " non esiste.");
+		throw new CouponException("Il coupon " + code + " non esiste.");
 	}
 	
 	
-	/** METODO per creare un nuovo coupon dalla classe cinema */
-	public long createCoupon(double price) {
-		Coupon c = new Coupon(price);
+	/** METODO per creare un nuovo coupon dalla classe cinema 
+	 * @throws CouponException */
+	public String createCoupon(String code, double price) throws CouponException {
+		Coupon c = new Coupon(code, price);
 		coupons.add(c);
-		return c.getProgressive();
+		return c.getCode();
 	}
 	
 	
@@ -867,11 +871,11 @@ public class Cinema {
 	 * @throws CouponAleadyUsedException
 	 * @throws ReservationNotExistsException 
 	 */
-	public void setReservationCoupon(long r, long progressive)
+	public void setReservationCoupon(long r, String code)
 			throws CouponException, ReservationException {
-		Coupon coupon = getCoupon(progressive);
+		Coupon coupon = getCoupon(code);
 		if (coupon.isUsed() == true) {
-			throw new CouponException("Il coupon " + progressive + " è già stato usato.");
+			throw new CouponException("Il coupon " + code + " è già stato usato.");
 		}
 		else getReservation(r).setCoupon(coupon);
 	}

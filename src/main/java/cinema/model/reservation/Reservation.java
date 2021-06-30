@@ -159,7 +159,7 @@ public class Reservation {
 		else {
 			if (!coupon.isUsed())
 				this.coupon = coupon;
-			else throw new CouponException("Il coupon " + coupon.getProgressive() + " è già stato usato.");
+			else throw new CouponException("Il coupon " + coupon.getCode() + " è già stato usato.");
 		}
 	}
 	
