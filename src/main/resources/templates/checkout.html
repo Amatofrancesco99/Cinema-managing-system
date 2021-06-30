@@ -148,6 +148,7 @@
                                 </h6>
                                 <small id="type-of-discount"></small>
                             </div>
+                            <span id="discount-amount" class="text-success"></span>
                         </li>
                         <li id="coupon-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
                             <div class="text-success">
@@ -165,7 +166,7 @@
                             <strong id="total-amount"></strong>
                         </li>
                     </ul>
-                    <form id="promo-code-form" action="/apply-coupon#" method="post" class="card p-2 needs-validation" novalidate>
+                    <form id="coupon-code-form" action="/apply-coupon#" method="post" class="card p-2 needs-validation" novalidate>
                         <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
                         <div class="input-group has-validation">
                             <input type="text" id="coupon-code" name="coupon-code" class="form-control" placeholder="Codice coupon" required>
@@ -359,14 +360,14 @@
                 div.innerHTML = 'Questo campo &egrave; obbligatorio';
             });
 
-            $('#promo-code-form')[0].addEventListener('submit', (event) => {
+            $('#coupon-code-form')[0].addEventListener('submit', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
                 if (event.target.checkValidity()) {
                     $.ajax({
                        type: 'POST',
-                       url: $('#promo-code-form').attr('action'),
-                       data: $('#promo-code-form').serialize()
+                       url: $('#coupon-code-form').attr('action'),
+                       data: $('#coupon-code-form').serialize()
                     }).done((response) => {
                         if (response == 'ok') {
                             updateShoppingCart();
@@ -437,10 +438,11 @@
                                 $('#type-of-discount').html('Sconto per giorno');
                                 break;
                         }
-                        $('#coupon-code-shopping-cart-entry').html(splittedResponse[4]);
-                        $('#coupon-discount').html('- ' + splittedResponse[5] + ' &euro;');
-                        $('#total-amount').html(splittedResponse[6] + ' &euro;');
-                        if (splittedResponse[4] != 'no coupon') {
+                        $('#discount-amount').html(splittedResponse[4] + ' &euro;');
+                        $('#coupon-code-shopping-cart-entry').html(splittedResponse[5]);
+                        $('#coupon-discount').html('- ' + splittedResponse[6] + ' &euro;');
+                        $('#total-amount').html(splittedResponse[7] + ' &euro;');
+                        if (splittedResponse[5] != 'no coupon') {
                             $('#coupon-shopping-cart-entry').removeClass('d-none');
                         }
                     } else {

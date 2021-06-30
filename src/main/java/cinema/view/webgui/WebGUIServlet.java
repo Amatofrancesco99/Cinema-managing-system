@@ -148,16 +148,21 @@ public class WebGUIServlet extends HttpServlet {
 		responseTokens.add("ok");
 
 		try {
+			double fullPrice = cinema.getReservationFullPrice(reservationId);
+			double couponDiscount = cinema.getReservationCouponDiscount(reservationId);
+			double totalAmount = cinema.getReservationTotalAmount(reservationId);
+			double discountAmount = fullPrice - totalAmount - couponDiscount;
 			responseTokens.add(String.valueOf(cinema.getReservationNSeats(reservationId)));
-			responseTokens.add(String.format("%.2f", cinema.getReservationFullPrice(reservationId)));
+			responseTokens.add(String.format("%.2f", fullPrice));
 			responseTokens.add(cinema.getReservationTypeOfDiscount(reservationId));
+			responseTokens.add(String.format("%.2f", discountAmount));
 			try {
 				responseTokens.add(cinema.getReservationCouponCode(reservationId));
 			} catch (NullPointerException exception) {
 				responseTokens.add("no coupon");
 			}
-			responseTokens.add(String.format("%.2f", cinema.getReservationCouponDiscount(reservationId)));
-			responseTokens.add(String.format("%.2f", cinema.getReservationTotalAmount(reservationId)));
+			responseTokens.add(String.format("%.2f", couponDiscount));
+			responseTokens.add(String.format("%.2f", totalAmount));
 		} catch (ReservationException exception) {
 			responseTokens.clear();
 			responseTokens.add("error");
