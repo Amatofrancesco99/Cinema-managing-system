@@ -439,7 +439,7 @@
                         $('#coupon-code').html(splittedResponse[4]);
                         $('#coupon-discount').html('- ' + splittedResponse[5] + ' &euro;');
                         $('#total-amount').html(splittedResponse[6] + ' &euro;');
-                        if (splittedResponse[5] != '0,0') {
+                        if (splittedResponse[4] != 'no coupon') {
                             $('#coupon-code-shopping-cart-entry').removeClass('d-none');
                         }
                     } else {
