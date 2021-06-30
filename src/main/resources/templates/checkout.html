@@ -402,7 +402,17 @@
                     if (splittedResponse[0] == 'ok') {
                         $('#n-seats').html(splittedResponse[1] + ' x Biglietto cinema');
                         $('#full-price').html(splittedResponse[2] + ' &euro;');
-                        $('#type-of-discount').html(splittedResponse[3]);
+                        switch (splittedResponse[3]) {
+                            case 'AGE':
+                                $('#type-of-discount').html('Sconto per et&agrave;');
+                                break;
+                            case 'NUMBER':
+                                $('#type-of-discount').html('Sconto per numero di spettatori');
+                                break;
+                            case 'DAY':
+                                $('#type-of-discount').html('Sconto per giorno');
+                                break;
+                        }
                         $('#coupon-code').html(splittedResponse[4]);
                         $('#coupon-discount').html('- ' + splittedResponse[5] + ' &euro;');
                         $('#total-amount').html(splittedResponse[6] + ' &euro;');
