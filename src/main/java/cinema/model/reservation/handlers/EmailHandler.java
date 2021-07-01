@@ -136,13 +136,13 @@ public class EmailHandler {
 	private static BodyPart createMailBody(Reservation r) throws MessagingException { 
 		BodyPart messageBodyPart1 = new MimeBodyPart();  
 		messageBodyPart1.setText(
-				"Si prega di non rispondere alla seguente mail.\n\n"
-				+ "Benvenuto " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + ",\n\n"
-				+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
-				+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
-				+ " a guardare il film.\n\n"
-			    + "Ti aspettiamo, buona giornata.\n"
-				+ "Cinema Armadillo.\n");
+				"Ciao " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + ",\n\n"
+				+ "grazie per aver scelto il nostro Cinema!\n\n\n"
+				+ "In allegato trovi la ricevuta di avvenuto pagamento che conferma il tuo acquisto.\n"
+				+ "Stampa la prenotazione e presentala quando verrai a guardare il film.\n\n"
+			    + "Ti aspettiamo, buona giornata!\n"
+				+ Cinema.getName() + "\n\n"
+			    + "Non rispondere alla presente e-mail. Messaggio generato automaticamente.\n");
 		return messageBodyPart1;
 	}
 

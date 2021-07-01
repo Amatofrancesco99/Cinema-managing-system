@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.format.TextStyle;
 import java.util.HashMap;
+import java.util.Locale;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -103,9 +105,9 @@ public class ReportHandler {
 	 * @return
 	 */
 	private static Paragraph createTotalParagraph(HashMap<String, Font> allFonts, Reservation r) {
-        Paragraph totalP = new Paragraph("TOTALE:  " + String.format("%.02f",r.getTotal())
-		   + " EUR ", allFonts.get("subFont3"));
-        totalP.setSpacingBefore(80);
+        Paragraph totalP = new Paragraph("Totale   " + String.format("%.02f",r.getTotal())
+		   + " EUR", allFonts.get("subFont3"));
+        totalP.setSpacingBefore(60);
         totalP.setAlignment(Element.ALIGN_RIGHT);
         totalP.setIndentationRight(55);
         return totalP;
@@ -119,14 +121,20 @@ public class ReportHandler {
 	 * @throws RoomException
 	 */
 	private static void insertFieldsIntoTable(PdfPTable table, Reservation r) throws RoomException {
-		PdfPCell c1 = new PdfPCell(new Phrase("POSTI RISERVATI"));
+		PdfPCell c1 = new PdfPCell(new Phrase("Posti prenotati scelti al momento dell'acquisto"));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        c1.setMinimumHeight(30);
         table.addCell(c1);
         for(PhysicalSeat s : r.getSeats()) {
         	String seatCoordinates = r.getProjection().getSeatCoordinates(s);
-        	if(seatCoordinates != null)
-        		table.addCell("Fila: " + seatCoordinates.replaceAll("\\d","") +
-        				 "\t\tPosto: " + seatCoordinates.replaceAll("[\\D]",""));	
+        	if(seatCoordinates != null) {
+        		PdfPCell cSeat = new PdfPCell(new Phrase("Fila " + seatCoordinates.replaceAll("\\d","") +
+       				 ",   Posto " + seatCoordinates.replaceAll("[\\D]","")));
+                cSeat.setVerticalAlignment(Element.ALIGN_MIDDLE);
+        		cSeat.setMinimumHeight(20);
+        		table.addCell(cSeat);
+        	}
         }
 	}
 
@@ -150,11 +158,11 @@ public class ReportHandler {
 	 * @return
 	 */
 	private static Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph infoReservationP = new Paragraph("Cliente: " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + "\n"
+		Paragraph infoReservationP = new Paragraph("Prenotazione effettuata da " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + "\n"
 				+ "Sala " + r.getProjection().getRoom().getProgressive()
-				+ "\t\t\t\t\t\t\tData:  " + r.getProjection().getDateTime().getDayOfWeek().toString().toLowerCase()
-				+ " " + r.getProjection().getDateTime().getDayOfMonth() + " " + r.getProjection().getDateTime().getMonth().toString().toLowerCase() + " " + r.getProjection().getDateTime().getYear()
-				+ " \t\t\t\t\t\tOra: " + String.format("%02d", r.getProjection().getDateTime().getHour()) + ":" + String.format("%02d", r.getProjection().getDateTime().getMinute()), allFonts.get("subFont2"));
+				+ "   -   " + r.getProjection().getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN)
+				+ " " + r.getProjection().getDateTime().getDayOfMonth() + " " + r.getProjection().getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + r.getProjection().getDateTime().getYear()
+				+ "  alle  " + String.format("%02d", r.getProjection().getDateTime().getHour()) + ":" + String.format("%02d", r.getProjection().getDateTime().getMinute()), allFonts.get("subFont25"));
 		infoReservationP.setSpacingBefore(30);
 		return infoReservationP;
 	}
@@ -167,9 +175,9 @@ public class ReportHandler {
 	 * @return
 	 */
 	private static Paragraph createFilmPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph infoFilmP = new Paragraph("Regista/i:  " + r.getProjection().getMovie().getDirectors().toString()
-				+ "\t\t\t\t\t\t\tDurata:  " + r.getProjection().getMovie().getDuration() 
-				+ "\t\t\t\t\t\t\tRating film:  " + r.getProjection().getMovie().getRating(),
+		Paragraph infoFilmP = new Paragraph("Regista/i:  " + r.getProjection().getMovie().getDirectors().toString().replaceAll("\\[", "").replaceAll("\\]", "")
+				+ "      Durata:  " + r.getProjection().getMovie().getDuration() + " min."
+				+ "      Rating film:  " + r.getProjection().getMovie().getRating() + "/5",
 				allFonts.get("subFont2"));
 		return infoFilmP;
 	}
@@ -181,7 +189,7 @@ public class ReportHandler {
 	 * @return
 	 */
 	private static Paragraph createFilmTitleParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph FilmP = new Paragraph(r.getProjection().getMovie().getTitle(), allFonts.get("subFont"));
+		Paragraph FilmP = new Paragraph(">  " + r.getProjection().getMovie().getTitle(), allFonts.get("subFont"));
         FilmP.setSpacingBefore(40);
         return FilmP;
 	}
@@ -269,12 +277,14 @@ public class ReportHandler {
 		Font catFont = new Font(Font.FontFamily.HELVETICA, 33, Font.BOLD);
 		Font subFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
 		Font subFont2 = new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL);
-		Font subFont3 = new Font(Font.FontFamily.HELVETICA, 18,Font.NORMAL);
+		Font subFont25 = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+		Font subFont3 = new Font(Font.FontFamily.HELVETICA, 16,Font.NORMAL);
 		Font smallFont = new Font(Font.FontFamily.HELVETICA, 14, Font.ITALIC);
 		
 		allFonts.put("catFont", catFont);
 		allFonts.put("subFont", subFont);
 		allFonts.put("subFont2", subFont2);
+		allFonts.put("subFont25", subFont25);
 		allFonts.put("subFont3", subFont3);
 		allFonts.put("smallFont", smallFont);
 		return allFonts;  
