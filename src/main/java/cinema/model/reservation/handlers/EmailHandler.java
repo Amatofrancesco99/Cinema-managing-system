@@ -136,12 +136,13 @@ public class EmailHandler {
 	private static BodyPart createMailBody(Reservation r) throws MessagingException { 
 		BodyPart messageBodyPart1 = new MimeBodyPart();  
 		messageBodyPart1.setText(
-				"SI PREGA DI NON RISPONDERE ALLA SEGUENTE EMAIL.\n\n\n"
+				"Si prega di non rispondere alla seguente mail.\n\n"
 				+ "Benvenuto " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + ",\n\n"
 				+ "In allegato trovi il documento che conferma l'avvenuta prenotazione.\n"
 				+ "Stampa l'allegato, o porta una prova della ricevuta quando verrai"
-				+ " a visionare il film.\n\n"
-			    + "Ti aspettiamo, buona giornata.\n\n\n");
+				+ " a guardare il film.\n\n"
+			    + "Ti aspettiamo, buona giornata.\n"
+				+ "Cinema Armadillo.\n");
 		return messageBodyPart1;
 	}
 
@@ -159,7 +160,7 @@ public class EmailHandler {
 		MimeMessage message = new MimeMessage(session);  
 		message.setFrom(new InternetAddress(user));  
 		message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
-		message.setSubject("REPORT PRENOTAZIONE N° " + r.getProgressive() + " | TI ASPETTIAMO!");  
+		message.setSubject("Prenotazione numero " + r.getProgressive() + " - Ti aspettiamo!");  
 		return message;
 	}
 

@@ -1,5 +1,6 @@
 package cinema.controller;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import cinema.model.spectator.Spectator;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.util.PaymentErrorException;
+import cinema.model.persistence.PersistenceFacade;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
@@ -80,6 +83,7 @@ public class Cinema {
 	private List<Coupon> coupons;
 	private Discount cinemaDiscount;
 	private ArrayList<Discount> allDiscounts;
+	private PersistenceFacade persistenceFacade;
 
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
@@ -95,6 +99,12 @@ public class Cinema {
 		password = "CinemaArmadillo@1999";
 		adminPassword = "admin";
 		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
+		try {
+			persistenceFacade = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
+		} catch (SQLException e) {
+			System.out.println("1 :" + e.getMessage());
+		}
+		
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
@@ -113,92 +123,6 @@ public class Cinema {
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
 
-		// DRUK
-		genres.add("Drammatico");
-		genres.add("Commedia");
-		directors.add("Thomas Vinterberg");
-		cast.add("Mads Mikkelsen");
-		cast.add("Thomas Bo Larsen");
-		cast.add("Lars Ranthe");
-		cast.add("Magnus Millang");
-		Movie drukMovie = new Movie(1, "Druk - Un altro giro",
-				"C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?",
-				genres, directors, cast, 4, 117, "druk-un-altro-giro.jpg",
-				"https://www.youtube.com/watch?v=hFbDh58QHzw");
-
-		genres = new ArrayList<>();
-		directors = new ArrayList<>();
-		cast = new ArrayList<>();
-
-		// PULP FICTION
-		genres.add("Drammatico");
-		genres.add("Thriller");
-		directors.add("Quentin Tarantino");
-		cast.add("Uma Thurman");
-		cast.add("John Travolta");
-		cast.add("Samuel L. Jackson");
-		cast.add("Bruce Willis");
-		cast.add("Steve Buscemi");
-		Movie pulpFictionMovie = new Movie(3, "Pulp Fiction",
-				"Un killer si innamora della moglie del suo capo, un pugile rinnega la sua promessa e una coppia tenta una rapina che va rapidamente fuori controllo.",
-				genres, directors, cast, 5, 154, "pulp-fiction.jpg", "https://www.youtube.com/watch?v=s7EdQ4FqbhY");
-
-		genres = new ArrayList<>();
-		directors = new ArrayList<>();
-		cast = new ArrayList<>();
-
-		// NO COUNTRY FOR OLD MEN
-		genres.add("Thriller");
-		genres.add("Crime");
-		genres.add("Neo-Western");
-		directors.add("Joel Coen");
-		directors.add("Ethan Coen");
-		cast.add("Javier Bardem");
-		cast.add("Tommy Lee Jones");
-		cast.add("Josh Brolin");
-		cast.add("Kelly Mcdonald");
-		Movie noCountryForOldMenMovie = new Movie(4, "Non è un paese per vecchi",
-				"Texas, 1980. Mentre è a caccia nei territori selvaggi al confine con il Messico, Llewelyn Moss, un saldatore texano reduce dalla guerra del Vietnam, si imbatte in quel che resta di un regolamento di conti tra bande locali per una partita di droga. In mezzo ai numerosi cadaveri, Moss trova un'ingente somma di denaro che si porta a casa, con l'intento di assicurarsi un futuro migliore per sé e la giovane moglie, Carla Jean.",
-				genres, directors, cast, 4, 122, "non-e-un-paese-per-vecchi.jpg",
-				"https://www.youtube.com/watch?v=38A__WT3-o0");
-
-		genres = new ArrayList<>();
-		directors = new ArrayList<>();
-		cast = new ArrayList<>();
-
-		// SKYFALL
-		genres.add("Drammatico");
-		genres.add("Action");
-		genres.add("Spy");
-		directors.add("Sam Mendes");
-		cast.add("Daniel Craig");
-		cast.add("Judi Dench");
-		cast.add("Javier Bardem");
-		cast.add("Ben Whishaw");
-		Movie skyfallMovie = new Movie(5, "Skyfall",
-				"In seguito al fallimento di una missione recente, Il celebre agente segreto britannico è costretto ad essere testimone di una serie terribile di eventi: la MI6 deve trasferirsi al più presto mentre i dipendenti sotto copertura vedono le proprie identità venire rivelate. M è disperata e si rivolge a James Bond in cerca di un aiuto immediato.",
-				genres, directors, cast, 4, 143, "skyfall.jpg", "https://www.youtube.com/watch?v=OnlSRBTG5Tw");
-
-		genres = new ArrayList<>();
-		directors = new ArrayList<>();
-		cast = new ArrayList<>();
-
-		// AVENGERS - ENDGAME
-		genres.add("Azione");
-		genres.add("Fantascienza");
-		genres.add("Avventura");
-		directors.add("Anthony Russo");
-		directors.add("Joe Russo");
-		cast.add("Robert Downey Jr.");
-		cast.add("Chris Evans");
-		cast.add("Mark Ruffalo");
-		cast.add("Chris Hemsworth");
-		cast.add("Scarlett Johansson");
-		cast.add("Jeremy Renner");
-		Movie avengersEndgameMovie = new Movie(2, "Avengers - Endgame",
-				"Tutto riparte dalla terra devastata da Thanos e le sue gemme dell'infinito, dopo aver visto svanire in particelle infinitesimali di polvere i Guardiani della Galassia e personaggi come Spider-Man, Black Panther e Dr. Strange. Questa seconda parte evidenzia una situazione altamente drammatica, con i superstiti che non sanno darsi pace, dilaniati dal senso di colpa e dal vuoto ed incapaci di ripartire. I legami rimasti continuano a rafforzarsi, seppur in sordina, quelli che avevano portato a scontri mutano in fiducia, le amicizie si cementano, i rapporti di vecchia data si consolidano ed alcuni cercano di costruirsi una famiglia fino a cinque anni dopo, quando una \"microscopica\" particella ritrovata rimette in moto lo spirito di gruppo. Un paese in ginocchio che prova a cambiare le cose e ripristinare l'ordine, quantomeno apparente e in mezzo al prevedibile e oramai noto affiorano sorprese inaspettate. Il finale non si tinge di dark, ma in alcuni tratti è caratterizzato da toni distesi, dialoghi divertenti, personaggi quasi caricaturali senza i muscoli di \"Avengers: Infinity War\", ma tanto cervello e costruzione dell'azione come del pensiero.",
-				genres, directors, cast, 5, 182, "avengers-endgame.jpg", "https://www.youtube.com/watch?v=vqWz0ZCpYBs");
-
 		// Test room
 		try {
 			addCinemaRoom(5, 10);
@@ -208,76 +132,84 @@ public class Cinema {
 		}
 
 		// Test projections
-		Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-08-01T22:30:00"), 12.5, rooms.get(0));
-		Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-08-02T20:15:00"), 12.5, rooms.get(0));
-		Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-08-03T22:30:00"), 12.5, rooms.get(0));
-		Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-08-04T22:30:00"), 12.5, rooms.get(0));
-		Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-08-05T23:30:00"), 12.5, rooms.get(0));
-		Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-08-05T19:00:00"), 12.5, rooms.get(0));
-		Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-08-04T08:05:00"), 12.5, rooms.get(0));
-		Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T22:30:00"), 12.5,
-				rooms.get(1));
-		Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 12.5,
-				rooms.get(1));
-		Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T19:00:00"), 12.5,
-				rooms.get(1));
-		Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 12.5,
-				rooms.get(1));
-		Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
-				rooms.get(1));
-		Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-08-06T22:30:00"), 8.5,
-				rooms.get(0));
-		Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
-				rooms.get(0));
-		Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
-				rooms.get(0));
-		Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
-				rooms.get(0));
-		Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-22T23:30:00"), 8.5,
-				rooms.get(0));
-		Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-21T19:00:00"), 8.5,
-				rooms.get(0));
-		Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-23T08:05:00"), 8.5,
-				rooms.get(0));
-		Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-08-01T08:05:00"), 8.5,
-				rooms.get(0));
-		Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
-				rooms.get(0));
-		Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
-				rooms.get(0));
-		Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-08-02T08:05:00"), 8.5,
-				rooms.get(0));
-
-		this.cinemaProjections.add(p1);
-		this.cinemaProjections.add(p2);
-		this.cinemaProjections.add(p3);
-		this.cinemaProjections.add(p4);
-		this.cinemaProjections.add(p5);
-		this.cinemaProjections.add(p6);
-		this.cinemaProjections.add(p7);
-		this.cinemaProjections.add(p8);
-		this.cinemaProjections.add(p9);
-		this.cinemaProjections.add(p10);
-		this.cinemaProjections.add(p11);
-		this.cinemaProjections.add(p12);
-		this.cinemaProjections.add(p13);
-		this.cinemaProjections.add(p14);
-		this.cinemaProjections.add(p15);
-		this.cinemaProjections.add(p16);
-		this.cinemaProjections.add(p17);
-		this.cinemaProjections.add(p18);
-		this.cinemaProjections.add(p19);
-		this.cinemaProjections.add(p20);
-		this.cinemaProjections.add(p21);
-		this.cinemaProjections.add(p22);
-		this.cinemaProjections.add(p23);
-
-		// occupare il primo posto della seconda proiezione
 		try {
-			p2.takeSeat(0, 0);
-		} catch (RoomException e) {
+			Movie drukMovie = this.getMovie(1);
+			Movie avengersEndgameMovie = this.getMovie(2);
+			Movie pulpFictionMovie = this.getMovie(3);
+			Movie noCountryForOldMenMovie = this.getMovie(4);
+			Movie skyfallMovie = this.getMovie(5);
+			Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-08-01T22:30:00"), 12.5, rooms.get(0));
+			Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-08-02T20:15:00"), 12.5, rooms.get(0));
+			Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-08-03T22:30:00"), 12.5, rooms.get(0));
+			Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-08-04T22:30:00"), 12.5, rooms.get(0));
+			Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-08-05T23:30:00"), 12.5, rooms.get(0));
+			Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-08-05T19:00:00"), 12.5, rooms.get(0));
+			Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-08-04T08:05:00"), 12.5, rooms.get(0));
+			Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T22:30:00"), 12.5,
+					rooms.get(1));
+			Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 12.5,
+					rooms.get(1));
+			Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T19:00:00"), 12.5,
+					rooms.get(1));
+			Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 12.5,
+					rooms.get(1));
+			Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
+					rooms.get(1));
+			Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-08-06T22:30:00"), 8.5,
+					rooms.get(0));
+			Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
+					rooms.get(0));
+			Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
+					rooms.get(0));
+			Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
+					rooms.get(0));
+			Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-22T23:30:00"), 8.5,
+					rooms.get(0));
+			Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-21T19:00:00"), 8.5,
+					rooms.get(0));
+			Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-23T08:05:00"), 8.5,
+					rooms.get(0));
+			Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-08-01T08:05:00"), 8.5,
+					rooms.get(0));
+			Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
+					rooms.get(0));
+			Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
+					rooms.get(0));
+			Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-08-02T08:05:00"), 8.5,
+					rooms.get(0));
+	
+			this.cinemaProjections.add(p1);
+			this.cinemaProjections.add(p2);
+			this.cinemaProjections.add(p3);
+			this.cinemaProjections.add(p4);
+			this.cinemaProjections.add(p5);
+			this.cinemaProjections.add(p6);
+			this.cinemaProjections.add(p7);
+			this.cinemaProjections.add(p8);
+			this.cinemaProjections.add(p9);
+			this.cinemaProjections.add(p10);
+			this.cinemaProjections.add(p11);
+			this.cinemaProjections.add(p12);
+			this.cinemaProjections.add(p13);
+			this.cinemaProjections.add(p14);
+			this.cinemaProjections.add(p15);
+			this.cinemaProjections.add(p16);
+			this.cinemaProjections.add(p17);
+			this.cinemaProjections.add(p18);
+			this.cinemaProjections.add(p19);
+			this.cinemaProjections.add(p20);
+			this.cinemaProjections.add(p21);
+			this.cinemaProjections.add(p22);
+			this.cinemaProjections.add(p23);
+		
+			// occupare il primo posto della seconda proiezione
+			try {
+				p2.takeSeat(0, 0);
+			} catch (RoomException e) {
+			}
+		}catch(NoMovieException e) {
+			System.out.println(e.getMessage());
 		}
-
 		// Aggiunti due coupon di prova emessi dal cinema
 		try {
 			createCoupon("SCONTO-PRIMAVERA", 5);
@@ -461,10 +393,9 @@ public class Cinema {
 					"Il film \"" + this.getMovie(movieId).getTitle() + "\" non è più in programmazione.");
 	}
 
-	/* METODO per farci dare tutte i film inerenti ad un anno specifico */
-	public ArrayList<Movie> getAllMovies(int year) {
-		// TODO with persistence
-		return null;
+	/** METODO per farci dare tutte i film inerenti ad un anno specifico */
+	public ArrayList<Movie> getAllMovies() throws PersistenceException {
+		return persistenceFacade.getAllMovies();
 	}
 
 	/**
@@ -520,12 +451,11 @@ public class Cinema {
 	 *                          con quell'Id
 	 */
 	public Movie getMovie(int id) throws NoMovieException {
-		for (Projection p : cinemaProjections) {
-			if (p.getMovie().getId() == id) {
-				return p.getMovie();
-			}
+		try {
+			return persistenceFacade.getMovie(id);
+		} catch (PersistenceException e) {
+			throw new NoMovieException("Il film con id " + id + " non esiste.");
 		}
-		throw new NoMovieException("Il film con id " + id + " non esiste.");
 	}
 
 	/**
