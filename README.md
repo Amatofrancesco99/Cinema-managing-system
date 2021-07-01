@@ -1,81 +1,75 @@
 # Progetto-F21
-***Sistema per la gestione delle prenotazioni di biglietti di un cinema.***
+
+***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
 
 ![image](https://user-images.githubusercontent.com/80333091/113708434-81895080-96e1-11eb-85db-60251d9deaf9.png)
 
-*** 
-## 0. SETUP
+***
+## 0. SETUP DEL REPOSITORY
 
-### 0.1 - Scarica Git
-In caso non si abbia già installato Git, andare al seguente [link](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) ;  selezionare l'installazione a seconda del proprio sistema operativo. 
+### 0.1 - Download di Git
+Se Git non è già presente sul sistema in uso, scaricarlo e installarlo da [git-scm.com](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git). 
 
-### 0.2 - Effettua il Fork & Clone
-- **0.2.1:** Effettuare il **fork** del progetto (tasto *Fork* in alto a destra).
-- **0.2.2:** Dopo di che, **dal vostro repository locale** (fork di questo progetto), cliccare sul bottone *"Code"* e copiare il link qui riportato.
-- **0.2.3:** Successivamente aprire il terminale e spostarsi in una cartella in cui fare il clone di questo progetto (ex: Temp/Progetto-F21)
-- **0.2.4:** Eseguire infine il comando:
+### 0.2 - Clone del repository
+È possibile effettuare il clone del repository contenente tutto il necessario alla compilazione ed esecuzione dell'applicazione tramite il comando seguente:
 
 ```
-git clone [link copiato]
+git clone https://github.com/IngSW-unipv/Progetto-F21.git
 ```
 
-### 0.3 - Scarica Gradle
+### 0.3 - Download di Gradle
 Per poter eseguire l'applicazione è necessario avere un'installazione locale di [Gradle](https://it.wikipedia.org/wiki/Gradle).
 
-Di seguito è riportato un link contenente tutte le istruzioni per poter fare il setup di Gradle sul vostro dispositivo, qualora non lo aveste già precedentemente installato.
-Trovate inoltre i procedimenti per l'installazione a seconda del sistema operativo che state utilizzando.
+Su [gradle.org](https://gradle.org/install/) è possibile reperire tutte le istruzioni per poter effettuare il setup di Gradle sul dispositivo in uso, qualora non sia già installato.
+Il procedimento per l'installazione a seconda del sistema operativo utilizzato può essere trovato [qui](https://gradle.org/install/).
 
-[Gradle installation](https://gradle.org/install/)
+***
+## 1. ESECUZIONE DELL'APPLICAZIONE WEB (SERVER HTTP) - VISTA SPETTATORE
 
-
-*** 
-## 1. APPLICAZIONE WEB - SPETTATORE
-### 1.1 - Apri il terminale o il prompt dei comandi:
-
-Aprite il vostro terminale/prompt dei comandi per poter eseguire i comandi che saranno riportati nei passaggi successivi.
-Prima però spostatevi nella cartella in cui, precedentemente, avete fatto il clone, tramite il comando:
+### 1.1 - Apertura del terminale o del prompt dei comandi
+Per poter compilare ed eseguire l'applicazione web (server HTTP) è necessario innanzitutto posizionarsi nella directory root del progetto all'interno di un terminale o prompt dei comandi:
 
 ```
-cd  [ example: Temp/Progetto-F21 ]
+cd Progetto-F21
 ```
 
-### 1.2 - Build dell'applicazione
+### 1.2 - Compilazione e setup dell'applicazione
+Per aggiornare le dipendenze di Gradle e compilare i file necessari eseguire il seguente comando:
 
 ```
 gradle clean build
 ```
 
-### 1.3 - Run dell'applicazione
-Con dispositivi Windows:
+### 1.3 - Esecuzione dell'applicazione
+Sul prompt dei comandi (Windows):
 
 ```
 gradlew run
 ```
 
-Con dispositivi Linux/MacOS: 
+Su un terminale (Linux/MacOS): 
 
 ```
 ./gradlew run
 ```
 
-Qualora uno dei due comandi sopracitati dicesse che manchi la classe wrapper, esegui il seguente comando:
+Qualora uno dei due comandi riportasse un errore dovuto alla mancanza della classe wrapper, esegui il seguente comando e riprovare:
 
 ```
 gradle wrapper
 ```
 
-### 1.4 - Apri il tuo browser
-Tramite un browser (preferibilmente Chrome) inserisci nella barra di ricerca questo link: 
+### 1.4 - Accesso al sito web
+Tramite un browser aggiornato (l'applicazione è stata testata sulle versioni recenti di Chrome) inserire nella barra di ricerca il seguente link:
+
 [`http://localhost:8080/`](http://localhost:8080/)
 
+***
+## 2. ESECUZIONE DA CLI (INTERFACCIA A RIGA DI COMANDO) - VISTA SPETTATORE
 
-*** 
-## 2. COMMAND LINE INTERFACE - SPETTATORE
-Attraverso un IDE (che supporti Java), esegui la classe CLIUserMain.java, presente nel percorso qui sotto riportato:
-- [src/main/java/cinema/view/cli/user/CLIUserMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java)
-
+Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [CLIUserMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java).
 
 ***
-## 3. COMMAND LINE INTERFACE - ADMIN
-Attraverso un IDE (che supporti Java), esegui la classe CLIAdminMain.java, presente nel percorso qui sotto riportato:
-- [src/main/java/cinema/view/cli/admin/CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java)
+## 3. ESECUZIONE DA CLI (INTERFACCIA A RIGA DI COMANDO) - VISTA ADMIN
+
+Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
