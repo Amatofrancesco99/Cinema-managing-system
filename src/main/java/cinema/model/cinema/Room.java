@@ -1,7 +1,6 @@
 package cinema.model.cinema;
 
 import java.util.ArrayList; 
-import java.util.concurrent.atomic.AtomicInteger;
 
 import cinema.model.cinema.util.RoomException;
 import cinema.model.cinema.util.TypeOfSeat;

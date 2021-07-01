@@ -45,7 +45,7 @@ public class CLIUserMain {
 	public static void main(String[] args){
 		// INFORMAZIONI GENERALI DEL CINEMA E BENVENUTO AL CLIENTE
 		printHeader();
-				
+		
 		// FILM ATTUALMENTE DISPONIBILI/PROIETTATI
 		printCurrentlyAvailableMovies();
 				
@@ -150,33 +150,39 @@ public class CLIUserMain {
 
 	private static void insertSpectatorsInfo(long r) {
 		try {
-			myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
-			myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
-		} catch (DiscountException | ReservationException e){
-			
-		}	
-		boolean end = false;
-		System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
-		while (!end) {
-			// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
-			// sconti
-			System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
-			String n1 = keyboard.next();
-			int nMin = Integer.parseInt(n1);
-			try {
-				myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
-			} catch (DiscountException | NumberFormatException | ReservationException e) {
-				System.out.println(e.getMessage());
+			if (myCinema.getReservationTypeOfDiscount(r).equals("AGE")) {
+				try {
+					myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
+					myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
+				} catch (DiscountException | ReservationException e){
+					
+				}	
+				boolean end = false;
+				System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
+				while (!end) {
+					// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
+					// sconti
+					System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
+					String n1 = keyboard.next();
+					int nMin = Integer.parseInt(n1);
+					try {
+						myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
+					} catch (DiscountException | NumberFormatException | ReservationException e) {
+						System.out.println(e.getMessage());
+					}
+					System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
+					String n2 = keyboard.next();
+					int nMax = Integer.parseInt(n2);
+					try {
+						myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
+						end = true;
+					} catch (DiscountException | NumberFormatException | ReservationException e) {
+						System.out.println(e.getMessage());
+					}		
+				}
 			}
-			System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
-			String n2 = keyboard.next();
-			int nMax = Integer.parseInt(n2);
-			try {
-				myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
-				end = true;
-			} catch (DiscountException | NumberFormatException | ReservationException e) {
-				System.out.println(e.getMessage());
-			}		
+		} catch (NumberFormatException | ReservationException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -285,8 +291,17 @@ public class CLIUserMain {
 	private static void showProjectionSeats(long r) {
 			System.out.println("\n2- SELEZIONE POSTO/I\n");
 			System.out.println("Disposizione sala e posti liberi.");
-			System.out.println("I posti segnati con i trattini sono già occupati.\n");
-			System.out.println("\n----------------------------------- SCHERMO -----------------------------------");
+			System.out.println("I posti segnati con i trattini sono già occupati.\n\n");
+			try {
+				for (int i = 0; i < myCinema.getNumberColsReservationProjection(r); i++) {
+					if (i == myCinema.getNumberColsReservationProjection(r)/2 )
+						 System.out.print("  SCHERMO   ");
+					else System.out.print("--------");
+				}
+			} catch (ReservationException e) {
+				System.out.println(e.getMessage());
+			}
+			System.out.println();
 			try {
 				for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
 					for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
