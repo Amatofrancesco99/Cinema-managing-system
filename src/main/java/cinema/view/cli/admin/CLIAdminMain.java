@@ -201,8 +201,12 @@ public class CLIAdminMain {
 
 	private static void selectProjectionRoom(int p) {
 		System.out.println("\n\nLista delle sale del cinema: ");
-		for (Room r : myCinema.getAllRooms())
-			System.out.println(r.toString());
+		try {
+			for (Room r : myCinema.getAllRooms())
+				System.out.println(r.toString());
+		} catch (PersistenceException e) {
+			System.out.println(e.getMessage());
+		}
 		boolean end = false;
 		while(!end) {
 			System.out.println("\nInserisci il numero della sala da associare alla proiezione: ");

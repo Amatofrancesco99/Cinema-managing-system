@@ -116,23 +116,10 @@ public class Cinema {
 		addDiscount(new DiscountNumberSpectators());
 
 		// ********* TEMPORARY DATA USED FOR TESTING *********
-
-		// Test movie
-		ArrayList<String> genres, directors, cast;
-		genres = new ArrayList<>();
-		directors = new ArrayList<>();
-		cast = new ArrayList<>();
-
-		// Test room
-		try {
-			addCinemaRoom(5, 10);
-			addCinemaRoom(7, 10);
-		} catch (RoomException e) {
-			e.printStackTrace();
-		}
-
 		// Test projections
 		try {
+			rooms = getAllRooms();
+			
 			Movie drukMovie = this.getMovie(1);
 			Movie avengersEndgameMovie = this.getMovie(2);
 			Movie pulpFictionMovie = this.getMovie(3);
@@ -207,9 +194,11 @@ public class Cinema {
 				p2.takeSeat(0, 0);
 			} catch (RoomException e) {
 			}
-		}catch(NoMovieException e) {
+		}catch(NoMovieException | PersistenceException e) {
 			System.out.println(e.getMessage());
 		}
+		
+		
 		// Aggiunti due coupon di prova emessi dal cinema
 		try {
 			createCoupon("SCONTO-PRIMAVERA", 5);
@@ -218,6 +207,7 @@ public class Cinema {
 			createCoupon("PAPERINO123", 3.5);
 			createCoupon("SCONTONE50", 50.0);
 		} catch (CouponException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -306,7 +296,7 @@ public class Cinema {
 	 * @throws RoomNotExistsException
 	 * @throws NoProjectionException
 	 */
-	public void setProjectionRoom(int p, long roomId) throws RoomException, ProjectionException {
+	public void setProjectionRoom(int p, int roomId) throws RoomException, ProjectionException {
 		getProjection(p).setRoom(getRoom(roomId));
 	}
 
@@ -535,17 +525,6 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per aggiungere una sala del cinema
-	 * 
-	 * @param r Sala del cinema da aggiungere, all'insieme delle sale del cinema
-	 *          stesso
-	 * @throws InvalidRoomDimensionsException
-	 */
-	public void addCinemaRoom(int row, int col) throws RoomException {
-		rooms.add(new Room(row, col));
-	}
-
-	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
 	 * 
 	 * @param city    Citta
@@ -594,13 +573,10 @@ public class Cinema {
 	 * METODO per farsi dire tutte le sale del cinema
 	 * 
 	 * @return rooms
+	 * @throws PersistenceException 
 	 */
-	public List<Room> getAllRooms() {
-		ArrayList<Room> allCinemaRooms = new ArrayList<Room>();
-		for (int i = 0; i < rooms.size(); i++) {
-			allCinemaRooms.add(rooms.get(i));
-		}
-		return allCinemaRooms;
+	public List<Room> getAllRooms() throws PersistenceException {
+		return this.persistenceFacade.getAllRooms();
 	}
 
 	/**
@@ -609,12 +585,12 @@ public class Cinema {
 	 * @return
 	 * @throws RoomNotExistsException
 	 */
-	public Room getRoom(long roomId) throws RoomException {
-		for (Room r : rooms) {
-			if (r.getProgressive() == roomId)
-				return r;
+	public Room getRoom(int roomId) throws RoomException {
+		try {
+			return this.persistenceFacade.getRoom(roomId);
+		} catch (PersistenceException e) {
+			throw new RoomException("La sala con id " + roomId + " non è presente all'interno del cinema.");
 		}
-		throw new RoomException("La sala con id " + roomId + " non è presente all'interno del cinema.");
 	}
 
 	/**
