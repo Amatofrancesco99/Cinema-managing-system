@@ -18,7 +18,7 @@
 
 @section(content) {
     <div class="container pt-5">
-        <div class="modal fade" id="modal-alert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-alert-label" aria-hidden="true">
+        <div class="modal fade" id="modal-alert" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal-alert-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -33,7 +33,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="/movie-details?id=@(movie.getId())#" class="btn btn-primary" id="modal-alert-close-button" role="button">
+                        <a id="dismiss-modal-button" data-bs-dismiss="modal" class="btn btn-primary" id="modal-alert-close-button" role="button">
+                            Chiudi
+                        </a>
+                        <a id="go-to-movie-details-button" href="/movie-details?id=@(movie.getId())#" class="btn btn-primary" id="modal-alert-close-button" role="button">
                             Chiudi
                         </a>
                     </div>
@@ -100,7 +103,7 @@
                                                     seatStatus = "non disponibile";
                                                 }
                                             } catch(RoomException e) {
-
+                                                // No exception to handle here, seats coordinates (i, j) are allowed for this room
                                             }
                                         }
                                         <img id="seat-@(i)-@(j)" status="@(seatStatus)" @if(clickable){class="seat"} src="@(seatIcon)" width="45px" alt="Posto @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" data-bs-toggle="tooltip" data-placement="top" title="Posto @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" @if(clickable){style="cursor: pointer;"}>

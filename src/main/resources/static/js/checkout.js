@@ -1,4 +1,4 @@
-$(window).on('load', () => {
+$(window).on('load', function() {
     'use strict';
 
     // Enable tooltips on seat icons
@@ -53,11 +53,11 @@ $(window).on('load', () => {
                 updateShoppingCart();
             } else {
                 // Alert the user if the seat status couldn't be updated
-                showAlert(false, 'Errore si sincronizzazione', 'Si &egrave; verificato un errore nell\'aggiornare lo stato del posto selezionato. Riprova pi&ugrave; tardi.');
+                showAlert(false, true, 'Errore si sincronizzazione', 'Si &egrave; verificato un errore nell\'aggiornare lo stato del posto selezionato. Riprova pi&ugrave; tardi.');
             }
         }).fail(function() {
             // Alert the user if something went wrong during the update
-            showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave; tardi.');
+            showNetworkErrorAlert();
         });
     });
 
@@ -101,11 +101,11 @@ $(window).on('load', () => {
                     $('#coupon-code-button').attr('disabled', true);
                 } else {
                     // Alert the user if the coupon couldn't be used
-                    showAlert(false, 'Errore durante l\'inserimento del coupon', 'Errore durante l\'inserimento del coupon. Controlla che il codice del coupon sia corretto e riprova.');
+                    showAlert(false, false, 'Errore durante l\'inserimento del coupon', 'Errore durante l\'inserimento del coupon. Controlla che il codice del coupon sia corretto e riprova.');
                 }
             }).fail(function() {
                 // Alert the user if something went wrong during the request
-                showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave; tardi.');
+                showNetworkErrorAlert();
             });
         }
         event.target.classList.add('was-validated');
@@ -125,36 +125,80 @@ $(window).on('load', () => {
             }).done(function(response) {
                 if (response == 'ok') {
                     // Show the success modal if the request had a positive outcome
-                    showAlert(true, 'Acquisto completato. Grazie!', 'Acquisto effettuato correttamente.<br>Riceverai un\'e-mail a breve con la ricevuta di prenotazione da presentare all\'ingresso.');
+                    showAlert(true, true, 'Acquisto completato. Grazie!', 'Acquisto effettuato correttamente.<br>Riceverai un\'e-mail a breve con la ricevuta di prenotazione da presentare all\'ingresso.');
                 } else {
                     // Show the error modal
-                    showAlert(false, 'Errore durante l\'acquisto', 'Errore durante il completamento dell\'acquisto.');
+                    showAlert(false, true, 'Errore durante l\'acquisto', 'Errore durante il completamento dell\'acquisto.');
                 }
-            }).fail(() => {
+            }).fail(function() {
                 // Alert the user if something went wrong during the request
-                showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave; tardi.');
+                showNetworkErrorAlert();
             });
         }
         event.target.classList.add('was-validated');
     }, false);
 
+    // Keep track of the open/closed state of the modal alert (do not show two modals at the same time)
+    window.alertOpened = false;
+
+    // Set the modal alert as closed when it gets hidden
+    var modalAlert = document.getElementById('modal-alert');
+    modalAlert.addEventListener('hidden.bs.modal', function() {
+        window.alertOpened = false;
+    });
+
     /**
-     * Shows a modal dialog.
+     * Shows a modal dialog to the user.
      *
-     * @@param boolean success dialog type.
-     * @@param string title title of the modal.
-     * @@param string body body content of the modal.
+     * If an alert is already opened, no other alerts can be shown.
+     *
+     * @@param boolean success dialog type (true = success, false = failure).
+     * @@param boolean goBack  modal type (true = go back to the movie details page, false = stay on the checkout page).
+     * @@param string title    title of the modal.
+     * @@param string body     body content of the modal.
      */
-    function showAlert(success, title, body) {
+    function showAlert(success, goBack, title, body) {
+        // If an alert is already opened, do not open a new one
+        if (window.alertOpened) {
+            return;
+        }
+
+        // Set the modal alert as opened when it gets shown
+        window.alertOpened = true;
+
         // Set the dialog type and content
+        $('#modal-alert-component').removeClass(!success ? 'alert-success' : 'alert-warning');
         $('#modal-alert-component').addClass(success ? 'alert-success' : 'alert-warning');
+        $('#modal-alert-icon').removeClass(!success ? 'fa-check-circle' : 'fa-exclamation-circle');
         $('#modal-alert-icon').addClass(success ? 'fa-check-circle' : 'fa-exclamation-circle');
         $('#modal-alert-label').html(title);
         $('#modal-alert-body').html(body);
 
+        // Create the alert object
+        var alert = new bootstrap.Modal($('#modal-alert')[0], {
+            backdrop: goBack ? 'static' : true,
+            keyboard: !goBack
+        });
+
+        // Show the appropriate close button (if goBack is true the user must go back to the movie details page)
+        if (goBack) {
+            $('#dismiss-modal-button').addClass('d-none');
+            $('#go-to-movie-details-button').removeClass('d-none');
+        } else {
+            $('#dismiss-modal-button').removeClass('d-none');
+            $('#go-to-movie-details-button').addClass('d-none');
+        }
+
         // Show the alert
-        var alert = new bootstrap.Modal($('#modal-alert')[0]);
         alert.show();
+    }
+
+    /**
+     * Shows a modal dialog to the user stating a network error occurred.
+     */
+    function showNetworkErrorAlert() {
+        // Alert the user if something went wrong during the request
+        showAlert(false, true, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave; tardi.');
     }
 
     /**
@@ -197,11 +241,11 @@ $(window).on('load', () => {
                 }
             } else {
                 // Alert the user if something went wrong during the update to the shopping cart
-                showAlert(false, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
+                showAlert(false, true, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
             }
         }).fail(function() {
             // Alert the user if something went wrong during the request
-            showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave tardi.');
+            showNetworkErrorAlert();
         });
     }
 });
