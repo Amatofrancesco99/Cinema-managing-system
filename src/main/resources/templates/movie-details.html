@@ -23,14 +23,14 @@
                     <div class="col p-4 d-flex flex-column position-static">
                         <div class="d-flex justify-content-between">
                             <h3 class="my-0 align-self-center">
-                                @(movie.getTitle())
+                                @(movie.getTitle().escapeHtml())
                             </h3>
                             <a class="btn btn-sm btn-secondary ms-3 my-0 align-self-center text-nowrap" href="@(movie.getTrailerURL())" target="_blank" rel="noopener noreferrer" role="button">
                                 Guarda il trailer
                             </a>
                         </div>
                         <p class="card-text mt-3">
-                            @(movie.getDescription())
+                            @(movie.getDescription().escapeHtml())
                         </p>
                         <table class="table table-borderless">
                             <tbody>
@@ -39,7 +39,7 @@
                                         Genere
                                     </td>
                                     <td>
-                                        @(movie.getGenres().join(", "))
+                                        @(movie.getGenres().join(", ").escapeHtml())
                                     </td>
                                 </tr>
                                 <tr>
@@ -47,7 +47,7 @@
                                         Regia
                                     </td>
                                     <td>
-                                        @(movie.getDirectors().join(", "))
+                                        @(movie.getDirectors().join(", ").escapeHtml())
                                     </td>
                                 </tr>
                                 <tr>
@@ -55,7 +55,7 @@
                                         Cast
                                     </td>
                                     <td>
-                                        @(movie.getCast().join(", "))
+                                        @(movie.getCast().join(", ").escapeHtml())
                                     </td>
                                 </tr>
                                 <tr>

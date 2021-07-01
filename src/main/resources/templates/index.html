@@ -60,11 +60,11 @@
                                     <div>
                                         <a href="/movie-details?id=@(movie.getId())#" class="text-decoration-none text-dark">
                                             <h5 class="card-title">
-                                                @(movie.getTitle())
+                                                @(movie.getTitle().escapeHtml())
                                             </h5>
                                         </a>
                                         <p class="card-text">
-                                            @(StringUtils.abbreviate(movie.getDescription(), 150))
+                                            @(StringUtils.abbreviate(movie.getDescription(), 150).escapeHtml())
                                         </p>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
