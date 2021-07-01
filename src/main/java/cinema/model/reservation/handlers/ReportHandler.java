@@ -237,7 +237,7 @@ public class ReportHandler {
 	 * @param r
 	 */
 	private static void addDocumentProperties(Document document, Reservation r) {
-		document.addTitle("PDF Report Reservation n°" + r.getProgressive());
+		document.addTitle("PDF Report Reservation n_" + r.getProgressive());
 		document.addSubject("Using iText");
         document.addKeywords("Java, PDF, iText");
         document.addAuthor("Screaming Hairy Armadillo Team");
