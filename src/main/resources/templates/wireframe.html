@@ -86,7 +86,7 @@
                 'use strict';
 
                 // Enable the search button only if the search field is filled up
-                $('#query')[0].addEventListener('input', function() {
+                $('#query').on('input', function() {
                     $('#submit-query')[0].disabled = (this.value.trim() == '');
                 });
             });
