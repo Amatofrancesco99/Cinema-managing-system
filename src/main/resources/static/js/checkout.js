@@ -152,10 +152,10 @@ $(window).on('load', function() {
      *
      * If an alert is already opened, no other alerts can be shown.
      *
-     * @@param boolean success dialog type (true = success, false = failure).
-     * @@param boolean goBack  modal type (true = go back to the movie details page, false = stay on the checkout page).
-     * @@param string title    title of the modal.
-     * @@param string body     body content of the modal.
+     * @param boolean success dialog type (true = success, false = failure).
+     * @param boolean goBack  modal type (true = go back to the movie details page, false = stay on the checkout page).
+     * @param string title    title of the modal.
+     * @param string body     body content of the modal.
      */
     function showAlert(success, goBack, title, body) {
         // If an alert is already opened, do not open a new one
