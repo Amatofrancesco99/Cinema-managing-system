@@ -62,14 +62,14 @@ gradle wrapper
 ### 1.4 - Accesso al sito web
 Tramite un browser aggiornato (l'applicazione è stata testata sulle versioni recenti di Chrome) inserire nella barra di ricerca il seguente link:
 
-[`http://localhost:8080/`](http://localhost:8080/)
+[http://localhost:8080/](http://localhost:8080/)
 
 ***
-## 2. ESECUZIONE DA CLI (INTERFACCIA A RIGA DI COMANDO) - VISTA SPETTATORE
+## 2. ESECUZIONE DA CLI - VISTA SPETTATORE
 
 Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [CLIUserMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java).
 
 ***
-## 3. ESECUZIONE DA CLI (INTERFACCIA A RIGA DI COMANDO) - VISTA ADMIN
+## 3. ESECUZIONE DA CLI - VISTA ADMIN
 
 Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
