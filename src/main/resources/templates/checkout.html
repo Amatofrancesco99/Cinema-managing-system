@@ -273,13 +273,13 @@
 
 @section(javascript) {
     <script>
-        (() => {
+        $(window).on('load', () => {
             'use strict';
 
             // Enable tooltips on seat icons
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map((tooltipTriggerEl) => {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
+            var tooltipList = tooltipTriggerList.map((tooltipTriggerElement) => {
+                return new bootstrap.Tooltip(tooltipTriggerElement);
             });
 
             // Add the listener used to track the available/selected state to every seat icon
@@ -454,6 +454,6 @@
                     showAlert(false, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server.');
                 });
             }
-        })();
+        });
     </script>
 }
