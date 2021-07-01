@@ -1,13 +1,14 @@
 @import cinema.controller.Cinema
 @import cinema.model.Movie
-@import cinema.model.projection.Projection
+@import cinema.model.projection.util.ProjectionException
+@import java.time.LocalDateTime
 @import java.time.format.DateTimeFormatter
 @import java.time.format.TextStyle
 
 @args() {
     Cinema cinema
     Movie movie
-    List<List<Projection>> schedule
+    List<List<Integer>> schedule
 }
 
 @extends(wireframe, cinema=cinema, pageTitle="Dettagli film")
@@ -88,17 +89,33 @@
                                 ACQUISTA ORA
                             </h6>
                             <div class="card-body">
-                                @for(ArrayList<Projection> dailyProjections : schedule) {
+                                @for(ArrayList<Integer> dailyProjections : schedule) {
+                                    @{
+                                        LocalDateTime projectionGroupDateTime = null;
+                                        try {
+                                            projectionGroupDateTime = cinema.getProjectionDateTime(dailyProjections.get(0));
+                                        } catch (ProjectionException exception) {
+                                            // No exceptions to handle here
+                                        }
+                                    }
                                     <div>
-                                        @(dailyProjections.get(0).getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html"))
+                                        @(projectionGroupDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html"))
                                         <strong>
-                                            @(dailyProjections.get(0).getDateTime().getDayOfMonth().format("00"))/@(dailyProjections.get(0).getDateTime().getMonthValue().format("00"))
+                                            @(projectionGroupDateTime.getDayOfMonth().format("00"))/@(projectionGroupDateTime.getMonthValue().format("00"))
                                         </strong>
                                     </div>
                                     <div>
-                                        @for(Projection projection : dailyProjections) {
-                                            <a class="btn btn-sm btn-primary mt-2 mb-3" href="/checkout?id=@(projection.getId())#" role="button">
-                                                @(projection.getDateTime().toLocalTime().format("hh:mm"))
+                                        @for(int projection : dailyProjections) {
+                                            @{
+                                                LocalDateTime projectionDateTime = null;
+                                                try {
+                                                    projectionDateTime = cinema.getProjectionDateTime(projection);
+                                                } catch (ProjectionException exception) {
+                                                    // No exceptions to handle here
+                                                }
+                                            }
+                                            <a class="btn btn-sm btn-primary mt-2 mb-3" href="/checkout?id=@(projection)#" role="button">
+                                                @(projectionDateTime.toLocalTime().format("hh:mm"))
                                             </a>
                                         }
                                     </div>

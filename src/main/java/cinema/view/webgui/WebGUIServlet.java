@@ -20,7 +20,6 @@ import cinema.controller.Cinema;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.util.RoomException;
-import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.util.ReservationException;
@@ -72,15 +71,15 @@ public class WebGUIServlet extends HttpServlet {
 
 	protected void renderCheckout(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, ProjectionException {
-		Projection projection = cinema.getProjection(Integer.parseInt(req.getParameter("id")));
+		int projectionId = Integer.parseInt(req.getParameter("id"));
 		long reservationId = cinema.createReservation();
 		try {
-			cinema.setReservationProjection(reservationId, projection.getId());
+			cinema.setReservationProjection(reservationId, projectionId);
 		} catch (ProjectionException | ReservationException e) {
 			renderError(req, resp);
 			return;
 		}
-		resp.getWriter().write(Rythm.render("checkout.html", cinema, projection.getMovie(), projection, reservationId));
+		resp.getWriter().write(Rythm.render("checkout.html", cinema, reservationId));
 	}
 
 	protected void renderError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -104,14 +103,19 @@ public class WebGUIServlet extends HttpServlet {
 		Movie movie = cinema.getMovie(movieId);
 
 		// Build the data structure used to store the sorted projections
-		ArrayList<Projection> sortedProjections = new ArrayList<>(cinema.getProjections(movieId));
+		ArrayList<Integer> sortedProjections = new ArrayList<>(cinema.getMovieProjections(movieId));
 		Collections.sort(sortedProjections);
-		ArrayList<ArrayList<Projection>> schedule = new ArrayList<>();
+		ArrayList<ArrayList<Integer>> schedule = new ArrayList<>();
 		LocalDate lastLocalDate = null;
-		for (Projection projection : sortedProjections) {
-			LocalDate localDate = projection.getDateTime().toLocalDate();
+		for (int projection : sortedProjections) {
+			LocalDate localDate = null;
+			try {
+				localDate = cinema.getProjectionDateTime(projection).toLocalDate();
+			} catch (ProjectionException exception) {
+				// No need to handle this exception
+			}
 			if (!Objects.equals(lastLocalDate, localDate)) {
-				schedule.add(new ArrayList<Projection>());
+				schedule.add(new ArrayList<Integer>());
 				lastLocalDate = localDate;
 			}
 			schedule.get(schedule.size() - 1).add(projection);

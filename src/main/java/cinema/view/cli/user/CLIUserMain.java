@@ -306,11 +306,11 @@ public class CLIUserMain {
 				for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
 					for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
 						try {
-							if (!myCinema.checkIfReservationProjectionSeatIsAvailable(r, i, j))
+							if (!myCinema.checkIfProjectionSeatIsAvailable(myCinema.getReservationProjection(r), i, j))
 								System.out.print(" ------ ");
 							else 
 								System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
-						} catch (RoomException e) {
+						} catch (RoomException | ProjectionException e) {
 							System.out.println(e.getMessage());
 						}
 					}

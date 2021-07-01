@@ -104,7 +104,7 @@ public class Cinema {
 		} catch (SQLException e) {
 			System.out.println("1 :" + e.getMessage());
 		}
-		
+
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
@@ -119,19 +119,26 @@ public class Cinema {
 		// Test projections
 		try {
 			rooms = getAllRooms();
-			
+
 			Movie drukMovie = this.getMovie(1);
 			Movie avengersEndgameMovie = this.getMovie(2);
 			Movie pulpFictionMovie = this.getMovie(3);
 			Movie noCountryForOldMenMovie = this.getMovie(4);
 			Movie skyfallMovie = this.getMovie(5);
-			Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-08-01T22:30:00"), 12.5, rooms.get(0));
-			Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-08-02T20:15:00"), 12.5, rooms.get(0));
-			Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-08-03T22:30:00"), 12.5, rooms.get(0));
-			Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-08-04T22:30:00"), 12.5, rooms.get(0));
-			Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-08-05T23:30:00"), 12.5, rooms.get(0));
-			Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-08-05T19:00:00"), 12.5, rooms.get(0));
-			Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-08-04T08:05:00"), 12.5, rooms.get(0));
+			Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-08-01T22:30:00"), 12.5,
+					rooms.get(0));
+			Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-08-02T20:15:00"), 12.5,
+					rooms.get(0));
+			Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-08-03T22:30:00"), 12.5,
+					rooms.get(0));
+			Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-08-04T22:30:00"), 12.5,
+					rooms.get(0));
+			Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-08-05T23:30:00"), 12.5,
+					rooms.get(0));
+			Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-08-05T19:00:00"), 12.5,
+					rooms.get(0));
+			Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-08-04T08:05:00"), 12.5,
+					rooms.get(0));
 			Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T22:30:00"), 12.5,
 					rooms.get(1));
 			Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 12.5,
@@ -150,12 +157,12 @@ public class Cinema {
 					rooms.get(0));
 			Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
 					rooms.get(0));
-			Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-22T23:30:00"), 8.5,
-					rooms.get(0));
-			Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-21T19:00:00"), 8.5,
-					rooms.get(0));
-			Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-23T08:05:00"), 8.5,
-					rooms.get(0));
+			Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-22T23:30:00"),
+					8.5, rooms.get(0));
+			Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-21T19:00:00"),
+					8.5, rooms.get(0));
+			Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-23T08:05:00"),
+					8.5, rooms.get(0));
 			Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-08-01T08:05:00"), 8.5,
 					rooms.get(0));
 			Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
@@ -164,7 +171,7 @@ public class Cinema {
 					rooms.get(0));
 			Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-08-02T08:05:00"), 8.5,
 					rooms.get(0));
-	
+
 			this.cinemaProjections.add(p1);
 			this.cinemaProjections.add(p2);
 			this.cinemaProjections.add(p3);
@@ -188,17 +195,16 @@ public class Cinema {
 			this.cinemaProjections.add(p21);
 			this.cinemaProjections.add(p22);
 			this.cinemaProjections.add(p23);
-		
+
 			// occupare il primo posto della seconda proiezione
 			try {
 				p2.takeSeat(0, 0);
 			} catch (RoomException e) {
 			}
-		}catch(NoMovieException | PersistenceException e) {
+		} catch (NoMovieException | PersistenceException e) {
 			System.out.println(e.getMessage());
 		}
-		
-		
+
 		// Aggiunti due coupon di prova emessi dal cinema
 		try {
 			createCoupon("SCONTO-PRIMAVERA", 5);
@@ -335,6 +341,9 @@ public class Cinema {
 	 * @throws NoMovieException
 	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
 	 *                                     abbia quel film, tra i film proiettati
+	 * 
+	 *                                     DA ELIMINARE (RIDURRE L'ACCOPPIAMENTO CON
+	 *                                     LE INTERFACCE)
 	 */
 	public List<Projection> getProjections(int movieId) throws NoMovieException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
@@ -343,6 +352,33 @@ public class Cinema {
 			for (Projection p : cinemaProjections) {
 				if (p.getMovie().getId() == movieId) {
 					movieProjections.add(p);
+				}
+			}
+		}
+		return movieProjections;
+	}
+
+	/**
+	 * 
+	 * METODO per restituire gli id delle pproiezioni di un cinema, inerenti uno
+	 * specifico film tramite l'id
+	 * 
+	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
+	 * @return ArrayList<Integer> Id delle proiezioni dello specifico film
+	 * @throws NoMovieException
+	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
+	 *                                     abbia quel film, tra i film proiettati
+	 * 
+	 *                                     DA ELIMINARE (RIDURRE L'ACCOPPIAMENTO CON
+	 *                                     LE INTERFACCE)
+	 */
+	public List<Integer> getMovieProjections(int movieId) throws NoMovieException {
+		List<Integer> movieProjections = new ArrayList<>();
+		Movie m = getMovie(movieId);
+		if (m != null) {
+			for (Projection p : cinemaProjections) {
+				if (p.getMovie().getId() == movieId) {
+					movieProjections.add(p.getId());
 				}
 			}
 		}
@@ -573,7 +609,7 @@ public class Cinema {
 	 * METODO per farsi dire tutte le sale del cinema
 	 * 
 	 * @return rooms
-	 * @throws PersistenceException 
+	 * @throws PersistenceException
 	 */
 	public List<Room> getAllRooms() throws PersistenceException {
 		return this.persistenceFacade.getAllRooms();
@@ -646,12 +682,21 @@ public class Cinema {
 	 * @param row
 	 * @param col
 	 * @return
+	 * @throws ProjectionException
 	 * @throws InvalidRoomSeatCoordinatesException
 	 * @throws ReservationNotExistsException
 	 */
-	public boolean checkIfReservationProjectionSeatIsAvailable(long r, int row, int col)
-			throws RoomException, ReservationException {
-		return getReservation(r).getProjection().checkIfSeatIsAvailable(row, col);
+	public boolean checkIfProjectionSeatIsAvailable(int p, int row, int col)
+			throws RoomException, ReservationException, ProjectionException {
+		return getProjection(p).checkIfSeatIsAvailable(row, col);
+	}
+
+	public int getReservationProjection(long r) throws ReservationException {
+		for (Reservation reservation : cinemaReservations) {
+			if (reservation.getProgressive() == r)
+				return reservation.getProjection().getId();
+		}
+		throw new ReservationException("La prenotazione " + r + " non esiste.");
 	}
 
 	/**
@@ -963,6 +1008,33 @@ public class Cinema {
 
 	public String getReservationCouponCode(long r) throws ReservationException {
 		return getReservation(r).getCoupon().getCode();
+	}
+
+	public Movie getProjectionMovie(int p) throws ProjectionException {
+		for (Projection projection : cinemaProjections) {
+			if (projection.getId() == p) {
+				return projection.getMovie();
+			}
+		}
+		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
+	}
+
+	public LocalDateTime getProjectionDateTime(int p) throws ProjectionException {
+		for (Projection projection : cinemaProjections) {
+			if (projection.getId() == p) {
+				return projection.getDateTime();
+			}
+		}
+		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
+	}
+
+	public Room getProjectionRoom(int p) throws ProjectionException {
+		for (Projection projection : cinemaProjections) {
+			if (projection.getId() == p) {
+				return projection.getRoom();
+			}
+		}
+		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
 	}
 
 }

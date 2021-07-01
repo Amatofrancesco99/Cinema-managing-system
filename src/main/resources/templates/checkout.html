@@ -2,16 +2,16 @@
 @import cinema.model.Movie
 @import cinema.model.cinema.Room
 @import cinema.model.cinema.util.RoomException
-@import cinema.model.projection.Projection
+@import cinema.model.projection.util.ProjectionException
+@import cinema.model.reservation.util.ReservationException
+@import java.time.LocalDateTime
 @import java.time.YearMonth
 @import java.time.format.DateTimeFormatter
 @import java.time.format.TextStyle
 
 @args() {
     Cinema cinema
-    Movie movie
-    Projection projection
-    long reservationId
+    long reservation
 }
 
 @extends(wireframe, cinema=cinema, pageTitle="Acquisto biglietti")
@@ -36,7 +36,19 @@
                         <a id="dismiss-modal-button" data-bs-dismiss="modal" class="btn btn-primary" id="modal-alert-close-button" role="button">
                             Chiudi
                         </a>
-                        <a id="go-to-movie-details-button" href="/movie-details?id=@(movie.getId())#" class="btn btn-primary" id="modal-alert-close-button" role="button">
+                        @{
+                            Movie projectionMovie = null;
+                            LocalDateTime projectionDateTime = null;
+                            Room projectionRoom = null;
+                            try {
+                                projectionMovie = cinema.getProjectionMovie(cinema.getReservationProjection(reservation));
+                                projectionDateTime = cinema.getProjectionDateTime(cinema.getReservationProjection(reservation));
+                                projectionRoom = cinema.getProjectionRoom(cinema.getReservationProjection(reservation));
+                            } catch (ProjectionException | ReservationException exception) {
+                                // No exceptions to handle here
+                            }
+                        }
+                        <a id="go-to-movie-details-button" href="/movie-details?id=@(projectionMovie.getId())#" class="btn btn-primary" id="modal-alert-close-button" role="button">
                             Chiudi
                         </a>
                     </div>
@@ -48,10 +60,10 @@
                 Scegli il tuo posto in sala
             </h3>
             <h5>
-                @(movie.getTitle())
+                @(projectionMovie.getTitle().escapeHtml())
             </h5>
             <h6 class="text-muted">
-                Proiezione di @(projection.getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html")) <strong>@(projection.getDateTime().getDayOfMonth().format("00"))/@(projection.getDateTime().getMonthValue().format("00"))</strong> delle <strong>@(projection.getDateTime().toLocalTime().format("hh:mm"))</strong> (Sala @(projection.getRoom().getProgressive()))
+                Proiezione di @(projectionDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html")) <strong>@(projectionDateTime.getDayOfMonth().format("00"))/@(projectionDateTime.getMonthValue().format("00"))</strong> delle <strong>@(projectionDateTime.toLocalTime().format("hh:mm"))</strong> (Sala @(projectionRoom.getProgressive()))
             </h6>
         </div>
         <div class="alert alert-secondary d-flex align-items-center mb-4" role="alert">
@@ -70,31 +82,31 @@
                     <tbody>
                         <tr class="p-0 m-0">
                             <th class="p-0 m-0"></th>
-                            <th class="pb-2 m-0 text-center" colspan="@(projection.getRoom().getNumberCols())">
+                            <th class="pb-2 m-0 text-center" colspan="@(projectionRoom.getNumberCols())">
                                 <img src="/static/img/screen.svg" width="500px" class="img-fluid" alt="Schermo della sala" data-bs-toggle="tooltip" data-placement="top" title="Schermo della sala">
                             </th>
                         </tr>
                         <tr class="p-0 m-0">
                             <th class="p-0 m-0"></th>
-                            @for (int j = 1; j <= projection.getRoom().getNumberCols(); j++) {
+                            @for (int j = 1; j <= projectionRoom.getNumberCols(); j++) {
                                 <th class="p-1 m-1 text-center align-middle">
                                     @(j)
                                 </th>
                             }
                         </tr>
-                        @for (int i = 0; i < projection.getRoom().getNumberRows(); i++) {
+                        @for (int i = 0; i < projectionRoom.getNumberRows(); i++) {
                             <tr class="p-0 m-0">
                                 <th class="px-2 py-1 m-1 text-center align-middle">
                                     @(Room.rowIndexToRowLetter(i))
                                 </th>
-                                @for (int j = 0; j < projection.getRoom().getNumberCols(); j++) {
+                                @for (int j = 0; j < projectionRoom.getNumberCols(); j++) {
                                     <td class="p-1 m-1 text-center">
                                         @{
                                             String seatIcon = "";
                                             String seatStatus = "";
                                             boolean clickable = false;
                                             try {
-                                                if (projection.checkIfSeatIsAvailable(i, j)) {
+                                                if (cinema.checkIfProjectionSeatIsAvailable(cinema.getReservationProjection(reservation), i, j)) {
                                                     seatIcon = "/static/img/seat-available.svg";
                                                     seatStatus = "disponibile";
                                                     clickable = true;
@@ -102,8 +114,8 @@
                                                     seatIcon = "/static/img/seat-unavailable.svg";
                                                     seatStatus = "non disponibile";
                                                 }
-                                            } catch(RoomException e) {
-                                                // No exception to handle here, seats coordinates (i, j) are allowed for this room
+                                            } catch(RoomException | ProjectionException | ReservationException exception) {
+                                                // No exceptions to handle here
                                             }
                                         }
                                         <img id="seat-@(i)-@(j)" status="@(seatStatus)" @if(clickable){class="seat"} src="@(seatIcon)" width="45px" alt="Posto @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" data-bs-toggle="tooltip" data-placement="top" title="Posto @(Room.rowIndexToRowLetter(i))@(j + 1) (@(seatStatus))" @if(clickable){style="cursor: pointer;"}>
@@ -139,7 +151,7 @@
                             <div>
                                 <h6 id="n-seats" class="my-0"></h6>
                                 <small class="text-muted">
-                                    @(movie.getTitle())
+                                    @(projectionMovie.getTitle().escapeHtml())
                                 </small>
                             </div>
                             <span id="full-price" class="text-muted"></span>
@@ -170,7 +182,7 @@
                         </li>
                     </ul>
                     <form id="coupon-code-form" action="/apply-coupon#" method="post" class="card p-2 needs-validation" novalidate>
-                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
+                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservation)">
                         <div class="input-group has-validation">
                             <input type="text" id="coupon-code" name="coupon-code" class="form-control" placeholder="Codice coupon" required>
                             <button id="coupon-code-button" class="btn btn-secondary" type="submit">
@@ -188,7 +200,7 @@
                 </div>
                 <div class="col-md-7 col-lg-8">
                     <form id="buy-form" action="/buy#" method="post" class="needs-validation" novalidate>
-                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservationId)">
+                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservation)">
                         <div class="row g-3">
                             <h4 class="mb-3">
                                 Dati personali
