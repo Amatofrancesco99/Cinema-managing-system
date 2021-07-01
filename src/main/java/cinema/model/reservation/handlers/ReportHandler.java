@@ -158,10 +158,12 @@ public class ReportHandler {
 	 * @return
 	 */
 	private static Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
+		String dayOfWeek = r.getProjection().getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
+		String month = r.getProjection().getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
 		Paragraph infoReservationP = new Paragraph("Prenotazione effettuata da " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + "\n"
 				+ "Sala " + r.getProjection().getRoom().getProgressive()
-				+ "   -   " + r.getProjection().getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN)
-				+ " " + r.getProjection().getDateTime().getDayOfMonth() + " " + r.getProjection().getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN) + " " + r.getProjection().getDateTime().getYear()
+				+ "   -   " + dayOfWeek.toUpperCase().charAt(0) + dayOfWeek.substring(1)
+				+ " " + r.getProjection().getDateTime().getDayOfMonth() + " " + month.toUpperCase().charAt(0) + month.substring(1) + " " + r.getProjection().getDateTime().getYear()
 				+ "  alle  " + String.format("%02d", r.getProjection().getDateTime().getHour()) + ":" + String.format("%02d", r.getProjection().getDateTime().getMinute()), allFonts.get("subFont25"));
 		infoReservationP.setSpacingBefore(30);
 		return infoReservationP;
