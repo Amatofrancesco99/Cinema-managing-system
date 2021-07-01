@@ -1,7 +1,6 @@
 package cinema.model.cinema;
 
 import java.util.ArrayList; 
-import java.util.concurrent.atomic.AtomicInteger;
 
 import cinema.model.cinema.util.RoomException;
 import cinema.model.cinema.util.TypeOfSeat;
@@ -15,10 +14,10 @@ import cinema.model.cinema.util.TypeOfSeat;
 public class Room {
 	
 	/** ATTRIBUTI
-	 * @param progressive	Id progressivo della sala
+	 * @param number	Id progressivo della sala
 	 * @param seats			Posti che compongono la sala
 	 */
-	private final int progressive;
+	private final int number;
 	private ArrayList<ArrayList<PhysicalSeat>> seats;
 	
 	/** COTRUTTORE, inseriti il numero di righe e di colonne di una sala, esso 
@@ -41,7 +40,7 @@ public class Room {
 			}
 			seats.add(row);
 		}
-		this.progressive = id;
+		this.number = id;
 	}
 	
 	
@@ -51,6 +50,14 @@ public class Room {
 	 */
 	public int getNumberSeats() {
 		return seats.size()*seats.get(0).size();
+	}
+	
+	/**
+	 * METODO per farsi dire il numero di posti che compongono la sala
+	 * @return n	Numero di posti
+	 */
+	public int getNumber() {
+		return this.number;
 	}
 	
 	/**
@@ -105,14 +112,14 @@ public class Room {
 	 * @return
 	 */
 	public long getProgressive() {
-		return progressive;
+		return number;
 	}
 	
 	
 	/** METODO per stampare le caratteristiche della sala*/
 	@Override
 	public String toString() {
-		return  "Sala n°: " + progressive + 
+		return  "Sala n°: " + number + 
 				"  Posti: " + getNumberSeats();
 	}
 }
