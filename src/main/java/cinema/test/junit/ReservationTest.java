@@ -65,7 +65,7 @@ public class ReservationTest {
 	public static void setUpBeforeClass() throws Exception {
 		myCinema.setCinemaDiscountStrategy(TypeOfDiscounts.AGE);
 		r = myCinema.getReservation(myCinema.createReservation());
-		Room room = new Room(3,3);
+		Room room = new Room(999, 3,3);
 		
 		ArrayList<String> genres, directors, cast;
 		genres = new ArrayList<>();

@@ -18,8 +18,7 @@ public class Room {
 	 * @param progressive	Id progressivo della sala
 	 * @param seats			Posti che compongono la sala
 	 */
-	private static final AtomicInteger count = new AtomicInteger(0); 
-	private final long progressive;
+	private final int progressive;
 	private ArrayList<ArrayList<PhysicalSeat>> seats;
 	
 	/** COTRUTTORE, inseriti il numero di righe e di colonne di una sala, esso 
@@ -30,7 +29,7 @@ public class Room {
 	 * @throws InvalidRoomDimensionsException	Eccezione lanciata qualora non siano
 	 * 											inseriti un numero di righe o colonne valido
 	 */
-	public Room(int rows, int cols) throws RoomException{
+	public Room(int id, int rows, int cols) throws RoomException{
 		if(rows <= 0 || cols <= 0)
 			throw new RoomException("La stanza deve contenere almeno un posto.");
 
@@ -42,8 +41,9 @@ public class Room {
 			}
 			seats.add(row);
 		}
-		this.progressive = count.incrementAndGet();
+		this.progressive = id;
 	}
+	
 	
 	/**
 	 * METODO per farsi dire il numero di posti che compongono la sala

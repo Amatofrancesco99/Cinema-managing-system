@@ -10,6 +10,7 @@ import cinema.controller.util.PasswordException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 
@@ -200,8 +201,12 @@ public class CLIAdminMain {
 
 	private static void selectProjectionRoom(int p) {
 		System.out.println("\n\nLista delle sale del cinema: ");
-		for (Room r : myCinema.getAllRooms())
-			System.out.println(r.toString());
+		try {
+			for (Room r : myCinema.getAllRooms())
+				System.out.println(r.toString());
+		} catch (PersistenceException e) {
+			System.out.println(e.getMessage());
+		}
 		boolean end = false;
 		while(!end) {
 			System.out.println("\nInserisci il numero della sala da associare alla proiezione: ");
@@ -219,11 +224,13 @@ public class CLIAdminMain {
 
 	private static void selectProjectionMovie(int p) {
 		System.out.println("\n\nLista dei film disponibili: ");
-		// TODO: change this method with something like:
-		// 		 myCinema.getAllMovies(int thisYear or a limited range)
-		for (Movie m: myCinema.getCurrentlyAvailableMovies()) {
-			System.out.println((m.getId()) + ") ");
-			System.out.println(m.getDetailedDescription());
+		try {
+			for (Movie m: myCinema.getAllMovies()) {
+				System.out.println((m.getId()) + ") ");
+				System.out.println(m.getDetailedDescription());
+			}
+		} catch (PersistenceException e) {
+			System.out.println(e.getMessage());
 		}
 		boolean end = false;
 		while(!end) {
