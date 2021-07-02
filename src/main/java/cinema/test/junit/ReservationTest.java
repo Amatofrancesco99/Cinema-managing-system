@@ -230,7 +230,7 @@ public class ReservationTest {
 			r2.setProjection(projections.get(0));
 			r2.addSeat(1, 1);
 			r2.addSeat(1, 2);
-			r2.setPaymentCard("", "", "212", YearMonth.of(24, 2));
+			r2.setPaymentCard("1234567890123456", "Francesco Amato", "212", YearMonth.of(2024, 02));
 			r2.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
 		} catch (ReservationException | SeatAvailabilityException | RoomException e) {
 			System.out.println(e.getMessage());

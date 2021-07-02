@@ -40,7 +40,7 @@
                                         Genere
                                     </td>
                                     <td>
-                                        @(movie.getGenres().join(", ").escapeHtml())
+                                        @(movie.getGenres().join(", "))
                                     </td>
                                 </tr>
                                 <tr>
@@ -48,7 +48,7 @@
                                         Regia
                                     </td>
                                     <td>
-                                        @(movie.getDirectors().join(", ").escapeHtml())
+                                        @(movie.getDirectors().join(", "))
                                     </td>
                                 </tr>
                                 <tr>
@@ -56,7 +56,7 @@
                                         Cast
                                     </td>
                                     <td>
-                                        @(movie.getCast().join(", ").escapeHtml())
+                                        @(movie.getCast().join(", "))
                                     </td>
                                 </tr>
                                 <tr>
