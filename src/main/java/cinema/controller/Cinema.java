@@ -25,6 +25,7 @@ import cinema.model.reservation.discount.types.DiscountDay;
 import cinema.model.reservation.discount.types.DiscountNumberSpectators;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.handlers.EmailHandler;
 import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
@@ -36,7 +37,7 @@ import cinema.model.reservation.util.SeatAvailabilityException;
  * @author Screaming Hairy Armadillo Team
  *
  *         Questa classe rappresenta il controller del nostro progetto, ossia la
- *         classe che consente alla vista di poter eseguire operazioni utili,
+ *         classe he consente alla vista di poter eseguire operazioni utili,
  *         senza dover conoscere la logica di dominio. Essa è molto utile poiché
  *         qualora si usino interfacce diverse, come nel nostro caso (CLI e GUI)
  *         gli stessi metodi della CLI saranno presenti nella GUI, chiaramente
@@ -49,40 +50,41 @@ public class Cinema {
 	/**
 	 * ATTRIBUTI
 	 * 
-	 * @param name               Nome
-	 * @param city               Città
-	 * @param country            Paese
-	 * @param zipCode            Codice comunale
-	 * @param address            Indirizzo (Via, numero civico)
-	 * @param logoURL            Logo del cinema
-	 * @param email              E-mail, utile per inviare report al cliente con i
-	 *                           diversi dati riferiti alla specifica prenotazione,
-	 *                           effettuata da quest ultimo
-	 * @param password           Password associata all'indirizzo email
-	 * @param adminPassword      Password dell'amministratore del cinema
-	 * @param rooms              List: comprende tutte le sale del cinema
-	 * @param cinemaProjections  List: comprende tutte le proiezioni fatte dal
-	 *                           cinema
-	 * @param cinemaReservations List: comprende tutte le prenotazioni del cinema
-	 * @param coupon             List: comprende tutti i coupon emessi dal cinema
-	 * @param cinemaDiscount     Sconto attivo
-	 * @param allDiscounts       Tutti gli sconti applicabili
+	 * @param name               	Nome
+	 * @param city               	Città
+	 * @param country            	Paese
+	 * @param zipCode            	Codice comunale
+	 * @param address            	Indirizzo (Via, numero civico)
+	 * @param logoURL            	Logo del cinema
+	 * @param email              	E-mail, utile per inviare report al cliente con i
+	 *                           	diversi dati riferiti alla specifica prenotazione,
+	 *                           	effettuata da quest ultimo
+	 * @param password           	Password associata all'indirizzo email
+	 * @param adminPassword      	Password dell'amministratore del cinema
+	 * @param rooms              	List: comprende tutte le sale del cinema
+	 * @param cinemaProjections  	List: comprende tutte le proiezioni fatte dal
+	 *                           	cinema
+	 * @param cinemaReservations 	List: comprende tutte le prenotazioni del cinema
+	 * @param cinemaDiscount     	Sconto attivo
+	 * @param allDiscounts       	Tutti gli sconti applicabili
+	 * @param persistenceFacade
 	 */
-	private static String name;
-	private static String city;
-	private static String country;
-	private static String zipCode;
-	private static String address;
-	private static String logoURL;
-	private static String email;
-	private static String password;
-	private static String adminPassword;
+	private String name;
+	private String city;
+	private String country;
+	private String zipCode;
+	private String address;
+	private String logoURL;
+	private String email;
+	private String password;
+	private String adminPassword;
+	private EmailHandler emailHandler;
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
 	private List<Reservation> cinemaReservations;
 	private Discount cinemaDiscount;
 	private ArrayList<Discount> allDiscounts;
-	private static PersistenceFacade persistenceFacade;
+	private PersistenceFacade persistenceFacade;
 
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
@@ -98,12 +100,12 @@ public class Cinema {
 		password = "CinemaArmadillo@1999";
 		adminPassword = "admin";
 		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
+		emailHandler = new EmailHandler(name,email,password,getLocation(),logoURL);
 		try {
 			persistenceFacade = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
@@ -539,7 +541,6 @@ public class Cinema {
 	 * @param zipCode Codice comunale
 	 * @param address Indirizzo (Via, numero civico)
 	 */
-	@SuppressWarnings("static-access")
 	public void setLocation(String city, String country, String zipCode, String address) {
 		this.city = city;
 		this.country = country;
@@ -583,7 +584,7 @@ public class Cinema {
 	 * @throws PersistenceException
 	 */
 	public List<Room> getAllRooms() throws PersistenceException {
-		return getPersistenceFacade().getAllRooms();
+		return persistenceFacade.getAllRooms();
 	}
 
 	/**
@@ -594,7 +595,7 @@ public class Cinema {
 	 */
 	public Room getRoom(int roomId) throws RoomException {
 		try {
-			return getPersistenceFacade().getRoom(roomId);
+			return persistenceFacade.getRoom(roomId);
 		} catch (PersistenceException e) {
 			throw new RoomException("La sala con id " + roomId + " non è presente all'interno del cinema.");
 		}
@@ -605,7 +606,7 @@ public class Cinema {
 	 * 
 	 * @return location
 	 */
-	public static String getLocation() {
+	public String getLocation() {
 		return address + ", " + city + " - " + zipCode + " " + country;
 	}
 
@@ -795,6 +796,12 @@ public class Cinema {
 	public void buyReservation(long r) throws NumberFormatException, SeatAvailabilityException, RoomException,
 			ReservationException, PaymentErrorException, ReservationException, PersistenceException {
 		getReservation(r).buy();
+		/* Se la reservation è associata ad un coupon una volta terminato il metodo buy
+		* dico che quel coupon è stato già utilizzato, in modo tale da impedirne il riutilizzo */
+		Coupon coupon = getReservation(r).getCoupon();
+		if (coupon != null) {
+			persistenceFacade.setCouponUsed(coupon.getCode());
+		}
 	}
 
 	/**
@@ -818,7 +825,7 @@ public class Cinema {
 	 * @throws ReservationNotExistsException
 	 */
 	public void sendReservationEmail(long r) throws ReservationException, HandlerException {
-		getReservation(r).sendEmail();
+		emailHandler.sendEmail(getReservation(r));
 	}
 
 	/**
@@ -826,7 +833,7 @@ public class Cinema {
 	 * 
 	 * @return
 	 */
-	public static String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -835,7 +842,7 @@ public class Cinema {
 	 * 
 	 * @return
 	 */
-	public static String getEmail() {
+	public String getEmail() {
 		return email;
 	}
 
@@ -844,7 +851,7 @@ public class Cinema {
 	 * 
 	 * @return
 	 */
-	public static String getLogoURL() {
+	public String getLogoURL() {
 		return logoURL;
 	}
 
@@ -853,7 +860,7 @@ public class Cinema {
 	 * 
 	 * @return
 	 */
-	public static String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
@@ -1007,9 +1014,5 @@ public class Cinema {
 			}
 		}
 		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
-	}
-	
-	public static PersistenceFacade getPersistenceFacade() {
-		return persistenceFacade;
 	}
 }

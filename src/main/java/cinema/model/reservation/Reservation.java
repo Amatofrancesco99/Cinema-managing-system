@@ -11,7 +11,6 @@ import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.spectator.Spectator;
-import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
@@ -20,8 +19,6 @@ import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
-import cinema.model.reservation.handlers.EmailHandler;
-import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
@@ -172,18 +169,6 @@ public class Reservation {
 	
 	
 	/**
-	 * METODO per effettuare l'invio tramite email da parte del cinema, all'utente che 
-	 * sta prenotando, del report .pdf della prenotazione stessa.
-	 * @throws HandlerException 	Eccezione lanciata qualora ci fosse un problema o nella
-	 * 								spedizione via email del report, o nella generazione di
-	 * 								quest ultimo.
-	 */
-	public void sendEmail() throws HandlerException {
-		EmailHandler.sendEmail(this);
-	}
-	
-	
-	/**
 	 * METODO per farsi dire quanti siano stati i posti occupati dalla prenotazione
 	 * @return	TakenSeats		Numero di posti occupati
 	 */
@@ -252,13 +237,6 @@ public class Reservation {
 				//Payment simulation
 				if (new GreatNorthernAccountingAdapter(paymentCard).pay(getTotal()) == false) {
 					throw new PaymentErrorException("Il pagamento non è andato a buon fine.");
-				}
-				else {
-					if (getCoupon() != null) {
-						// se il pagamento va a buon fine dico che il coupon è stato utilizzato
-						// chiaramente se un coupon è stato associato alla prenotazione
-						Cinema.getPersistenceFacade().setCouponUsed(coupon.getCode());
-					}
 				}
 			}
 		}
