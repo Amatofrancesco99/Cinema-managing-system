@@ -1,6 +1,6 @@
 package cinema.model.reservation.discount.types;
 
-import cinema.model.reservation.discount.ReservationDiscountStrategy;
+import cinema.model.reservation.discount.IReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 
@@ -10,7 +10,7 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
  *	
  *  Questa classe rappresenta padre delle strategia
  */
-public abstract class Discount implements ReservationDiscountStrategy{
+public abstract class Discount implements IReservationDiscountStrategy{
 	
 	/**ATTRIBUTI
 	 * @param type		Tipo di sconto.

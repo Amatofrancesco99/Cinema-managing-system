@@ -7,7 +7,7 @@ package cinema.model.payment;
  * Interfaccia che rappresenta i metodi che uno strumento
  * di pagamento dovrebbero avere
  */
-public interface PaymentAdapter {
+public interface IPaymentAdapter {
 	
 	public boolean pay(double amount);
 

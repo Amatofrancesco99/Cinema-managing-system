@@ -15,7 +15,7 @@ import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
-import cinema.model.reservation.discount.ReservationDiscountStrategy;
+import cinema.model.reservation.discount.IReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
@@ -63,10 +63,10 @@ public class Reservation {
 	private Projection projection;
 	private PaymentCard paymentCard;
 	private String reportLocation;
-	private Coupon coupon;
+	private Coupon coupon; 
 	private int numberPeopleUntilMinAge;
 	private int numberPeopleOverMaxAge;
-	private ReservationDiscountStrategy rd;
+	private IReservationDiscountStrategy rd;
 	
 	
 	/**
@@ -74,7 +74,7 @@ public class Reservation {
 	 * progressivo che si auto-incrementa e la data di creazione corrisponde alla data di
 	 * sistema in cui viene invocato il costruttore stesso
 	 */
-	public Reservation(ReservationDiscountStrategy rd) {
+	public Reservation(IReservationDiscountStrategy rd) {
 		progressive = count.incrementAndGet(); 
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
@@ -372,7 +372,7 @@ public class Reservation {
 	
 	
 	/**METODO per farsi dire la strategia della reservation*/
-	public ReservationDiscountStrategy getStrategy() {
+	public IReservationDiscountStrategy getStrategy() {
 		return rd;
 	}
 	

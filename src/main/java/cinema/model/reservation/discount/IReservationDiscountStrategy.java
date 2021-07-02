@@ -15,7 +15,7 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
  * moltissimi altri a piacere. Trovate alcune tra le strategie applicabili sulle prenotazioni
  * nel sottopackage types, di questo stesso package. 
  */
-public interface ReservationDiscountStrategy {
+public interface IReservationDiscountStrategy {
 	
 	
 	/**

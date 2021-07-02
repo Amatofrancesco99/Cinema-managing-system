@@ -4,7 +4,7 @@ import java.util.Random;
 
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 
-public class GreatNorthernAccountingAdapter implements PaymentAdapter {
+public class GreatNorthernAccountingAdapter implements IPaymentAdapter {
 
 	@SuppressWarnings("unused")
 	private PaymentCard p;
