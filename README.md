@@ -24,7 +24,7 @@ Su [gradle.org](https://gradle.org/install/) è possibile reperire tutte le istr
 Il procedimento per l'installazione a seconda del sistema operativo utilizzato può essere trovato [qui](https://gradle.org/install/).
 
 ***
-## 1. ESECUZIONE DELL'APPLICAZIONE WEB (SERVER HTTP) - VISTA SPETTATORE
+## 1. ESECUZIONE DELL'APPLICAZIONE WEB - VISTA SPETTATORE
 
 ### 1.1 - Apertura del terminale o del prompt dei comandi
 Per poter compilare ed eseguire l'applicazione web (server HTTP) è necessario innanzitutto posizionarsi nella directory root del progetto all'interno di un terminale o prompt dei comandi:
