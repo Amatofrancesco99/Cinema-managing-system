@@ -80,10 +80,9 @@ public class Cinema {
 	private List<Room> rooms;
 	private List<Projection> cinemaProjections;
 	private List<Reservation> cinemaReservations;
-	private List<Coupon> coupons;
 	private Discount cinemaDiscount;
 	private ArrayList<Discount> allDiscounts;
-	private PersistenceFacade persistenceFacade;
+	private static PersistenceFacade persistenceFacade;
 
 	/**
 	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
@@ -102,13 +101,21 @@ public class Cinema {
 		try {
 			persistenceFacade = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
 		} catch (SQLException e) {
-			System.out.println("1 :" + e.getMessage());
+			System.out.println(e.getMessage());
 		}
-
+		
+		
+		try {
+			System.out.println(this.getCoupon("PLUTO123").toString());
+		} catch (CouponException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
-		coupons = new ArrayList<Coupon>();
 		cinemaDiscount = new DiscountAge();
 		allDiscounts = new ArrayList<Discount>();
 		addDiscount(new DiscountAge());
@@ -202,17 +209,6 @@ public class Cinema {
 			} catch (RoomException e) {
 			}
 		} catch (NoMovieException | PersistenceException e) {
-			System.out.println(e.getMessage());
-		}
-
-		// Aggiunti due coupon di prova emessi dal cinema
-		try {
-			createCoupon("SCONTO-PRIMAVERA", 5);
-			coupons.get(0).setUsed(true); // Coupon ID: SCONTO-PRIMAVERA già utilizzato (Prova)
-			createCoupon("PLUTO123", 2);
-			createCoupon("PAPERINO123", 3.5);
-			createCoupon("SCONTONE50", 50.0);
-		} catch (CouponException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -536,29 +532,13 @@ public class Cinema {
 	 *                                  coupon con quell'Id progressivo
 	 */
 	public Coupon getCoupon(String code) throws CouponException {
-		for (Coupon c : coupons) {
-			if (c.getCode().equals(code)) {
-				return c;
-			}
+		try {
+			return persistenceFacade.getCoupon(code);
+		} catch (PersistenceException e) {
+			throw new CouponException("Il coupon " + code + " non esiste.");
 		}
-		throw new CouponException("Il coupon " + code + " non esiste.");
 	}
-
-	/**
-	 * METODO per creare un nuovo coupon dalla classe cinema
-	 * 
-	 * @throws CouponException
-	 */
-	public String createCoupon(String code, double price) throws CouponException {
-		for (Coupon c : coupons) {
-			if (c.getCode().equals(code)) {
-				throw new CouponException("Il coupon " + code + " è già stato creato.");
-			}
-		}
-		Coupon c = new Coupon(code, price);
-		coupons.add(c);
-		return c.getCode();
-	}
+	
 
 	/**
 	 * METODO per settare/cambiare la "location" in cui si trova il cinema
@@ -612,7 +592,7 @@ public class Cinema {
 	 * @throws PersistenceException
 	 */
 	public List<Room> getAllRooms() throws PersistenceException {
-		return this.persistenceFacade.getAllRooms();
+		return getPersistenceFacade().getAllRooms();
 	}
 
 	/**
@@ -623,7 +603,7 @@ public class Cinema {
 	 */
 	public Room getRoom(int roomId) throws RoomException {
 		try {
-			return this.persistenceFacade.getRoom(roomId);
+			return getPersistenceFacade().getRoom(roomId);
 		} catch (PersistenceException e) {
 			throw new RoomException("La sala con id " + roomId + " non è presente all'interno del cinema.");
 		}
@@ -818,10 +798,11 @@ public class Cinema {
 	 * @throws ReservationHasNoSeatException
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
+	 * @throws PersistenceException 
 	 * @throws ReservationNotExistsException
 	 */
 	public void buyReservation(long r) throws NumberFormatException, SeatAvailabilityException, RoomException,
-			ReservationException, PaymentErrorException, ReservationException {
+			ReservationException, PaymentErrorException, ReservationException, PersistenceException {
 		getReservation(r).buy();
 	}
 
@@ -1036,5 +1017,8 @@ public class Cinema {
 		}
 		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
 	}
-
+	
+	public static PersistenceFacade getPersistenceFacade() {
+		return persistenceFacade;
+	}
 }

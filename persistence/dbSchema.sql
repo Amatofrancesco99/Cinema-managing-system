@@ -19,11 +19,13 @@ CREATE TABLE Movie(
     cast TEXT NOT NULL
 );
 
+
 CREATE TABLE Room(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     rows INTEGER NOT NULL CHECK(rows > 0),
     columns INTEGER NOT NULL CHECK(columns > 0)
 );
+
 
 CREATE TABLE Projection(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -35,9 +37,10 @@ CREATE TABLE Projection(
     FOREIGN KEY(room) REFERENCES Room(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+
 CREATE TABLE Coupon(
 	promocode TEXT PRIMARY KEY NOT NULL,
-	percentage REAL NOT NULL CHECK(percentage >= 0 AND percentage <= 1),
+	amount REAL NOT NULL CHECK(amount > 0),
 	used INTEGER NOT NULL DEFAULT(0) CHECK(used == 1 OR used == 0)
 );
 
@@ -85,6 +88,7 @@ INSERT INTO Movie (id, title, duration, rating, imageurl, trailerurl, descriptio
 INSERT INTO Movie (id, title, duration, rating, imageurl, trailerurl, description, genres, directors, cast)
     VALUES (5, "Skyfall", 143, 4, "skyfall.jpg", "https://www.youtube.com/watch?v=OnlSRBTG5Tw", "In seguito al fallimento di una missione recente, Il celebre agente segreto britannico è costretto ad essere testimone di una serie terribile di eventi: la MI6 deve trasferirsi al più presto mentre i dipendenti sotto copertura vedono le proprie identità venire rivelate. M è disperata e si rivolge a James Bond in cerca di un aiuto immediato.", "Drammatico,Spy,Action","Sam Mendes", "Daniel Craig,Judi Dench,Javier Bardem,Ben Whishaw");
 
+
 INSERT INTO Room(id, rows, columns) VALUES(1, 7, 15);
 INSERT INTO Room(id, rows, columns) VALUES(2, 8, 14);
 INSERT INTO Room(id, rows, columns) VALUES(3, 5, 10);
@@ -126,3 +130,8 @@ INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(31, "2021-08-03 
 INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(32, "2021-08-04 21:45:00", 8.5, 2, 2);
 INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(33, "2021-08-01 16:30:00", 9.5, 3, 3);
 
+
+INSERT INTO Coupon(promocode, amount) VALUES ("SCONTO10", 10.0);
+INSERT INTO Coupon(promocode, amount) VALUES ("PLUTO123", 4.0);
+INSERT INTO Coupon(promocode, amount) VALUES ("PAPERINO123", 7.0);
+INSERT INTO Coupon(promocode, amount) VALUES ("SCONTO50", 50.0);

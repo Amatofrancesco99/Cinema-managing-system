@@ -10,18 +10,22 @@ import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
+import cinema.model.reservation.discount.coupon.Coupon;
+import cinema.model.reservation.discount.coupon.util.CouponException;
 
 public class PersistenceFacade {
     Connection connection;
     IMovieDao iMovieDao;
     IRoomDao iRoomDao;
     IProjectionDao iProjectionDao;
+    ICouponDao iCouponDao;
 	
     public PersistenceFacade(String url) throws SQLException {
     	connection = DriverManager.getConnection(url);
     	iMovieDao = new MovieRdbDao(connection);
     	iRoomDao = new RoomRdbDao(connection);
     	iProjectionDao = new ProjectionRdbDao(connection);
+    	iCouponDao = new CouponRdbDao(connection);
     }
     
     
@@ -104,4 +108,31 @@ public class PersistenceFacade {
 			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
+	
+	public ArrayList<Coupon> getAllCoupons() throws PersistenceException {
+		try {
+			return this.iCouponDao.getAllCoupons();
+		} catch (SQLException | CouponException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	
+	public Coupon getCoupon(String promocode) throws PersistenceException {
+		try {
+			return this.iCouponDao.getCoupon(promocode);
+		} catch (SQLException | CouponException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	
+	public void setCouponUsed(String promocode) throws PersistenceException {
+		try {
+			this.iCouponDao.setCouponUsed(promocode);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
 }

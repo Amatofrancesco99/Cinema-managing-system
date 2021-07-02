@@ -10,6 +10,7 @@ import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.util.PaymentErrorException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
@@ -114,7 +115,7 @@ public class CLIUserMain {
 					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
 					  + " lo sconto\ndell'eventuale coupon applicato.\n");
 				end = true;
-			} catch (PaymentErrorException | ReservationException | SeatAvailabilityException | RoomException | NumberFormatException  e) {
+			} catch (PaymentErrorException | ReservationException | SeatAvailabilityException | RoomException | NumberFormatException | PersistenceException  e) {
 				System.out.println(e.getMessage());
 				return false;	
 			}

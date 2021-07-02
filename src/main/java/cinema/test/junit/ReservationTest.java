@@ -17,8 +17,10 @@ import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.util.PaymentErrorException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
+import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
@@ -142,13 +144,13 @@ public class ReservationTest {
 	@Test
 	public void testCoupon() {
 		// Coupon utilizzato una sola volta
-		String c1 = null;
+		Coupon c1 = null;
 		try {
-			c1 = myCinema.createCoupon("PROVA123",2);
+			c1 = new Coupon("PROVA123",3.5,false);
 		} catch (CouponException e1) { }
 		try {
-			r.setCoupon(myCinema.getCoupon(c1));
-			assertEquals(23 , r.getFullPrice() - myCinema.getCoupon(c1).getDiscount(),0);
+			r.setCoupon(c1);
+			assertEquals(23 , r.getFullPrice() - c1.getDiscount(),0);
 		} catch (CouponException e) {
 			e.toString();
 		}
@@ -156,7 +158,7 @@ public class ReservationTest {
 			r.setPaymentCard("1234567890123456", "TestOwnerName", "123", YearMonth.of(2022, 01));
 			r.buy();
 		} catch (NumberFormatException | SeatAvailabilityException | RoomException
-				| ReservationException | PaymentErrorException e) {
+				| ReservationException | PaymentErrorException | PersistenceException e) {
 			e.toString();
 		}
 		// Cerco di riutilizzare lo stesso coupon in due reservation diverse
@@ -164,7 +166,7 @@ public class ReservationTest {
 			Reservation newReservation = myCinema.getReservation(myCinema.createReservation());
 			newReservation.setProjection(projections.get(0));
 			newReservation.addSeat(2, 2); // occupo un nuovo posto
-			newReservation.setCoupon(myCinema.getCoupon(c1));
+			newReservation.setCoupon(c1);
 			assertEquals(12.50, newReservation.getTotal(),0);
 		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException e) {
 			e.toString();

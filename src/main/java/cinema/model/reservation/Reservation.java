@@ -8,8 +8,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import cinema.model.payment.GreatNorthernAccountingAdapter;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 import cinema.model.payment.util.PaymentErrorException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.spectator.Spectator;
+import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
@@ -200,11 +202,11 @@ public class Reservation {
 	 * @throws SeatAlreadyTakenException 
 	 * @throws NumberFormatException 
 	 */
-	public void buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException, PaymentErrorException{
+	public void buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException, PaymentErrorException, PersistenceException{
 		takeSeat();
 		try {
 			pay();
-		} catch (ReservationException | PaymentErrorException e) {
+		} catch (ReservationException | PaymentErrorException | PersistenceException e) {
 			freeAllSeats();
 			seats.removeAll(seats);
 			throw e;
@@ -238,8 +240,9 @@ public class Reservation {
 	 * @throws ReservationHasNoSeatException
 	 * @throws ReservationHasNoPaymentCardException
 	 * @throws PaymentErrorException
+	 * @throws PersistenceException 
 	 */
-	public void pay() throws ReservationException, PaymentErrorException {
+	public void pay() throws ReservationException, PaymentErrorException, PersistenceException {
 		if (getNSeats() > 0)
 		{
 			if (paymentCard == null) {
@@ -254,7 +257,7 @@ public class Reservation {
 					if (getCoupon() != null) {
 						// se il pagamento va a buon fine dico che il coupon è stato utilizzato
 						// chiaramente se un coupon è stato associato alla prenotazione
-						this.coupon.setUsed(true);
+						Cinema.getPersistenceFacade().setCouponUsed(coupon.getCode());
 					}
 				}
 			}

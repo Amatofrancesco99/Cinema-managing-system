@@ -27,14 +27,14 @@ public class Coupon {
 	 * @param discount
 	 * @throws CouponException 
 	 */
-	public Coupon(String code, double discount) throws CouponException {
+	public Coupon(String code, double discount, boolean used) throws CouponException {
 		if (code.length() < MIN_COUPON_CHARACTERS) {
 			throw new CouponException("Il coupon che si sta cercando di creare è troppo corto (almeno 8 cifre)." );
 		}
 		else {
 			this.code = code;
 			this.discount = Math.round(discount * 100.0)/100.0;
-			used = false;
+			this.used = used;
 		}
 	}
 
@@ -58,4 +58,8 @@ public class Coupon {
 		this.used = b;
 	}
 	
+	@Override
+	public String toString() {
+		return this.getCode() + " " +this.getDiscount() + " " + this.isUsed();
+	}
 }
