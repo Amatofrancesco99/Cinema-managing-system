@@ -12,13 +12,15 @@ import cinema.model.reservation.discount.coupon.util.CouponException;
 public class CouponRdbDao implements ICouponDao{
 	private Connection connection;
 	
+	
 	public CouponRdbDao(Connection connection) {
 		this.connection = connection;
 	}
 	
+	
 	@Override
 	public ArrayList<Coupon> getAllCoupons() throws SQLException, CouponException {
-		String sql = "SELECT * FROM Coupon";
+		String sql = "SELECT * FROM Coupon;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         ResultSet result = pstatement.executeQuery();
         ArrayList<Coupon> coupons = new ArrayList<Coupon>();
@@ -28,9 +30,10 @@ public class CouponRdbDao implements ICouponDao{
         return coupons;
 	}
 	
+	
 	@Override
 	public Coupon getCoupon(String promocode) throws SQLException, CouponException {
-		String sql = "SELECT * FROM Coupon WHERE promocode = ?";
+		String sql = "SELECT * FROM Coupon WHERE promocode = ?;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         pstatement.setString(1, promocode);
         ResultSet result = pstatement.executeQuery();
@@ -38,12 +41,13 @@ public class CouponRdbDao implements ICouponDao{
 		return coupon;
 	}
 
+	
 	@Override
 	public void setCouponUsed(String promocode) throws SQLException {
-		String sql = "UPDATE Coupon SET used = 1 WHERE promocode = ?";
+		String sql = "UPDATE Coupon SET used = 1 WHERE promocode = ?;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         pstatement.setString(1, promocode);
-        pstatement.executeQuery();
+        pstatement.executeUpdate();
 	}
 
 }

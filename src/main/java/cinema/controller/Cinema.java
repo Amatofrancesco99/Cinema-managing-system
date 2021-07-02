@@ -103,16 +103,7 @@ public class Cinema {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		
-		
-		try {
-			System.out.println(this.getCoupon("PLUTO123").toString());
-		} catch (CouponException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		
+
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
