@@ -43,7 +43,7 @@ $(window).on('load', function() {
             type: 'POST',
             url: 'update-seat-status',
             data: { 
-                'reservation-id': $('#reservation-id')[0].value,
+                'reservation-id': $('#reservation-id-buy')[0].value,
                 'seat-id': event.target.id,
                 'seat-status': event.target.status
             }
@@ -52,11 +52,11 @@ $(window).on('load', function() {
                 // Update the shopping cart if the seat status is updated
                 updateShoppingCart();
             } else {
-                // Alert the user if the seat status couldn't be updated
+                // Alert the spectator if the seat status couldn't be updated
                 showAlert(false, true, 'Errore si sincronizzazione', 'Si &egrave; verificato un errore nell\'aggiornare lo stato del posto selezionato. Riprova pi&ugrave; tardi.');
             }
         }).fail(function() {
-            // Alert the user if something went wrong during the update
+            // Alert the spectator if something went wrong during the update
             showNetworkErrorAlert();
         });
     });
@@ -100,11 +100,11 @@ $(window).on('load', function() {
                     $('#coupon-code').attr('disabled', true);
                     $('#coupon-code-button').attr('disabled', true);
                 } else {
-                    // Alert the user if the coupon couldn't be used
+                    // Alert the spectator if the coupon couldn't be used
                     showAlert(false, false, 'Errore durante l\'inserimento del coupon', 'Errore durante l\'inserimento del coupon. Controlla che il codice del coupon sia corretto e riprova.');
                 }
             }).fail(function() {
-                // Alert the user if something went wrong during the request
+                // Alert the spectator if something went wrong during the request
                 showNetworkErrorAlert();
             });
         }
@@ -131,7 +131,7 @@ $(window).on('load', function() {
                     showAlert(false, true, 'Errore durante l\'acquisto', 'Errore durante il completamento dell\'acquisto.');
                 }
             }).fail(function() {
-                // Alert the user if something went wrong during the request
+                // Alert the spectator if something went wrong during the request
                 showNetworkErrorAlert();
             });
         }
@@ -148,14 +148,14 @@ $(window).on('load', function() {
     });
 
     /**
-     * Shows a modal dialog to the user.
+     * Shows a modal dialog to the spectator.
      *
-     * If an alert is already opened, no other alerts can be shown.
+     * If an alert is already opened (and not closed yet by the spectator), no other alerts can be shown.
      *
      * @param boolean success dialog type (true = success, false = failure).
      * @param boolean goBack  modal type (true = go back to the movie details page, false = stay on the checkout page).
-     * @param string title    title of the modal.
-     * @param string body     body content of the modal.
+     * @param string  title   title of the modal.
+     * @param string  body    body content of the modal.
      */
     function showAlert(success, goBack, title, body) {
         // If an alert is already opened, do not open a new one
@@ -180,7 +180,7 @@ $(window).on('load', function() {
             keyboard: !goBack
         });
 
-        // Show the appropriate close button (if goBack is true the user must go back to the movie details page)
+        // Show the appropriate close button (if goBack is true the spectator must go back to the movie details page)
         if (goBack) {
             $('#dismiss-modal-button').addClass('d-none');
             $('#go-to-movie-details-button').removeClass('d-none');
@@ -194,10 +194,10 @@ $(window).on('load', function() {
     }
 
     /**
-     * Shows a modal dialog to the user stating a network error occurred.
+     * Shows a modal dialog to the spectator stating a network error occurred.
      */
     function showNetworkErrorAlert() {
-        // Alert the user if something went wrong during the request
+        // Alert the spectator if something went wrong during the request
         showAlert(false, true, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave; tardi.');
     }
 
@@ -210,7 +210,7 @@ $(window).on('load', function() {
             type: 'POST',
             url: 'get-checkout-info',
             data: { 
-                'reservation-id': $('#reservation-id').val()
+                'reservation-id': $('#reservation-id-buy').val()
             }
         }).done(function(response) {
             // Parse the response from the backend (prices' dot decimal separator is converted to a comma, token separator is '\n')
@@ -240,11 +240,11 @@ $(window).on('load', function() {
                     $('#coupon-shopping-cart-entry').removeClass('d-none');
                 }
             } else {
-                // Alert the user if something went wrong during the update to the shopping cart
+                // Alert the spectator if something went wrong during the update to the shopping cart
                 showAlert(false, true, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
             }
         }).fail(function() {
-            // Alert the user if something went wrong during the request
+            // Alert the spectator if something went wrong during the request
             showNetworkErrorAlert();
         });
     }
