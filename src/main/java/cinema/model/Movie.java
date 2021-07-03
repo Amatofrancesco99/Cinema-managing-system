@@ -73,7 +73,7 @@ public class Movie {
 			 + "Cast: " + this.getCast().toString() + "\n"
 			 + "Rating: " + this.getRating() + "\n"
 			 + "Durata: " + this.getDuration() + " min.\n"
-			 + "Trailer (URL): " + this.getTrailerURL() + "\n\n";
+			 + "Trailer (URL): " + this.getTrailerURL() + "\n";
 	}
 	
 	

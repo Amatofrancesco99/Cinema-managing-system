@@ -395,7 +395,7 @@ public class Cinema {
 		try {
 			return persistenceFacade.getMovie(id);
 		} catch (PersistenceException e) {
-			throw new NoMovieException("Il film con id " + id + " non esiste.");
+			throw new NoMovieException("Il film con ID " + id + " non esiste.");
 		}
 	}
 
