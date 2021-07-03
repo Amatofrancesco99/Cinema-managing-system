@@ -255,9 +255,17 @@ $(window).on('load', function() {
         });
     }
 
+    /**
+     * Validates the age discount input fields in the shopping cart and synchronizes them with the backend, then updates the shopping cart.
+     *
+     * The inputs are valid only if the sum of the two does not exceed the number of selected seats at the moment of the update.
+     * In this case, the inputs are marked as invalid and the backend is synchronized using 0 as the value of both inputs.
+     */
     function updateAgeDiscountInputsAndShoppingCart() {
+        // Difference between the number of selected seats necessary to consider the user inputs valid and the currently selected seats
         var extraSeats = parseInt($('#age-under').val()) + parseInt($('#age-over').val()) - getSelectedSeats();
 
+        // Update the validation status of the inputs
         $('#age-under').removeClass((extraSeats > 0) ? 'is-valid' : 'is-invalid');
         $('#age-under').addClass((extraSeats > 0) ? 'is-invalid' : 'is-valid');
         $('#age-over').removeClass((extraSeats > 0) ? 'is-valid' : 'is-invalid');
@@ -266,6 +274,7 @@ $(window).on('load', function() {
         $('.discount-entry').removeClass((extraSeats > 0) ? 'text-success' : 'text-danger');
         $('.discount-entry').addClass((extraSeats > 0) ? 'text-danger' : 'text-success');
 
+        // Update the backend with the current values of the inputs (both get set to 0 if the inputs are invalid)
         $.ajax({
             type: 'POST',
             url: $('#age-discount-form').attr('action'),
@@ -288,9 +297,16 @@ $(window).on('load', function() {
         });
     }
 
+    /**
+     * Returns the number of currently selected seats.
+     *
+     * @returns number number of currently selected seats.
+     */
     function getSelectedSeats() {
         var selectedSeats = 0;
         var seats = $('.seat').toArray();
+
+        // Count the number of selected seats and return it
         for (var i = 0; i < seats.length - 1; i++) {
             if (seats[i].status == 'selezionato') {
                 selectedSeats++;
