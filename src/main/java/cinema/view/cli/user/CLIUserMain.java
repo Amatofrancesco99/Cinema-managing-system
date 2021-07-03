@@ -36,6 +36,7 @@ public class CLIUserMain {
 
 	static Scanner keyboard = new Scanner(System.in);
 	static Cinema myCinema = new Cinema();
+	private final String separatore = "-----------------------------------------------------";
 	
 	/**
 	 * METODO Main, per eseguire la nostra CLI
@@ -44,16 +45,57 @@ public class CLIUserMain {
 	 * @throws InvalidNumberPeopleValueException 
 	 */
 	public static void main(String[] args){
+		@SuppressWarnings("unused")
+		CLIUserMain cli = new CLIUserMain();
+	}
+	
+	public CLIUserMain() {
 		// INFORMAZIONI GENERALI DEL CINEMA E BENVENUTO AL CLIENTE
 		printHeader();
+			
+		//MENU CHE ACCOGLIE IL CLIENTE
+		menu();		
+	}
+	
+	
+	private void menu() {
+		
+		boolean end = false;
+		
+		do {
+			
+			System.out.println("\nMENU");
+			System.out.println("\nCosa vuoi fare: \n\n1) Visualizzare i film disponibili \n2) Acquistare un biglietto \n3) Uscire \n");
+			System.out.println("Inserire la scelta: ");
+			
+			int scelta = Integer.parseInt(keyboard.nextLine());
+			
+			switch(scelta) {
+				
+				case 1: printCurrentlyAvailableMovies();
+						end = backToMenu();
+						break;
+				
+				case 2: buyTicket();
+						break;
+						
+				default:end = true;
+			}
+			
+		}while(!end);
+		
+		sayGoodbye();
+	}
+	
+	private void buyTicket() {
 		
 		// FILM ATTUALMENTE DISPONIBILI/PROIETTATI
 		printCurrentlyAvailableMovies();
-				
+						
 		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI E MAGGIORI DETTAGLI 
 		int movieID = askMovieId();
 		printMovieProjections(movieID);
-		
+						
 		// CREAZIONE DI UNA NUOVA RESERVATION E INSERIMENTO DATI
 		printReservationHeader();
 		long r = myCinema.createReservation();
@@ -65,7 +107,7 @@ public class CLIUserMain {
 		insertPaymentCardInfo(r);	// Inserimento dati pagamento
 		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
 		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
-		
+						
 		// EFFETTUA PAGAMENTO, SE QUALCOSA VA STORTO INSERISCO DI NUOVO 
 		while(!buy(r)) {
 			showProjectionSeats(r);	 	
@@ -73,23 +115,42 @@ public class CLIUserMain {
 			insertPaymentCardInfo(r);	
 			insertSpectatorsInfo(r);
 		}
-		
+						
 		// SPEDIZIONE DELL'EMAIL AL CLIENTE, CONTENENTE IL REPORT
-		sendEmail(r); 			    
+		sendEmail(r); 
 		
-		// SALUTO DEL CLIENTE E TERMINA PROGRAMMA
-		sayGoodbye();
+	}
+	
+	private boolean backToMenu() {
+		
+		boolean end = true;
+		
+		do {
+			
+			System.out.println("\n\nVuoi tornare al menu principale (Y) o preferisci uscire (N)? ");
+			String conferma = keyboard.nextLine().toUpperCase();
+			if (conferma.contains("N")) {
+				return true;
+			
+			} else if ((!conferma.equals("Y"))&&(!conferma.equals("N"))){
+				System.out.println("Scelta non valida...");
+				end = false;
+			}
+			end = true;
+			
+		}while(!end);
+		
+		return false;
 	}
 
-
-	private static void sayGoodbye() {
+	private void sayGoodbye() {
 		System.out.println("\n\nGrazie, a presto!\n");
-		System.out.println("-----------------------------------------------------");
+		System.out.println(separatore);
 	}
 
 	
-	private static void sendEmail(long r) {
-		System.out.println("-----------------------------------------------------\n");
+	private void sendEmail(long r) {
+		System.out.println(separatore);
 		System.out.println("\nSPEDIZIONE EMAIL \n");
 		try {
 			myCinema.sendReservationEmail(r);
@@ -101,9 +162,9 @@ public class CLIUserMain {
 	}
 
 	
-	private static boolean buy(long r){
+	private boolean buy(long r){
 		boolean end = false;
-		System.out.println("-----------------------------------------------------\n");
+		System.out.println(separatore);
 		System.out.println("\nPAGAMENTO \n");
 		while (!end) {
 			try {
@@ -124,7 +185,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertCouponInfo(long r) {
+	private void insertCouponInfo(long r) {
 		boolean end = false;
 		System.out.println("\n\n3.4- INSERIMENTO COUPON \n");
 		while (!end) {
@@ -149,7 +210,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertSpectatorsInfo(long r) {
+	private void insertSpectatorsInfo(long r) {
 		try {
 			if (myCinema.getReservationTypeOfDiscount(r).equals("AGE")) {
 				try {
@@ -188,7 +249,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertPaymentCardInfo(long r) {
+	private void insertPaymentCardInfo(long r) {
 		boolean end = false;
 		while(!end) {
 			System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
@@ -225,7 +286,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void insertPersonalData(long r) {
+	private void insertPersonalData(long r) {
 		boolean end = false;
 		System.out.println("\n3.1- INSERIMENTO DATI PERSONALI \n");
 		while (!end) {
@@ -254,7 +315,7 @@ public class CLIUserMain {
 	}
 
 	
-	private static void addSeatsToReservation(long r) {
+	private void addSeatsToReservation(long r) {
 		boolean end = false;
 		do {
 			boolean validSeat = false;
@@ -289,7 +350,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void showProjectionSeats(long r) {
+	private void showProjectionSeats(long r) {
 			System.out.println("\n2- SELEZIONE POSTO/I\n");
 			System.out.println("Disposizione sala e posti liberi.");
 			System.out.println("I posti segnati con i trattini sono già occupati.\n\n");
@@ -323,7 +384,7 @@ public class CLIUserMain {
 	}
 
 
-	private static void setReservationProjection(long r, int projectionId) {
+	private void setReservationProjection(long r, int projectionId) {
 		System.out.println("\n");
 		try {
 			myCinema.setReservationProjection(r, projectionId);
@@ -333,7 +394,7 @@ public class CLIUserMain {
 	}
 
 
-	private static int selectProjection() {
+	private int selectProjection() {
 		boolean end = false;
 		int projectionId = 0;
 		System.out.println("1- SELEZIONE PROIEZIONE \n");
@@ -356,13 +417,13 @@ public class CLIUserMain {
 	}
 
 
-	private static void printReservationHeader() {
-		System.out.println("-----------------------------------------------------\n\n");
+	private void printReservationHeader() {
+		System.out.println(separatore + "\n\n");
 		System.out.println("COMPILAZIONE PRENOTAZIONE\n");
 	}
 
 
-	private static void printMovieProjections(int movieID) {
+	private void printMovieProjections(int movieID) {
 		try {
 			myCinema.getCurrentlyAvailableProjections(movieID);
 			System.out.println("Maggiori dettagli sul film\n");
@@ -378,7 +439,7 @@ public class CLIUserMain {
 	}
 
 
-	private static int askMovieId() {
+	private int askMovieId() {
 		boolean end = false;
 		int filmId = 0;
 		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI\n");
@@ -403,22 +464,22 @@ public class CLIUserMain {
 	}
 
 
-	private static void printHeader() {
-		System.out.println("-----------------------------------------------------\n");
+	private void printHeader() {
+		System.out.println(separatore + "\n");
 		System.out.println(myCinema.getName().toUpperCase()+"\n");
 		System.out.println("Puoi trovarci in: " + myCinema.getLocation() + "\n");
 		System.out.println("Contattaci: " + myCinema.getEmail() + "\n\n");
 		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
-		System.out.println("-----------------------------------------------------\n");
+		System.out.println(separatore + "\n");
 	}
 	
 	
-	private static void printCurrentlyAvailableMovies() {
+	private void printCurrentlyAvailableMovies() {
 		System.out.println("FILM ATTUALMENTE PROIETTATI \n");
 		for (Movie m : myCinema.getCurrentlyAvailableMovies()) {
 			System.out.println(m.getId() + ")");
 			System.out.println(m.getDefaultDescription());
 		}
-		System.out.println("-----------------------------------------------------\n");
+		System.out.println(separatore + "\n");
 	}
 }
