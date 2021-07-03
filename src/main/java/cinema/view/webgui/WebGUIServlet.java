@@ -20,10 +20,15 @@ import cinema.controller.Cinema;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.payment.util.PaymentErrorException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
+import cinema.model.reservation.discount.types.util.DiscountException;
+import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
@@ -57,6 +62,8 @@ public class WebGUIServlet extends HttpServlet {
 				handleUpdateSeatStatus(req, resp);
 			} else if (req.getPathInfo().equals("/get-checkout-info")) {
 				handleGetCheckoutInfo(req, resp);
+			} else if (req.getPathInfo().equals("/set-age-discount")) {
+				handleSetAgeDiscount(req, resp);
 			} else if (req.getPathInfo().equals("/apply-coupon")) {
 				handleApplyCoupon(req, resp);
 			} else if (req.getPathInfo().equals("/buy")) {
@@ -126,11 +133,19 @@ public class WebGUIServlet extends HttpServlet {
 	protected void handleUpdateSeatStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+
 		String[] splittedSeat = req.getParameter("seat-id").split("-");
 		int row = Integer.parseInt(splittedSeat[1]);
 		int col = Integer.parseInt(splittedSeat[2]);
+
 		String response = "ok";
+
 		try {
+			// Reset the age discount parameters if seats get modified
+			if (cinema.getReservationTypeOfDiscount(reservationId).contentEquals("AGE")) {
+				cinema.setReservationNumberPeopleUntilMinAge(reservationId, 0);
+				cinema.setReservationNumberPeopleOverMaxAge(reservationId, 0);
+			}
 			if (req.getParameter("seat-status").equals("selezionato")) {
 				cinema.addSeatToReservation(reservationId, row, col);
 			} else if (req.getParameter("seat-status").equals("disponibile")) {
@@ -138,7 +153,7 @@ public class WebGUIServlet extends HttpServlet {
 			} else {
 				response = "invalid parameter";
 			}
-		} catch (RoomException | SeatAvailabilityException | ReservationException exception) {
+		} catch (DiscountException | RoomException | SeatAvailabilityException | ReservationException exception) {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));
@@ -172,6 +187,24 @@ public class WebGUIServlet extends HttpServlet {
 			responseTokens.add("error");
 		}
 		resp.getWriter().write(Rythm.render(String.join("\n", responseTokens)));
+	}
+
+	protected void handleSetAgeDiscount(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+
+		int numberPeopleUnderMinAge = Integer.parseInt(req.getParameter("age-under"));
+		int numberPeopleOverMaxAge = Integer.parseInt(req.getParameter("age-over"));
+
+		String response = "ok";
+
+		try {
+			cinema.setReservationNumberPeopleUntilMinAge(reservationId, numberPeopleUnderMinAge);
+			cinema.setReservationNumberPeopleOverMaxAge(reservationId, numberPeopleOverMaxAge);
+		} catch (DiscountException | ReservationException exception) {
+			response = "error";
+		}
+		resp.getWriter().write(Rythm.render(response));
 	}
 
 	protected void handleApplyCoupon(HttpServletRequest req, HttpServletResponse resp)
@@ -209,7 +242,8 @@ public class WebGUIServlet extends HttpServlet {
 			cinema.setReservationPaymentCard(reservationId, ccNumber, ccName, ccCvv, ccExpirationDate);
 			cinema.buyReservation(reservationId);
 			cinema.sendReservationEmail(reservationId);
-		} catch (Exception exception) {
+		} catch (HandlerException | InvalidSpectatorInfoException | PaymentErrorException | PersistenceException
+				| ReservationException | RoomException | SeatAvailabilityException exception) {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));

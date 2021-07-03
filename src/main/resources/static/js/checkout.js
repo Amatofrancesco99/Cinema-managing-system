@@ -18,19 +18,20 @@ $(window).on('load', function() {
             event.target.src = '/static/img/seat-selected.svg';
         }
 
-        // Check if at least one seat is selected
-        var atLeastOneSeatIsSelected = false;
-        $('.seat').toArray().some(function(item) {
-            if (item.status == 'selezionato') {
-                atLeastOneSeatIsSelected = true;
-            }
-            return atLeastOneSeatIsSelected;
-        });
-
         // Enable/disable the button used to go to the checkout form based on the number of selected seats
-        if (!atLeastOneSeatIsSelected) {
+        if (getSelectedSeats() == 0) {
             $('#go-to-checkout').addClass('disabled');
             $('#go-to-checkout').removeClass('invisible');
+
+            // Reset the age discount inputs
+            $('#age-under').val(0);
+            $('#age-over').val(0);
+            $('#age-under').removeClass('is-invalid');
+            $('#age-under').addClass('is-valid');
+            $('#age-over').removeClass('is-invalid');
+            $('#age-over').addClass('is-valid');
+            $('.discount-entry').removeClass('text-danger');
+            $('.discount-entry').addClass('text-success');
 
             // If there are no seats selected, hide the collapsible checkout form
             checkoutDetailsCollapse.hide();
@@ -43,20 +44,20 @@ $(window).on('load', function() {
             type: 'POST',
             url: 'update-seat-status',
             data: { 
-                'reservation-id': $('#reservation-id')[0].value,
+                'reservation-id': $('#reservation-id-buy').val(),
                 'seat-id': event.target.id,
                 'seat-status': event.target.status
             }
         }).done(function(response) {
             if (response == 'ok') {
-                // Update the shopping cart if the seat status is updated
-                updateShoppingCart();
+                // Trigger the validation of age discount inputs with the new selected seats and update the shopping cart
+                updateAgeDiscountInputsAndShoppingCart();
             } else {
-                // Alert the user if the seat status couldn't be updated
+                // Alert the spectator if the seat status couldn't be updated
                 showAlert(false, true, 'Errore si sincronizzazione', 'Si &egrave; verificato un errore nell\'aggiornare lo stato del posto selezionato. Riprova pi&ugrave; tardi.');
             }
         }).fail(function() {
-            // Alert the user if something went wrong during the update
+            // Alert the spectator if something went wrong during the update
             showNetworkErrorAlert();
         });
     });
@@ -81,6 +82,11 @@ $(window).on('load', function() {
     // Set the text shown when a form field is invalid
     $('.default-feedback').html('Questo campo &egrave; obbligatorio');
 
+    // Trigger the validation of age discount inputs when they get modified by the spectator
+    $('#age-under,#age-over').on('change', function() {
+        updateAgeDiscountInputsAndShoppingCart();
+    });
+
     // Apply the coupon and update the shopping cart when a coupon code is inserted
     $('#coupon-code-form')[0].addEventListener('submit', function(event) {
         event.preventDefault();
@@ -100,11 +106,11 @@ $(window).on('load', function() {
                     $('#coupon-code').attr('disabled', true);
                     $('#coupon-code-button').attr('disabled', true);
                 } else {
-                    // Alert the user if the coupon couldn't be used
+                    // Alert the spectator if the coupon couldn't be used
                     showAlert(false, false, 'Errore durante l\'inserimento del coupon', 'Errore durante l\'inserimento del coupon. Controlla che il codice del coupon sia corretto e riprova.');
                 }
             }).fail(function() {
-                // Alert the user if something went wrong during the request
+                // Alert the spectator if something went wrong during the request
                 showNetworkErrorAlert();
             });
         }
@@ -119,9 +125,9 @@ $(window).on('load', function() {
         // Try to conclude the reservation only if the form is filled up
         if (event.target.checkValidity()) {
             $.ajax({
-               type: 'POST',
-               url: $('#buy-form').attr('action'),
-               data: $('#buy-form').serialize()
+                type: 'POST',
+                url: $('#buy-form').attr('action'),
+                data: $('#buy-form').serialize()
             }).done(function(response) {
                 if (response == 'ok') {
                     // Show the success modal if the request had a positive outcome
@@ -131,7 +137,7 @@ $(window).on('load', function() {
                     showAlert(false, true, 'Errore durante l\'acquisto', 'Errore durante il completamento dell\'acquisto.');
                 }
             }).fail(function() {
-                // Alert the user if something went wrong during the request
+                // Alert the spectator if something went wrong during the request
                 showNetworkErrorAlert();
             });
         }
@@ -148,14 +154,14 @@ $(window).on('load', function() {
     });
 
     /**
-     * Shows a modal dialog to the user.
+     * Shows a modal dialog to the spectator.
      *
-     * If an alert is already opened, no other alerts can be shown.
+     * If an alert is already opened (and not closed yet by the spectator), no other alerts can be shown.
      *
      * @param boolean success dialog type (true = success, false = failure).
      * @param boolean goBack  modal type (true = go back to the movie details page, false = stay on the checkout page).
-     * @param string title    title of the modal.
-     * @param string body     body content of the modal.
+     * @param string  title   title of the modal.
+     * @param string  body    body content of the modal.
      */
     function showAlert(success, goBack, title, body) {
         // If an alert is already opened, do not open a new one
@@ -180,7 +186,7 @@ $(window).on('load', function() {
             keyboard: !goBack
         });
 
-        // Show the appropriate close button (if goBack is true the user must go back to the movie details page)
+        // Show the appropriate close button (if goBack is true the spectator must go back to the movie details page)
         if (goBack) {
             $('#dismiss-modal-button').addClass('d-none');
             $('#go-to-movie-details-button').removeClass('d-none');
@@ -194,10 +200,10 @@ $(window).on('load', function() {
     }
 
     /**
-     * Shows a modal dialog to the user stating a network error occurred.
+     * Shows a modal dialog to the spectator stating a network error occurred.
      */
     function showNetworkErrorAlert() {
-        // Alert the user if something went wrong during the request
+        // Alert the spectator if something went wrong during the request
         showAlert(false, true, 'Errore di rete', 'Si &egrave; verificato un errore di rete: impossibile contattare il server. Riprova pi&ugrave; tardi.');
     }
 
@@ -210,7 +216,7 @@ $(window).on('load', function() {
             type: 'POST',
             url: 'get-checkout-info',
             data: { 
-                'reservation-id': $('#reservation-id').val()
+                'reservation-id': $('#reservation-id-buy').val()
             }
         }).done(function(response) {
             // Parse the response from the backend (prices' dot decimal separator is converted to a comma, token separator is '\n')
@@ -240,12 +246,72 @@ $(window).on('load', function() {
                     $('#coupon-shopping-cart-entry').removeClass('d-none');
                 }
             } else {
-                // Alert the user if something went wrong during the update to the shopping cart
+                // Alert the spectator if something went wrong during the update to the shopping cart
                 showAlert(false, true, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
             }
         }).fail(function() {
-            // Alert the user if something went wrong during the request
+            // Alert the spectator if something went wrong during the request
             showNetworkErrorAlert();
         });
+    }
+
+    /**
+     * Validates the age discount input fields in the shopping cart and synchronizes them with the backend, then updates the shopping cart.
+     *
+     * The inputs are valid only if the sum of the two does not exceed the number of selected seats at the moment of the update.
+     * In this case, the inputs are marked as invalid and the backend is synchronized using 0 as the value of both inputs.
+     */
+    function updateAgeDiscountInputsAndShoppingCart() {
+        // Difference between the number of selected seats necessary to consider the user inputs valid and the currently selected seats
+        var extraSeats = parseInt($('#age-under').val()) + parseInt($('#age-over').val()) - getSelectedSeats();
+
+        // Update the validation status of the inputs
+        $('#age-under').removeClass((extraSeats > 0) ? 'is-valid' : 'is-invalid');
+        $('#age-under').addClass((extraSeats > 0) ? 'is-invalid' : 'is-valid');
+        $('#age-over').removeClass((extraSeats > 0) ? 'is-valid' : 'is-invalid');
+        $('#age-over').addClass((extraSeats > 0) ? 'is-invalid' : 'is-valid');
+
+        $('.discount-entry').removeClass((extraSeats > 0) ? 'text-success' : 'text-danger');
+        $('.discount-entry').addClass((extraSeats > 0) ? 'text-danger' : 'text-success');
+
+        // Update the backend with the current values of the inputs (both get set to 0 if the inputs are invalid)
+        $.ajax({
+            type: 'POST',
+            url: $('#age-discount-form').attr('action'),
+            data: {
+                'reservation-id': $('#reservation-id-buy').val(),
+                'age-under': (extraSeats > 0) ? '0' : $('#age-under').val(),
+                'age-over': (extraSeats > 0) ? '0' : $('#age-over').val()
+            }
+        }).done(function(response) {
+            if (response == 'ok') {
+                // Update the shopping cart with the new discount amount
+                updateShoppingCart();
+            } else {
+                // Show the error modal
+                showAlert(false, true, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
+            }
+        }).fail(function() {
+            // Alert the spectator if something went wrong during the request
+            showNetworkErrorAlert();
+        });
+    }
+
+    /**
+     * Returns the number of currently selected seats.
+     *
+     * @returns number number of currently selected seats.
+     */
+    function getSelectedSeats() {
+        var selectedSeats = 0;
+        var seats = $('.seat').toArray();
+
+        // Count the number of selected seats and return it
+        for (var i = 0; i < seats.length - 1; i++) {
+            if (seats[i].status == 'selezionato') {
+                selectedSeats++;
+            }
+        }
+        return selectedSeats;
     }
 });

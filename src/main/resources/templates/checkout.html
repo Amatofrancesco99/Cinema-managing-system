@@ -157,13 +157,43 @@
                             <span id="full-price" class="text-muted"></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between bg-light">
-                            <div class="text-success">
-                                <h6 class="my-0">
-                                    Sconto attivo
-                                </h6>
-                                <small id="type-of-discount"></small>
+                            <div class="container mb-0 mx-0 px-0">
+                                <div class="row">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="text-success discount-entry">
+                                            <h6 class="my-0">
+                                                Sconto attivo
+                                            </h6>
+                                            <small id="type-of-discount"></small>
+                                        </div>
+                                        <span id="discount-amount" class="text-success discount-entry"></span>
+                                    </div>
+                                </div>
+                                @{
+                                    boolean discountAge = false;
+                                    try {
+                                        discountAge = cinema.getReservationTypeOfDiscount(reservation).equals("AGE");
+                                    } catch (ReservationException exception) {
+                                        // No exceptions to handle here
+                                    }
+                                }
+                                <form id="age-discount-form" action="/set-age-discount#" method="post" class="needs-validation mt-0 @if(!discountAge){d-none}" novalidate>
+                                    <div id="age-discount-inputs" class="row g-3 mt-0">
+                                        <div class="col-6">
+                                            <label id="age-under-label" for="age-under" class="form-label">
+                                                < @(cinema.getMinDiscountAge()) anni
+                                            </label>
+                                            <input type="number" class="form-control" id="age-under" name="age-under" min="0" value="0" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label id="age-over-label" for="age-over" class="form-label">
+                                                > @(cinema.getMaxDiscountAge()) anni
+                                            </label>
+                                            <input type="number" class="form-control" id="age-over" name="age-over" min="0" value="0" required>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <span id="discount-amount" class="text-success"></span>
                         </li>
                         <li id="coupon-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
                             <div class="text-success">
@@ -182,7 +212,7 @@
                         </li>
                     </ul>
                     <form id="coupon-code-form" action="/apply-coupon#" method="post" class="card p-2 needs-validation" novalidate>
-                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservation)">
+                        <input type="hidden" id="reservation-id-coupon" name="reservation-id" value="@(reservation)">
                         <div class="input-group has-validation">
                             <input type="text" id="coupon-code" name="coupon-code" class="form-control" placeholder="Codice coupon" required>
                             <button id="coupon-code-button" class="btn btn-secondary" type="submit">
@@ -200,7 +230,7 @@
                 </div>
                 <div class="col-md-7 col-lg-8">
                     <form id="buy-form" action="/buy#" method="post" class="needs-validation" novalidate>
-                        <input type="hidden" id="reservation-id" name="reservation-id" value="@(reservation)">
+                        <input type="hidden" id="reservation-id-buy" name="reservation-id" value="@(reservation)">
                         <div class="row g-3">
                             <h4 class="mb-3">
                                 Dati personali
@@ -251,14 +281,14 @@
                                 <input type="text" class="form-control" id="cc-number" name="cc-number" placeholder="0000 0000 0000 0000" required>
                                 <div class="invalid-feedback default-feedback"></div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-8 col-md-4">
                                 <label for="cc-expiration" class="form-label">
                                     Scadenza
                                 </label>
                                 <input type="month" class="form-control" id="cc-expiration" name="cc-expiration" min="@(YearMonth.now().toString())" placeholder="2023-01" required>
                                 <div class="invalid-feedback default-feedback"></div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-4 col-md-2">
                                 <label for="cc-cvv" class="form-label">
                                     CVV
                                 </label>
