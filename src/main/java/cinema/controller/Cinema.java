@@ -888,7 +888,7 @@ public class Cinema {
 	 */
 	public void login(String password) throws PasswordException {
 		if (!getAdminPassword().equals(password))
-			throw new PasswordException("la password inserita è errata.");
+			throw new PasswordException("La password inserita è errata.");
 	}
 
 	public int getReservationNSeats(long r) throws ReservationException {
