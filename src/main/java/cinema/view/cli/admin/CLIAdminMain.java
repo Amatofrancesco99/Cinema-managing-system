@@ -156,13 +156,13 @@ public class CLIAdminMain {
 		LocalDateTime projectionDateTime = null;
 		while (!end) {
 			System.out.println("\nInserisci la data della proiezione: (DD-MM-YYYY)");
-			String date = keyboard.next();
+			String date = keyboard.nextLine();
 			String[] parts1 = date.split("-");
 			int year = Integer.parseInt(parts1[2]);
 			int month = Integer.parseInt(parts1[1]);
 			int dayOfMonth = Integer.parseInt(parts1[0]);
 			System.out.println("\nInserisci l'ora della proiezione: (HH:MM)");
-			String time = keyboard.next();
+			String time = keyboard.nextLine();
 			String[] parts2 = time.split(":");
 			int hour = Integer.parseInt(parts2[0]);
 			int minute = Integer.parseInt(parts2[1]);
@@ -187,7 +187,7 @@ public class CLIAdminMain {
 		boolean end = false;
 		while(!end) {
 			System.out.println("\nInserisci il prezzo della proiezione: ");
-			String n = keyboard.next();
+			String n = keyboard.nextLine();
 			double price = Double.parseDouble(n);
 			try {
 				myCinema.setProjectionPrice(p,price);
@@ -210,7 +210,7 @@ public class CLIAdminMain {
 		boolean end = false;
 		while(!end) {
 			System.out.println("\nInserisci il numero della sala da associare alla proiezione: ");
-			String n = keyboard.next();
+			String n = keyboard.nextLine();
 			int roomId = Integer.parseInt(n);
 			try {
 				myCinema.setProjectionRoom(p,roomId);
@@ -235,7 +235,7 @@ public class CLIAdminMain {
 		boolean end = false;
 		while(!end) {
 			System.out.println("Inserisci l'id del film da associare alla proiezione: ");
-			String n = keyboard.next();
+			String n = keyboard.nextLine();
 			int movieId = Integer.parseInt(n);
 			try {
 				myCinema.setProjectionMovie(p,movieId);
@@ -252,7 +252,7 @@ public class CLIAdminMain {
 		int projectionId = -1;
 		while (!end) {
 			System.out.println("\nInserisci l'id della proiezione da inserire: ");
-			String n = keyboard.next();
+			String n = keyboard.nextLine();
 			projectionId = Integer.parseInt(n);
 			try {
 				myCinema.createProjectionWithID(projectionId);

@@ -130,10 +130,10 @@ public class CLIUserMain {
 		while (!end) {
 			// Aggiungi un coupon alla tua prenotazione
 			System.out.println("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
-			String usaCoupon = keyboard.next().toUpperCase();
+			String usaCoupon = keyboard.nextLine().toUpperCase();
 			if (usaCoupon.equals("Y")) {
 				System.out.println("Inserisci il codice del coupon:  ");
-				String couponCode = keyboard.next();
+				String couponCode = keyboard.nextLine();
 				try {
 					myCinema.setReservationCoupon(r, couponCode);
 					end = true;
@@ -164,7 +164,7 @@ public class CLIUserMain {
 					// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
 					// sconti
 					System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
-					String n1 = keyboard.next();
+					String n1 = keyboard.nextLine();
 					int nMin = Integer.parseInt(n1);
 					try {
 						myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
@@ -172,7 +172,7 @@ public class CLIUserMain {
 						System.out.println(e.getMessage());
 					}
 					System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
-					String n2 = keyboard.next();
+					String n2 = keyboard.nextLine();
 					int nMax = Integer.parseInt(n2);
 					try {
 						myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
@@ -193,16 +193,16 @@ public class CLIUserMain {
 		while(!end) {
 			System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
 			System.out.println("\nInserisci il nome del titolare della carta:  ");
-			String owner = keyboard.next();
+			String owner = keyboard.nextLine();
 			System.out.println("\n");
 			System.out.println("\nInserisci il numero della carta: ");
-			String number = keyboard.next();
+			String number = keyboard.nextLine();
 			System.out.println("\n");
 			YearMonth expirationDate = null;
 			boolean validDate = false;
 			while(!validDate) {
 				System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
-				String expD = keyboard.next();
+				String expD = keyboard.nextLine();
 				System.out.println("\n");
 				try {
 					expirationDate = YearMonth.parse(expD);
@@ -213,7 +213,7 @@ public class CLIUserMain {
 				}
 			}
 			System.out.println("\nInserisci il CVV: ");
-			String cvv = keyboard.next();
+			String cvv = keyboard.nextLine();
 			System.out.println("\n");
 			end = true;
 			try {
@@ -232,17 +232,17 @@ public class CLIUserMain {
 			// NOME, COGNOME, DATA DI NASCITA, EMAIL
 			System.out.println("Inserisci il tuo nome:  ");
 			String name = "";
-			name = keyboard.next();
+			name = keyboard.nextLine();
 			System.out.println("\n");
 			
 			System.out.println("Inserisci il tuo cognome:  ");
 			String surname = "";
-			surname = keyboard.next();
+			surname = keyboard.nextLine();
 			System.out.println("\n");
 			
 			System.out.println("Inserisci la tua email:  ");
 			String email = "";
-			email = keyboard.next();
+			email = keyboard.nextLine();
 			
 			try {
 				myCinema.setReservationPurchaser(r, name, surname, email);
@@ -261,7 +261,7 @@ public class CLIUserMain {
 			do {
 				System.out.println("\nInserisci il posto che vuoi occupare:\n");
 				String posto = "";
-				posto = keyboard.next();
+				posto = keyboard.nextLine();
 				System.out.println("\n");
 				int riga = -1, colonna = -1;
 				try {
@@ -278,7 +278,7 @@ public class CLIUserMain {
 				} 
 			} while (!validSeat);
 			System.out.println("\nVuoi occupare altri posti? (Y/N):");
-			String occupaAltri = keyboard.next().toUpperCase();
+			String occupaAltri = keyboard.nextLine().toUpperCase();
 			if (occupaAltri.contains("N")) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
 				end = true;
