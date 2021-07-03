@@ -45,7 +45,7 @@ public class ProjectionRdbDao implements IProjectionDao{
             Projection projection = new Projection(movieId, movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
             projections.add(projection);
         }
-		return null;
+		return projections;
 	}
 
 	@Override
