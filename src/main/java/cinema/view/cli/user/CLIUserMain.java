@@ -74,7 +74,10 @@ public class CLIUserMain {
 						end = backToMenu();
 						break;
 						
-				default:end = false;
+				case 3: end = false;
+						break;
+				
+				default:System.out.println("\nInserisci un numero valido.");
 			}			
 		}while(end);		
 		sayGoodbye();
