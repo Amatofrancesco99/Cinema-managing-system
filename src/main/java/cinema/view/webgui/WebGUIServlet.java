@@ -133,11 +133,19 @@ public class WebGUIServlet extends HttpServlet {
 	protected void handleUpdateSeatStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
+
 		String[] splittedSeat = req.getParameter("seat-id").split("-");
 		int row = Integer.parseInt(splittedSeat[1]);
 		int col = Integer.parseInt(splittedSeat[2]);
+
 		String response = "ok";
+
 		try {
+			// Reset the age discount parameters if seats get modified
+			if (cinema.getReservationTypeOfDiscount(reservationId).contentEquals("AGE")) {
+				cinema.setReservationNumberPeopleUntilMinAge(reservationId, 0);
+				cinema.setReservationNumberPeopleOverMaxAge(reservationId, 0);
+			}
 			if (req.getParameter("seat-status").equals("selezionato")) {
 				cinema.addSeatToReservation(reservationId, row, col);
 			} else if (req.getParameter("seat-status").equals("disponibile")) {
@@ -145,7 +153,7 @@ public class WebGUIServlet extends HttpServlet {
 			} else {
 				response = "invalid parameter";
 			}
-		} catch (RoomException | SeatAvailabilityException | ReservationException exception) {
+		} catch (DiscountException | RoomException | SeatAvailabilityException | ReservationException exception) {
 			response = "error";
 		}
 		resp.getWriter().write(Rythm.render(response));

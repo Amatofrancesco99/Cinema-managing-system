@@ -18,19 +18,20 @@ $(window).on('load', function() {
             event.target.src = '/static/img/seat-selected.svg';
         }
 
-        // Check if at least one seat is selected
-        var atLeastOneSeatIsSelected = false;
-        $('.seat').toArray().some(function(item) {
-            if (item.status == 'selezionato') {
-                atLeastOneSeatIsSelected = true;
-            }
-            return atLeastOneSeatIsSelected;
-        });
-
         // Enable/disable the button used to go to the checkout form based on the number of selected seats
-        if (!atLeastOneSeatIsSelected) {
+        if (getSelectedSeats() == 0) {
             $('#go-to-checkout').addClass('disabled');
             $('#go-to-checkout').removeClass('invisible');
+
+            // Reset the age discount inputs
+            $('#age-under').val(0);
+            $('#age-over').val(0);
+            $('#age-under').removeClass('is-invalid');
+            $('#age-under').addClass('is-valid');
+            $('#age-over').removeClass('is-invalid');
+            $('#age-over').addClass('is-valid');
+            $('.discount-entry').removeClass('text-danger');
+            $('.discount-entry').addClass('text-success');
 
             // If there are no seats selected, hide the collapsible checkout form
             checkoutDetailsCollapse.hide();
@@ -43,14 +44,14 @@ $(window).on('load', function() {
             type: 'POST',
             url: 'update-seat-status',
             data: { 
-                'reservation-id': $('#reservation-id-buy')[0].value,
+                'reservation-id': $('#reservation-id-buy').val(),
                 'seat-id': event.target.id,
                 'seat-status': event.target.status
             }
         }).done(function(response) {
             if (response == 'ok') {
-                // Update the shopping cart if the seat status is updated
-                updateShoppingCart();
+                // Trigger the validation of age discount inputs with the new selected seats and update the shopping cart
+                updateAgeDiscountInputsAndShoppingCart();
             } else {
                 // Alert the spectator if the seat status couldn't be updated
                 showAlert(false, true, 'Errore si sincronizzazione', 'Si &egrave; verificato un errore nell\'aggiornare lo stato del posto selezionato. Riprova pi&ugrave; tardi.');
@@ -80,6 +81,11 @@ $(window).on('load', function() {
 
     // Set the text shown when a form field is invalid
     $('.default-feedback').html('Questo campo &egrave; obbligatorio');
+
+    // Trigger the validation of age discount inputs when they get modified by the spectator
+    $('#age-under,#age-over').on('change', function() {
+        updateAgeDiscountInputsAndShoppingCart();
+    });
 
     // Apply the coupon and update the shopping cart when a coupon code is inserted
     $('#coupon-code-form')[0].addEventListener('submit', function(event) {
@@ -119,9 +125,9 @@ $(window).on('load', function() {
         // Try to conclude the reservation only if the form is filled up
         if (event.target.checkValidity()) {
             $.ajax({
-               type: 'POST',
-               url: $('#buy-form').attr('action'),
-               data: $('#buy-form').serialize()
+                type: 'POST',
+                url: $('#buy-form').attr('action'),
+                data: $('#buy-form').serialize()
             }).done(function(response) {
                 if (response == 'ok') {
                     // Show the success modal if the request had a positive outcome
@@ -247,5 +253,49 @@ $(window).on('load', function() {
             // Alert the spectator if something went wrong during the request
             showNetworkErrorAlert();
         });
+    }
+
+    function updateAgeDiscountInputsAndShoppingCart() {
+        var extraSeats = parseInt($('#age-under').val()) + parseInt($('#age-over').val()) - getSelectedSeats();
+
+        $('#age-under').removeClass((extraSeats > 0) ? 'is-valid' : 'is-invalid');
+        $('#age-under').addClass((extraSeats > 0) ? 'is-invalid' : 'is-valid');
+        $('#age-over').removeClass((extraSeats > 0) ? 'is-valid' : 'is-invalid');
+        $('#age-over').addClass((extraSeats > 0) ? 'is-invalid' : 'is-valid');
+
+        $('.discount-entry').removeClass((extraSeats > 0) ? 'text-success' : 'text-danger');
+        $('.discount-entry').addClass((extraSeats > 0) ? 'text-danger' : 'text-success');
+
+        $.ajax({
+            type: 'POST',
+            url: $('#age-discount-form').attr('action'),
+            data: {
+                'reservation-id': $('#reservation-id-buy').val(),
+                'age-under': (extraSeats > 0) ? '0' : $('#age-under').val(),
+                'age-over': (extraSeats > 0) ? '0' : $('#age-over').val()
+            }
+        }).done(function(response) {
+            if (response == 'ok') {
+                // Update the shopping cart with the new discount amount
+                updateShoppingCart();
+            } else {
+                // Show the error modal
+                showAlert(false, true, 'Errore durante l\'aggiornamento del carrello', 'Si &egrave; verificato un errore durante l\'aggiornamento del carrello.');
+            }
+        }).fail(function() {
+            // Alert the spectator if something went wrong during the request
+            showNetworkErrorAlert();
+        });
+    }
+
+    function getSelectedSeats() {
+        var selectedSeats = 0;
+        var seats = $('.seat').toArray();
+        for (var i = 0; i < seats.length - 1; i++) {
+            if (seats[i].status == 'selezionato') {
+                selectedSeats++;
+            }
+        }
+        return selectedSeats;
     }
 });

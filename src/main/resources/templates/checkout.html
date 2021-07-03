@@ -160,31 +160,31 @@
                             <div class="container mb-1 mx-0 px-0">
                                 <div class="row">
                                     <div class="d-flex justify-content-between">
-                                        <div class="text-success">
+                                        <div class="text-success discount-entry">
                                             <h6 class="my-0">
                                                 Sconto attivo
                                             </h6>
                                             <small id="type-of-discount"></small>
                                         </div>
-                                        <span id="discount-amount" class="text-success"></span>
+                                        <span id="discount-amount" class="text-success discount-entry"></span>
                                     </div>
                                 </div>
-                                <div id="age-discount-inputs" class="row g-3 mt-0">
-                                    <div class="col-6">
-                                        <label id="age-under-label" for="age-under" class="form-label">
-                                            < 18 anni
-                                        </label>
-                                        <input type="number" class="form-control" id="age-under" name="age-under" min="0" value="0" required>
-                                        <div class="invalid-feedback default-feedback"></div>
+                                <form id="age-discount-form" action="/set-age-discount#" method="post" class="needs-validation" novalidate>
+                                    <div id="age-discount-inputs" class="row g-3 mt-0">
+                                        <div class="col-6">
+                                            <label id="age-under-label" for="age-under" class="form-label">
+                                                < 18 anni?
+                                            </label>
+                                            <input type="number" class="form-control" id="age-under" name="age-under" min="0" value="0" required>
+                                        </div>
+                                        <div class="col-6">
+                                            <label id="age-over-label" for="age-over" class="form-label">
+                                                > 70 anni?
+                                            </label>
+                                            <input type="number" class="form-control" id="age-over" name="age-over" min="0" value="0" required>
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        <label id="age-over-label" for="age-over" class="form-label">
-                                            > 70 anni
-                                        </label>
-                                        <input type="number" class="form-control" id="age-over" name="age-over" min="0" value="0" required>
-                                        <div class="invalid-feedback default-feedback"></div>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </li>
                         <li id="coupon-shopping-cart-entry" class="list-group-item d-flex justify-content-between bg-light d-none">
