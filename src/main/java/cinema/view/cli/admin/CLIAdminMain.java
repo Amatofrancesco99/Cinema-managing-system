@@ -25,44 +25,46 @@ import cinema.model.projection.util.ProjectionException;
  */
 public class CLIAdminMain {
 
-	static Scanner keyboard = new Scanner(System.in);
-	static Cinema myCinema = new Cinema();
-	final static int MAX_ATTEMPTS = 3;
-	private static final String separator = "-----------------------------------------------------\n";
+	private Scanner keyboard;
+	private Cinema cinema;
+	private final int MAX_ATTEMPTS = 3;
+	private final String SEPARATOR = "-----------------------------------------------------\n";
 
 	public static void main(String[] args) {
-		// INFORMAZIONI GENERALI SUL CINEMA
-		printHeader();
+		new CLIAdminMain();
+	}
 
-		// SALUTO ALL'ADMIN E LOGIN
+	public CLIAdminMain() {
+		keyboard = new Scanner(System.in);
+		cinema = new Cinema();
+
+		// Informazioni generali sul cinema, messaggio di benvenuto e login
+		System.out.println(SEPARATOR);
+		System.out.println(cinema.getName());
+		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		welcomeAndLogin();
 
-		// CAMBIO PASSWORD (OPZIONALE)
+		// Cambio della password
 		changePassword();
 
-		// SELEZIONE STRATEGIA APPLICABILE (OPZIONALE)
+		// Selezione della strategia di sconto da applicare alle prossime prenotazioni
 		changeNewReservationsDiscountStrategy();
 
-		// INSERIMENTO NUOVE PROIEZIONI (OPZIONALE)
+		// Inserimento di nuove proiezioni
 		insertOrRemoveProjections();
 
-		// SALUTO DELL'ADMIN E TERMINA PROGRAMMA
-		sayGoodbye();
+		// Terminazione dell'applicazione
+		System.out.println("\n\nA presto!");
 	}
 
-	private static void sayGoodbye() {
-		System.out.println("\n\nGrazie, a presto!");
-		System.out.println("-----------------------------------------------------");
-	}
-
-	private static void insertOrRemoveProjections() {
-		System.out.println("-----------------------------------------------------\n");
-		System.out.println("INSERIMENTO/RIMOZIONE PROIEZIONI\n");
+	private void insertOrRemoveProjections() {
+		System.out.println(SEPARATOR);
+		System.out.println("Inserimento/rimozione proiezioni\n");
 		insertNewProjections();
 		removeProjections();
 	}
 
-	private static void removeProjections() {
+	private void removeProjections() {
 		System.out.println("\nVuoi rimuovere delle proiezioni esistenti? (Y/N)");
 		boolean end = false;
 		while (!end) {
@@ -80,7 +82,7 @@ public class CLIAdminMain {
 					System.out.println("Inserisci il numero della proiezione che vuoi rimuovere: ");
 					int projectionId = Integer.parseInt(keyboard.nextLine());
 					try {
-						myCinema.removeProjection(projectionId);
+						cinema.removeProjection(projectionId);
 					} catch (ProjectionException e) {
 						System.out.println(e.getMessage());
 					}
@@ -100,17 +102,17 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void showAllProjections() {
+	private void showAllProjections() {
 		System.out.println("\nLista di tutte le proiezioni");
 		// TODO: change this method with something like :
 		// myCinema.getProjections(int thisYear or a limited range)
-		for (Projection p : myCinema.getProjections()) {
+		for (Projection p : cinema.getProjections()) {
 			System.out.println(p.getId() + ") ");
 			System.out.println(p.toString());
 		}
 	}
 
-	private static void insertNewProjections() {
+	private void insertNewProjections() {
 		System.out.println("Vuoi inserire nuove proiezioni? (Y/N)");
 		boolean end = false;
 		while (!end) {
@@ -146,7 +148,7 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void selectProjectionDateTime(int p) {
+	private void selectProjectionDateTime(int p) {
 		boolean end = false;
 		LocalDateTime projectionDateTime = null;
 		while (!end) {
@@ -168,7 +170,7 @@ public class CLIAdminMain {
 			}
 			try {
 				if (projectionDateTime != null) {
-					myCinema.setProjectionDateTime(p, projectionDateTime);
+					cinema.setProjectionDateTime(p, projectionDateTime);
 					end = true;
 				}
 			} catch (ProjectionException e) {
@@ -177,14 +179,14 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void selectProjectionPrice(int p) {
+	private void selectProjectionPrice(int p) {
 		boolean end = false;
 		while (!end) {
 			System.out.println("\nInserisci il prezzo della proiezione: ");
 			String n = keyboard.nextLine();
 			double price = Double.parseDouble(n);
 			try {
-				myCinema.setProjectionPrice(p, price);
+				cinema.setProjectionPrice(p, price);
 				end = true;
 			} catch (ProjectionException e) {
 				System.out.println(e.getMessage());
@@ -192,10 +194,10 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void selectProjectionRoom(int p) {
+	private void selectProjectionRoom(int p) {
 		System.out.println("\n\nLista delle sale del cinema: ");
 		try {
-			for (Room r : myCinema.getAllRooms())
+			for (Room r : cinema.getAllRooms())
 				System.out.println(r.toString());
 		} catch (PersistenceException e) {
 			System.out.println(e.getMessage());
@@ -206,7 +208,7 @@ public class CLIAdminMain {
 			String n = keyboard.nextLine();
 			int roomId = Integer.parseInt(n);
 			try {
-				myCinema.setProjectionRoom(p, roomId);
+				cinema.setProjectionRoom(p, roomId);
 				end = true;
 			} catch (RoomException | ProjectionException e) {
 				System.out.println(e.getMessage());
@@ -214,10 +216,10 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void selectProjectionMovie(int p) {
+	private void selectProjectionMovie(int p) {
 		System.out.println("\n\nLista dei film disponibili: ");
 		try {
-			for (Movie m : myCinema.getAllMovies()) {
+			for (Movie m : cinema.getAllMovies()) {
 				System.out.println((m.getId()) + ") ");
 				System.out.println(m.getDetailedDescription());
 			}
@@ -230,7 +232,7 @@ public class CLIAdminMain {
 			String n = keyboard.nextLine();
 			int movieId = Integer.parseInt(n);
 			try {
-				myCinema.setProjectionMovie(p, movieId);
+				cinema.setProjectionMovie(p, movieId);
 				end = true;
 			} catch (NoMovieException | ProjectionException e) {
 				System.out.println(e.getMessage());
@@ -238,25 +240,24 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static int selectProjectionID() {
+	private int selectProjectionID() {
 		boolean end = false;
 		int projectionId = -1;
 		while (!end) {
-			System.out.println("\nInserisci l'id della proiezione da inserire: ");
-			String n = keyboard.nextLine();
-			projectionId = Integer.parseInt(n);
+			System.out.print("\nInserisci l'id della proiezione da inserire: ");
 			try {
-				myCinema.createProjectionWithID(projectionId);
+				cinema.createProjectionWithID(Integer.parseInt(keyboard.nextLine()));
+				System.out.println();
 				end = true;
-			} catch (ProjectionException e) {
-				System.out.println(e.getMessage());
+			} catch (ProjectionException exception) {
+				System.out.println(exception.getMessage());
 			}
 		}
 		return projectionId;
 	}
 
-	private static void changeNewReservationsDiscountStrategy() {
-		System.out.println(separator);
+	private void changeNewReservationsDiscountStrategy() {
+		System.out.println(SEPARATOR);
 		System.out.println("Gestione degli sconti\n");
 		boolean end = false;
 		while (!end) {
@@ -267,15 +268,15 @@ public class CLIAdminMain {
 				end = true;
 			} else if (choice.equals("Y")) {
 				System.out.print("\nStrategie disponibili: ");
-				System.out.println(myCinema.getAllDiscountStrategy());
+				System.out.println(cinema.getAllDiscountStrategy());
 				boolean changeEnd = false;
 				while (!changeEnd) {
 					System.out.print("Inserisci una tra le strategie disponibili: ");
 					String newStrategyName = keyboard.nextLine().toUpperCase();
-					for (int i = 0; i < myCinema.getAllDiscountStrategy().size(); i++) {
-						if (newStrategyName.equals(myCinema.getAllDiscountStrategy().get(i).toString())) {
+					for (int i = 0; i < cinema.getAllDiscountStrategy().size(); i++) {
+						if (newStrategyName.equals(cinema.getAllDiscountStrategy().get(i).toString())) {
 							try {
-								myCinema.setCinemaDiscountStrategy(myCinema.getAllDiscountStrategy().get(i));
+								cinema.setCinemaDiscountStrategy(cinema.getAllDiscountStrategy().get(i));
 								System.out.println("\nStrategia aggiornata con successo.\n");
 							} catch (DiscountNotFoundException exception) {
 								System.out.println(exception.getMessage() + "\n");
@@ -294,8 +295,8 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void changePassword() {
-		System.out.println(separator);
+	private void changePassword() {
+		System.out.println(SEPARATOR);
 		System.out.println("Gestione password\n");
 		boolean end = false;
 		while (!end) {
@@ -311,7 +312,7 @@ public class CLIAdminMain {
 					System.out.print("Inserisci la nuova password: ");
 					String newPassword = keyboard.nextLine();
 					try {
-						myCinema.setPassword(newPassword);
+						cinema.setPassword(newPassword);
 						System.out.println("\nPassword aggiornata con successo.\n");
 						changePasswordEnd = true;
 						end = true;
@@ -325,16 +326,16 @@ public class CLIAdminMain {
 		}
 	}
 
-	private static void welcomeAndLogin() {
-		System.out.println(separator);
-		System.out.println("Benvenuto nell'interfaccia amministratore di " + myCinema.getName());
+	private void welcomeAndLogin() {
+		System.out.println(SEPARATOR);
+		System.out.println("Benvenuto nell'interfaccia amministratore di " + cinema.getName());
 		boolean end = false;
 		int attempts = 0;
 		while (!end) {
 			System.out.print("\nInserisci la password (admin): ");
 			String password = keyboard.nextLine();
 			try {
-				myCinema.login(password);
+				cinema.login(password);
 				System.out.println();
 				end = true;
 			} catch (PasswordException exception) {
@@ -346,12 +347,6 @@ public class CLIAdminMain {
 				System.exit(1);
 			}
 		}
-	}
-
-	private static void printHeader() {
-		System.out.println(separator);
-		System.out.println(myCinema.getName());
-		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 	}
 
 }
