@@ -102,7 +102,7 @@ public class Cinema {
 		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
 		emailHandler = new EmailHandler(name,email,password,getLocation(),logoURL);
 		try {
-			persistenceFacade = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
+			persistenceFacade = PersistenceFacade.getInstance();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -119,89 +119,15 @@ public class Cinema {
 		// Test projections
 		try {
 			rooms = getAllRooms();
-
-			Movie drukMovie = this.getMovie(1);
-			Movie avengersEndgameMovie = this.getMovie(2);
-			Movie pulpFictionMovie = this.getMovie(3);
-			Movie noCountryForOldMenMovie = this.getMovie(4);
-			Movie skyfallMovie = this.getMovie(5);
-			Projection p1 = new Projection(100, drukMovie, LocalDateTime.parse("2021-08-01T22:30:00"), 12.5,
-					rooms.get(0));
-			Projection p2 = new Projection(101, drukMovie, LocalDateTime.parse("2021-08-02T20:15:00"), 12.5,
-					rooms.get(0));
-			Projection p3 = new Projection(102, drukMovie, LocalDateTime.parse("2021-08-03T22:30:00"), 12.5,
-					rooms.get(0));
-			Projection p4 = new Projection(103, drukMovie, LocalDateTime.parse("2021-08-04T22:30:00"), 12.5,
-					rooms.get(0));
-			Projection p5 = new Projection(104, drukMovie, LocalDateTime.parse("2021-08-05T23:30:00"), 12.5,
-					rooms.get(0));
-			Projection p6 = new Projection(105, drukMovie, LocalDateTime.parse("2021-08-05T19:00:00"), 12.5,
-					rooms.get(0));
-			Projection p7 = new Projection(106, drukMovie, LocalDateTime.parse("2021-08-04T08:05:00"), 12.5,
-					rooms.get(0));
-			Projection p8 = new Projection(200, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T22:30:00"), 12.5,
-					rooms.get(1));
-			Projection p9 = new Projection(201, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 12.5,
-					rooms.get(1));
-			Projection p10 = new Projection(202, avengersEndgameMovie, LocalDateTime.parse("2021-08-02T19:00:00"), 12.5,
-					rooms.get(1));
-			Projection p11 = new Projection(203, avengersEndgameMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 12.5,
-					rooms.get(1));
-			Projection p12 = new Projection(300, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
-					rooms.get(1));
-			Projection p13 = new Projection(301, pulpFictionMovie, LocalDateTime.parse("2021-08-06T22:30:00"), 8.5,
-					rooms.get(0));
-			Projection p14 = new Projection(302, pulpFictionMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
-					rooms.get(0));
-			Projection p15 = new Projection(303, pulpFictionMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
-					rooms.get(0));
-			Projection p16 = new Projection(304, pulpFictionMovie, LocalDateTime.parse("2021-08-03T08:05:00"), 8.5,
-					rooms.get(0));
-			Projection p17 = new Projection(400, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-22T23:30:00"),
-					8.5, rooms.get(0));
-			Projection p18 = new Projection(401, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-21T19:00:00"),
-					8.5, rooms.get(0));
-			Projection p19 = new Projection(402, noCountryForOldMenMovie, LocalDateTime.parse("2021-08-23T08:05:00"),
-					8.5, rooms.get(0));
-			Projection p20 = new Projection(500, skyfallMovie, LocalDateTime.parse("2021-08-01T08:05:00"), 8.5,
-					rooms.get(0));
-			Projection p21 = new Projection(501, skyfallMovie, LocalDateTime.parse("2021-08-02T23:30:00"), 8.5,
-					rooms.get(0));
-			Projection p22 = new Projection(502, skyfallMovie, LocalDateTime.parse("2021-08-01T19:00:00"), 8.5,
-					rooms.get(0));
-			Projection p23 = new Projection(503, skyfallMovie, LocalDateTime.parse("2021-08-02T08:05:00"), 8.5,
-					rooms.get(0));
-
-			this.cinemaProjections.add(p1);
-			this.cinemaProjections.add(p2);
-			this.cinemaProjections.add(p3);
-			this.cinemaProjections.add(p4);
-			this.cinemaProjections.add(p5);
-			this.cinemaProjections.add(p6);
-			this.cinemaProjections.add(p7);
-			this.cinemaProjections.add(p8);
-			this.cinemaProjections.add(p9);
-			this.cinemaProjections.add(p10);
-			this.cinemaProjections.add(p11);
-			this.cinemaProjections.add(p12);
-			this.cinemaProjections.add(p13);
-			this.cinemaProjections.add(p14);
-			this.cinemaProjections.add(p15);
-			this.cinemaProjections.add(p16);
-			this.cinemaProjections.add(p17);
-			this.cinemaProjections.add(p18);
-			this.cinemaProjections.add(p19);
-			this.cinemaProjections.add(p20);
-			this.cinemaProjections.add(p21);
-			this.cinemaProjections.add(p22);
-			this.cinemaProjections.add(p23);
-
+			cinemaProjections = persistenceFacade.getAllProjections();
+			/*
 			// occupare il primo posto della seconda proiezione
 			try {
 				p2.takeSeat(0, 0);
 			} catch (RoomException e) {
 			}
-		} catch (NoMovieException | PersistenceException e) {
+			*/
+		} catch (PersistenceException e) {
 			System.out.println(e.getMessage());
 		}
 	}

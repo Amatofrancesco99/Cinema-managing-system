@@ -5,12 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
-import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 
 public class ProjectionRdbDao implements IProjectionDao{
@@ -21,37 +21,46 @@ public class ProjectionRdbDao implements IProjectionDao{
 	}
 
 	@Override
-	public Projection getProjection(int id) throws SQLException {
+	public Projection getProjection(int id) throws SQLException, PersistenceException {
 		String sql = "SELECT * FROM Projection WHERE id = ?;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         pstatement.setInt(1, id);
         ResultSet result = pstatement.executeQuery();
-        
-        //(int id, Movie movie, LocalDateTime dateTime, double price, Room room)
-        Projection projection = new Projection();
+        Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
+        Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
+        Projection projection = new Projection(id, movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
         return projection;
 	}
 
 	@Override
-	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException {
+	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException {
 		String sql = "SELECT * FROM Projection WHERE movie = ?;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         pstatement.setInt(1, movieId);
         ResultSet result = pstatement.executeQuery();
-        
-        
-        
-        
+        ArrayList<Projection> projections = new ArrayList<Projection>();
+        while(result.next()) {
+            Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
+            Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
+            Projection projection = new Projection(movieId, movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
+            projections.add(projection);
+        }
 		return null;
 	}
 
 	@Override
-	public ArrayList<Projection> getAllProjections() throws SQLException {
+	public ArrayList<Projection> getAllProjections() throws SQLException, PersistenceException {
 		String sql = "SELECT * FROM Projection;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         ResultSet result = pstatement.executeQuery();
-		
-		return null;
+        ArrayList<Projection> projections = new ArrayList<Projection>();
+        while(result.next()) {
+            Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
+            Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
+            Projection projection = new Projection(result.getInt("id"), movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
+            projections.add(projection);
+        }
+		return projections;
 	}
 
 	@Override

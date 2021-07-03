@@ -19,8 +19,9 @@ public class PersistenceFacade {
     IRoomDao iRoomDao;
     IProjectionDao iProjectionDao;
     ICouponDao iCouponDao;
-	
-    public PersistenceFacade(String url) throws SQLException {
+	private static PersistenceFacade singleInstance;
+    
+    private PersistenceFacade(String url) throws SQLException {
     	connection = DriverManager.getConnection(url);
     	iMovieDao = new MovieRdbDao(connection);
     	iRoomDao = new RoomRdbDao(connection);
@@ -28,6 +29,12 @@ public class PersistenceFacade {
     	iCouponDao = new CouponRdbDao(connection);
     }
     
+    public static PersistenceFacade getInstance() throws SQLException {
+    	if (singleInstance == null) {
+    		singleInstance = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
+    	}
+    	return singleInstance;
+    }
     
     public Movie getMovie(int id) throws PersistenceException  {
     	try {
