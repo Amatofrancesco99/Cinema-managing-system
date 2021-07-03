@@ -1,5 +1,6 @@
 package cinema.view.cli.user;
 
+import java.time.LocalDate;
 import java.time.YearMonth; 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -44,51 +45,42 @@ public class CLIUserMain {
 	 * 				 vengono utilizzati.
 	 * @throws InvalidNumberPeopleValueException 
 	 */
-	public static void main(String[] args){
-		@SuppressWarnings("unused")
-		CLIUserMain cli = new CLIUserMain();
+	public static void main(String[] args){	
+		new CLIUserMain();	
 	}
 	
 	public CLIUserMain() {
 		// INFORMAZIONI GENERALI DEL CINEMA E BENVENUTO AL CLIENTE
 		printHeader();
-			
+
 		//MENU CHE ACCOGLIE IL CLIENTE
-		menu();		
+		menu();	
 	}
 	
 	
-	private void menu() {
-		
-		boolean end = false;
-		
-		do {
-			
+	private void menu() {		
+		boolean end = false;		
+		do {		
 			System.out.println("\nMENU");
 			System.out.println("\nCosa vuoi fare: \n\n1) Visualizzare i film disponibili \n2) Acquistare un biglietto \n3) Uscire \n");
-			System.out.println("Inserire la scelta: ");
-			
-			int scelta = Integer.parseInt(keyboard.nextLine());
-			
-			switch(scelta) {
+			int choice = checkNumber("Inserire la scelta: ");			
+			switch(choice) {
 				
 				case 1: printCurrentlyAvailableMovies();
 						end = backToMenu();
 						break;
 				
 				case 2: buyTicket();
+						end = backToMenu();
 						break;
 						
 				default:end = true;
-			}
-			
-		}while(!end);
-		
+			}			
+		}while(!end);		
 		sayGoodbye();
 	}
 	
-	private void buyTicket() {
-		
+	private void buyTicket() {		
 		// FILM ATTUALMENTE DISPONIBILI/PROIETTATI
 		printCurrentlyAvailableMovies();
 						
@@ -118,28 +110,38 @@ public class CLIUserMain {
 						
 		// SPEDIZIONE DELL'EMAIL AL CLIENTE, CONTENENTE IL REPORT
 		sendEmail(r); 
-		
 	}
 	
+	
+	private int checkNumber(String str) {
+		boolean end = false;
+		int choice = 0;		
+		do {			
+			System.out.println(str);		
+			try {			
+				choice = Integer.parseInt(keyboard.nextLine());
+				end = true;			
+			}catch(NumberFormatException e) {			
+				System.out.println("\nInserisci un numero.\n");
+			}	
+		}while(!end);			
+		return choice;
+	}
+	
+	
 	private boolean backToMenu() {
-		
 		boolean end = true;
-		
 		do {
-			
 			System.out.println("\n\nVuoi tornare al menu principale (Y) o preferisci uscire (N)? ");
 			String conferma = keyboard.nextLine().toUpperCase();
 			if (conferma.contains("N")) {
 				return true;
-			
 			} else if ((!conferma.equals("Y"))&&(!conferma.equals("N"))){
 				System.out.println("Scelta non valida...");
 				end = false;
 			}
-			end = true;
-			
-		}while(!end);
-		
+			end = true;	
+		}while(!end);	
 		return false;
 	}
 
@@ -260,6 +262,8 @@ public class CLIUserMain {
 			String number = keyboard.nextLine();
 			System.out.println("\n");
 			YearMonth expirationDate = null;
+			String actualDate = LocalDate.now().toString().substring(0, 7);
+			YearMonth actual = YearMonth.parse(actualDate);
 			boolean validDate = false;
 			while(!validDate) {
 				System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
@@ -267,7 +271,10 @@ public class CLIUserMain {
 				System.out.println("\n");
 				try {
 					expirationDate = YearMonth.parse(expD);
-					validDate = true;
+					if(expirationDate.compareTo(actual) >= 0) 
+						validDate = true;
+					else
+						System.out.println("La data inserita non è valida.");
 				}
 				catch(Exception e) {
 					System.out.println("La data inserita non è valida.");
@@ -338,7 +345,7 @@ public class CLIUserMain {
 					System.out.println(e.getMessage());
 				} 
 			} while (!validSeat);
-			System.out.println("\nVuoi occupare altri posti? (Y/N):");
+			System.out.println("\nVuoi occupare altri posti? (Y/N)");
 			String occupaAltri = keyboard.nextLine().toUpperCase();
 			if (occupaAltri.contains("N")) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
