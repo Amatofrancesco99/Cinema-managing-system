@@ -1,4 +1,4 @@
-package cinema.model.reservation.handlers;
+package cinema.controller.handlers;
 
 import java.util.Properties;
 
@@ -18,7 +18,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.handlers.util.HandlerException;
+import cinema.controller.handlers.util.HandlerException;
 
 
 /** BREVE DESCRIZIONE CLASSE EmailHandler

@@ -6,17 +6,17 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
-import cinema.model.Movie;
-import cinema.model.spectator.Spectator;
+import cinema.controller.util.*;
+import cinema.controller.handlers.EmailHandler;
+import cinema.controller.handlers.util.HandlerException;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.Movie;
 import cinema.model.payment.util.PaymentErrorException;
 import cinema.model.persistence.PersistenceFacade;
 import cinema.model.persistence.util.PersistenceException;
-import cinema.controller.util.*;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
-import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.Discount;
@@ -25,11 +25,11 @@ import cinema.model.reservation.discount.types.DiscountDay;
 import cinema.model.reservation.discount.types.DiscountNumberSpectators;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
-import cinema.model.reservation.handlers.EmailHandler;
-import cinema.model.reservation.handlers.util.HandlerException;
+import cinema.model.reservation.Reservation;
 import cinema.model.reservation.util.ReservationException;
-import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.reservation.util.SeatAvailabilityException;
+import cinema.model.spectator.Spectator;
+import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
 /**
  * BREVE SPIEGAZIONE CLASSE CINEMA ( Pattern Controller)

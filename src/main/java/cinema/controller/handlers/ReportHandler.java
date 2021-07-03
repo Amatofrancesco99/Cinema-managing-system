@@ -1,4 +1,4 @@
-package cinema.model.reservation.handlers;
+package cinema.controller.handlers;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,7 +24,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.handlers.util.HandlerException;
+import cinema.controller.handlers.util.HandlerException;
 
 
 /** BREVE DESCRIZIONE CLASSE ReportHandler

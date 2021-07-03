@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import cinema.controller.Cinema;
+import cinema.controller.handlers.util.HandlerException;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
@@ -15,7 +16,6 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;

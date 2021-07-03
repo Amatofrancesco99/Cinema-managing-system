@@ -1,4 +1,4 @@
-package cinema.model.reservation.handlers.util;
+package cinema.controller.handlers.util;
 
 
 /** BREVE DESCRIZIONE CLASSE HandlerException
