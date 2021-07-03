@@ -77,3 +77,8 @@ Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, 
 ## 3. ESECUZIONE DA CLI - VISTA ADMIN
 
 Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
+
+***
+## 4. WIKI DEL PROGETTO
+
+È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/IngSW-unipv/Progetto-F21/wiki).
