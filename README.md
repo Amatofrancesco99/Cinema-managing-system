@@ -2,7 +2,7 @@
 
 ***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
 
-![image](https://user-images.githubusercontent.com/80333091/113708434-81895080-96e1-11eb-85db-60251d9deaf9.png)
+![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png)
 
 ***
 ## 0. SETUP DEL REPOSITORY
@@ -25,6 +25,8 @@ Il procedimento per l'installazione a seconda del sistema operativo utilizzato p
 
 ***
 ## 1. ESECUZIONE DELL'APPLICAZIONE WEB - VISTA SPETTATORE
+
+Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java). È possibile farlo con l'aiuto di Gradle tramite i comandi riportati di seguito.
 
 ### 1.1 - Apertura del terminale o del prompt dei comandi
 Per poter compilare ed eseguire l'applicazione web (server HTTP) è necessario innanzitutto posizionarsi nella directory root del progetto all'interno di un terminale o prompt dei comandi:
