@@ -90,9 +90,7 @@ public class EmailHandler {
 				    //Tentativo di composizione del messaggio ed invio dell'email  
 				    createMessageAndSendEmail(session,user,to,r);
 				} catch (HandlerException exception) {
-					exception.printStackTrace();
-					// If an error occurred during the sending process, it is not handled (the
-					// spectator will notify the cinema to fix the issue)
+					System.out.println(exception.getMessage());
 				}
 			}
 		};

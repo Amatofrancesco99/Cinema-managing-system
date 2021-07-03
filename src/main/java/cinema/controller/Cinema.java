@@ -109,17 +109,36 @@ public class Cinema {
 		rooms = new ArrayList<Room>();
 		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
-		cinemaDiscount = new DiscountAge();
-		allDiscounts = new ArrayList<Discount>();
-		addDiscount(new DiscountAge());
-		addDiscount(new DiscountDay());
-		addDiscount(new DiscountNumberSpectators());
+		try {
+			cinemaDiscount = persistenceFacade.getAgeDiscounts();
+			allDiscounts = new ArrayList<Discount>();
+			addDiscount(persistenceFacade.getAgeDiscounts());
+			addDiscount(persistenceFacade.getAllDayDiscounts());
+			addDiscount(persistenceFacade.getGroupDiscounts());
+		} catch (PersistenceException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// ********* TEMPORARY DATA USED FOR TESTING *********
 		// Test projections
 		try {
 			rooms = getAllRooms();
 			cinemaProjections = persistenceFacade.getAllProjections();
+			//occupazione dei posti
+			
+			/**
+			 * 
+			 * for(Projection p : getCurrently...){
+			 * 		ArrayList<ProjectionSeat> blockedSeats = persistenceFacade.getOcuupiedSeats(p.getId());
+			 *      for(ProjectionSeat ps : blockedSeats)
+			 *      	p.takeSeat(ps.getRow(), ps.getColumn());
+			 * }
+			 * 
+			 */
+			
+			
+			
 			/*
 			// occupare il primo posto della seconda proiezione
 			try {
@@ -479,9 +498,10 @@ public class Cinema {
 	 * sul totale
 	 * 
 	 * @return max_age Età massima
+	 * @throws PersistenceException 
 	 */
-	public int getMaxDiscountAge() {
-		return new DiscountAge().getMax_age();
+	public int getMaxDiscountAge() throws PersistenceException {
+		return this.persistenceFacade.getAgeDiscounts().getMax_age();
 	}
 
 	/**
@@ -489,9 +509,10 @@ public class Cinema {
 	 * sul totale
 	 * 
 	 * @return min_age Età minima
+	 * @throws PersistenceException 
 	 */
-	public int getMinDiscountAge() {
-		return new DiscountAge().getMin_age();
+	public int getMinDiscountAge() throws PersistenceException {
+		return this.persistenceFacade.getAgeDiscounts().getMin_age();
 	}
 
 	/**

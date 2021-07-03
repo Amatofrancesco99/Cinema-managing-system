@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import cinema.controller.Cinema;
 import cinema.controller.handlers.util.HandlerException;
+import cinema.controller.util.DiscountNotFoundException;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
@@ -16,6 +17,7 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
+import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
@@ -182,7 +184,7 @@ public class CLIUserMain {
 					}		
 				}
 			}
-		} catch (NumberFormatException | ReservationException e) {
+		} catch (NumberFormatException | ReservationException | PersistenceException e) {
 			System.out.println(e.getMessage());
 		}
 	}

@@ -15,25 +15,26 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
  */
 public class DiscountNumberSpectators extends Discount{
 
-
-
 	/** ATTRIBUTI
 	 * @param NUMBER_PEOPLE 	Numero di persone minimo, al di sopra del quale lo sconto
 	 * 							comitiva sarà valido
 	 * @param PERCENTAGE  		Percentuale di sconto effettuata
 	 */
-	private int numberPeople = 5;
-	private double percentage = 0.15;
+	private int numberPeople;
+	private double percentage;
 	
-		
 	/**
-	 * COSTRUTTORE 
-	 * @param type
+	 * COSTRUTTORE
+	 * @param numberPeople
+	 * @param percentage
 	 */
-	public DiscountNumberSpectators() {
+	public DiscountNumberSpectators(int numberPeople, double percentage) {
 		super(TypeOfDiscounts.NUMBER);
+		this.numberPeople = numberPeople;
+		this.percentage = percentage;
+		
 	}
-
+	
 	
 	/**
 	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi
