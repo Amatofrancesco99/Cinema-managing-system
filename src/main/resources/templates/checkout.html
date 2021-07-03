@@ -44,7 +44,7 @@
                                 projectionMovie = cinema.getProjectionMovie(cinema.getReservationProjection(reservation));
                                 projectionDateTime = cinema.getProjectionDateTime(cinema.getReservationProjection(reservation));
                                 projectionRoom = cinema.getProjectionRoom(cinema.getReservationProjection(reservation));
-                            } catch (ProjectionException | ReservationException exception) {
+                            } catch (Exception exception) {
                                 // No exceptions to handle here
                             }
                         }
@@ -114,7 +114,7 @@
                                                     seatIcon = "/static/img/seat-unavailable.svg";
                                                     seatStatus = "non disponibile";
                                                 }
-                                            } catch(RoomException | ProjectionException | ReservationException exception) {
+                                            } catch(Exception exception) {
                                                 // No exceptions to handle here
                                             }
                                         }

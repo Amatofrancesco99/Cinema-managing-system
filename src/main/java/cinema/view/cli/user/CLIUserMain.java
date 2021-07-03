@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import cinema.controller.Cinema;
+import cinema.controller.handlers.util.HandlerException;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
@@ -15,7 +16,6 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
@@ -405,9 +405,9 @@ public class CLIUserMain {
 
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
-		System.out.println(Cinema.getName().toUpperCase()+"\n");
-		System.out.println("Puoi trovarci in: " + Cinema.getLocation() + "\n");
-		System.out.println("Contattaci: " + Cinema.getEmail() + "\n\n");
+		System.out.println(myCinema.getName().toUpperCase()+"\n");
+		System.out.println("Puoi trovarci in: " + myCinema.getLocation() + "\n");
+		System.out.println("Contattaci: " + myCinema.getEmail() + "\n\n");
 		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.out.println("-----------------------------------------------------\n");
 	}

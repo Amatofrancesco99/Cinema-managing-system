@@ -1,4 +1,4 @@
-package cinema.model.reservation.handlers;
+package cinema.controller.handlers;
 
 import java.util.Properties;
 
@@ -17,9 +17,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import cinema.controller.Cinema;
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.handlers.util.HandlerException;
+import cinema.controller.handlers.util.HandlerException;
 
 
 /** BREVE DESCRIZIONE CLASSE EmailHandler
@@ -31,6 +30,34 @@ import cinema.model.reservation.handlers.util.HandlerException;
  */
 public class EmailHandler {
 	
+	/** 
+	 * ATTRIBUTI
+	 * @param email
+	 * @param password
+	 * @param name
+	 */
+	private String email;
+	private String password;
+	private String name;
+	private String location;
+	private String logoURL;
+	
+	/**
+	 * COSTRUTTORE
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param location
+	 * @param logo URL
+	 */
+	public EmailHandler (String name, String email, String password, String location, String logoURL) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.location = location;
+		this.logoURL = logoURL;
+	}
+	
 	/**
 	 * METODO per effettuare l'invio dell'email
 	 * @param r						Prenotazione da inviare
@@ -38,7 +65,8 @@ public class EmailHandler {
 	 * 								spedizione via email del report, o nella generazione di
 	 * 								quest ultimo.
 	 */
-	public static void sendEmail(Reservation r) throws HandlerException {
+	public void sendEmail(Reservation r) throws HandlerException {
+		ReportHandler reportHandler = new ReportHandler(name, email, location, logoURL);
 	    Thread emailThread = new Thread() {
 			@Override
 			public void run() {
@@ -46,13 +74,12 @@ public class EmailHandler {
 					// prima di inviare l'email verifico che il report sia già stato generato, 
 					// se non è ancora stato generato lo genero
 					if (r.getReportLocation() == null) {
-						ReportHandler.createReport(r);
+						reportHandler.createReport(r);
 					}
 					
 					// Stabilire le informazioni sul sender ed il receiver dell'email
 					String to = r.getPurchaser().getEmail(); //receiver email
-					final String user = Cinema.getEmail(); //sender email (cinema)
-					final String password = Cinema.getPassword(); //sender password
+					String user = email; //sender email (cinema)
 					   
 					// Configurazione delle proprietà dell'email
 					Properties properties = setUpMainProperties(user, password);
@@ -63,6 +90,7 @@ public class EmailHandler {
 				    //Tentativo di composizione del messaggio ed invio dell'email  
 				    createMessageAndSendEmail(session,user,to,r);
 				} catch (HandlerException exception) {
+					exception.printStackTrace();
 					// If an error occurred during the sending process, it is not handled (the
 					// spectator will notify the cinema to fix the issue)
 				}
@@ -74,7 +102,7 @@ public class EmailHandler {
 	
 	/** METODO per effettuare la creazione del messaggio da inviare e l'invio dell'email
 	 * @throws HandlerException */
-	private static void createMessageAndSendEmail(Session session, String user, String to, Reservation r) throws HandlerException {
+	private void createMessageAndSendEmail(Session session, String user, String to, Reservation r) throws HandlerException {
 		try{  
 			// Configurazione proprietà basilari dell'email
 			Message message = createBasicMailProperties(session,user,to,r);
@@ -104,7 +132,7 @@ public class EmailHandler {
 	 * @param messageBodyPart2
 	 * @throws MessagingException
 	 */
-	private static void addBodyAndReportToMail(Message message, BodyPart messageBodyPart1, MimeBodyPart messageBodyPart2) throws MessagingException {
+	private void addBodyAndReportToMail(Message message, BodyPart messageBodyPart1, MimeBodyPart messageBodyPart2) throws MessagingException {
 		Multipart multipart = new MimeMultipart();  
 		multipart.addBodyPart(messageBodyPart1);  
 		multipart.addBodyPart(messageBodyPart2);  
@@ -118,7 +146,7 @@ public class EmailHandler {
 	 * @return
 	 * @throws MessagingException
 	 */
-	private static MimeBodyPart createMailReport(Reservation r) throws MessagingException {
+	private MimeBodyPart createMailReport(Reservation r) throws MessagingException {
 		MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
 		String filename = r.getReportLocation();
 		DataSource source = new FileDataSource(filename);  
@@ -133,7 +161,7 @@ public class EmailHandler {
 	 * @param r
 	 * @throws MessagingException
 	 */
-	private static BodyPart createMailBody(Reservation r) throws MessagingException { 
+	private BodyPart createMailBody(Reservation r) throws MessagingException { 
 		BodyPart messageBodyPart1 = new MimeBodyPart();  
 		messageBodyPart1.setText(
 				"Ciao " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + ",\n\n"
@@ -141,7 +169,7 @@ public class EmailHandler {
 				+ "In allegato trovi la ricevuta di avvenuto pagamento che conferma il tuo acquisto.\n"
 				+ "Stampa la prenotazione e presentala quando verrai a guardare il film.\n\n"
 			    + "Ti aspettiamo, buona giornata!\n"
-				+ Cinema.getName() + "\n\n"
+				+ name + "\n\n"
 			    + "Non rispondere alla presente e-mail. Messaggio generato automaticamente.\n");
 		return messageBodyPart1;
 	}
@@ -156,7 +184,7 @@ public class EmailHandler {
 	 * @return
 	 * @throws MessagingException
 	 */
-	private static Message createBasicMailProperties(Session session, String user, String to, Reservation r) throws MessagingException {
+	private Message createBasicMailProperties(Session session, String user, String to, Reservation r) throws MessagingException {
 		MimeMessage message = new MimeMessage(session);  
 		message.setFrom(new InternetAddress(user));  
 		message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
@@ -172,7 +200,7 @@ public class EmailHandler {
 	 * @param properties
 	 * @return
 	 */
-	private static Session startNewSession(String user, String password, Properties properties) {
+	private Session startNewSession(String user, String password, Properties properties) {
 		 Session session = Session.getDefaultInstance(properties,  
 				new javax.mail.Authenticator() {  
 				protected PasswordAuthentication getPasswordAuthentication() {  
@@ -189,7 +217,7 @@ public class EmailHandler {
 	 * @param password
 	 * @return
 	 */
-	private static Properties setUpMainProperties(String user, String password) {
+	private Properties setUpMainProperties(String user, String password) {
 		Properties properties = System.getProperties();  
 		String host = "smtp.gmail.com";
 		properties.put("mail.smtp.starttls.enable", "true");

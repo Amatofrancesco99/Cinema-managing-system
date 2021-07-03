@@ -361,7 +361,7 @@ public class CLIAdminMain {
 	
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
-		System.out.println(Cinema.getName().toUpperCase()+"\n");
+		System.out.println(myCinema.getName().toUpperCase()+"\n");
 		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
 		System.out.println("-----------------------------------------------------\n");
 	}

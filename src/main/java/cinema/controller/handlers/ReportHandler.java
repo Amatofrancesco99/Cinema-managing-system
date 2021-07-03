@@ -1,4 +1,4 @@
-package cinema.model.reservation.handlers;
+package cinema.controller.handlers;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,11 +21,10 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import cinema.controller.Cinema;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.handlers.util.HandlerException;
+import cinema.controller.handlers.util.HandlerException;
 
 
 /** BREVE DESCRIZIONE CLASSE ReportHandler
@@ -38,11 +37,39 @@ import cinema.model.reservation.handlers.util.HandlerException;
 public class ReportHandler {
 	
 	/**
+	 * ATTRIBUTI
+	 * @param name
+	 * @param email
+	 * @param location
+	 * @param logoURL
+	 */
+	private String name;
+	private String email;
+	private String location;
+	private String logoURL;
+	
+	
+	/**
+	 * COSTRUTTORE
+	 * @param name
+	 * @param email
+	 * @param location
+	 * @param logoURL
+	 */
+	public ReportHandler(String name, String email, String location, String logoURL) {
+		this.name = name;
+		this.email = email;
+		this.location = location;
+		this.logoURL = logoURL;
+	}
+	
+	
+	/**
 	 * METODO per la creazione del report
 	 * @param r 					Prenotazione di cui si vuole creare il report
 	 * @throws HandlerException 
 	 */
-	public static void createReport(Reservation r) throws HandlerException {
+	public void createReport(Reservation r) throws HandlerException {
 		String FILE = "./savedReports/Reservation_"+Long.toString(r.getProgressive())+".pdf";	// posizione in cui il report sarà salvato
 		HashMap<String,Font> allFonts = createAllFonts();	// impostazione dei font che verranno utilizzati nel report
 		generateReport(FILE,allFonts,r);					// tentativo di generazione del report
@@ -50,7 +77,7 @@ public class ReportHandler {
 
 	
 	/** METODO per la creazione del report*/
-	private static void generateReport(String FILE, HashMap<String,Font> allFonts, Reservation r) throws HandlerException {
+	private void generateReport(String FILE, HashMap<String,Font> allFonts, Reservation r) throws HandlerException {
 		try {
 			Document document = createEmptyDocument(FILE);		// generazione di un documento vuoto e apertura di quest ultimo
 			document.open();
@@ -86,7 +113,7 @@ public class ReportHandler {
 	 * @param totalP
 	 * @throws DocumentException
 	 */
-	private static void addAllInfoToDocument(Document document, Image image, Paragraph titleP, Paragraph infoCinemaP, Paragraph filmP, Paragraph infoFilmP, Paragraph infoReservationP, PdfPTable table, Paragraph totalP) throws DocumentException {
+	private void addAllInfoToDocument(Document document, Image image, Paragraph titleP, Paragraph infoCinemaP, Paragraph filmP, Paragraph infoFilmP, Paragraph infoReservationP, PdfPTable table, Paragraph totalP) throws DocumentException {
 		document.add(image);
         document.add(titleP);
         document.add(infoCinemaP);
@@ -104,7 +131,7 @@ public class ReportHandler {
 	 * @param r
 	 * @return
 	 */
-	private static Paragraph createTotalParagraph(HashMap<String, Font> allFonts, Reservation r) {
+	private Paragraph createTotalParagraph(HashMap<String, Font> allFonts, Reservation r) {
         Paragraph totalP = new Paragraph("Totale   " + String.format("%.02f",r.getTotal())
 		   + " EUR", allFonts.get("subFont3"));
         totalP.setSpacingBefore(60);
@@ -120,7 +147,7 @@ public class ReportHandler {
 	 * @param r
 	 * @throws RoomException
 	 */
-	private static void insertFieldsIntoTable(PdfPTable table, Reservation r) throws RoomException {
+	private void insertFieldsIntoTable(PdfPTable table, Reservation r) throws RoomException {
 		PdfPCell c1 = new PdfPCell(new Phrase("Posti prenotati scelti al momento dell'acquisto"));
         c1.setHorizontalAlignment(Element.ALIGN_CENTER);
         c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -143,7 +170,7 @@ public class ReportHandler {
 	 * 
 	 * @return
 	 */
-	private static PdfPTable createEmptyTable() {
+	private PdfPTable createEmptyTable() {
 		PdfPTable table = new PdfPTable(1);
         table.setSpacingBefore(60);
         return table;
@@ -157,7 +184,7 @@ public class ReportHandler {
 	 * @param r
 	 * @return
 	 */
-	private static Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
+	private Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
 		String dayOfWeek = r.getProjection().getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
 		String month = r.getProjection().getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
 		Paragraph infoReservationP = new Paragraph("Prenotazione effettuata da " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + "\n"
@@ -176,7 +203,7 @@ public class ReportHandler {
 	 * @param r
 	 * @return
 	 */
-	private static Paragraph createFilmPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
+	private Paragraph createFilmPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
 		Paragraph infoFilmP = new Paragraph("Regista/i:  " + r.getProjection().getMovie().getDirectors().toString().replaceAll("\\[", "").replaceAll("\\]", "")
 				+ "      Durata:  " + r.getProjection().getMovie().getDuration() + " min."
 				+ "      Rating film:  " + r.getProjection().getMovie().getRating() + "/5",
@@ -190,7 +217,7 @@ public class ReportHandler {
 	 * @param allFonts
 	 * @return
 	 */
-	private static Paragraph createFilmTitleParagraph(HashMap<String, Font> allFonts, Reservation r) {
+	private Paragraph createFilmTitleParagraph(HashMap<String, Font> allFonts, Reservation r) {
 		Paragraph FilmP = new Paragraph(">  " + r.getProjection().getMovie().getTitle(), allFonts.get("subFont"));
         FilmP.setSpacingBefore(40);
         return FilmP;
@@ -202,9 +229,9 @@ public class ReportHandler {
 	 * @param allFonts
 	 * @return
 	 */
-	private static Paragraph createCinemaInfoParagraph(HashMap<String, Font> allFonts) {
-		Paragraph infoCinemaP = new Paragraph(Cinema.getLocation() 
-        		+ "\n" + Cinema.getEmail() + "\n", allFonts.get("smallFont"));
+	private Paragraph createCinemaInfoParagraph(HashMap<String, Font> allFonts) {
+		Paragraph infoCinemaP = new Paragraph(location 
+        		+ "\n" + email + "\n", allFonts.get("smallFont"));
         infoCinemaP.setSpacingBefore(10);
         infoCinemaP.setAlignment(Element.ALIGN_CENTER);
         return infoCinemaP;
@@ -216,8 +243,8 @@ public class ReportHandler {
 	 * @param allFonts
 	 * @return
 	 */
-	private static Paragraph createReportTitleParagraph(HashMap<String, Font> allFonts) {
-		Paragraph titleP = new Paragraph(Cinema.getName() + "\n", allFonts.get("catFont"));
+	private Paragraph createReportTitleParagraph(HashMap<String, Font> allFonts) {
+		Paragraph titleP = new Paragraph(name + "\n", allFonts.get("catFont"));
         titleP.setSpacingBefore(80);
         titleP.setAlignment(Element.ALIGN_CENTER);
         return titleP;
@@ -232,8 +259,8 @@ public class ReportHandler {
 	 * @throws MalformedURLException
 	 * @throws IOException
 	 */
-	private static Image createReportLogoImage() throws BadElementException, MalformedURLException, IOException {
-		String imageUrl = Cinema.getLogoURL();
+	private Image createReportLogoImage() throws BadElementException, MalformedURLException, IOException {
+		String imageUrl = logoURL;
         Image image = Image.getInstance(new URL(imageUrl));
         image.scalePercent(20f);
         image.setAbsolutePosition(250f, 715f);
@@ -246,7 +273,7 @@ public class ReportHandler {
 	 * @param document
 	 * @param r
 	 */
-	private static void addDocumentProperties(Document document, Reservation r) {
+	private void addDocumentProperties(Document document, Reservation r) {
 		document.addTitle("Prenotazione numero " + r.getProgressive());
 		document.addSubject("Using iText");
         document.addKeywords("Java, PDF, iText");
@@ -262,7 +289,7 @@ public class ReportHandler {
 	 * @throws FileNotFoundException
 	 * @throws DocumentException
 	 */
-	private static Document createEmptyDocument(String FILE) throws FileNotFoundException, DocumentException {
+	private Document createEmptyDocument(String FILE) throws FileNotFoundException, DocumentException {
 		Document document = new Document();
 		PdfWriter.getInstance(document, new FileOutputStream(FILE));
 		return document;
@@ -273,7 +300,7 @@ public class ReportHandler {
 	 *  
 	 * @return allFonts		Tutti i font utili nel report
 	 */
-	private static HashMap<String,Font> createAllFonts() {
+	private HashMap<String,Font> createAllFonts() {
 		HashMap<String,Font> allFonts = new HashMap<String,Font>();
 		
 		Font catFont = new Font(Font.FontFamily.HELVETICA, 33, Font.BOLD);

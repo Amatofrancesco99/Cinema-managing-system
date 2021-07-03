@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import cinema.controller.Cinema;
+import cinema.controller.handlers.util.HandlerException;
 import cinema.model.Movie;
 import cinema.model.spectator.Spectator;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
@@ -24,8 +25,6 @@ import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
-import cinema.model.reservation.handlers.ReportHandler;
-import cinema.model.reservation.handlers.util.HandlerException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
@@ -143,20 +142,21 @@ public class ReservationTest {
 	/** Test sui coupon */
 	@Test
 	public void testCoupon() {
-		// Coupon utilizzato una sola volta
 		Coupon c1 = null;
+		// Coupon utilizzato una sola volta
 		try {
-			c1 = new Coupon("PROVA123",3.5,false);
+			c1 = new Coupon("PROVA123", 3.5, false);
 		} catch (CouponException e1) { }
 		try {
+			myCinema.setReservationCoupon(r.getProgressive(), c1.getCode());
 			r.setCoupon(c1);
-			assertEquals(23 , r.getFullPrice() - c1.getDiscount(),0);
-		} catch (CouponException e) {
+			assertEquals(21.5 , r.getTotal() , 0);
+		} catch (CouponException | ReservationException e) {
 			e.toString();
 		}
 		try {
 			r.setPaymentCard("1234567890123456", "TestOwnerName", "123", YearMonth.of(2022, 01));
-			r.buy();
+			myCinema.buyReservation(r.getProgressive());
 		} catch (NumberFormatException | SeatAvailabilityException | RoomException
 				| ReservationException | PaymentErrorException | PersistenceException e) {
 			e.toString();
@@ -166,8 +166,8 @@ public class ReservationTest {
 			Reservation newReservation = myCinema.getReservation(myCinema.createReservation());
 			newReservation.setProjection(projections.get(0));
 			newReservation.addSeat(2, 2); // occupo un nuovo posto
-			newReservation.setCoupon(c1);
-			assertEquals(12.50, newReservation.getTotal(),0);
+			myCinema.setReservationCoupon(newReservation.getProgressive(), c1.getCode());
+			assertEquals(12.50, newReservation.getTotal(), 0);
 		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException e) {
 			e.toString();
 		}	
@@ -183,7 +183,7 @@ public class ReservationTest {
 			r.setNumberPeopleUnderMinAge(1);
 			r.setNumberPeopleOverMaxAge(0);
 		} catch (DiscountException e) {}
-		assertEquals(12.50*2 - 1.87 - r.getCoupon().getDiscount(),r.getTotal(),0);
+		assertEquals(12.50*2 - 1.87 , r.getTotal() , 0);
 	}
 	
 	
@@ -217,16 +217,6 @@ public class ReservationTest {
 	}
 	
 	
-	/** Test di creazione del report */
-	public void testCreateReport() {
-		try {
-			ReportHandler.createReport(r);
-		} catch (HandlerException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	
 	/** Test invio email 
 	 * @throws InvalidSpectatorInfoException */
 	@Test
@@ -234,13 +224,23 @@ public class ReservationTest {
 		// cambia i campi qui sotto, specialmente l'email, per poter testare l'invio
 		// del report contenente tutte le informazioni sulla prenotazione alla tua casella
 		// di posta personale
-		r.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
+		Reservation r2 = null;
+		try {
+			r2 = myCinema.getReservation(myCinema.createReservation());
+			r2.setProjection(projections.get(0));
+			r2.addSeat(1, 1);
+			r2.addSeat(1, 2);
+			r2.setPaymentCard("1234567890123456", "Francesco Amato", "212", YearMonth.of(2024, 02));
+			r2.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
+		} catch (ReservationException | SeatAvailabilityException | RoomException e) {
+			System.out.println(e.getMessage());
+		}
 		try {
 			/* notare ci sono tre posti nell'email inviata 
 			* (ogni classe di test chiama setUpBeforeClass(), prima di iniziare)
 			*/
-			r.sendEmail();
-		} catch (HandlerException e) {
+			myCinema.sendReservationEmail(r2.getProgressive());
+		} catch (HandlerException | ReservationException e) {
 			System.out.println(e.getMessage());
 		}
 	}
