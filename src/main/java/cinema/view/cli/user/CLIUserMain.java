@@ -59,7 +59,7 @@ public class CLIUserMain {
 	
 	
 	private void menu() {		
-		boolean end = false;		
+		boolean end = true;		
 		do {		
 			System.out.println("\nMENU");
 			System.out.println("\nCosa vuoi fare: \n\n1) Visualizzare i film disponibili \n2) Acquistare un biglietto \n3) Uscire \n");
@@ -74,9 +74,9 @@ public class CLIUserMain {
 						end = backToMenu();
 						break;
 						
-				default:end = true;
+				default:end = false;
 			}			
-		}while(!end);		
+		}while(end);		
 		sayGoodbye();
 	}
 	
@@ -121,7 +121,7 @@ public class CLIUserMain {
 			try {			
 				choice = Integer.parseInt(keyboard.nextLine());
 				end = true;			
-			}catch(NumberFormatException e) {			
+			}catch(NumberFormatException | InputMismatchException e) {			
 				System.out.println("\nInserisci un numero.\n");
 			}	
 		}while(!end);			
@@ -129,20 +129,23 @@ public class CLIUserMain {
 	}
 	
 	
-	private boolean backToMenu() {
-		boolean end = true;
+	private boolean checkAssertion(String str) {
+		boolean end = false;
 		do {
-			System.out.println("\n\nVuoi tornare al menu principale (Y) o preferisci uscire (N)? ");
-			String conferma = keyboard.nextLine().toUpperCase();
-			if (conferma.contains("N")) {
+			System.out.println(str);
+			String choice = keyboard.nextLine().toUpperCase();
+			if (choice.equals("Y")) 
 				return true;
-			} else if ((!conferma.equals("Y"))&&(!conferma.equals("N"))){
+			else if ((!choice.equals("Y")) && (!choice.equals("N")))
 				System.out.println("Scelta non valida...");
-				end = false;
-			}
-			end = true;	
-		}while(!end);	
+			else
+				end = true;
+		}while(!end);
 		return false;
+	}
+	
+	private boolean backToMenu() {
+		return checkAssertion("\n\nVuoi tornare al menu principale (Y) o preferisci uscire (N)? ");
 	}
 
 	private void sayGoodbye() {
@@ -192,9 +195,8 @@ public class CLIUserMain {
 		System.out.println("\n\n3.4- INSERIMENTO COUPON \n");
 		while (!end) {
 			// Aggiungi un coupon alla tua prenotazione
-			System.out.println("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
-			String usaCoupon = keyboard.nextLine().toUpperCase();
-			if (usaCoupon.equals("Y")) {
+			boolean usaCoupon = checkAssertion("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
+			if (usaCoupon) {
 				System.out.println("Inserisci il codice del coupon:  ");
 				String couponCode = keyboard.nextLine();
 				try {
@@ -203,16 +205,14 @@ public class CLIUserMain {
 				} catch (CouponException | ReservationException e) {
 					System.out.println(e.getMessage());
 				}
-			} else if ((!usaCoupon.equals("Y")) && (!usaCoupon.equals("N"))){
-				System.out.println("Scelta non valida...");
-			} else if (usaCoupon.equals("N")) {
-				end = true;
-			}
+			} 
+			else 
+				end = true;	
 		}
 	}
 
 
-	private void insertSpectatorsInfo(long r) {
+	private void insertSpectatorsInfo(long r) {	
 		try {
 			if (myCinema.getReservationTypeOfDiscount(r).equals("AGE")) {
 				try {
@@ -226,17 +226,13 @@ public class CLIUserMain {
 				while (!end) {
 					// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
 					// sconti
-					System.out.println("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
-					String n1 = keyboard.nextLine();
-					int nMin = Integer.parseInt(n1);
+					int nMin = checkNumber("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
 					try {
 						myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
 					} catch (DiscountException | NumberFormatException | ReservationException e) {
 						System.out.println(e.getMessage());
-					}
-					System.out.println("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
-					String n2 = keyboard.nextLine();
-					int nMax = Integer.parseInt(n2);
+					}					
+					int nMax = checkNumber("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
 					try {
 						myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
 						end = true;
@@ -246,7 +242,8 @@ public class CLIUserMain {
 				}
 			}
 		} catch (NumberFormatException | ReservationException e) {
-			System.out.println(e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -342,16 +339,13 @@ public class CLIUserMain {
 					myCinema.addSeatToReservation(r, riga, colonna);
 					validSeat = true;
 				} catch (SeatAvailabilityException | RoomException | ReservationException e) {
-					System.out.println(e.getMessage());
+					System.out.println("Il posto selezionato risulta occupato o non esiste.");
 				} 
 			} while (!validSeat);
-			System.out.println("\nVuoi occupare altri posti? (Y/N)");
-			String occupaAltri = keyboard.nextLine().toUpperCase();
-			if (occupaAltri.contains("N")) {
+			boolean occupaAltri = checkAssertion("\nVuoi occupare altri posti? (Y/N)");
+			if (!occupaAltri) {
 				System.out.println("\nFase di occupazione posti terminata.\n\n");
 				end = true;
-			} else if ((!occupaAltri.equals("Y"))&&(!occupaAltri.equals("N"))){
-				System.out.println("Scelta non valida...");
 			}
 		} while (!end);
 	}
@@ -404,20 +398,15 @@ public class CLIUserMain {
 	private int selectProjection() {
 		boolean end = false;
 		int projectionId = 0;
-		System.out.println("1- SELEZIONE PROIEZIONE \n");
+		System.out.println("1- SELEZIONE PROIEZIONE ");
 		while (!end) {
-			System.out.println("\nInserisci il numero della proiezione che sei interessato visionare:  ");
+			System.out.println();
+			projectionId = checkNumber("\nInserisci il numero della proiezione che sei interessato visionare:  ");
 			try {
-				projectionId = Integer.parseInt(keyboard.nextLine());
-				try {
-					myCinema.getCurrentlyAvailableProjection(projectionId);
-					end = true;
-				} catch (ProjectionException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-			catch (InputMismatchException | NumberFormatException e){
-				System.out.println("\nInserisci solamente caratteri numerici.\n");
+				myCinema.getCurrentlyAvailableProjection(projectionId);
+				end = true;
+			} catch (ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 		return projectionId;
@@ -451,22 +440,15 @@ public class CLIUserMain {
 		int filmId = 0;
 		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI\n");
 		while (!end) {
-			System.out.println("Inserisci il numero del film di cui vuoi vedere maggiori dettagli e le sue"
-						+ " relative proiezioni:");
+			filmId = checkNumber("Inserisci il numero del film di cui vuoi vedere maggiori dettagli e le sue relative proiezioni:");
 			try {
-				filmId = Integer.parseInt(keyboard.nextLine());
-				try {
-					myCinema.getCurrentlyAvailableProjections(filmId);
-					end = true;
-				} catch (NoMovieException | ProjectionException e) {
-					System.out.println(e.getMessage());
-				}
+				myCinema.getCurrentlyAvailableProjections(filmId);
+				end = true;
+			} catch (NoMovieException | ProjectionException e) {
+				System.out.println(e.getMessage());
 			}
-			catch (InputMismatchException | NumberFormatException e){
-				System.out.println("\nInserisci solamente caratteri numerici.\n");
-			}
-			System.out.println("\n");
-		}
+			System.out.println("\n");	
+		}				
 		return filmId;
 	}
 
