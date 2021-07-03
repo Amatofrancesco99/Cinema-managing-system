@@ -65,17 +65,13 @@ public class CLIAdminMain {
 	}
 
 	private void removeProjections() {
-		System.out.println("\nVuoi rimuovere delle proiezioni esistenti? (Y/N)");
 		boolean end = false;
 		while (!end) {
+			System.out.println("Vuoi rimuovere delle proiezioni esistenti? (Y/N) ");
 			String choice = keyboard.nextLine();
 			if (choice.toUpperCase().equals("N")) {
 				end = true;
-			}
-			if (!choice.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
-				System.out.println("Scelta non valida...\n");
-			}
-			if (choice.toUpperCase().equals("Y")) {
+			} else if (choice.toUpperCase().equals("Y")) {
 				boolean removeEnd = false;
 				while (!removeEnd) {
 					showAllProjections();
@@ -83,21 +79,20 @@ public class CLIAdminMain {
 					int projectionId = Integer.parseInt(keyboard.nextLine());
 					try {
 						cinema.removeProjection(projectionId);
-					} catch (ProjectionException e) {
-						System.out.println(e.getMessage());
+					} catch (ProjectionException exception) {
+						System.out.println(exception.getMessage() + "\n");
 					}
-					System.out.println("\n\nVuoi rimuovere altre proiezioni? (Y/N) ");
+					System.out.println("\nVuoi rimuovere altre proiezioni? (Y/N) ");
 					String c = keyboard.nextLine();
 					if (c.toUpperCase().equals("N")) {
 						removeEnd = true;
 						end = true;
-					}
-					if (!c.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
-						System.out.println("Scelta non valida...\n");
-					}
-					if (c.toUpperCase().equals("Y")) {
+					} else if (!c.toUpperCase().equals("N") && !choice.toUpperCase().equals("Y")) {
+						System.out.println("Scelta non valida.\n");
 					}
 				}
+			} else {
+				System.out.println("Scelta non valida.\n");
 			}
 		}
 	}
@@ -111,68 +106,65 @@ public class CLIAdminMain {
 	}
 
 	private void insertNewProjections() {
-		System.out.println("Vuoi inserire nuove proiezioni? (Y/N)");
 		boolean end = false;
 		while (!end) {
+			System.out.println("Vuoi inserire nuove proiezioni? (Y/N) ");
 			String choice = keyboard.nextLine();
 			if (choice.toUpperCase().equals("N")) {
 				end = true;
-			}
-			if (!choice.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
-				System.out.println("Scelta non valida...\n");
-			}
-			if (choice.toUpperCase().equals("Y")) {
+			} else if (choice.toUpperCase().equals("Y")) {
 				boolean insertingEnd = false;
 				while (!insertingEnd) {
-					int p = insertProjectionID();
-					selectProjectionMovie(p);
-					selectProjectionRoom(p);
-					selectProjectionDateTime(p);
-					selectProjectionPrice(p);
+					int projection = insertProjectionID();
+					selectProjectionMovie(projection);
+					selectProjectionRoom(projection);
+					selectProjectionDateTime(projection);
+					selectProjectionPrice(projection);
 					insertingEnd = true;
-					System.out.println("\n\nVuoi inserire nuove proiezioni? (Y/N) ");
+					System.out.println("\nVuoi inserire nuove proiezioni? (Y/N) ");
 					String c = keyboard.nextLine();
 					if (c.toUpperCase().equals("N")) {
 						insertingEnd = true;
 						end = true;
 					}
-					if (!c.toUpperCase().equals("N") && (!choice.toUpperCase().equals("Y"))) {
-						System.out.println("Scelta non valida...\n");
-					}
-					if (c.toUpperCase().equals("Y")) {
+					if (!c.toUpperCase().equals("N") && !choice.toUpperCase().equals("Y")) {
+						System.out.println("Scelta non valida.\n");
 					}
 				}
+			} else {
+				System.out.println("Scelta non valida.\n");
 			}
 		}
 	}
 
-	private void selectProjectionDateTime(int p) {
+	private void selectProjectionDateTime(int projection) {
 		boolean end = false;
 		LocalDateTime projectionDateTime = null;
 		while (!end) {
-			System.out.println("\nInserisci la data della proiezione: (DD-MM-YYYY)");
+			System.out.println("Inserisci la data della proiezione (DD-MM-YYYY): ");
 			String date = keyboard.nextLine();
-			String[] parts1 = date.split("-");
-			int year = Integer.parseInt(parts1[2]);
-			int month = Integer.parseInt(parts1[1]);
-			int dayOfMonth = Integer.parseInt(parts1[0]);
-			System.out.println("\nInserisci l'ora della proiezione: (HH:MM)");
+			String[] tokens1 = date.split("-");
+			int year = Integer.parseInt(tokens1[2]);
+			int month = Integer.parseInt(tokens1[1]);
+			int dayOfMonth = Integer.parseInt(tokens1[0]);
+			System.out.println("Inserisci l'ora della proiezione (HH:MM): ");
 			String time = keyboard.nextLine();
-			String[] parts2 = time.split(":");
-			int hour = Integer.parseInt(parts2[0]);
-			int minute = Integer.parseInt(parts2[1]);
+			String[] tokens2 = time.split(":");
+			int hour = Integer.parseInt(tokens2[0]);
+			int minute = Integer.parseInt(tokens2[1]);
 			try {
 				projectionDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
-			} catch (Exception e) {
+			} catch (Exception exception) {
 
 			}
 			try {
 				if (projectionDateTime != null) {
-					cinema.setProjectionDateTime(p, projectionDateTime);
+					cinema.setProjectionDateTime(projection, projectionDateTime);
+					System.out.println();
 					end = true;
 				}
-			} catch (ProjectionException e) {
-				System.out.println(e.getMessage());
+			} catch (ProjectionException exception) {
+				System.out.println(exception.getMessage() + "\n");
 			}
 		}
 	}
@@ -180,7 +172,7 @@ public class CLIAdminMain {
 	private void selectProjectionPrice(int projection) {
 		boolean end = false;
 		while (!end) {
-			System.out.println("Inserisci il prezzo della proiezione: ");
+			System.out.println("Inserisci il prezzo della proiezione (EUR): ");
 			try {
 				cinema.setProjectionPrice(projection, Double.parseDouble(keyboard.nextLine()));
 				System.out.println();
@@ -239,9 +231,10 @@ public class CLIAdminMain {
 		boolean end = false;
 		int projectionId = -1;
 		while (!end) {
-			System.out.print("\nInserisci l'ID della proiezione da inserire: ");
+			System.out.print("\nInserisci l'ID della proiezione da aggiungere: ");
+			projectionId = Integer.parseInt(keyboard.nextLine());
 			try {
-				cinema.createProjectionWithID(Integer.parseInt(keyboard.nextLine()));
+				cinema.createProjectionWithID(projectionId);
 				System.out.println();
 				end = true;
 			} catch (ProjectionException exception) {
@@ -256,7 +249,7 @@ public class CLIAdminMain {
 		System.out.println("Gestione degli sconti\n");
 		boolean end = false;
 		while (!end) {
-			System.out.print("Vuoi cambiare la strategia di sconto delle prossime prenotazioni? (Y/N): ");
+			System.out.print("Vuoi cambiare la strategia di sconto delle prossime prenotazioni? (Y/N) ");
 			String choice = keyboard.nextLine().toUpperCase();
 			if (choice.equals("N")) {
 				System.out.println();
@@ -295,7 +288,7 @@ public class CLIAdminMain {
 		System.out.println("Gestione password\n");
 		boolean end = false;
 		while (!end) {
-			System.out.print("Vuoi cambiare la password? (Y/N): ");
+			System.out.print("Vuoi cambiare la password? (Y/N) ");
 			String choice = keyboard.nextLine().toUpperCase();
 			if (choice.equals("N")) {
 				System.out.println();
