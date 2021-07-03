@@ -1,8 +1,7 @@
 package cinema.view.cli.user;
 
 import java.time.LocalDate;
-import java.time.YearMonth; 
-import java.util.InputMismatchException;
+import java.time.YearMonth;
 import java.util.Scanner;
 
 import cinema.controller.Cinema;
@@ -21,457 +20,390 @@ import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
-
-/** BREVE DESCRIZIONE CLASSE CLIMain
+/**
+ * BREVE DESCRIZIONE CLASSE CLIMain
  * 
  * @author Screaming Hairy Armadillo Team
  *
- *  Questa classe permette allo spettatore di poter effettuare le operazioni principali 
- *  (visualizzare i film attualmente proiettati, visualizzare le proiezioni dei film,
- *  selezione di posti per la prenotazione della visione in sala, inserimento dati per
- *  poter effettuare sconti, pagamento e invio email da parte del cinema dell'avvenuta
- *  prenotazione con tutte le informazioni utili). Chiaramante la resa grafica della 
- *  WEBGui è molto più elevata, anche se le funzionalità sono le stesse.
+ *         Questa classe permette allo spettatore di poter effettuare le
+ *         operazioni principali (visualizzare i film attualmente proiettati,
+ *         visualizzare le proiezioni dei film, selezione di posti per la
+ *         prenotazione della visione in sala, inserimento dati per poter
+ *         effettuare sconti, pagamento e invio email da parte del cinema
+ *         dell'avvenuta prenotazione con tutte le informazioni utili).
+ *         Chiaramante la resa grafica della WEBGui è molto più elevata, anche
+ *         se le funzionalità sono le stesse.
  */
 public class CLIUserMain {
 
-	static Scanner keyboard = new Scanner(System.in);
-	static Cinema myCinema = new Cinema();
-	private final String separatore = "-----------------------------------------------------";
-	
-	/**
-	 * METODO Main, per eseguire la nostra CLI
-	 * @param args   Parametri in ingresso, nel nostro caso non servono, ne tanto meno
-	 * 				 vengono utilizzati.
-	 * @throws InvalidNumberPeopleValueException 
-	 */
-	public static void main(String[] args){	
-		new CLIUserMain();	
-	}
-	
-	public CLIUserMain() {
-		// INFORMAZIONI GENERALI DEL CINEMA E BENVENUTO AL CLIENTE
-		printHeader();
+	private Scanner keyboard;
+	private Cinema cinema;
+	private final int MAX_PAYMENT_ATTEMPTS = 3;
+	private final String SEPARATOR = "-----------------------------------------------------\n";
 
-		//MENU CHE ACCOGLIE IL CLIENTE
-		menu();	
+	/**
+	 * METODO Main, per avviare la CLI
+	 * 
+	 * @param args Parametri in ingresso, nel nostro caso non servono, ne tanto meno
+	 *             vengono utilizzati.
+	 * @throws InvalidNumberPeopleValueException
+	 */
+	public static void main(String[] args) {
+		new CLIUserMain();
 	}
-	
-	
-	private void menu() {		
-		boolean end = true;		
-		do {		
-			System.out.println("\nMENU");
-			System.out.println("\nCosa vuoi fare: \n\n1) Visualizzare i film disponibili \n2) Acquistare un biglietto \n3) Uscire \n");
-			int choice = checkNumber("Inserire la scelta: ");			
-			switch(choice) {
-				
-				case 1: printCurrentlyAvailableMovies();
-						end = backToMenu();
-						break;
-				
-				case 2: buyTicket();
-						end = backToMenu();
-						break;
-						
-				case 3: end = false;
-						break;
-				
-				default:System.out.println("\nInserisci un numero valido.");
-			}			
-		}while(end);		
+
+	public CLIUserMain() {
+		keyboard = new Scanner(System.in);
+		cinema = new Cinema();
+
+		printWelcomeMessage();
+
+		// Menu di scelta delle opzioni disponibili
+		boolean end = true;
+		do {
+			System.out.println(SEPARATOR + "\nMenu\n");
+			System.out.println("Inserisci il numero corrispondente all'azione che vuoi effettuare:\n\n"
+					+ "1) Visualizzare i film disponibili\n2) Acquistare un biglietto\n3) Uscire dall'applicazione\n");
+			switch (inputInt("Scelta: ")) {
+			case 1:
+				printCurrentlyAvailableMovies();
+				end = !backToMenu();
+				break;
+			case 2:
+				createReservation();
+				end = !backToMenu();
+				break;
+			case 3:
+				System.out.println();
+				end = true;
+				break;
+			default:
+				System.out.println("Inserisci il numero corrispondente a una scelta valida.\n");
+				end = false;
+				break;
+			}
+		} while (!end);
+
 		sayGoodbye();
 	}
-	
-	private void buyTicket() {		
-		// FILM ATTUALMENTE DISPONIBILI/PROIETTATI
-		printCurrentlyAvailableMovies();
-						
-		// FILM DI CUI SI VOGLIONO VEDERE LE PROIEZIONI E MAGGIORI DETTAGLI 
-		int movieID = askMovieId();
-		printMovieProjections(movieID);
-						
-		// CREAZIONE DI UNA NUOVA RESERVATION E INSERIMENTO DATI
-		printReservationHeader();
-		long r = myCinema.createReservation();
-		int projectionID = selectProjection();	// Selezione di una specifica proiezione
-		setReservationProjection(r, projectionID);
-		showProjectionSeats(r);	 	// Disposizione posti in sala e posti già occupati
-		addSeatsToReservation(r);	// Selezione di uno/più posto/i
-		insertPersonalData(r);		// Inserimento dati anagrafici
-		insertPaymentCardInfo(r);	// Inserimento dati pagamento
-		insertSpectatorsInfo(r);	// Inserimento informazioni persone insieme al compratore del biglietto
-		insertCouponInfo(r);		// Aggiungi un eventuale coupon alla prenotazione
-						
-		// EFFETTUA PAGAMENTO, SE QUALCOSA VA STORTO INSERISCO DI NUOVO 
-		while(!buy(r)) {
-			showProjectionSeats(r);	 	
-			addSeatsToReservation(r);
-			insertPaymentCardInfo(r);	
-			insertSpectatorsInfo(r);
-		}
-						
-		// SPEDIZIONE DELL'EMAIL AL CLIENTE, CONTENENTE IL REPORT
-		sendEmail(r); 
+
+	private void printWelcomeMessage() {
+		System.out.println(SEPARATOR);
+		System.out.println(cinema.getName() + "\n");
+		System.out.println(cinema.getLocation());
+		System.out.println(cinema.getEmail() + "\n");
+		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
+		System.out.println("Benvenuto!\n");
 	}
-	
-	
-	private int checkNumber(String str) {
-		boolean end = false;
-		int choice = 0;		
-		do {			
-			System.out.println(str);		
-			try {			
-				choice = Integer.parseInt(keyboard.nextLine());
-				end = true;			
-			}catch(NumberFormatException | InputMismatchException e) {			
-				System.out.println("\nInserisci un numero.\n");
-			}	
-		}while(!end);			
-		return choice;
-	}
-	
-	
-	private boolean checkAssertion(String str) {
-		boolean end = false;
-		do {
-			System.out.println(str);
-			String choice = keyboard.nextLine().toUpperCase();
-			if (choice.equals("Y")) 
-				return true;
-			else if ((!choice.equals("Y")) && (!choice.equals("N")))
-				System.out.println("Scelta non valida...");
-			else
-				end = true;
-		}while(!end);
-		return false;
-	}
-	
+
 	private boolean backToMenu() {
-		return checkAssertion("\n\nVuoi tornare al menu principale (Y) o preferisci uscire (N)? ");
+		boolean answer = inputBoolean("Vuoi tornare al menu principale (M) o preferisci uscire (U)? ", "M", "U");
+		System.out.println();
+		return answer;
 	}
 
-	private void sayGoodbye() {
-		System.out.println("\n\nGrazie, a presto!\n");
-		System.out.println(separatore);
+	private void printCurrentlyAvailableMovies() {
+		System.out.println("\n" + SEPARATOR + "\nFilm attualmente proiettati:\n");
+		for (Movie movie : cinema.getCurrentlyAvailableMovies()) {
+			System.out.println(movie.getId() + ")");
+			System.out.println(movie.getDefaultDescription());
+		}
 	}
 
-	
-	private void sendEmail(long r) {
-		System.out.println(separatore);
-		System.out.println("\nSPEDIZIONE EMAIL \n");
+	private void createReservation() {
+		printCurrentlyAvailableMovies();
+
+		int movie = askMovieId();
+		printMovieProjections(movie);
+
+		// Creazione di una nuova prenotazione e inserimento dei relativi dati
+		long reservation = cinema.createReservation();
+
+		// Selezione di una specifica proiezione
+		int projection = askProjectionId(movie);
 		try {
-			myCinema.sendReservationEmail(r);
-			System.out.println("Controlla le tue email ricevute, a breve ne riceverai una "
-					+ "con allegato un pdf contenente il resoconto della tua prenotazione.\n");
-		} catch (ReservationException | HandlerException e) {
-			System.out.println(e.getMessage());
+			cinema.setReservationProjection(reservation, projection);
+		} catch (ProjectionException | ReservationException exception) {
+			System.out.println(exception.getMessage() + "\n");
+		}
+
+		// Inserimento dati, pagamento e invio della ricevuta allo spettatore
+		showProjectionSeats(reservation);
+		addSeatsToReservation(reservation);
+		insertSpectatorData(reservation);
+		insertPaymentCardInfo(reservation);
+		insertSpectatorsInfo(reservation);
+		insertCouponInfo(reservation);
+		if (buy(reservation)) {
+			sendEmail(reservation);
 		}
 	}
 
-	
-	private boolean buy(long r){
-		boolean end = false;
-		System.out.println(separatore);
-		System.out.println("\nPAGAMENTO \n");
-		while (!end) {
+	private int askMovieId() {
+		do {
+			int movieId = inputInt("Inserisci il numero del film da guardare: ");
 			try {
-				myCinema.buyReservation(r);
-				System.out.print("Abbiamo scalato dalla tua carta inserita un ammontare pari "
-						+ "a: ");
-				System.out.print(String.format("%.02f", myCinema.getReservationTotalAmount(r)) + "€ " + "\n");
-				System.out.println("Il prezzo mostrato comprende sia lo sconto" 
-					   + " applicato dal nostro cinema, in base alle specifiche inserite, sia"
-					  + " lo sconto\ndell'eventuale coupon applicato.\n");
-				end = true;
-			} catch (PaymentErrorException | ReservationException | SeatAvailabilityException | RoomException | NumberFormatException | PersistenceException  e) {
-				System.out.println(e.getMessage());
-				return false;	
+				cinema.getCurrentlyAvailableProjections(movieId);
+				return movieId;
+			} catch (NoMovieException | ProjectionException exception) {
+				System.out.println(exception.getMessage() + "\n");
 			}
-		}
-		return true;
+		} while (true);
 	}
 
-
-	private void insertCouponInfo(long r) {
-		boolean end = false;
-		System.out.println("\n\n3.4- INSERIMENTO COUPON \n");
-		while (!end) {
-			// Aggiungi un coupon alla tua prenotazione
-			boolean usaCoupon = checkAssertion("\nVuoi utilizzare un coupon, ottenuto dal nostro cinema, per scontare il totale? (Y/N)");
-			if (usaCoupon) {
-				System.out.println("Inserisci il codice del coupon:  ");
-				String couponCode = keyboard.nextLine();
-				try {
-					myCinema.setReservationCoupon(r, couponCode);
-					end = true;
-				} catch (CouponException | ReservationException e) {
-					System.out.println(e.getMessage());
-				}
-			} 
-			else 
-				end = true;	
-		}
-	}
-
-
-	private void insertSpectatorsInfo(long r) {	
+	private void printMovieProjections(int movieId) {
 		try {
-			if (myCinema.getReservationTypeOfDiscount(r).equals("AGE")) {
-				try {
-					myCinema.setReservationNumberPeopleOverMaxAge(r, 0);
-					myCinema.setReservationNumberPeopleUntilMinAge(r, 0);
-				} catch (DiscountException | ReservationException e){
-					
-				}	
-				boolean end = false;
-				System.out.println("\n3.3- INSERIMENTO INFORMAZIONI SPETTATORI \n");
-				while (!end) {
-					// Aggiungi  informazioni di chi viene con te, per poter effettuare eventuali
-					// sconti
-					int nMin = checkNumber("Inserisci il numero di persone che hanno un età inferiore a " + (myCinema.getMinDiscountAge()) + " anni: ");
-					try {
-						myCinema.setReservationNumberPeopleUntilMinAge(r, nMin);
-					} catch (DiscountException | NumberFormatException | ReservationException e) {
-						System.out.println(e.getMessage());
-					}					
-					int nMax = checkNumber("Inserisci il numero di persone che hanno un età superiore a " + (myCinema.getMaxDiscountAge()) + " anni: ");
-					try {
-						myCinema.setReservationNumberPeopleOverMaxAge(r, nMax);
-						end = true;
-					} catch (DiscountException | NumberFormatException | ReservationException e) {
-						System.out.println(e.getMessage());
-					}		
-				}
+			cinema.getCurrentlyAvailableProjections(movieId);
+			System.out.println("\nMaggiori dettagli sul film selezionato:\n");
+			System.out.println(
+					cinema.getCurrentlyAvailableProjections(movieId).get(0).getMovie().getDetailedDescription());
+			System.out.println("Proiezioni programmate per questo film:\n");
+			for (Projection projection : cinema.getCurrentlyAvailableProjections(movieId)) {
+				System.out.println(projection.getId() + ")");
+				System.out.println(projection.toString());
 			}
-		} catch (NumberFormatException | ReservationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NoMovieException | ProjectionException exception) {
+			System.out.println(exception.getMessage() + "\n");
 		}
 	}
 
-
-	private void insertPaymentCardInfo(long r) {
-		boolean end = false;
-		while(!end) {
-			System.out.println("\n\n\n3.2- INSERIMENTO DATI PAGAMENTO \n");
-			System.out.println("\nInserisci il nome del titolare della carta:  ");
-			String owner = keyboard.nextLine();
-			System.out.println("\n");
-			System.out.println("\nInserisci il numero della carta: ");
-			String number = keyboard.nextLine();
-			System.out.println("\n");
-			YearMonth expirationDate = null;
-			String actualDate = LocalDate.now().toString().substring(0, 7);
-			YearMonth actual = YearMonth.parse(actualDate);
-			boolean validDate = false;
-			while(!validDate) {
-				System.out.println("\nInserisci la data di scadenza della carta (Anno-Mese): ");
-				String expD = keyboard.nextLine();
-				System.out.println("\n");
-				try {
-					expirationDate = YearMonth.parse(expD);
-					if(expirationDate.compareTo(actual) >= 0) 
-						validDate = true;
-					else
-						System.out.println("La data inserita non è valida.");
-				}
-				catch(Exception e) {
-					System.out.println("La data inserita non è valida.");
-				}
-			}
-			System.out.println("\nInserisci il CVV: ");
-			String cvv = keyboard.nextLine();
-			System.out.println("\n");
-			end = true;
+	private int askProjectionId(long movieId) {
+		do {
+			int projectionId = inputInt("Inserisci il numero della proiezione da prenotare: ");
 			try {
-				myCinema.setReservationPaymentCard(r, number, owner, cvv, expirationDate);
-			} catch (ReservationException e) {
-				System.out.println(e.getMessage());
+				cinema.getCurrentlyAvailableProjection(projectionId);
+				if (cinema.getProjectionMovie(projectionId).getId() != movieId) {
+					throw new ProjectionException("Inserisci il numero di una proiezione per il film scelto.");
+				}
+				return projectionId;
+			} catch (ProjectionException exception) {
+				System.out.println(exception.getMessage() + "\n");
 			}
+		} while (true);
+	}
+
+	private void showProjectionSeats(long reservation) {
+		System.out.println("\nDi seguito viene mostrata la disposizione dei posti in sala.");
+		System.out.println("I posti segnati con i trattini sono già stati occupati.\n");
+		try {
+			for (int i = 0; i < cinema.getNumberColsReservationProjection(reservation); i++) {
+				if (i == cinema.getNumberColsReservationProjection(reservation) / 2) {
+					System.out.print(" SCHERMO ");
+				} else {
+					System.out.print("---------");
+				}
+			}
+		} catch (ReservationException exception) {
+			System.out.println(exception.getMessage() + "\n");
+		}
+		System.out.println();
+		try {
+			for (int i = 0; i < cinema.getNumberRowsReservationProjection(reservation); i++) {
+				for (int j = 0; j < cinema.getNumberColsReservationProjection(reservation); j++) {
+					try {
+						if (!cinema.checkIfProjectionSeatIsAvailable(cinema.getReservationProjection(reservation), i,
+								j))
+							System.out.print(" ------- ");
+						else
+							System.out.print(String.format(" [ %s%-2d ] ", Room.rowIndexToRowLetter(i), j + 1));
+					} catch (RoomException | ProjectionException exception) {
+						System.out.println(exception.getMessage() + "\n");
+					}
+				}
+				System.out.println();
+			}
+		} catch (ReservationException exception) {
+			System.out.println(exception.getMessage() + "\n");
 		}
 	}
 
-
-	private void insertPersonalData(long r) {
-		boolean end = false;
-		System.out.println("\n3.1- INSERIMENTO DATI PERSONALI \n");
-		while (!end) {
-			// NOME, COGNOME, DATA DI NASCITA, EMAIL
-			System.out.println("Inserisci il tuo nome:  ");
-			String name = "";
-			name = keyboard.nextLine();
-			System.out.println("\n");
-			
-			System.out.println("Inserisci il tuo cognome:  ");
-			String surname = "";
-			surname = keyboard.nextLine();
-			System.out.println("\n");
-			
-			System.out.println("Inserisci la tua email:  ");
-			String email = "";
-			email = keyboard.nextLine();
-			
-			try {
-				myCinema.setReservationPurchaser(r, name, surname, email);
-				end = true;
-			} catch (InvalidSpectatorInfoException | ReservationException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
-
-	
-	private void addSeatsToReservation(long r) {
-		boolean end = false;
+	private void addSeatsToReservation(long reservation) {
 		do {
 			boolean validSeat = false;
+			System.out.println();
 			do {
-				System.out.println("\nInserisci il posto che vuoi occupare:\n");
-				String posto = "";
-				posto = keyboard.nextLine();
-				System.out.println("\n");
+				System.out.print("Inserisci un posto da occupare: ");
+				String seat = keyboard.nextLine().toUpperCase();
 				int riga = -1, colonna = -1;
 				try {
-					riga = Room.rowLetterToRowIndex(posto.replaceAll("\\d",""));
-					colonna = Integer.valueOf(posto.replaceAll("[\\D]", "")) - 1;
-				}
-				catch (Exception e) {
+					riga = Room.rowLetterToRowIndex(seat.replaceAll("\\d", ""));
+					colonna = Integer.valueOf(seat.replaceAll("[\\D]", "")) - 1;
+				} catch (Exception exception) {
+
 				}
 				try {
-					myCinema.addSeatToReservation(r, riga, colonna);
+					cinema.addSeatToReservation(reservation, riga, colonna);
+					System.out.println();
 					validSeat = true;
-				} catch (SeatAvailabilityException | RoomException | ReservationException e) {
-					System.out.println("Il posto selezionato risulta occupato o non esiste.");
-				} 
+				} catch (SeatAvailabilityException | RoomException | ReservationException exception) {
+					System.out.println("Il posto selezionato risulta occupato o non esiste.\n");
+					validSeat = false;
+				}
 			} while (!validSeat);
-			boolean occupaAltri = checkAssertion("\nVuoi occupare altri posti? (Y/N)");
-			if (!occupaAltri) {
-				System.out.println("\nFase di occupazione posti terminata.\n\n");
-				end = true;
+		} while (inputBoolean("Vuoi occupare altri posti? (S/N) ", "S", "N"));
+	}
+
+	private void insertSpectatorData(long reservation) {
+		System.out.println();
+		do {
+			System.out.print("Inserisci il tuo nome: ");
+			String name = keyboard.nextLine();
+			System.out.print("Inserisci il tuo cognome: ");
+			String surname = keyboard.nextLine();
+			System.out.print("Inserisci la tua email: ");
+			String email = keyboard.nextLine();
+			try {
+				cinema.setReservationPurchaser(reservation, name, surname, email);
+				return;
+			} catch (InvalidSpectatorInfoException | ReservationException exception) {
+				System.out.println(exception.getMessage() + "\n");
+			}
+		} while (true);
+	}
+
+	private void insertPaymentCardInfo(long reservation) {
+		System.out.println();
+		boolean end = false;
+		do {
+			System.out.print("Inserisci nome e cognome del titolare della carta di credito: ");
+			String owner = keyboard.nextLine();
+			System.out.print("Inserisci il numero della carta di credito: ");
+			String number = keyboard.nextLine();
+			YearMonth expirationDate = null;
+			YearMonth currentYearMonth = YearMonth.parse(LocalDate.now().toString().substring(0, 7));
+			boolean validDate = false;
+			do {
+				System.out.print("Inserisci la data di scadenza della carta di credito (YYYY-MM): ");
+				try {
+					expirationDate = YearMonth.parse(keyboard.nextLine());
+					if (expirationDate.compareTo(currentYearMonth) >= 0) {
+						validDate = true;
+					} else {
+						throw new Exception();
+					}
+				} catch (Exception exception) {
+					System.out.println("La data inserita non è valida.\n");
+				}
+			} while (!validDate);
+			System.out.print("Inserisci il CVV della carta di credito: ");
+			String cvv = keyboard.nextLine();
+			end = true;
+			try {
+				cinema.setReservationPaymentCard(reservation, number, owner, cvv, expirationDate);
+			} catch (ReservationException exception) {
+				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (!end);
 	}
 
-
-	private void showProjectionSeats(long r) {
-			System.out.println("\n2- SELEZIONE POSTO/I\n");
-			System.out.println("Disposizione sala e posti liberi.");
-			System.out.println("I posti segnati con i trattini sono già occupati.\n\n");
-			try {
-				for (int i = 0; i < myCinema.getNumberColsReservationProjection(r); i++) {
-					if (i == myCinema.getNumberColsReservationProjection(r)/2 )
-						 System.out.print("  SCHERMO   ");
-					else System.out.print("--------");
+	private void insertSpectatorsInfo(long reservation) {
+		System.out.println();
+		try {
+			if (cinema.getReservationTypeOfDiscount(reservation).equals("AGE")) {
+				try {
+					cinema.setReservationNumberPeopleOverMaxAge(reservation, 0);
+					cinema.setReservationNumberPeopleUntilMinAge(reservation, 0);
+				} catch (DiscountException | ReservationException exception) {
+					// Nessuna eccezione da gestire qui
 				}
-			} catch (ReservationException e) {
-				System.out.println(e.getMessage());
-			}
-			System.out.println();
-			try {
-				for (int i = 0; i < myCinema.getNumberRowsReservationProjection(r); i++) {
-					for (int j = 0; j < myCinema.getNumberColsReservationProjection(r); j++) {
-						try {
-							if (!myCinema.checkIfProjectionSeatIsAvailable(myCinema.getReservationProjection(r), i, j))
-								System.out.print(" ------ ");
-							else 
-								System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
-						} catch (RoomException | ProjectionException e) {
-							System.out.println(e.getMessage());
-						}
+				boolean end = false;
+				do {
+					int nMin = inputInt("Inserisci il numero di persone di età inferiore a "
+							+ cinema.getMinDiscountAge() + " anni: ");
+					int nMax = inputInt("Inserisci il numero di persone di età superiore a "
+							+ cinema.getMaxDiscountAge() + " anni: ");
+					try {
+						cinema.setReservationNumberPeopleUntilMinAge(reservation, nMin);
+						cinema.setReservationNumberPeopleOverMaxAge(reservation, nMax);
+						end = true;
+					} catch (DiscountException | NumberFormatException | ReservationException exception) {
+						System.out.println(exception.getMessage() + "\n");
 					}
-					System.out.println("");
+				} while (!end);
+			}
+		} catch (NumberFormatException | ReservationException exception) {
+			System.out.println(exception.getMessage() + "\n");
+		}
+	}
+
+	private void insertCouponInfo(long reservation) {
+		System.out.println();
+		if (inputBoolean("Hai un codice coupon erogato dal nostro cinema da applicare al totale? (S/N) ", "S", "N")) {
+			do {
+				System.out.print("Inserisci il codice coupon: ");
+				try {
+					cinema.setReservationCoupon(reservation, keyboard.nextLine());
+					return;
+				} catch (CouponException | ReservationException exception) {
+					System.out.println(exception.getMessage() + "\n");
 				}
-			} catch (ReservationException e) {
-				System.out.println(e.getMessage());
-			}
-	}
-
-
-	private void setReservationProjection(long r, int projectionId) {
-		System.out.println("\n");
-		try {
-			myCinema.setReservationProjection(r, projectionId);
-		} catch (ProjectionException | ReservationException e) {
-			System.out.println(e.getMessage());
+			} while (true);
 		}
 	}
 
-
-	private int selectProjection() {
-		boolean end = false;
-		int projectionId = 0;
-		System.out.println("1- SELEZIONE PROIEZIONE ");
-		while (!end) {
-			System.out.println();
-			projectionId = checkNumber("\nInserisci il numero della proiezione che sei interessato visionare:  ");
+	private boolean buy(long reservation) {
+		int attempts = 0;
+		System.out.println("\n" + SEPARATOR);
+		System.out.println("Pagamento:\n");
+		do {
 			try {
-				myCinema.getCurrentlyAvailableProjection(projectionId);
-				end = true;
-			} catch (ProjectionException e) {
-				System.out.println(e.getMessage());
+				attempts++;
+				System.out.println("Tentativo di transazione in corso...");
+				cinema.buyReservation(reservation);
+				System.out.print("\nAbbiamo scalato dalla tua carta di credito l'importo di ");
+				System.out.print(String.format("%.02f €\n", cinema.getReservationTotalAmount(reservation)));
+				System.out.println(
+						"Il prezzo comprende sia lo sconto applicato dal nostro cinema in base ai dati inseriti,\n"
+								+ "sia lo sconto dell'eventuale coupon applicato (se inserito precedentemente).");
+				return true;
+			} catch (PaymentErrorException | ReservationException | SeatAvailabilityException | RoomException
+					| NumberFormatException | PersistenceException exception) {
+				System.out.println(exception.getMessage() + "\n");
 			}
-		}
-		return projectionId;
+		} while (attempts < MAX_PAYMENT_ATTEMPTS);
+		System.out.println("Impossibile completare la transazione. Riprova più tardi.");
+		return false;
 	}
 
-
-	private void printReservationHeader() {
-		System.out.println(separatore + "\n\n");
-		System.out.println("COMPILAZIONE PRENOTAZIONE\n");
-	}
-
-
-	private void printMovieProjections(int movieID) {
+	private void sendEmail(long reservation) {
+		System.out.println("\n" + SEPARATOR);
+		System.out.println("Invio prenotazione per e-mail:\n");
 		try {
-			myCinema.getCurrentlyAvailableProjections(movieID);
-			System.out.println("Maggiori dettagli sul film\n");
-			System.out.println(myCinema.getCurrentlyAvailableProjections(movieID).get(0).getMovie().getDetailedDescription());
-			System.out.println("Proiezioni previste\n");
-			for (Projection p : myCinema.getCurrentlyAvailableProjections(movieID)) {
-				System.out.println(p.getId() + ")");
-				System.out.println(p.toString());
-			}
-		} catch (NoMovieException | ProjectionException e) {
-			System.out.println(e.getMessage());
-		}		
-	}
-
-
-	private int askMovieId() {
-		boolean end = false;
-		int filmId = 0;
-		System.out.println("MAGGIORI DETTAGLI FILM E PROIEZIONI\n");
-		while (!end) {
-			filmId = checkNumber("Inserisci il numero del film di cui vuoi vedere maggiori dettagli e le sue relative proiezioni:");
-			try {
-				myCinema.getCurrentlyAvailableProjections(filmId);
-				end = true;
-			} catch (NoMovieException | ProjectionException e) {
-				System.out.println(e.getMessage());
-			}
-			System.out.println("\n");	
-		}				
-		return filmId;
-	}
-
-
-	private void printHeader() {
-		System.out.println(separatore + "\n");
-		System.out.println(myCinema.getName().toUpperCase()+"\n");
-		System.out.println("Puoi trovarci in: " + myCinema.getLocation() + "\n");
-		System.out.println("Contattaci: " + myCinema.getEmail() + "\n\n");
-		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
-		System.out.println(separatore + "\n");
-	}
-	
-	
-	private void printCurrentlyAvailableMovies() {
-		System.out.println("FILM ATTUALMENTE PROIETTATI \n");
-		for (Movie m : myCinema.getCurrentlyAvailableMovies()) {
-			System.out.println(m.getId() + ")");
-			System.out.println(m.getDefaultDescription());
+			cinema.sendReservationEmail(reservation);
+			System.out.println("Controlla la tua casella di posta.\n"
+					+ "A breve riceverai un'e-mail contenente la ricevuta della tua prenotazione.\n\n"
+					+ "Grazie di averci scelto!\n");
+		} catch (ReservationException | HandlerException exception) {
+			System.out.println(exception.getMessage() + "\n");
 		}
-		System.out.println(separatore + "\n");
 	}
+
+	private void sayGoodbye() {
+		System.out.println(SEPARATOR + "\nGrazie, a presto!");
+	}
+
+	private int inputInt(String question) {
+		do {
+			System.out.print(question);
+			try {
+				return Integer.parseInt(keyboard.nextLine());
+			} catch (NumberFormatException exception) {
+				System.out.println("Inserisci un numero.\n");
+			}
+		} while (true);
+	}
+
+	private boolean inputBoolean(String question, String onTrue, String onFalse) {
+		do {
+			System.out.print(question);
+			String choice = keyboard.nextLine().toUpperCase();
+			if (choice.equals(onTrue)) {
+				return true;
+			} else if (choice.equals(onFalse)) {
+				return false;
+			}
+			System.out.println(String.format("Inserisci %s o %s.\n", onTrue, onFalse));
+		} while (true);
+	}
+
 }

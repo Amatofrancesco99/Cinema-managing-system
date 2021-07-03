@@ -39,9 +39,7 @@ public class CLIAdminMain {
 		cinema = new Cinema();
 
 		// Informazioni generali sul cinema, messaggio di benvenuto e login
-		System.out.println(SEPARATOR);
-		System.out.println(cinema.getName());
-		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
+		printWelcomeMessage();
 		welcomeAndLogin();
 
 		// Cambio della password
@@ -55,6 +53,15 @@ public class CLIAdminMain {
 
 		// Terminazione dell'applicazione
 		System.out.println("\nA presto!");
+	}
+
+	private void printWelcomeMessage() {
+		System.out.println(SEPARATOR);
+		System.out.println(cinema.getName() + "\n");
+		System.out.println(cinema.getLocation());
+		System.out.println(cinema.getEmail() + "\n");
+		System.out.println("Sviluppato da Screaming Hairy Armadillo Team\n");
+		System.out.println(SEPARATOR);
 	}
 
 	private void insertOrRemoveProjections() {
@@ -113,7 +120,7 @@ public class CLIAdminMain {
 			if (choice.toUpperCase().equals("N")) {
 				end = true;
 			} else if (choice.toUpperCase().equals("Y")) {
-				int projection = insertProjectionID();
+				int projection = insertProjectionId();
 				selectProjectionMovie(projection);
 				selectProjectionRoom(projection);
 				selectProjectionDateTime(projection);
@@ -214,7 +221,7 @@ public class CLIAdminMain {
 		}
 	}
 
-	private int insertProjectionID() {
+	private int insertProjectionId() {
 		boolean end = false;
 		int projectionId = -1;
 		while (!end) {
