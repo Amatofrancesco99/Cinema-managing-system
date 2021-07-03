@@ -332,32 +332,26 @@ public class CLIAdminMain {
 		}
 	}
 
-	
 	private static void welcomeAndLogin() {
 		System.out.println("BENVENUTO ADMIN");
 		boolean end = false;
-		int attempt = 0;
+		int attempts = 0;
 		while (!end) {
 			System.out.println("\nInserisci la password: ");
 			String password = keyboard.nextLine();
 			try {
 				myCinema.login(password);
 				end = true;
-			} catch (PasswordException e) {
-				attempt++;
-				System.out.println(e.getMessage());
+			} catch (PasswordException exception) {
+				attempts++;
+				System.out.println(exception.getMessage());
 			}
-			/* Se non ricordo la password per più di N volte allora la cambio
-			* e faccio il login nuovamente 
-			* */
-			if (attempt == MAX_ATTEMPTS) {
-				attempt = 0;
+			if (attempts == MAX_ATTEMPTS) {
 				System.out.println("\nSembra che non ricordi più la password...\n");
-				changePassword();
+				System.exit(1);
 			}
 		}
 	}
-
 	
 	private static void printHeader() {
 		System.out.println("-----------------------------------------------------\n");
