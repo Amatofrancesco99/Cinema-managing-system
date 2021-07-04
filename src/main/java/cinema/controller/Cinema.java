@@ -60,7 +60,6 @@ public class Cinema {
 	 * @param adminPassword      	Password dell'amministratore del cinema
 	 * @param cinemaReservations 	List: comprende tutte le prenotazioni del cinema
 	 * @param cinemaDiscount     	Sconto attivo
-	 * @param allDiscounts       	Tutti gli sconti applicabili
 	 * @param persistenceFacade
 	 */
 	private String name;
@@ -76,7 +75,6 @@ public class Cinema {
 	private Projection newProjection;
 	private List<Reservation> cinemaReservations;
 	private Discount cinemaDiscount;
-	private ArrayList<Discount> allDiscounts;
 	private PersistenceFacade persistenceFacade;
 
 	/**
@@ -102,12 +100,8 @@ public class Cinema {
 		cinemaReservations = new ArrayList<Reservation>();
 		try {
 			cinemaDiscount = persistenceFacade.getAgeDiscounts();
-			allDiscounts = new ArrayList<Discount>();
-			addDiscount(persistenceFacade.getAgeDiscounts());
-			addDiscount(persistenceFacade.getAllDayDiscounts());
-			addDiscount(persistenceFacade.getGroupDiscounts());
 		} catch (PersistenceException e1) { 
-			// non gestiamo l'eccezione
+			// unhandled exception
 		}
 
 			//occupazione dei posti
@@ -812,45 +806,36 @@ public class Cinema {
 	 * 
 	 * @param td
 	 * @throws DiscountNotFoundException
+	 * @throws PersistenceException 
 	 */
-	public void setCinemaDiscountStrategy(TypeOfDiscounts td) throws DiscountNotFoundException {
+	public void setCinemaDiscountStrategy(TypeOfDiscounts td) throws DiscountNotFoundException, PersistenceException {
 		cinemaDiscount = this.getDiscountByStrategy(td);
 	}
 
-	/**
-	 * METODO per aggiungere una strategia di sconto alla lista Non si può
-	 * aggiungere uno sconto di una tipologià già esistente
+	
+	/** METODO per farsi dire tutte le strategie che il cinema ha presente nel db
 	 * 
-	 * @param d
+	 * @return
+	 * @throws PersistenceException
 	 */
-	public void addDiscount(Discount d) {
-		boolean alreadyExists = false;
-		for (TypeOfDiscounts td : getAllDiscountStrategy()) {
-			if (d.getTypeOfDiscount().equals(td))
-				alreadyExists = true;
-		}
-		if (!alreadyExists)
-			allDiscounts.add(d);
+	public ArrayList<Discount> getAllCinemaDiscounts() throws PersistenceException {
+		ArrayList<Discount> allDiscounts = new ArrayList<Discount>();
+		allDiscounts.add(persistenceFacade.getAgeDiscounts());
+		allDiscounts.add(persistenceFacade.getAllDayDiscounts());
+		allDiscounts.add(persistenceFacade.getGroupDiscounts());
+		return allDiscounts;
 	}
-
-	/**
-	 * METODO per rimuovere una strategia di sconto dalla lista, dato il suo tipo
-	 * 
-	 * @param td
-	 * @throws DiscountNotFoundException
-	 */
-	public void removeDiscount(TypeOfDiscounts td) throws DiscountNotFoundException {
-		allDiscounts.remove(getDiscountByStrategy(td));
-	}
-
+	
+	
 	/**
 	 * METODO per farsi dire tutte le tipologie di sconto applicabili
 	 * 
 	 * @param td
+	 * @throws PersistenceException 
 	 */
-	public ArrayList<TypeOfDiscounts> getAllDiscountStrategy() {
+	public ArrayList<TypeOfDiscounts> getAllDiscountStrategy() throws PersistenceException {
 		ArrayList<TypeOfDiscounts> allTypeOfDiscounts = new ArrayList<TypeOfDiscounts>();
-		for (Discount d : this.allDiscounts) {
+		for (Discount d : getAllCinemaDiscounts()) {
 			if (!allTypeOfDiscounts.contains(d.getTypeOfDiscount())) {
 				allTypeOfDiscounts.add(d.getTypeOfDiscount());
 			}
@@ -864,10 +849,11 @@ public class Cinema {
 	 * @param t
 	 * @return
 	 * @throws DiscountNotFoundException
+	 * @throws PersistenceException 
 	 */
-	public Discount getDiscountByStrategy(TypeOfDiscounts t) throws DiscountNotFoundException {
+	public Discount getDiscountByStrategy(TypeOfDiscounts t) throws DiscountNotFoundException, PersistenceException {
 		Discount discount = null;
-		for (Discount d : allDiscounts) {
+		for (Discount d : getAllCinemaDiscounts()) {
 			if (d.getTypeOfDiscount() == t) {
 				discount = d;
 			}
@@ -878,7 +864,7 @@ public class Cinema {
 			return discount;
 	}
 
-	public String getDiscountStrategyDescription(TypeOfDiscounts t) throws DiscountNotFoundException {
+	public String getDiscountStrategyDescription(TypeOfDiscounts t) throws DiscountNotFoundException, PersistenceException {
 		return getDiscountByStrategy(t).toString();
 	}
 
