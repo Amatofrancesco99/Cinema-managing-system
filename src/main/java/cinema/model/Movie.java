@@ -56,9 +56,9 @@ public class Movie {
 		return "Titolo:\t" + this.getTitle() + "\n"
 			 + "Breve trama: " + this.getDescription().substring(0, (this.getDescription().length() <= 240 ? this.getDescription().length() : 240 )).replaceAll("(.{100})", "$1\n             ") 
 			 + "...\n"
-			 + "Genere/i: " + this.getGenres().toString() + "\n"
+			 + "Genere/i: " + this.getGenres().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n"
 			 + "Rating: " + this.getRating() + "\n"
-			 + "Durata: " + this.getDuration() + " min.\n\n";
+			 + "Durata: " + this.getDuration() + " min.\n";
 	}
 	
 	/**
@@ -68,12 +68,12 @@ public class Movie {
 	public String getDetailedDescription() {
 		return "Titolo:\t" + this.getTitle() + "\n"
 			 + "Trama: " + this.getDescription().replaceAll("(.{100})", "$1\n       ") + "\n"
-			 + "Genere/i: " + this.getGenres().toString() + "\n"
-			 + "Regista/i: " + this.getDirectors().toString() + "\n"
-			 + "Cast: " + this.getCast().toString() + "\n"
-			 + "Rating: " + this.getRating() + "\n"
+			 + "Genere/i: " + this.getGenres().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n"
+			 + "Regista/i: " + this.getDirectors().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n"
+			 + "Cast: " + this.getCast().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n"
+			 + "Rating: " + this.getRating() + "/5\n"
 			 + "Durata: " + this.getDuration() + " min.\n"
-			 + "Trailer (URL): " + this.getTrailerURL() + "\n\n";
+			 + "Trailer (URL): " + this.getTrailerURL() + "\n";
 	}
 	
 	
