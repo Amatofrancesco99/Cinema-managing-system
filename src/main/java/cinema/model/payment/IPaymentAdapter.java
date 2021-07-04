@@ -1,14 +1,13 @@
 package cinema.model.payment;
 
-/** BREVE DESCRIZIONE PAYMENT
+/**
+ * Contiene i metodi di cui uno strumento di pagamento dovrebbe disporre.
  * 
- * @author Screaming HairyArmadillo Team
+ * @author Screaming Hairy Armadillo Team
  *
- * Interfaccia che rappresenta i metodi che uno strumento
- * di pagamento dovrebbero avere
  */
 public interface IPaymentAdapter {
-	
+
 	public boolean pay(double amount);
 
 }

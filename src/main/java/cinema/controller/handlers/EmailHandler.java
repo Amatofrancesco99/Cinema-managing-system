@@ -20,75 +20,88 @@ import javax.mail.internet.MimeMultipart;
 import cinema.model.reservation.Reservation;
 import cinema.controller.handlers.util.HandlerException;
 
-
-/** BREVE DESCRIZIONE CLASSE EmailHandler
+/**
+ * Gestisce l'invio dell'e-mail, da parte del cinema, all'utente che ha concluso
+ * una prenotazione.
  * 
- * @author Screaming HairyArmadillo
- * 
- * Questa classe serve per effettuare l'invio tramite email da parte del cinema, all'utente 
- * che sta prenotando, del report .pdf della prenotazione stessa.
+ * @author Screaming Hairy Armadillo Team
+ *
  */
 public class EmailHandler {
-	
-	/** 
-	 * ATTRIBUTI
-	 * @param email
-	 * @param password
-	 * @param name
+
+	/**
+	 * E-mail del cinema.
 	 */
 	private String email;
-	private String password;
-	private String name;
-	private String location;
-	private String logoURL;
-	
+
 	/**
-	 * COSTRUTTORE
-	 * @param name
-	 * @param email
-	 * @param password
-	 * @param location
-	 * @param logo URL
+	 * Password dell'e-mail del cinema.
 	 */
-	public EmailHandler (String name, String email, String password, String location, String logoURL) {
+	private String password;
+
+	/**
+	 * Nome del cinema.
+	 */
+	private String name;
+
+	/**
+	 * Ubicazione del cinema.
+	 */
+	private String location;
+
+	/**
+	 * URL del logo del cinema.
+	 */
+	private String logoURL;
+
+	/**
+	 * Costruttore del gestore dell'e-mail.
+	 * 
+	 * @param name     nome del cinema.
+	 * @param email    e-mail del cinema.
+	 * @param password password dell'e-mail del cinema.
+	 * @param location ubicazione del cinema.
+	 * @param logoURL  URL del logo del cinema (iconfinder.com).
+	 */
+	public EmailHandler(String name, String email, String password, String location, String logoURL) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.location = location;
 		this.logoURL = logoURL;
 	}
-	
+
 	/**
-	 * METODO per effettuare l'invio dell'email
-	 * @param r						Prenotazione da inviare
-	 * @throws HandlerException 	Eccezione lanciata qualora ci fosse un problema o nella
-	 * 								spedizione via email del report, o nella generazione di
-	 * 								quest ultimo.
+	 * Invia l'e-mail allo spettatore.
+	 * 
+	 * @param reservation prenotazione da inviare.
+	 * @throws HandlerException se ci fosse un problema nella spedizione del report
+	 *                          o nella sua generazione.
 	 */
-	public void sendEmail(Reservation r) throws HandlerException {
+	public void sendEmail(Reservation reservation) throws HandlerException {
 		ReportHandler reportHandler = new ReportHandler(name, email, location, logoURL);
-	    Thread emailThread = new Thread() {
+		Thread emailThread = new Thread() {
 			@Override
 			public void run() {
 				try {
-					// prima di inviare l'email verifico che il report sia già stato generato, 
+					// Prima di inviare l'email si verifica che il report sia già stato generato,
 					// se non è ancora stato generato lo genero
-					if (r.getReportLocation() == null) {
-						reportHandler.createReport(r);
+					if (reservation.getReportLocation() == null) {
+						reportHandler.createReport(reservation);
 					}
-					
-					// Stabilire le informazioni sul sender ed il receiver dell'email
-					String to = r.getPurchaser().getEmail(); //receiver email
-					String user = email; //sender email (cinema)
-					   
-					// Configurazione delle proprietà dell'email
+
+					// Stabilisce le informazioni sul sender ed il receiver dell'email
+					String to = reservation.getPurchaser().getEmail(); // Receiver email
+					String user = email; // Sender email (cinema)
+
+					// Configura le proprietà dell'email
 					Properties properties = setUpMainProperties(user, password);
 
-				    // Generazione di una nuova sessione mail
-				    Session session = startNewSession(user,password,properties);
-					   
-				    //Tentativo di composizione del messaggio ed invio dell'email
-				    createMessageAndSendEmail(session,user,to,r);
+					// Genera una nuova sessione mail
+					Session session = startNewSession(user, password, properties);
+
+					// Tenta la composizione del messaggio e l'invio dell'email
+					createMessageAndSendEmail(session, user, to, reservation);
 				} catch (HandlerException exception) {
 					System.out.println(exception.getMessage());
 				}
@@ -97,126 +110,135 @@ public class EmailHandler {
 		emailThread.start();
 	}
 
-	
-	/** METODO per effettuare la creazione del messaggio da inviare e l'invio dell'email
-	 * @throws HandlerException */
-	private void createMessageAndSendEmail(Session session, String user, String to, Reservation r) throws HandlerException {
-		try{  
-			// Configurazione proprietà basilari dell'email
-			Message message = createBasicMailProperties(session,user,to,r);
-		     
-			// Creazione del body dell'email
-			BodyPart messageBodyPart1 = createMailBody(r);
-		      
-			// Aggiungere all'email come allegato il report della prenotazione      
-			MimeBodyPart messageBodyPart2 = createMailReport(r);
-		     
-			// Creazione di un campo multipart comprendente body e allegato    
-			addBodyAndReportToMail(message, messageBodyPart1, messageBodyPart2);  
-		     
-			// Invio dell'email
-			Transport.send(message);   
-			}
-			catch (MessagingException ex) {
-				throw new HandlerException("Si è verificato un problema nella spedizione via email del tuo report.");
-			}  
+	/**
+	 * Effettua le creazione del messaggio da inviare e invia l'e-mail.
+	 * 
+	 * @param session     sessione e-mail generata per la specifica prenotazione.
+	 * @param user        mittente dell'e-mail (cinema).
+	 * @param to          destinatario dell'e-mail (spettatore).
+	 * @param reservation prenotazione da inviare.
+	 * @throws HandlerException se ci fosse un problema nella spedizione del report
+	 *                          o nella sua generazione.
+	 */
+	private void createMessageAndSendEmail(Session session, String user, String to, Reservation reservation)
+			throws HandlerException {
+		try {
+			// Configura le proprietà basilari dell'email
+			Message message = createBasicMailProperties(session, user, to, reservation);
+
+			// Crea il body dell'email
+			BodyPart messageBodyPart1 = createMailBody(reservation);
+
+			// Aggiunge, all'email, il report della prenotazione in allegato
+			MimeBodyPart messageBodyPart2 = createMailReport(reservation);
+
+			// Crea un campo multipart comprendente body e allegato
+			addBodyAndReportToMail(message, messageBodyPart1, messageBodyPart2);
+
+			// Invia l'email
+			Transport.send(message);
+		} catch (MessagingException ex) {
+			throw new HandlerException("Si è verificato un problema nella spedizione via email del tuo report.");
+		}
 	}
 
-	
-	/** METODO per aggiungere all'email il body ed il report in allegato
+	/**
+	 * Aggiunge all'e-mail il body ed il report in allegato.
 	 * 
-	 * @param message
-	 * @param messageBodyPart1
-	 * @param messageBodyPart2
-	 * @throws MessagingException
+	 * @param message          contenitore con le proprietà dell'email.
+	 * @param messageBodyPart1 body dell'e-mail.
+	 * @param messageBodyPart2 allegato dell'e-mail.
+	 * @throws MessagingException se ci sono problemi nella generazione dell'e-mail.
 	 */
-	private void addBodyAndReportToMail(Message message, BodyPart messageBodyPart1, MimeBodyPart messageBodyPart2) throws MessagingException {
-		Multipart multipart = new MimeMultipart();  
-		multipart.addBodyPart(messageBodyPart1);  
-		multipart.addBodyPart(messageBodyPart2);  
+	private void addBodyAndReportToMail(Message message, BodyPart messageBodyPart1, MimeBodyPart messageBodyPart2)
+			throws MessagingException {
+		Multipart multipart = new MimeMultipart();
+		multipart.addBodyPart(messageBodyPart1);
+		multipart.addBodyPart(messageBodyPart2);
 		message.setContent(multipart);
 	}
 
-
-	/** METODO per creare l'allegato per l'email
+	/**
+	 * Crea l'allegato dell'e-mail. Allega il report della prenotazione.
 	 * 
-	 * @param r
-	 * @return
-	 * @throws MessagingException
+	 * @param reservation prenotazione da inviare.
+	 * @return il report allegato all'email.
+	 * @throws MessagingException se ci sono problemi nella generazione dell'e-mail.
 	 */
-	private MimeBodyPart createMailReport(Reservation r) throws MessagingException {
-		MimeBodyPart messageBodyPart2 = new MimeBodyPart();  
-		String filename = r.getReportLocation();
-		DataSource source = new FileDataSource(filename);  
-		messageBodyPart2.setDataHandler(new DataHandler(source));  
-		messageBodyPart2.setFileName("Reservation_"+Long.toString(r.getProgressive())+".pdf"); 
+	private MimeBodyPart createMailReport(Reservation reservation) throws MessagingException {
+		MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+		String filename = reservation.getReportLocation();
+		DataSource source = new FileDataSource(filename);
+		messageBodyPart2.setDataHandler(new DataHandler(source));
+		messageBodyPart2.setFileName("Reservation_" + Long.toString(reservation.getProgressive()) + ".pdf");
 		return messageBodyPart2;
 	}
 
-
-	/** METODO per creare il testo principale (body) dell'email
+	/**
+	 * Crea il testo principale (body) dell'email.
 	 * 
-	 * @param r
-	 * @throws MessagingException
+	 * @param reservation prenotazione da inviare.
+	 * @return il body dell'e-mail.
+	 * @throws MessagingException se ci sono problemi nella generazione dell'e-mail.
 	 */
-	private BodyPart createMailBody(Reservation r) throws MessagingException { 
-		BodyPart messageBodyPart1 = new MimeBodyPart();  
-		messageBodyPart1.setText(
-				"Ciao " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + ",\n\n"
-				+ "grazie per aver scelto il nostro Cinema!\n\n\n"
+	private BodyPart createMailBody(Reservation reservation) throws MessagingException {
+		BodyPart messageBodyPart1 = new MimeBodyPart();
+		messageBodyPart1.setText("Ciao " + reservation.getPurchaser().getName() + " "
+				+ reservation.getPurchaser().getSurname() + ",\n\n" + "grazie per aver scelto il nostro Cinema!\n\n\n"
 				+ "In allegato trovi la ricevuta di avvenuto pagamento che conferma il tuo acquisto.\n"
 				+ "Stampa la prenotazione e presentala quando verrai a guardare il film.\n\n"
-			    + "Ti aspettiamo, buona giornata!\n"
-				+ name + "\n\n"
-			    + "Non rispondere alla presente e-mail. Messaggio generato automaticamente.\n");
+				+ "Ti aspettiamo, buona giornata!\n" + name + "\n\n"
+				+ "Non rispondere alla presente e-mail. Messaggio generato automaticamente.\n");
 		return messageBodyPart1;
 	}
 
-
-	/** METODO per impostare le proprietà basilari dell'email
+	/**
+	 * Imposta le proprietà basilari necessarie per la creazione e invio
+	 * dell'e-mail.
 	 * 
-	 * @param session
-	 * @param user
-	 * @param to
-	 * @param r
-	 * @return
-	 * @throws MessagingException
+	 * @param session     sessione e-mail generata per la specifica prenotazione.
+	 * @param user        mittente dell'e-mail (cinema).
+	 * @param to          destinatario dell'e-mail (spettatore).
+	 * @param reservation prenotazione da inviare.
+	 * @return il contenitore, che accoglierà: l'oggetto, il body e l'allegato, con
+	 *         le proprietà dell'email.
+	 * @throws MessagingException se ci sono problemi nella generazione dell'e-mail.
 	 */
-	private Message createBasicMailProperties(Session session, String user, String to, Reservation r) throws MessagingException {
-		MimeMessage message = new MimeMessage(session);  
-		message.setFrom(new InternetAddress(user));  
-		message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));  
-		message.setSubject("Prenotazione numero " + r.getProgressive() + " - Ti aspettiamo!");  
+	private Message createBasicMailProperties(Session session, String user, String to, Reservation reservation)
+			throws MessagingException {
+		MimeMessage message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(user));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		message.setSubject("Prenotazione numero " + reservation.getProgressive() + " - Ti aspettiamo!");
 		return message;
 	}
 
-
-	/** METODO per generare una nuova sessione mail
+	/**
+	 * Genera una nuova sessione e-mail.
 	 * 
-	 * @param user
-	 * @param password
-	 * @param properties
-	 * @return
+	 * @param user       user mittente dell'e-mail (cinema).
+	 * @param password   password password dell'e-mail del cinema.
+	 * @param properties proprietà dell'e-mail.
+	 * @return sessione e-mail generata per la specifica prenotazione.
 	 */
 	private Session startNewSession(String user, String password, Properties properties) {
-		 Session session = Session.getDefaultInstance(properties,  
-				new javax.mail.Authenticator() {  
-				protected PasswordAuthentication getPasswordAuthentication() {  
-						return new PasswordAuthentication(user,password);  
-					}  
-				});
-		 return session;
+		Session session = Session.getDefaultInstance(properties, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
+		return session;
 	}
 
-	
-	/** METODO per impostare le proprietà dell'email
+	/**
+	 * Imposta le proprietà dell'e-mail.
 	 * 
-	 * @param user
-	 * @param password
-	 * @return
+	 * @param user     mittente dell'e-mail (cinema).
+	 * @param password password dell'e-mail del cinema.
+	 * @return le proprietà dell'e-mail.
 	 */
 	private Properties setUpMainProperties(String user, String password) {
-		Properties properties = System.getProperties();  
+		Properties properties = System.getProperties();
 		String host = "smtp.gmail.com";
 		properties.put("mail.smtp.starttls.enable", "true");
 		properties.put("mail.smtp.host", host);

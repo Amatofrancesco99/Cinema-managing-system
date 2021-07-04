@@ -15,25 +15,51 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 
 /**
- * BREVE DESCRIZIONE CLASSE CLIAdminMain
+ * Permette all'amministratore del cinema di poter effettuare le operazioni base
+ * principali (login, aggiunta/rimozione di prenotazioni, modifica delle
+ * politiche di sconto).
  * 
  * @author Screaming Hairy Armadillo Team
- *
- *         Questa classe permette all'amministratore del cinema di poter
- *         effettuare le operazioni base principali (login, aggiunta/rimozione
- *         prenotazione, modifica delle politiche di sconto).
+ * 
  */
 public class CLIAdminMain {
 
+	/**
+	 * Scanner utilizzato per leggere gli input dal terminale.
+	 */
 	private Scanner keyboard;
+
+	/**
+	 * Controller di dominio utilizzato come interfaccia verso il modello.
+	 */
 	private Cinema cinema;
+
+	/**
+	 * Massimo numero di tentativi di login errati permessi prima di chiudere
+	 * l'applicazione.
+	 */
 	private final int MAX_PASSWORD_ATTEMPTS = 3;
+
+	/**
+	 * Separatore delle sezioni dell'output sul terminale.
+	 */
 	private final String SEPARATOR = "-----------------------------------------------------\n";
 
+	/**
+	 * Avvia l'interfaccia testuale riservata all'amministratore del sistema.
+	 *
+	 * @param args Parametri dell'applicazione (non utilizzati).
+	 */
 	public static void main(String[] args) {
 		new CLIAdminMain();
 	}
 
+	/**
+	 * Costruttore dell'interfaccia utente da riga di comando.
+	 * 
+	 * Viene proposto un menu numerato contenente varie scelte che l'amministratore
+	 * può selezionare per agire sui dati gestiti dall'applicazione.
+	 */
 	public CLIAdminMain() {
 		keyboard = new Scanner(System.in);
 		cinema = new Cinema();
@@ -76,6 +102,9 @@ public class CLIAdminMain {
 		sayGoodbye();
 	}
 
+	/**
+	 * Stampa un messaggio di benvenuto all'amministratore sul terminale.
+	 */
 	private void printWelcomeMessage() {
 		System.out.println(SEPARATOR);
 		System.out.println(cinema.getName() + "\n");
@@ -85,6 +114,12 @@ public class CLIAdminMain {
 		System.out.println("Benvenuto nell'interfaccia amministratore di " + cinema.getName() + "!\n");
 	}
 
+	/**
+	 * Permette all'amministratore di autenticarsi attraverso la passowrd.
+	 * 
+	 * Se viene raggiunto il numero massimo ti tentativi di login falliti
+	 * l'applicazione viene chiusa.
+	 */
 	private void login() {
 		System.out.println(SEPARATOR);
 		boolean end = false;
@@ -106,12 +141,25 @@ public class CLIAdminMain {
 		} while (!end);
 	}
 
+	/**
+	 * Chiede all'amministratore se vuole tornare al menu principale o uscire
+	 * dall'applicazione.
+	 *
+	 * @return true se l'utente vuole tornare al menu principale, false se vuole
+	 *         uscire dall'applicazione.
+	 */
 	private boolean backToMenu() {
 		boolean answer = inputBoolean("Vuoi tornare al menu principale (M) o preferisci uscire (U)? ", "M", "U");
 		System.out.println();
 		return answer;
 	}
 
+	/**
+	 * Permette all'amministratore di cambiare la passowrd di login.
+	 *
+	 * Se la password non rispetta i requisiti minimi di lunghezza essa viene
+	 * richiesta.
+	 */
 	private void changePassword() {
 		System.out.println("\n" + SEPARATOR + "\nGestione password:\n");
 		do {
@@ -126,10 +174,16 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di cambiare la strategia di discount applicata
+	 * alle prenotazioni future tra quelle disponibili.
+	 * 
+	 * Se viene inserita una strategia inesistente viene chiesto di effettuare una
+	 * nuova selezione della scelta.
+	 */
 	private void changeNewReservationsDiscountStrategy() {
 		System.out.println("\n" + SEPARATOR + "\nGestione sconti:\n");
 		try {
-			System.out.print("Strategie di sconto disponibili: ");
 			System.out.println(
 					cinema.getAllDiscountStrategy().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n");
 			do {
@@ -157,12 +211,19 @@ public class CLIAdminMain {
 		}
 	}
 
+	/**
+	 * Permette all'amministratore di inserire o rimuovere proiezioni.
+	 */
 	private void insertOrRemoveProjections() {
 		System.out.println("\n" + SEPARATOR + "\nInserimento/rimozione proiezioni:\n");
 		insertNewProjections();
 		removeProjections();
 	}
 
+	/**
+	 * Permette all'amministratore di inserire nuove proiezioni per uno specifico
+	 * film.
+	 */
 	private void insertNewProjections() {
 		while (inputBoolean("Vuoi inserire nuove proiezioni? (S/N) ", "S", "N")) {
 			int projection = insertProjectionId();
@@ -178,6 +239,12 @@ public class CLIAdminMain {
 		}
 	}
 
+	/**
+	 * Permette all'amministratore di inserire l'ID di una nuova proiezione da
+	 * aggiungere al programma.
+	 *
+	 * @return l'ID della nuova proiezione.
+	 */
 	private int insertProjectionId() {
 		System.out.println();
 		int projectionId = -1;
@@ -193,6 +260,12 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di scegliere a quale film associare la nuova
+	 * proiezione.
+	 *
+	 * @param projection proiezione di cui impostare il film.
+	 */
 	private void selectProjectionMovie(int projection) {
 		System.out.println("Lista dei film disponibili:\n");
 		try {
@@ -215,6 +288,12 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di scegliere in quale sala programmare la nuova
+	 * proiezione.
+	 *
+	 * @param projection proiezione di cui impostare la sala.
+	 */
 	private void selectProjectionRoom(int projection) {
 		System.out.println("Lista delle sale del cinema:\n");
 		try {
@@ -236,6 +315,12 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di scegliere in quale data e a quale ora
+	 * programmare la nuova proiezione.
+	 *
+	 * @param projection proiezione di cui impostare la data e l'ora.
+	 */
 	private void selectProjectionDateTime(int projection) {
 		System.out.println();
 		LocalDateTime projectionDateTime;
@@ -271,6 +356,11 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di scegliere il costo della nuova proiezione.
+	 *
+	 * @param projection proiezione di cui impostare il costo.
+	 */
 	private void selectProjectionPrice(int projection) {
 		do {
 			System.out.print("Inserisci il prezzo della proiezione (EUR): ");
@@ -288,6 +378,9 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di rimuovere una o più proiezioni in base all'ID.
+	 */
 	private void removeProjections() {
 		while (inputBoolean("Vuoi rimuovere delle proiezioni esistenti? (S/N) ", "S", "N")) {
 			showAllProjections();
@@ -306,6 +399,9 @@ public class CLIAdminMain {
 		System.out.println();
 	}
 
+	/**
+	 * Stampa sul terminale tutte le proiezioni esistenti.
+	 */
 	private void showAllProjections() {
 		System.out.println("\nLista di tutte le proiezioni esistenti:\n");
 		try {
@@ -318,10 +414,23 @@ public class CLIAdminMain {
 		}
 	}
 
+	/**
+	 * Stampa sul terminale il messaggio di chiusura dell'applicazione.
+	 */
 	private void sayGoodbye() {
 		System.out.println(SEPARATOR + "\nGrazie, a presto!");
 	}
 
+	/**
+	 * Permette all'amministratore di inserire un numero intero da terminale.
+	 *
+	 * Viene effettuato un controllo per permettere solamente l'inserimento di un
+	 * numero intero (e non altri tipi di dato).
+	 *
+	 * @param question messaggio da stampare sul terminale prima dell'input
+	 *                 dell'amministratore.
+	 * @return il valore letto.
+	 */
 	private int inputInt(String question) {
 		do {
 			System.out.print(question);
@@ -333,6 +442,18 @@ public class CLIAdminMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette all'amministratore di effettuare una scelta binaria.
+	 *
+	 * Viene effettuato un controllo per permettere solamente l'inserimento di una
+	 * scelta binaria (S/N, A/B, ...) da parte dell'amministratore.
+	 *
+	 * @param question messaggio da stampare sul terminale prima dell'input
+	 *                 dell'amministratore.
+	 * @param onTrue   stringa corrispondente al valore restituito true.
+	 * @param onFalse  stringa corrispondente al valore restituito false.
+	 * @return true se l'input utente è onTrue, false se è onFalse.
+	 */
 	private boolean inputBoolean(String question, String onTrue, String onFalse) {
 		do {
 			System.out.print(question);

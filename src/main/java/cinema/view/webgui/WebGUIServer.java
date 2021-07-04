@@ -11,16 +11,23 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.rythmengine.Rythm;
 
+/**
+ * Apre la porta sulla quale rimane in ascolto in attesa di rischieste da parte
+ * degli spettatori. In seguito passa la gestione delle richieste alla Servlet.
+ * 
+ * @author Screaming Hairy Armadillo Team
+ *
+ */
 public class WebGUIServer {
 
 	private int port;
 	private Servlet servlet;
-	
+
 	public WebGUIServer(int port, Servlet servlet) {
 		this.port = port;
 		this.servlet = servlet;
 	}
-	
+
 	public void start() throws Exception {
 		initRythm();
 		Server server = new Server(port);
