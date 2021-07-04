@@ -11,7 +11,9 @@ package cinema.controller.util;
 public class DiscountNotFoundException extends Exception {
 
 	/**
-	 * METODO utilizzato per stampare le informazioni dell'eccezione
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message messaggio da riportare.
 	 */
 	public DiscountNotFoundException(String message) {
 		super(message);

@@ -8,6 +8,13 @@ package cinema.model.payment;
  */
 public interface IPaymentAdapter {
 
+	/**
+	 * Permette di gestire il pagamento.
+	 * 
+	 * @param amount quantita di denaro da sottrarre dal saldo.
+	 * @return true se il pagamento è andato a buon fine, false nel caso ci siano
+	 *         stati dei problemi.
+	 */
 	public boolean pay(double amount);
 
 }
