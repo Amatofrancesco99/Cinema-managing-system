@@ -30,6 +30,13 @@ import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
+/**
+ * Gestisce le rieschieste del client web via HTTP interfacciandosi con il
+ * controller.
+ *
+ * @author Screaming Hairy Armadillo Team
+ *
+ */
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
 
