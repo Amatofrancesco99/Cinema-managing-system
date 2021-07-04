@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
@@ -26,6 +27,7 @@ public class PersistenceFacade {
     IDiscountDao iDiscountDao;
     IOccupiedSeatDao iOccupiedSeatDao;
     IReservationDao iReservationDao;
+    ICinemaDao iCinemaDao;
 	private static PersistenceFacade singleInstance;
     
     private PersistenceFacade(String url) throws SQLException {
@@ -37,6 +39,7 @@ public class PersistenceFacade {
     	iDiscountDao = new DiscountRdbDao(connection);
     	iOccupiedSeatDao = new OccupiedSeatRdbDao(connection);
     	iReservationDao = new ReservationRdbDao(connection);
+    	iCinemaDao = new CinemaRdbDao(connection);
     }
     
     public static PersistenceFacade getInstance() throws SQLException {
@@ -203,12 +206,20 @@ public class PersistenceFacade {
 		}
 	}
 	
+	public void deleteReservation(long reservationId) throws PersistenceException{
+		try {
+			iReservationDao.deleteReservation(reservationId);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	
 	public void putEmptyReservation(Reservation newReservation) throws PersistenceException{
 		try {
 			iReservationDao.putEmptyReservation(newReservation);
 		} catch (SQLException e) {
-			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
-			e.printStackTrace();
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
 	
@@ -216,8 +227,7 @@ public class PersistenceFacade {
 		try {
 			iReservationDao.setReservationFields(reservation);
 		} catch (SQLException e) {
-			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
-			e.printStackTrace();
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
 	
@@ -225,9 +235,34 @@ public class PersistenceFacade {
 		try {
 			iOccupiedSeatDao.putOccupiedSeatsFromReservation(reservation);
 		} catch (SQLException e) {
-			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
-			e.printStackTrace();
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
 	
+	
+	public HashMap<String, String> getAllCinemaInfo(int cinemaId) throws PersistenceException{
+		try {
+			return iCinemaDao.getAllCinemaInfo(cinemaId);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	
+	public void setPassword(int cinemaId, String newPassword) throws PersistenceException {
+		try {
+			iCinemaDao.setPassword(cinemaId, newPassword);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	
+	public void setDiscountStrategy(int cinemaId, String discountStrategyName) throws PersistenceException {
+		try {
+			iCinemaDao.setDiscountStrategy(cinemaId, discountStrategyName);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
 }

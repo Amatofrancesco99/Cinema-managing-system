@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS Discount;
 DROP TABLE IF EXISTS Coupon;
 DROP TABLE IF EXISTS Reservation;
 DROP TABLE IF EXISTS OccupiedSeat;
+DROP TABLE IF EXISTS Cinema;
 
 
 CREATE TABLE Movie(
@@ -87,6 +88,22 @@ CREATE TABLE OccupiedSeat(
 );
 
 
+CREATE TABLE Cinema(
+	id INTEGER PRIMARY KEY NOT NULL,
+	name TEXT NOT NULL,
+	city TEXT NOT NULL,
+	country TEXT NOT NULL,
+	zipCode TEXT NOT NULL,
+	address TEXT NOT NULL,
+	email TEXT NOT NULL,
+	mailPassword TEXT NOT NULL,
+	adminPassword TEXT NOT NULL,
+	logoURL TEXT NOT NULL,
+	discountstrategy TEXT NOT NULL,
+	FOREIGN KEY (discountstrategy) REFERENCES Discount(type)
+);
+
+
 INSERT INTO Movie (id, title, duration, rating, imageurl, trailerurl, description, genres, directors, cast)
     VALUES (1, "Druk - Un altro giro", 117, 4, "druk-un-altro-giro.jpg", "https://www.youtube.com/watch?v=hFbDh58QHzw", "C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?", "Drammatico,Commedia", "Thomas Vinterberg", "Mads Mikkelsen,Thomas Bo Larsen,Lars Ranthe,Magnus Millang");
 INSERT INTO Movie (id, title, duration, rating, imageurl, trailerurl, description, genres, directors, cast)
@@ -152,10 +169,14 @@ INSERT INTO Discount(type, percentage, date) VALUES("DAY", 0.2, "2021-08-01");
 INSERT INTO Discount(type, percentage, numberpeople) VALUES("NUMBER", 0.15, 5);
 
 
-INSERT INTO Reservation(id, date, projection, name, surname, email, paymentcardowner, paymentcard) VALUES(999, "2021-07-01", 1, "Fake", "Person", "fakeemail@fake.fa", "Fake Person", "FAKECREDITCARD");
+INSERT INTO Reservation(id, date, projection, name, surname, email, paymentcardowner, paymentcard) VALUES(1, "2021-07-01", 1, "Fake", "Person", "fakeemail@fake.fa", "Fake Person", "FAKECREDITCARD");
+
 
 INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 1, 1);
 INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 2, 1);
 INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 3, 1);
 INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 4, 1);
 
+
+INSERT INTO Cinema(id, name, city, country, zipCode, address, email, mailPassword, adminPassword, logoURL, discountstrategy)
+    VALUES( 1, "Cinema Armadillo", "Pavia (PV)", "Italia", "27100", "Via A. Ferrata, 5", "cinemaarmadillo@gmail.com", "CinemaArmadillo@1999", "admin", "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png", "AGE");

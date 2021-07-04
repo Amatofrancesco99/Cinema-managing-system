@@ -18,9 +18,11 @@ import cinema.model.persistence.PersistenceFacade;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
+import cinema.model.reservation.discount.IReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.Discount;
+import cinema.model.reservation.discount.types.DiscountAge;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.Reservation;
@@ -63,19 +65,11 @@ public class Cinema {
 	 * @param cinemaDiscount     Sconto attivo
 	 * @param persistenceFacade
 	 */
-	private String name;
-	private String city;
-	private String country;
-	private String zipCode;
-	private String address;
-	private String logoURL;
-	private String email;
-	private String password;
-	private String adminPassword;
+	private HashMap<String, String> cinemaInfo;
 	private EmailHandler emailHandler;
 	private HashMap<Integer, Projection> newProjections;
 	private List<Reservation> cinemaReservations;
-	private Discount cinemaDiscount;
+	private IReservationDiscountStrategy cinemaDiscount;
 	private PersistenceFacade persistenceFacade;
 
 	/**
@@ -83,46 +77,16 @@ public class Cinema {
 	 * cinema
 	 */
 	public Cinema() {
-		name = "Cinema Armadillo";
-		city = "Pavia (PV)";
-		country = "Italia";
-		zipCode = "27100";
-		address = "Via A. Ferrata, 5";
-		email = "cinemaarmadillo@gmail.com";
-		password = "CinemaArmadillo@1999";
-		adminPassword = "admin";
-		logoURL = "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png";
-		emailHandler = new EmailHandler(name, email, password, getLocation(), logoURL);
 		try {
 			persistenceFacade = PersistenceFacade.getInstance();
-		} catch (SQLException e) {
+			cinemaInfo = persistenceFacade.getAllCinemaInfo(1);
+			cinemaDiscount = getDiscountByStrategy(TypeOfDiscounts.valueOf(cinemaInfo.get("discountStrategy")));			
+		} catch (SQLException | PersistenceException | DiscountNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
+		emailHandler = new EmailHandler(cinemaInfo.get("name"), cinemaInfo.get("email"), cinemaInfo.get("mailPassword"), getLocation(), cinemaInfo.get("logoURL"));
 		cinemaReservations = new ArrayList<Reservation>();
-		try {
-			cinemaDiscount = persistenceFacade.getAgeDiscounts();
-		} catch (PersistenceException e) { 
-			System.out.println(e.getMessage());
-		}
 		newProjections = new HashMap<>();
-
-		// occupazione dei posti
-
-		/*
-		 * PIU' CHE ALL'INIZIO DEL MAIN IO (Francesco Amato) PROPORREI DI CREARE UN
-		 * METODO CHE OCCUPA I POSTI DI UNA STANZA, DATI GLI OCCUPIED SEAT, RENDERLO
-		 * PUBBLICO E CHIAMARLO NELLA GUI, IN MODO TALE CHE OGNI VOLTA CHE UN UTENTE
-		 * SELEZIONI UNA PROIEZIONE AUTOMATICAMENTE SI OCCUPANO I POSTI GIA' OCCUPATI DA
-		 * ALTRI UTENTI
-		 * 
-		 * QUESTO PER FAR SI CHE OGNI UTENTE QUANDO CARICA UNA PROIEZIONE ABBIA UNA
-		 * FOTOGRAFIA AGGIORNATA DEI POSTI OCCUPATI E NON QUELLA DEI POSTI OCCUPATI
-		 * PRESENTI ALL'INIZIO DELLA CREAZIONE DEL CINEMA STESSO (Costruttore)
-		 * 
-		 * for(Projection p : getCurrently...){ ArrayList<ProjectionSeat> blockedSeats =
-		 * persistenceFacade.getOccupiedSeats(p.getId()); for(ProjectionSeat ps :
-		 * blockedSeats) p.takeSeat(ps.getRow(), ps.getColumn()); }
-		 */
 	}
 
 	/**
@@ -138,6 +102,8 @@ public class Cinema {
 		persistenceFacade.putEmptyReservation(r);
 		return r.getProgressive();
 	}
+	
+	
 
 	/**
 	 * METODO per farsi dare una prenotazione, dato il suo id
@@ -492,21 +458,6 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per settare/cambiare la "location" in cui si trova il cinema
-	 * 
-	 * @param city    Citta
-	 * @param country Paese
-	 * @param zipCode Codice comunale
-	 * @param address Indirizzo (Via, numero civico)
-	 */
-	public void setLocation(String city, String country, String zipCode, String address) {
-		this.city = city;
-		this.country = country;
-		this.zipCode = zipCode;
-		this.address = address;
-	}
-
-	/**
 	 * METODO per farsi dire l'età più elevata da cui il cinema effettua uno sconto
 	 * sul totale
 	 * 
@@ -568,7 +519,7 @@ public class Cinema {
 	 * @return location
 	 */
 	public String getLocation() {
-		return address + ", " + city + " - " + zipCode + " " + country;
+		return cinemaInfo.get("address") + ", " + cinemaInfo.get("city") + " - " + cinemaInfo.get("zipCode") + " " + cinemaInfo.get("country");
 	}
 
 	/**
@@ -759,7 +710,12 @@ public class Cinema {
 	 */
 	public void buyReservation(long r) throws NumberFormatException, SeatAvailabilityException, RoomException,
 			ReservationException, PaymentErrorException, ReservationException, PersistenceException {
-		getReservation(r).buy();
+		try {
+			getReservation(r).buy();
+		} catch (PaymentErrorException e) {
+			persistenceFacade.deleteReservation(r);
+			throw new PaymentErrorException(e.getMessage());
+		}
 		/*
 		 * Se la reservation è associata ad un coupon una volta terminato il metodo buy
 		 * dico che quel coupon è stato già utilizzato, in modo tale da impedirne il
@@ -802,7 +758,7 @@ public class Cinema {
 	 * @return
 	 */
 	public String getName() {
-		return name;
+		return cinemaInfo.get("name");
 	}
 
 	/**
@@ -811,7 +767,7 @@ public class Cinema {
 	 * @return
 	 */
 	public String getEmail() {
-		return email;
+		return cinemaInfo.get("email");
 	}
 
 	/**
@@ -820,7 +776,7 @@ public class Cinema {
 	 * @return
 	 */
 	public String getLogoURL() {
-		return logoURL;
+		return cinemaInfo.get("logoURL");
 	}
 
 	/**
@@ -829,7 +785,7 @@ public class Cinema {
 	 * @return
 	 */
 	public String getPassword() {
-		return password;
+		return cinemaInfo.get("mailPassword");
 	}
 
 	/**
@@ -840,7 +796,8 @@ public class Cinema {
 	 * @throws PersistenceException
 	 */
 	public void setCinemaDiscountStrategy(TypeOfDiscounts td) throws DiscountNotFoundException, PersistenceException {
-		cinemaDiscount = this.getDiscountByStrategy(td);
+		cinemaDiscount = this.getDiscountByStrategy(td);	
+		persistenceFacade.setDiscountStrategy(1, td.name().toString().toUpperCase());
 	}
 
 	/**
@@ -901,15 +858,15 @@ public class Cinema {
 
 	/** METODO per farsi dire la password dell'admin */
 	public String getAdminPassword() {
-		return adminPassword;
+		return cinemaInfo.get("adminPassword");
 	}
 
 	/* METODO per cambiare la password dell'admin */
-	public void setPassword(String newAdminPassword) throws PasswordException {
+	public void setPassword(String newAdminPassword) throws PasswordException, PersistenceException {
 		if (newAdminPassword.length() < 5) {
 			throw new PasswordException("La password inserita è troppo corta.");
 		}
-		adminPassword = newAdminPassword;
+		persistenceFacade.setPassword(1, newAdminPassword);
 	}
 
 	/**

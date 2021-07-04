@@ -54,4 +54,15 @@ public class ReservationRdbDao implements IReservationDao{
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         return pstatement.executeQuery().getLong("maxid");
 	}
+
+
+
+	@Override
+	public void deleteReservation(long reservationId) throws SQLException {
+		String sql = "DELETE FROM Reservation WHERE id = ?;";
+        PreparedStatement pstatement  = connection.prepareStatement(sql);
+        pstatement.setLong(1, reservationId);
+        pstatement.executeUpdate();
+	}
+	
 }

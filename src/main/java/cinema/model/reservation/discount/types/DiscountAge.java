@@ -23,6 +23,9 @@ public class DiscountAge extends Discount{
 	private int max_age;
 	private double percentage;
 	
+	public DiscountAge() {
+		super(TypeOfDiscounts.AGE, -1);
+	}
 	
 	/**
 	 * COSTRUTTORE 
