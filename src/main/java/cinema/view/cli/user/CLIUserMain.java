@@ -121,25 +121,24 @@ public class CLIUserMain {
 		printMovieProjections(movie);
 
 		// Creazione di una nuova prenotazione e inserimento dei relativi dati
-		long reservation = cinema.createReservation();
-
-		// Selezione di una specifica proiezione
-		int projection = askProjectionId(movie);
+		long reservation = -1;
 		try {
+			reservation = cinema.createReservation();
+			// Selezione di una specifica proiezione
+			int projection = askProjectionId(movie);
 			cinema.setReservationProjection(reservation, projection);
+			// Inserimento dati, pagamento e invio della ricevuta allo spettatore
+			showProjectionSeats(reservation);
+			addSeatsToReservation(reservation);
+			insertSpectatorData(reservation);
+			insertPaymentCardInfo(reservation);
+			insertSpectatorsInfo(reservation);
+			insertCouponInfo(reservation);
+			if (buy(reservation)) {
+				sendEmail(reservation);
+			}
 		} catch (ProjectionException | ReservationException | PersistenceException exception) {
 			System.out.println(exception.getMessage() + "\n");
-		}
-
-		// Inserimento dati, pagamento e invio della ricevuta allo spettatore
-		showProjectionSeats(reservation);
-		addSeatsToReservation(reservation);
-		insertSpectatorData(reservation);
-		insertPaymentCardInfo(reservation);
-		insertSpectatorsInfo(reservation);
-		insertCouponInfo(reservation);
-		if (buy(reservation)) {
-			sendEmail(reservation);
 		}
 	}
 

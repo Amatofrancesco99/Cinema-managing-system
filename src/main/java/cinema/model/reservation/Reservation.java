@@ -52,7 +52,6 @@ public class Reservation {
 	 *@param numberPeopleOverMaxAge    Numero di persone che hanno un'età superiore ad un età max
 	 *@param rd				 Strategia di sconto applicata
 	 */
-	private static final AtomicInteger count = new AtomicInteger(0); 
 	private final long progressive;
 	private LocalDate purchaseDate;
 	private Spectator purchaser;
@@ -71,8 +70,8 @@ public class Reservation {
 	 * progressivo che si auto-incrementa e la data di creazione corrisponde alla data di
 	 * sistema in cui viene invocato il costruttore stesso
 	 */
-	public Reservation(IReservationDiscountStrategy rd) {
-		progressive = count.incrementAndGet(); 
+	public Reservation(IReservationDiscountStrategy rd, long id) {
+		progressive = id; 
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
 		paymentCard = null;

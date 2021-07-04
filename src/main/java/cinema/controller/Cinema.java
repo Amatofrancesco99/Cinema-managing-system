@@ -100,27 +100,9 @@ public class Cinema {
 		cinemaReservations = new ArrayList<Reservation>();
 		try {
 			cinemaDiscount = persistenceFacade.getAgeDiscounts();
-		} catch (PersistenceException e1) { 
-			// unhandled exception
+		} catch (PersistenceException e) { 
+			System.out.println(e.getMessage());
 		}
-
-			//occupazione dei posti
-			
-			/* PIU' CHE ALL'INIZIO DEL MAIN IO (Francesco Amato) PROPORREI DI CREARE UN METODO
-			 * CHE OCCUPA I POSTI DI UNA STANZA, DATI GLI OCCUPIED SEAT, RENDERLO PUBBLICO E CHIAMARLO
-			 * NELLA GUI, IN MODO TALE CHE OGNI VOLTA CHE UN UTENTE SELEZIONI UNA PROIEZIONE
-			 * AUTOMATICAMENTE SI OCCUPANO I POSTI GIA' OCCUPATI DA ALTRI UTENTI 
-			 * 
-			 * QUESTO PER FAR SI CHE OGNI UTENTE QUANDO CARICA UNA PROIEZIONE ABBIA UNA 
-			 * FOTOGRAFIA AGGIORNATA DEI POSTI OCCUPATI E NON QUELLA DEI POSTI OCCUPATI
-			 * PRESENTI ALL'INIZIO DELLA CREAZIONE DEL CINEMA STESSO (Costruttore)
-			 * 
-			 * for(Projection p : getCurrently...){
-			 * 		ArrayList<ProjectionSeat> blockedSeats = persistenceFacade.getOccupiedSeats(p.getId());
-			 *      for(ProjectionSeat ps : blockedSeats)
-			 *      	p.takeSeat(ps.getRow(), ps.getColumn());
-			 * }
-			 */
 	}
 
 	/**
@@ -128,9 +110,10 @@ public class Cinema {
 	 * cinema
 	 * 
 	 * @return reservation Nuova prenotazione creata
+	 * @throws PersistenceException 
 	 */
-	public long createReservation() {
-		Reservation r = new Reservation(cinemaDiscount);
+	public long createReservation() throws PersistenceException {
+		Reservation r = new Reservation(cinemaDiscount, persistenceFacade.getLastReservationId() + 1);
 		cinemaReservations.add(r);
 		return r.getProgressive();
 	}
@@ -597,7 +580,7 @@ public class Cinema {
 	 */
 	public boolean checkIfProjectionSeatIsAvailable(int p, int row, int col)
 			throws RoomException, ReservationException, ProjectionException, PersistenceException {
-		return getProjection(p).checkIfSeatIsAvailable(row, col);
+		return persistenceFacade.getOccupiedSeat(p, row, col);
 	}
 
 	public int getReservationProjection(long r) throws ReservationException {
