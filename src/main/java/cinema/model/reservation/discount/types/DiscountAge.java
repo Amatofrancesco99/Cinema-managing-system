@@ -14,20 +14,24 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 public class DiscountAge extends Discount {
 
 	/**
-	 * ATTRIBUTI
-	 * 
-	 * @param MIN_AGE    Età al di sotto della quale lo sconto è valido
-	 * @param MAX_AGE    Età al di sopra della quale lo sconto è valido
-	 * @param PERCENTAGE Percentuale di sconto effettuata
+	 * Età minima, sotto la quale si ottiene lo sconto per l'età.
 	 */
 	private int min_age;
+	/**
+	 * Età massima, sopra la quale si ottiene lo sconto per l'età.
+	 */
 	private int max_age;
+	/**
+	 * Percentuale di sconto.
+	 */
 	private double percentage;
 
 	/**
-	 * COSTRUTTORE
+	 * Costruttore dello sconto in base all'età.
 	 * 
-	 * @param type
+	 * @param minAge     Età minima, sotto la quale si ottiene lo sconto per l'età.
+	 * @param maxAge     Età massima, sopra la quale si ottiene lo sconto per l'età.
+	 * @param percentage Percentuale di sconto.
 	 */
 	public DiscountAge(int minAge, int maxAge, double percentage) {
 		super(TypeOfDiscounts.AGE);
@@ -36,10 +40,6 @@ public class DiscountAge extends Discount {
 		this.percentage = percentage;
 	}
 
-	/**
-	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi
-	 * restituire il nuovo totale, dato lo sconto
-	 */
 	@Override
 	public double getTotal(Reservation r) {
 		double totalPrice = 0;
@@ -64,10 +64,11 @@ public class DiscountAge extends Discount {
 	}
 
 	/**
-	 * METODO per settare l'età minima di validità dello sconto
+	 * Imposta l'età sotto la quale si ottiene lo sconto.
 	 * 
-	 * @param min_age
-	 * @throws InvalidMinAgeException
+	 * @param min_age Età minima, sotto la quale si ottiene lo sconto per l'età.
+	 * @throws DiscountException Eccezione lanciata qualora l'età minima inserita
+	 *                           sia inferiore o uguale a zero.
 	 */
 	public void setMin_Age(int min_age) throws DiscountException {
 		if (min_age >= 0) {
@@ -77,10 +78,11 @@ public class DiscountAge extends Discount {
 	}
 
 	/**
-	 * METODO per settare l'età minima di validità dello sconto
+	 * Imposta l'età sopra la quale si ottiene lo sconto.
 	 * 
-	 * @param max_age
-	 * @throws InvalidMaxAgeException
+	 * @param max_age Età massima, sopra la quale si ottiene lo sconto per l'età.
+	 * @throws DiscountException Eccezione lanciata qualora l'età massima inserita
+	 *                           sia inferiore o uguale a zero.
 	 */
 	public void setMax_Age(int max_age) throws DiscountException {
 		if (max_age >= 0) {
@@ -89,21 +91,14 @@ public class DiscountAge extends Discount {
 			throw new DiscountException("L'età massima deve essere maggiore di zero.");
 	}
 
-	/**
-	 * METODO per farsi dire l'età al di sotto della quale parte lo sconto per età
-	 */
 	public int getMin_age() {
 		return min_age;
 	}
 
-	/**
-	 * METODO per farsi dire l'età al di sopra della quale parte lo sconto per età
-	 */
 	public int getMax_age() {
 		return max_age;
 	}
 
-	/** METODO per farsi restituire le caratteristiche dello sconto per età */
 	@Override
 	public String toString() {
 		return "[ " + this.getTypeOfDiscount() + " ]" + "\n" + "Età al di sotto della quale lo sconto è valido: "
@@ -112,10 +107,11 @@ public class DiscountAge extends Discount {
 	}
 
 	/**
-	 * METODO per settare il nuovo sconto
+	 * Imposta il nuovo sconto.
 	 * 
-	 * @param f Percentuale di sconto da applicare
-	 * @throws InvalidPercentageValueException
+	 * @param d Valore dello sconto.
+	 * @throws DiscountException Eccezione lanciata qualora la percentuale di sconto
+	 *                           sia negativa,o superiore al 100%.
 	 */
 	public void setPercentage(double d) throws DiscountException {
 		if (d < 0)

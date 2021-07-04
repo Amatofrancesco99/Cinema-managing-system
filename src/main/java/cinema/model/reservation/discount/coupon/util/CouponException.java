@@ -8,6 +8,12 @@ package cinema.model.reservation.discount.coupon.util;
  */
 @SuppressWarnings("serial")
 public class CouponException extends Exception {
+
+	/**
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message Messaggio da riportare.
+	 */
 	public CouponException(String message) {
 		super(message);
 	}

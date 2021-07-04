@@ -11,7 +11,9 @@ package cinema.model.spectator.util;
 public class InvalidSpectatorInfoException extends Exception {
 
 	/**
-	 * METODO utilizzato per stampare le informazioni dell'eccezione
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message Messaggio da riportare.
 	 */
 	public InvalidSpectatorInfoException(String message) {
 		super(message);
