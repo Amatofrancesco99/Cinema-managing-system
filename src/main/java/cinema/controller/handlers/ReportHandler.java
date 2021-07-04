@@ -36,25 +36,32 @@ import cinema.controller.handlers.util.HandlerException;
 public class ReportHandler {
 
 	/**
-	 * ATTRIBUTI
-	 * 
-	 * @param name
-	 * @param email
-	 * @param location
-	 * @param logoURL
+	 * Nome del cinema.
 	 */
 	private String name;
+
+	/**
+	 * E-mail del cinema.
+	 */
 	private String email;
+
+	/**
+	 * Ubicazione del cinema.
+	 */
 	private String location;
+
+	/**
+	 * URL del logo del cinema.
+	 */
 	private String logoURL;
 
 	/**
-	 * COSTRUTTORE
+	 * Costruttore del gestore del report.
 	 * 
-	 * @param name
-	 * @param email
-	 * @param location
-	 * @param logoURL
+	 * @param name     nome del cinema.
+	 * @param email    e-mail del cinema.
+	 * @param location ubicazione del cinema.
+	 * @param logoURL  URL del logo del cinema (iconfinder.com).
 	 */
 	public ReportHandler(String name, String email, String location, String logoURL) {
 		this.name = name;
@@ -64,65 +71,88 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per la creazione del report
+	 * Crea il report e lo salva nella posizione desiderata.
 	 * 
-	 * @param r Prenotazione di cui si vuole creare il report
-	 * @throws HandlerException
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @throws HandlerException se ci fosse un problema nella generazione del
+	 *                          report.
 	 */
-	public void createReport(Reservation r) throws HandlerException {
-		String FILE = "./savedReports/Reservation_" + Long.toString(r.getProgressive()) + ".pdf"; // posizione in cui il
-																									// report sarà
-																									// salvato
-		HashMap<String, Font> allFonts = createAllFonts(); // impostazione dei font che verranno utilizzati nel report
-		generateReport(FILE, allFonts, r); // tentativo di generazione del report
+	public void createReport(Reservation reservation) throws HandlerException {
+		// Posizione in cui verrà salvato il report
+		String FILE = "./savedReports/Reservation_" + Long.toString(reservation.getProgressive()) + ".pdf";
+		HashMap<String, Font> allFonts = createAllFonts(); // Imposta i font che verranno utilizzati nel report
+		generateReport(FILE, allFonts, reservation); // Tenta di generare il report
 	}
 
-	/** METODO per la creazione del report */
-	private void generateReport(String FILE, HashMap<String, Font> allFonts, Reservation r) throws HandlerException {
+	/**
+	 * Genera il report vero e proprio.
+	 * 
+	 * @param FILE        si referisce al percorso relativo dove verrà salvato il
+	 *                    report.
+	 * @param allFonts    HashMap che contiene tutti i font utili.
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @throws HandlerException se ci fosse un problema nella generazione del
+	 *                          report.
+	 */
+	private void generateReport(String FILE, HashMap<String, Font> allFonts, Reservation reservation)
+			throws HandlerException {
 		try {
-			Document document = createEmptyDocument(FILE); // generazione di un documento vuoto e apertura di quest
-															// ultimo
-			document.open();
-			addDocumentProperties(document, r); // aggiungere le proprietà al documenti
-			Image image = createReportLogoImage(); // creazione di una nuova immagine con il logo del cinema
-			Paragraph titleP = createReportTitleParagraph(allFonts); // creare un paragrafo contenente il titolo del
+			Document document = createEmptyDocument(FILE); // Genera un documento vuoto
+			document.open(); // Apre il documento
+			addDocumentProperties(document, reservation); // Aggiunge le proprietà al documenti
+			Image image = createReportLogoImage(); // Crea una nuova immagine con il logo del cinema
+			Paragraph titleP = createReportTitleParagraph(allFonts); // Crea un paragrafo contenente il titolo del
 																		// cinema
-			Paragraph infoCinemaP = createCinemaInfoParagraph(allFonts); // creare un paragrafo contenente alcune
+			Paragraph infoCinemaP = createCinemaInfoParagraph(allFonts); // Crea un paragrafo contenente alcune
 																			// proprietà del cinema
-			Paragraph filmP = createFilmTitleParagraph(allFonts, r); // creare un paragrafo contenente il titolo del
-																		// film associato alla prenotazioni
-			Paragraph infoFilmP = createFilmPropertiesParagraph(allFonts, r); // creazione di un paragrafo contenente
-																				// alcune informazioni riassuntive sul
-																				// film che si vuole visionare
-			Paragraph infoReservationP = createReservationPropertiesParagraph(allFonts, r); // creazione di informazioni
-																							// sulla prenotazione
-			PdfPTable table = createEmptyTable(); // generazione di una tabella
-			insertFieldsIntoTable(table, r); // aggiungere alla tabella i posti selezionati
-			Paragraph totalP = createTotalParagraph(allFonts, r); // totale della prenotazione
+			Paragraph filmP = createFilmTitleParagraph(allFonts, reservation); // Crea un paragrafo contenente il
+																				// titolo del
+			// film associato alla prenotazioni
+			Paragraph infoFilmP = createFilmPropertiesParagraph(allFonts, reservation); // Crea un paragrafo
+																						// contenente
+			// alcune informazioni riassuntive sul
+			// film che si vuole visionare
+			Paragraph infoReservationP = createReservationPropertiesParagraph(allFonts, reservation); // Crea un
+																										// paragrafo con
+																										// le
+																										// informazioni
+																										// della
+																										// reservation
+			PdfPTable table = createEmptyTable(); // Genera una tabella
+			insertFieldsIntoTable(table, reservation); // Aggiunge alla tabella i posti selezionati
+			Paragraph totalP = createTotalParagraph(allFonts, reservation); // Crea un paragrafo con il totale della
+																			// prenotazione
 			addAllInfoToDocument(document, image, titleP, infoCinemaP, filmP, infoFilmP, infoReservationP, table,
-					totalP); // aggiunte al documento tutte le informazioni precedentemente create
-			document.close(); // Chiusura del documento
-			r.setReportLocation(FILE); // se tutto va bene aggiungo il report alla cartella contenente tutti i report
-										// emessi dal cinema
+					totalP); // Aggiunge al documento tutte le informazioni precedentemente create
+			document.close(); // Chiude del documento
+			reservation.setReportLocation(FILE); // se tutto va bene aggiunge il report alla cartella contenente tutti i
+													// report
+			// emessi dal cinema
 		} catch (Exception e) {
 			throw new HandlerException("Si è verificato un problema nella generazione del report.");
 		}
 	}
 
 	/**
-	 * METODO per aggiungere al documento tutte le informazioni e paragrafi generati
-	 * precedentemente
+	 * Aggiugne al documento (report) tutte le informazioni e i paragrafi utili e
+	 * generarlo.
 	 * 
-	 * @param document
-	 * @param image
-	 * @param titleP
-	 * @param infoCinemaP
-	 * @param filmP
-	 * @param infoFilmP
-	 * @param infoReservationP
-	 * @param table
-	 * @param totalP
-	 * @throws DocumentException
+	 * @param document         documento che formalmente rappresenta il nostro
+	 *                         report.
+	 * @param image            immagine con il logo del cinema.
+	 * @param titleP           paragrafo con il titolo del cinema.
+	 * @param infoCinemaP      paragrafo che contiene le proprietà del cinema.
+	 * @param filmP            paragrafo che contiene il titolo del film associato
+	 *                         alla prenotazione.
+	 * @param infoFilmP        paragrafo che contiene le informazioni del film
+	 *                         associato alla prenotazione.
+	 * @param infoReservationP paragrafo che contiene le informazioni della
+	 *                         prenotazione.
+	 * @param table            tabella che conterrà i posti associati alla
+	 *                         prenotazione.
+	 * @param totalP           paragrafo che contiene il totale della prenotazione.
+	 * @throws DocumentException se si verificano problemi nella generazione del
+	 *                           documento.
 	 */
 	private void addAllInfoToDocument(Document document, Image image, Paragraph titleP, Paragraph infoCinemaP,
 			Paragraph filmP, Paragraph infoFilmP, Paragraph infoReservationP, PdfPTable table, Paragraph totalP)
@@ -138,14 +168,14 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per generare un paragrafo contenente il totale della prenotazione
+	 * Generare un paragrafo contenente il totale della prenotazione.
 	 * 
-	 * @param allFonts
-	 * @param r
-	 * @return
+	 * @param allFonts    HashMap che contiene tutti i font utili.
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @return il paragrafo che contiene il totale della prenotazione.
 	 */
-	private Paragraph createTotalParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph totalP = new Paragraph("Totale   " + String.format("%.02f", r.getTotal()) + " EUR",
+	private Paragraph createTotalParagraph(HashMap<String, Font> allFonts, Reservation reservation) {
+		Paragraph totalP = new Paragraph("Totale   " + String.format("%.02f", reservation.getTotal()) + " EUR",
 				allFonts.get("subFont3"));
 		totalP.setSpacingBefore(60);
 		totalP.setAlignment(Element.ALIGN_RIGHT);
@@ -154,20 +184,20 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per aggiungere alla tabella i posti selezionati
+	 * Aggiungere alla tabella i posti selezionati nella prenotazione.
 	 * 
-	 * @param table
-	 * @param r
-	 * @throws RoomException
+	 * @param table       tabella che conterrà i posti associati alla prenotazione.
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @throws RoomException se ci sono delle eccezioni generate dalla classe Room.
 	 */
-	private void insertFieldsIntoTable(PdfPTable table, Reservation r) throws RoomException {
+	private void insertFieldsIntoTable(PdfPTable table, Reservation reservation) throws RoomException {
 		PdfPCell c1 = new PdfPCell(new Phrase("Posti prenotati scelti al momento dell'acquisto"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		c1.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		c1.setMinimumHeight(30);
 		table.addCell(c1);
-		for (PhysicalSeat s : r.getSeats()) {
-			String seatCoordinates = r.getProjection().getSeatCoordinates(s);
+		for (PhysicalSeat s : reservation.getSeats()) {
+			String seatCoordinates = reservation.getProjection().getSeatCoordinates(s);
 			if (seatCoordinates != null) {
 				PdfPCell cSeat = new PdfPCell(new Phrase("Fila " + seatCoordinates.replaceAll("\\d", "") + ",   Posto "
 						+ seatCoordinates.replaceAll("[\\D]", "")));
@@ -179,9 +209,9 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per creare una tabella vuota
+	 * Crea una tabella vuota.
 	 * 
-	 * @return
+	 * @return una tabella vuota.
 	 */
 	private PdfPTable createEmptyTable() {
 		PdfPTable table = new PdfPTable(1);
@@ -190,67 +220,70 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per generare un paragrafo contenente alcune informazioni riassuntive
-	 * sulla prenotazione effettuata
+	 * Genera un paragrafo contenente alcune informazioni riassuntive sulla
+	 * prenotazione effettuata.
 	 * 
-	 * @param allFonts
-	 * @param r
-	 * @return
+	 * @param allFonts    HashMap che contiene tutti i font utili.
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @return il paragrafo che contiene le informazioni della prenotazione.
 	 */
-	private Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		String dayOfWeek = r.getProjection().getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL,
+	private Paragraph createReservationPropertiesParagraph(HashMap<String, Font> allFonts, Reservation reservation) {
+		String dayOfWeek = reservation.getProjection().getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL,
 				Locale.ITALIAN);
-		String month = r.getProjection().getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
-		Paragraph infoReservationP = new Paragraph(
-				"Prenotazione effettuata da " + r.getPurchaser().getName() + " " + r.getPurchaser().getSurname() + "\n"
-						+ "Sala " + r.getProjection().getRoom().getProgressive() + "   -   "
-						+ dayOfWeek.toUpperCase().charAt(0) + dayOfWeek.substring(1) + " "
-						+ r.getProjection().getDateTime().getDayOfMonth() + " " + month.toUpperCase().charAt(0)
-						+ month.substring(1) + " " + r.getProjection().getDateTime().getYear() + "  alle  "
-						+ String.format("%02d", r.getProjection().getDateTime().getHour()) + ":"
-						+ String.format("%02d", r.getProjection().getDateTime().getMinute()),
+		String month = reservation.getProjection().getDateTime().getMonth().getDisplayName(TextStyle.FULL,
+				Locale.ITALIAN);
+		Paragraph infoReservationP = new Paragraph("Prenotazione effettuata da " + reservation.getPurchaser().getName()
+				+ " " + reservation.getPurchaser().getSurname() + "\n" + "Sala "
+				+ reservation.getProjection().getRoom().getProgressive() + "   -   " + dayOfWeek.toUpperCase().charAt(0)
+				+ dayOfWeek.substring(1) + " " + reservation.getProjection().getDateTime().getDayOfMonth() + " "
+				+ month.toUpperCase().charAt(0) + month.substring(1) + " "
+				+ reservation.getProjection().getDateTime().getYear() + "  alle  "
+				+ String.format("%02d", reservation.getProjection().getDateTime().getHour()) + ":"
+				+ String.format("%02d", reservation.getProjection().getDateTime().getMinute()),
 				allFonts.get("subFont25"));
 		infoReservationP.setSpacingBefore(30);
 		return infoReservationP;
 	}
 
 	/**
-	 * METODO per generare un paragrafo contente alcune informazioni riassuntive sul
-	 * film
+	 * Genera un paragrafo contente alcune informazioni riassuntive sul film.
 	 * 
-	 * @param allFonts
-	 * @param r
-	 * @return
+	 * @param allFonts    HashMap che contiene tutti i font utili.
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @return il paragrafo che contiene le informazioni del film associato alla
+	 *         prenotazione.
 	 */
-	private Paragraph createFilmPropertiesParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph infoFilmP = new Paragraph(
-				"Regista/i:  "
-						+ r.getProjection().getMovie().getDirectors().toString().replaceAll("\\[", "").replaceAll("\\]",
-								"")
-						+ "      Durata:  " + r.getProjection().getMovie().getDuration() + " min."
-						+ "      Rating film:  " + r.getProjection().getMovie().getRating() + "/5",
+	private Paragraph createFilmPropertiesParagraph(HashMap<String, Font> allFonts, Reservation reservation) {
+		Paragraph infoFilmP = new Paragraph("Regista/i:  "
+				+ reservation.getProjection().getMovie().getDirectors().toString().replaceAll("\\[", "").replaceAll(
+						"\\]", "")
+				+ "      Durata:  " + reservation.getProjection().getMovie().getDuration() + " min."
+				+ "      Rating film:  " + reservation.getProjection().getMovie().getRating() + "/5",
 				allFonts.get("subFont2"));
 		return infoFilmP;
 	}
 
 	/**
-	 * METODO per generare un paragrafo contenente il titolo del film
+	 * Genera un paragrafo contenente il titolo del film.
 	 * 
-	 * @param allFonts
-	 * @return
+	 * 
+	 * @param allFonts    HashMap che contiene tutti i font utili.
+	 * @param reservation prenotazione di cui si vuole creare il report.
+	 * @return il paragrafo che contiene il titolo del film associato alla
+	 *         prenotazione.
 	 */
-	private Paragraph createFilmTitleParagraph(HashMap<String, Font> allFonts, Reservation r) {
-		Paragraph FilmP = new Paragraph(">  " + r.getProjection().getMovie().getTitle(), allFonts.get("subFont"));
+	private Paragraph createFilmTitleParagraph(HashMap<String, Font> allFonts, Reservation reservation) {
+		Paragraph FilmP = new Paragraph(">  " + reservation.getProjection().getMovie().getTitle(),
+				allFonts.get("subFont"));
 		FilmP.setSpacingBefore(40);
 		return FilmP;
 	}
 
 	/**
-	 * METODO per generare un paragrafo contenente alcune proprietà riassuntive del
-	 * cinema
+	 * Genera un paragrafo contenente alcune proprietà riassuntive del cinema.
 	 * 
-	 * @param allFonts
-	 * @return
+	 * @param allFonts HashMap che contiene tutti i font utili.
+	 * @return il paragrafo che contiene le proprietà del cinema.
 	 */
 	private Paragraph createCinemaInfoParagraph(HashMap<String, Font> allFonts) {
 		Paragraph infoCinemaP = new Paragraph(location + "\n" + email + "\n", allFonts.get("smallFont"));
@@ -260,11 +293,10 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per generare un paragrafo contenente il titolo del report (nome del
-	 * cinema)
+	 * Genera un paragrafo contenente il titolo del report (nome del cinema).
 	 * 
-	 * @param allFonts
-	 * @return
+	 * @param allFonts HashMap che contiene tutti i font utili.
+	 * @return il paragrafo con il titolo del cinema.
 	 */
 	private Paragraph createReportTitleParagraph(HashMap<String, Font> allFonts) {
 		Paragraph titleP = new Paragraph(name + "\n", allFonts.get("catFont"));
@@ -274,13 +306,15 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per creare una nuova immagine contenente il logo del cinema e settare
-	 * le sue dimensioni
+	 * Crea una nuova immagine contenente il logo del cinema e setta le sue
+	 * dimensioni.
 	 * 
-	 * @return
-	 * @throws BadElementException
-	 * @throws MalformedURLException
-	 * @throws IOException
+	 * @return l'immagine con il logo del cinema.
+	 * @throws BadElementException   se l'immagine non viene generata nel modo
+	 *                               corretto.
+	 * @throws MalformedURLException se l'URL è malformato.
+	 * @throws IOException           se l'immagine non viene generata con un input
+	 *                               corretto.
 	 */
 	private Image createReportLogoImage() throws BadElementException, MalformedURLException, IOException {
 		String imageUrl = logoURL;
@@ -291,13 +325,13 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per aggiungere i metadati al documento
+	 * Aggiugne i metadati al documento.
 	 * 
-	 * @param document
-	 * @param r
+	 * @param document    documento che formalmente rappresenta il nostro report.
+	 * @param reservation prenotazione di cui si vuole creare il report.
 	 */
-	private void addDocumentProperties(Document document, Reservation r) {
-		document.addTitle("Prenotazione numero " + r.getProgressive());
+	private void addDocumentProperties(Document document, Reservation reservation) {
+		document.addTitle("Prenotazione numero " + reservation.getProgressive());
 		document.addSubject("Using iText");
 		document.addKeywords("Java, PDF, iText");
 		document.addAuthor("Screaming Hairy Armadillo Team");
@@ -305,12 +339,14 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODO per creare un documento ed aprirlo in lettura
+	 * Crea un documento e lo apre in lettura.
 	 * 
-	 * @param FILE
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws DocumentException
+	 * @param FILE si referisce al percorso relativo dove verrà salvato il report.
+	 * @return documento che formalmente rappresenta il nostro report.
+	 * @throws FileNotFoundException se si verificano errori nell'apertura del file
+	 *                               dove verrà salvato il report.
+	 * @throws DocumentException     se si verificano problemi nella generazione del
+	 *                               documento.
 	 */
 	private Document createEmptyDocument(String FILE) throws FileNotFoundException, DocumentException {
 		Document document = new Document();
@@ -319,9 +355,9 @@ public class ReportHandler {
 	}
 
 	/**
-	 * METODo per generare tutti i font che verranno utilizzati nel report
+	 * Genera tutti i font che verranno utilizzati nel report.
 	 * 
-	 * @return allFonts Tutti i font utili nel report
+	 * @return allFonts HashMap che contiene tutti i font utili.
 	 */
 	private HashMap<String, Font> createAllFonts() {
 		HashMap<String, Font> allFonts = new HashMap<String, Font>();
