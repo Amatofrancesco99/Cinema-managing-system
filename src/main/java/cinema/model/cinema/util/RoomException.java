@@ -1,7 +1,7 @@
 package cinema.model.cinema.util;
 
 /**
- * Gestisce le eccezioni generate dalla classe Room.
+ * Lanciata in caso di errori legati alla gestione delle sale del cinema.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,9 +12,10 @@ public class RoomException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public RoomException(String message) {
 		super(message);
 	}
+
 }

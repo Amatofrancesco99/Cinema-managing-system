@@ -1,7 +1,8 @@
 package cinema.controller.handlers.util;
 
 /**
- * Gestisce le eccezioni generate dalle classi EmailHanlder e ReportHandler.
+ * Lanciata in caso di errori riscontrati durante le procedure di generazione
+ * dei report delle prenotazioni e conseguente invio di e-mail allo spettatore.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,7 +13,7 @@ public class HandlerException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public HandlerException(String message) {
 		super(message);

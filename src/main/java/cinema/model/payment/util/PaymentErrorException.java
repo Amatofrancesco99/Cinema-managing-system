@@ -1,7 +1,7 @@
 package cinema.model.payment.util;
 
 /**
- * Gestisce le eccezioni generate da un pagamento che non è andato a buon fine.
+ * Lanciata in caso di errori riscontrati nelle procedure di pagamento.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,7 +12,7 @@ public class PaymentErrorException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public PaymentErrorException(String message) {
 		super(message);

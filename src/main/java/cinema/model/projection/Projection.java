@@ -53,9 +53,9 @@ public class Projection implements Comparable<Projection> {
 		this.price = Math.round(price * 100.0)/100.0;
 		this.room = room;
 		this.seats = new ArrayList<ArrayList<ProjectionSeat>>();
-		for(int i = 0; i < room.getNumberRows(); i++) {
+		for(int i = 0; i < room.getNumberOfRows(); i++) {
 			ArrayList<ProjectionSeat> row = new ArrayList<ProjectionSeat>();
-			for(int j = 0; j < room.getNumberCols(); j++) {
+			for(int j = 0; j < room.getNumberOfCols(); j++) {
 				row.add(new ProjectionSeat(room.getSeat(i, j), true));
 			}
 			seats.add(row);
@@ -92,9 +92,9 @@ public class Projection implements Comparable<Projection> {
 		if (seats.size() != 0) {
 			seats.removeAll(seats);
 		}
-		for(int i = 0; i < room.getNumberRows(); i++) {
+		for(int i = 0; i < room.getNumberOfRows(); i++) {
 			ArrayList<ProjectionSeat> row = new ArrayList<ProjectionSeat>();
-			for(int j = 0; j < room.getNumberCols(); j++) {
+			for(int j = 0; j < room.getNumberOfCols(); j++) {
 				row.add(new ProjectionSeat(room.getSeat(i, j), true));
 			}
 			seats.add(row);
@@ -148,8 +148,8 @@ public class Projection implements Comparable<Projection> {
 	 */
 	public int getNumberAvailableSeat() throws RoomException {
 		int availableSeats = 0;
-		for (int i = 0 ; i < this.getRoom().getNumberRows() ; i++) {
-			for (int j = 0 ; j < this.getRoom().getNumberCols() ; j++) {
+		for (int i = 0 ; i < this.getRoom().getNumberOfRows() ; i++) {
+			for (int j = 0 ; j < this.getRoom().getNumberOfCols() ; j++) {
 				if (checkIfSeatIsAvailable(i, j)) {
 					availableSeats++;
 				}
@@ -207,8 +207,8 @@ public class Projection implements Comparable<Projection> {
 	 * @throws InvalidRoomSeatCoordinatesException 
 	 */
 	public String getSeatCoordinates(PhysicalSeat s) throws RoomException {
-		for(int i=0; i < room.getNumberRows(); i++) {
-			for(int j=0; j < room.getNumberCols(); j++) {
+		for(int i=0; i < room.getNumberOfRows(); i++) {
+			for(int j=0; j < room.getNumberOfCols(); j++) {
 				if(getPhysicalSeat(i,j) == s)
 					return Room.rowIndexToRowLetter(i) + (j+1);		
 			}
@@ -239,7 +239,7 @@ public class Projection implements Comparable<Projection> {
 		String dayOfWeek = getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
 		String month = getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
 		
-		return "Sala n°: " + this.getRoom().getProgressive() + "\n"
+		return "Sala n°: " + this.getRoom().getNumber() + "\n"
 				+ "Data: " + dayOfWeek.toUpperCase().charAt(0) + dayOfWeek.substring(1)
 				+ " " + this.getDateTime().getDayOfMonth()
 				+ " " + month.toUpperCase().charAt(0) + month.substring(1)

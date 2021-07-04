@@ -1,12 +1,12 @@
 package cinema.model.cinema.util;
 
 /**
- * Contiene le informazioni che riguardano i diversi tipi di posto, di cui il
- * cinema potrebbe disporre, all'interno delle sale.
- * 
- * Normal indica il posto classico.
- * 
- * Premium indica il posto più confortevole.
+ * Tipologie di posti di cui il cinema dispone posizionati nelle varie sale.
+ *
+ * Al momento la logica di business contempla solamente posti di tipo
+ * {@code NORMAL} ma sono sempre possibili future implementazioni che
+ * implementano le funzionalità rispettive anche per il tipo di posto
+ * {@code PREMIUM}.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -14,8 +14,13 @@ package cinema.model.cinema.util;
 public enum TypeOfSeat {
 
 	/**
-	 * Tipologia di posto.
+	 * Posto normale di tipo classico.
 	 */
-	NORMAL, PREMIUM;
+	NORMAL,
+
+	/**
+	 * Posto privilegiato con un livello di comfort aggiuntivo.
+	 */
+	PREMIUM;
 
 }

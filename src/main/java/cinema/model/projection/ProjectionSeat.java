@@ -2,50 +2,50 @@ package cinema.model.projection;
 
 import cinema.model.cinema.PhysicalSeat;
 
-/**	BREVE DESCRIZIONE CLASSE ProjectionSeat
+/**
+ * Posto di proiezione associato ad uno specifico posto fisico di una sala.
+ *
+ * A differenza di un posto fisico, un posto di proiezione tiene conto dello
+ * stato del posto fisico per una determinata proiezione (in particolare modella
+ * la disponibilità del posto fisico nel contesto della proiezione).
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * Questa classe rappresenta i posti della sala, ma di una proiezione specifica.
- * Sostanzialmente sono posti fisici (presi dalla sala in cui è proiettato il film), ma
- * hanno come attributo in più il fatto che siano già stati occupati, o che siano liberi.
  */
 public class ProjectionSeat {
-	
-	/** ATTRIBUTI
-	 * @param physicalSeat  Posto fisico della sala
-	 * @param available		Disponibilità del posto ( 0 = occupato, 1 = libero )
+
+	/**
+	 * Posto fisico associato al posto di proiezione.
 	 */
 	private PhysicalSeat physicalSeat;
-	private boolean available;
-	
-	
+
 	/**
-	 * COSTRUTTORE DELLA CLASSE
-	 * @param seat
-	 * @param b
+	 * Stato del posto di proiezione (true = disponibile, false = non disponibile).
 	 */
-	public ProjectionSeat(PhysicalSeat seat, boolean b) {
+	private boolean available;
+
+	/**
+	 * Costruttore del posto di proiezione.
+	 * 
+	 * @param seat      posto fisico da associare al posto di proiezione.
+	 * @param available disponibilità del posto (true = disponibile, false = non
+	 *                  disponibile).
+	 */
+	public ProjectionSeat(PhysicalSeat seat, boolean available) {
 		this.physicalSeat = seat;
-		this.available = b;
+		this.available = available;
 	}
 
-
-	/** METODO per farsi dire il posto fisico*/
 	public PhysicalSeat getPhysicalSeat() {
 		return physicalSeat;
 	}
-	
-	
-	/** METODO per farsi dire se il posto è libero o meno*/
+
 	public boolean isAvailable() {
 		return available;
 	}
-	
-	
-	/* METODO per farsi impostare lo stato di un posto*/
-	public void setAvailable(boolean status) {
-		this.available = status;
+
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
-	
+
 }

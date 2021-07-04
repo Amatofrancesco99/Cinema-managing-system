@@ -544,7 +544,7 @@ public class Cinema {
 	 * @throws ReservationNotExistsException
 	 */
 	public int getNumberColsReservationProjection(long r) throws ReservationException {
-		return getReservation(r).getProjection().getRoom().getNumberCols();
+		return getReservation(r).getProjection().getRoom().getNumberOfCols();
 	}
 
 	/**
@@ -556,7 +556,7 @@ public class Cinema {
 	 * @throws ReservationNotExistsException
 	 */
 	public int getNumberRowsReservationProjection(long r) throws ReservationException {
-		return getReservation(r).getProjection().getRoom().getNumberRows();
+		return getReservation(r).getProjection().getRoom().getNumberOfRows();
 	}
 
 	/**

@@ -186,8 +186,8 @@ public class ReservationTest {
 	@Test
 	public void testRoomSeatNotExists() {
 		int error = 0;
-		int nCols = r.getProjection().getRoom().getNumberCols();
-		int nRows = r.getProjection().getRoom().getNumberRows();
+		int nCols = r.getProjection().getRoom().getNumberOfCols();
+		int nRows = r.getProjection().getRoom().getNumberOfRows();
 		try {
 			r.addSeat(nRows + 2, nCols + 8);
 		} catch (RoomException | SeatAvailabilityException e) {

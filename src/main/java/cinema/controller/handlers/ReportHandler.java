@@ -213,7 +213,7 @@ public class ReportHandler {
 				Locale.ITALIAN);
 		Paragraph infoReservationP = new Paragraph("Prenotazione effettuata da " + reservation.getPurchaser().getName()
 				+ " " + reservation.getPurchaser().getSurname() + "\n" + "Sala "
-				+ reservation.getProjection().getRoom().getProgressive() + "   -   " + dayOfWeek.toUpperCase().charAt(0)
+				+ reservation.getProjection().getRoom().getNumber() + "   -   " + dayOfWeek.toUpperCase().charAt(0)
 				+ dayOfWeek.substring(1) + " " + reservation.getProjection().getDateTime().getDayOfMonth() + " "
 				+ month.toUpperCase().charAt(0) + month.substring(1) + " "
 				+ reservation.getProjection().getDateTime().getYear() + "  alle  "

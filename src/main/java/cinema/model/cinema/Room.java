@@ -6,35 +6,38 @@ import cinema.model.cinema.util.RoomException;
 import cinema.model.cinema.util.TypeOfSeat;
 
 /**
- * Contiene le informazioni che riguardano la sala di un cinema.
- * 
+ * Sala del cinema.
+ *
  * @author Screaming Hairy Armadillo Team
  *
  */
 public class Room {
 
 	/**
-	 * Identificativo progressivo della sala.
+	 * Identificativo univoco della sala.
 	 */
 	private final int number;
 
 	/**
-	 * Matrice di posti che compongono la sala.
+	 * Matrice di posti contenuti nella sala.
 	 */
 	private ArrayList<ArrayList<PhysicalSeat>> seats;
 
 	/**
 	 * Costruttore della sala.
+	 *
+	 * {@code rows} e {@code cols} partono da zero (il primo posto vicino allo
+	 * schermo a sinistra dall'alto ha coordinate (0, 0)).
 	 * 
-	 * @param id   Identificativo progressivo della sala.
-	 * @param rows numero di righe della sala.
-	 * @param cols numero di colonne della sala
-	 * @throws RoomException se ci sono delle eccezioni generate dalla classe Room.
+	 * @param number identificativo univoco della sala.
+	 * @param rows   numero di file della sala.
+	 * @param cols   numero di posti per fila della sala.
+	 * @throws RoomException se le dimensioni della sala (file e posti per fila) non
+	 *                       sono valide.
 	 */
-	public Room(int id, int rows, int cols) throws RoomException {
+	public Room(int number, int rows, int cols) throws RoomException {
 		if (rows <= 0 || cols <= 0)
 			throw new RoomException("La stanza deve contenere almeno un posto.");
-
 		seats = new ArrayList<ArrayList<PhysicalSeat>>();
 		for (int i = 0; i < rows; i++) {
 			ArrayList<PhysicalSeat> row = new ArrayList<PhysicalSeat>();
@@ -43,79 +46,78 @@ public class Room {
 			}
 			seats.add(row);
 		}
-		this.number = id;
+		this.number = number;
 	}
 
 	/**
-	 * Restituisce il numero totale di posti della sala.
+	 * Restituisce il numero totale di posti presenti nella sala.
 	 * 
 	 * @return il numero totale di posti.
 	 */
-	public int getNumberSeats() {
+	public int getNumberOfSeats() {
 		return seats.size() * seats.get(0).size();
 	}
 
-	public int getNumber() {
-		return this.number;
-	}
-
 	/**
-	 * Restituisce il numero di colonne della sala.
+	 * Restituisce il numero di posti per fila della sala.
 	 * 
-	 * @return il numero di colonne.
+	 * @return il numero di posti per fila.
 	 */
-	public int getNumberCols() {
+	public int getNumberOfCols() {
 		return seats.get(0).size();
 	}
 
 	/**
-	 * Restituisce il numero di righe della sala.
+	 * Restituisce il numero di file della sala.
 	 * 
 	 * @return il numero di righe.
 	 */
-	public int getNumberRows() {
+	public int getNumberOfRows() {
 		return seats.size();
 	}
 
 	/**
-	 * Restituisce uno specifico posto della sala, date le sue coordinate
-	 * (riga,colonna).
+	 * Restituisce uno specifico posto della sala date le sue coordinate (fila,
+	 * posto).
 	 * 
-	 * @param row riga del posto.
-	 * @param col colonna del posto.
-	 * @return un posto della sala.
+	 * @param row fila del posto.
+	 * @param col numero del posto all'interno della fila.
+	 * @return il posto della sala richiesto.
 	 */
 	public PhysicalSeat getSeat(int row, int col) {
 		return seats.get(row).get(col);
 	}
 
 	/**
-	 * Converte il numero della riga in un carattere.
+	 * Converte il numero della fila {@code number} nella lettera corrispondente.
 	 * 
-	 * @param number numero da convertire.
-	 * @return il carattere associato al numero inserito.
+	 * @param number numero della fila.
+	 * @return la lettera associata alla fila o null se il numero della fila non è
+	 *         valido.
 	 */
 	public static String rowIndexToRowLetter(int number) {
 		return ((number >= 0 && number <= 25) ? String.valueOf((char) (number + 65)) : null);
 	}
 
 	/**
-	 * Converte un carattere (numero di una fila) in un valore numerico da 0 a 25.
+	 * Converte una lettera (identificante una fila) nel corrispettivo indice
+	 * numerico all'interno della sala.
 	 * 
-	 * @param fila lettera che si vuole convertire in numero.
-	 * @return il numero intero corrispondente alla lettera dell'alfabeto.
+	 * @param fila lettera identificante la fila.
+	 * @return l'indice numerico corrispondente alla lettera.
 	 */
 	public static int rowLetterToRowIndex(String fila) {
 		char letter = fila.toUpperCase().charAt(0);
-		return (Character.getNumericValue(letter) - Character.getNumericValue('A'));
+		return Character.getNumericValue(letter) - Character.getNumericValue('A');
 	}
 
-	public long getProgressive() {
+	public int getNumber() {
 		return number;
 	}
 
 	@Override
 	public String toString() {
-		return "Sala n°: " + number + "  Posti: " + getNumberSeats();
+		return String.format("Sala %d, %d posti", number, getNumberOfSeats());
 	}
+
 }

@@ -2,32 +2,36 @@ package cinema.model.cinema;
 
 import cinema.model.cinema.util.TypeOfSeat;
 
-
-/**BREVE SPIEGAZIONE CLASSE PhysicalSeat
- * 
+/**
+ * Posto fisico presente all'interno delle sale del cinema.
+ *
+ * Questa classe rappresenta un singolo posto fisico presente in una determinata
+ * sala del cinema, differente da uno o più "posti di proiezione" ad esso
+ * associati che tengono invece conto dello stato del posto fisico per una
+ * specifica proiezione di uno specifico film.
+ *
  * @author Screaming Hairy Armadillo Team
  *
- * La classe rappresenta il posto fisico che è presente all'interno di una specifica 
- * sala, esistono diversi tipi di posti in un cinema. 
- * Ovviamente si potrebbero aggiungere molti altri attributi a questa classe, ma per semplicità
- * e soprattutto per la realtà che vogliamo rappresentare non ci interessa farlo.
- * Qualora fosse utile per uno specifico cinema aggiungere attributi a questa classe il 
- * programmatore è libero di aggiungerli.
  */
 public class PhysicalSeat {
-	
-	/**	ATTRIBUTI
-	 * @param type  Tipo di posto
+
+	/**
+	 * Tipo del posto. Al momento sono implementate solamente le funzionalità per il
+	 * tipo {@code TypeOfSeat.NORMAL}.
 	 */
 	@SuppressWarnings("unused")
 	private TypeOfSeat type;
-	
-	
-	/** 
-	 * COSTRUTTORE della classe
-	 * @param type
+
+	/**
+	 * Costruttore del posto fisico.
+	 *
+	 * Al momento sono implementate solamente le funzionalità per il tipo
+	 * {@code TypeOfSeat.NORMAL}.
+	 *
+	 * @param type tipo del posto fisico.
 	 */
-	public PhysicalSeat(TypeOfSeat type){
+	public PhysicalSeat(TypeOfSeat type) {
 		this.type = type;
 	}
+
 }

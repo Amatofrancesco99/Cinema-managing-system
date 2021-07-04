@@ -3,18 +3,13 @@ package cinema.model.payment.methods.paymentCard;
 import java.time.YearMonth;
 
 /**
- * Contiene le informazioni che riguardano la carta di credito, utilizzata dallo
- * spettatore, per effettuare il pagamento della prenotazione.
- * 
+ * Carta di credito utilizzata dallo spettatore per effettuare il pagamento
+ * della prenotazione.
+ *
  * @author Screaming Hairy Armadillo Team
  *
  */
 public class PaymentCard {
-
-	/**
-	 * Titolare della carta.
-	 */
-	private String owner;
 
 	/**
 	 * Numero della carta.
@@ -22,12 +17,17 @@ public class PaymentCard {
 	private String number;
 
 	/**
+	 * Titolare della carta.
+	 */
+	private String owner;
+
+	/**
 	 * Codice di sicurezza della carta.
 	 */
 	private String cvv;
 
 	/**
-	 * Data di scadenza della carta (formato YYYY-MM).
+	 * Data di scadenza della carta.
 	 */
 	private YearMonth expirationDate;
 

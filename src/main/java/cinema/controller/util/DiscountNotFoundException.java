@@ -1,8 +1,7 @@
 package cinema.controller.util;
 
 /**
- * Gestisce le eccezioni, generate da Cinema, che segnalano la mancanza di uno
- * specifico sconto.
+ * Lanciata in caso in cui la strategia di sconto richiesta non sia valida.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -13,7 +12,7 @@ public class DiscountNotFoundException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public DiscountNotFoundException(String message) {
 		super(message);
