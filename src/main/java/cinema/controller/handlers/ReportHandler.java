@@ -134,7 +134,7 @@ public class ReportHandler {
 	}
 
 	/**
-	 * Aggiugne al documento (report) tutte le informazioni e i paragrafi utili e
+	 * Aggiugne al documento (report) tutte le informazioni e i paragrafi utili a
 	 * generarlo.
 	 * 
 	 * @param document         documento che formalmente rappresenta il nostro
