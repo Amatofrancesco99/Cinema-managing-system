@@ -26,7 +26,7 @@ public interface IReservationDiscountStrategy {
 	 * @return Money  Ritorno del prezzo totale scontato
 	 */
 	public double getTotal(Reservation r);
-	
+	public int getDiscountId();
 	public TypeOfDiscounts getTypeOfDiscount();
 
 }

@@ -28,8 +28,8 @@ public class DiscountNumberSpectators extends Discount{
 	 * @param numberPeople
 	 * @param percentage
 	 */
-	public DiscountNumberSpectators(int numberPeople, double percentage) {
-		super(TypeOfDiscounts.NUMBER);
+	public DiscountNumberSpectators(int numberPeople, double percentage, int id) {
+		super(TypeOfDiscounts.NUMBER, id);
 		this.numberPeople = numberPeople;
 		this.percentage = percentage;
 		

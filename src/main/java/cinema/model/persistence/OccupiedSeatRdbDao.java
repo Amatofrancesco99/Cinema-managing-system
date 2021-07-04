@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
-import cinema.model.reservation.Reservation;
 
 public class OccupiedSeatRdbDao implements IOccupiedSeatDao{
 	private Connection connection;

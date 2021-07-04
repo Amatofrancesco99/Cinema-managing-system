@@ -23,7 +23,7 @@ public class DiscountRdbDao implements IDiscountDao{
 		String sql = "SELECT * FROM Discount WHERE type = \"DAY\";";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         ResultSet result = pstatement.executeQuery();
-        DiscountDay discounts = new DiscountDay();
+        DiscountDay discounts = new DiscountDay(result.getInt("id"));
         while (result.next()) {
         	discounts.addDayDiscount(LocalDate.parse(result.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")), result.getDouble("percentage"));
         }
@@ -35,7 +35,7 @@ public class DiscountRdbDao implements IDiscountDao{
 		String sql = "SELECT * FROM Discount WHERE type = \"AGE\";";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         ResultSet result = pstatement.executeQuery();
-        return new DiscountAge(result.getInt("minage"), result.getInt("maxage"), result.getDouble("percentage"));
+        return new DiscountAge(result.getInt("minage"), result.getInt("maxage"), result.getDouble("percentage"), result.getInt("id"));
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class DiscountRdbDao implements IDiscountDao{
 		String sql = "SELECT * FROM Discount WHERE type = \"NUMBER\";";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         ResultSet result = pstatement.executeQuery();
-        return new DiscountNumberSpectators(result.getInt("numberpeople"), result.getDouble("percentage"));
+        return new DiscountNumberSpectators(result.getInt("numberpeople"), result.getDouble("percentage"), result.getInt("id"));
 	}
 
 }

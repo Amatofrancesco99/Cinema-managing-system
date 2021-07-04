@@ -1,9 +1,8 @@
 package cinema.model.reservation;
 
-import java.time.LocalDate;
+import java.time.LocalDate; 
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import cinema.model.payment.GreatNorthernAccountingAdapter;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
@@ -379,5 +378,9 @@ public class Reservation {
 	
 	public TypeOfDiscounts getTypeOfDiscount() {
 		return rd.getTypeOfDiscount();
+	}
+	
+	public int getDiscountId() {
+		return rd.getDiscountId();
 	}
 }
