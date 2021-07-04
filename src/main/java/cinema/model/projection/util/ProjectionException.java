@@ -1,7 +1,8 @@
 package cinema.model.projection.util;
 
 /**
- * Gestisce le eccezioni generate dalla classe Projection.
+ * Lanciata in caso di errori riscontrati nelle procedure di interazione con gli
+ * oggetti che rappresentano le proiezioni.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,9 +13,10 @@ public class ProjectionException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public ProjectionException(String message) {
 		super(message);
 	}
+
 }

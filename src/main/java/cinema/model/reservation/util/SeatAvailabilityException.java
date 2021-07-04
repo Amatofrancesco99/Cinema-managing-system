@@ -1,7 +1,7 @@
 package cinema.model.reservation.util;
 
 /**
- * Eccezione lanciata qualora il posto non sia disponibile.
+ * Eccezione lanciata se il posto richiesto non è disponibile.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,9 +12,10 @@ public class SeatAvailabilityException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message Messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public SeatAvailabilityException(String message) {
 		super(message);
 	}
+
 }

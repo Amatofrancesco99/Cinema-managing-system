@@ -1,7 +1,8 @@
 package cinema.model.reservation.discount.types.util;
 
 /**
- * Eccezione lanciata qualora via sia un problema nell'utilizzo degli sconti.
+ * Lanciata in caso di errori riscontrati nelle procedure di interazione con gli
+ * oggetti che rappresentano i gli sconti.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,9 +13,10 @@ public class DiscountException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message Messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public DiscountException(String message) {
 		super(message);
 	}
+
 }
