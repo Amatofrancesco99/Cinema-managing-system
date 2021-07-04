@@ -8,6 +8,12 @@ package cinema.model.reservation.util;
  */
 @SuppressWarnings("serial")
 public class SeatAvailabilityException extends Exception {
+
+	/**
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message Messaggio da riportare.
+	 */
 	public SeatAvailabilityException(String message) {
 		super(message);
 	}
