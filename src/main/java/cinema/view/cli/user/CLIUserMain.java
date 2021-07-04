@@ -267,16 +267,20 @@ public class CLIUserMain {
 
 	private void insertPaymentCardInfo(long reservation) {
 		System.out.println();
+		String owner = null;
+		String number = null;
+		YearMonth expirationDate = null;
 		boolean end = false;
 		do {
-			System.out.print("Inserisci nome e cognome del titolare della carta di credito: ");
-			String owner = keyboard.nextLine();
-			System.out.print("Inserisci il numero della carta di credito: ");
-			String number = keyboard.nextLine();
-			YearMonth expirationDate = null;
-			YearMonth currentYearMonth = YearMonth.parse(LocalDate.now().toString().substring(0, 7));
 			boolean validDate = false;
 			do {
+				System.out.print("Inserisci nome e cognome del titolare della carta di credito: ");
+				owner = keyboard.nextLine();
+				System.out.print("Inserisci il numero della carta di credito: ");
+				number = keyboard.nextLine();
+				expirationDate = null;
+				YearMonth currentYearMonth = YearMonth.parse(LocalDate.now().toString().substring(0, 7));
+				validDate = false;
 				System.out.print("Inserisci la data di scadenza della carta di credito (YYYY-MM): ");
 				try {
 					expirationDate = YearMonth.parse(keyboard.nextLine());
@@ -286,7 +290,7 @@ public class CLIUserMain {
 						throw new Exception();
 					}
 				} catch (Exception exception) {
-					System.out.println("La data inserita non è valida.\n");
+					System.out.println("La carta di credito inserita è scaduta.\nInserisci una nuova carta di credito.\n");
 				}
 			} while (!validDate);
 			System.out.print("Inserisci il CVV della carta di credito: ");
