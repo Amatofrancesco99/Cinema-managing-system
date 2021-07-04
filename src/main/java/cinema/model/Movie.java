@@ -11,32 +11,71 @@ import java.util.ArrayList;
 public class Movie {
 
 	/**
-	 * ATTRIBUTI
-	 * 
-	 * @param id          Id
-	 * @param title       Titolo
-	 * @param description Trama
-	 * @param genres      Generi
-	 * @param directors   Registi
-	 * @param cast        Attori
-	 * @param rating      Valutazione (intero da 0 a 5, 5 apprezzato molto dal
-	 *                    pubblico)
-	 * @param duration    Durata
-	 * @param imageURL    Immagine di locandina
-	 * @param trailerURL  Link del trailer del film
+	 * Id del film.
 	 */
 	private int id;
+
+	/**
+	 * Titolo del film.
+	 */
 	private String title;
+
+	/**
+	 * Descrizione del film.
+	 */
 	private String description;
+
+	/**
+	 * ArrayList contenente i generi del film.
+	 */
 	private ArrayList<String> genres;
+
+	/**
+	 * ArrayList contenente i direttori del film.
+	 */
 	private ArrayList<String> directors;
+
+	/**
+	 * ArrayList contenente gli attori del film.
+	 */
 	private ArrayList<String> cast;
+
+	/**
+	 * Valutazione del film (1-5 stelle).
+	 */
 	private int rating;
+
+	/**
+	 * Durata del film in minuti.
+	 */
 	private int duration;
+
+	/**
+	 * URL della locandina del film.
+	 */
 	private String imageURL;
+
+	/**
+	 * URL del trailer del film.
+	 */
 	private String trailerURL;
 
-	/** COSTRUTTORE comprendente tutti gli argomenti */
+	/**
+	 * Costruttore del film.
+	 * 
+	 * @param id          id del film.
+	 * @param title       titolo del film.
+	 * @param description descrizione del film.
+	 * @param genres      generi del film.
+	 * @param directors   direttori del film.
+	 * @param cast        cast del film.
+	 * @param rating      valutazione del film (1-5 stelle).
+	 * @param duration    durata del film in minuti.
+	 * @param imageURL    URL della locandina del film (deve puntare a un'immagine
+	 *                    all'interno della cartella
+	 *                    src/main/resources/static/img/movie-posters).
+	 * @param trailerURL  URL del trailer del film (YouTube).
+	 */
 	public Movie(int id, String title, String description, ArrayList<String> genres, ArrayList<String> directors,
 			ArrayList<String> cast, int rating, int duration, String imageURL, String trailerURL) {
 		this.id = id;
@@ -52,9 +91,10 @@ public class Movie {
 	}
 
 	/**
-	 * METODO per descrivere brevemente le caratteristiche principali di un film
+	 * Restituisce una serializzazione breve dei dati del film.
 	 * 
-	 * @return caratteristiche
+	 * @return la descrizione di default del film (rappresentante i suoi dati
+	 *         principali).
 	 */
 	public String getDefaultDescription() {
 		return "Titolo:\t" + this.getTitle() + "\n" + "Breve trama: "
@@ -66,9 +106,10 @@ public class Movie {
 	}
 
 	/**
-	 * METODO per descrivere tutte le caratteristiche di un film
+	 * Restituisce una serializzazione dettagliata dei dati del film.
 	 * 
-	 * @return caratteristiche
+	 * @return la descrizione dettagliata del film (rappresentante il dettaglio dei
+	 *         suoi dati).
 	 */
 	public String getDetailedDescription() {
 		return "Titolo:\t" + this.getTitle() + "\n" + "Trama: "
@@ -80,53 +121,44 @@ public class Movie {
 				+ this.getTrailerURL() + "\n";
 	}
 
-	/** METODO per farsi dire l'id di un film */
 	public int getId() {
 		return id;
 	}
 
-	/** METODO per farsi dire il titolo di un film */
 	public String getTitle() {
 		return title;
 	}
 
-	/** METODO per farsi dire la trama di un film */
 	public String getDescription() {
 		return description;
 	}
 
-	/** METODO per farsi dire i generi di un film */
 	public ArrayList<String> getGenres() {
 		return genres;
 	}
 
-	/** METODO per farsi dire i direttori di un film */
 	public ArrayList<String> getDirectors() {
 		return directors;
 	}
 
-	/** METODO per farsi dire il cast di un film */
 	public ArrayList<String> getCast() {
 		return cast;
 	}
 
-	/** METODO per farsi dire il rating di un film */
 	public int getRating() {
 		return rating;
 	}
 
-	/** METODO per farsi dire la durata di un film */
 	public int getDuration() {
 		return duration;
 	}
 
-	/** METODO per farsi dire l'url dell'immagine di copertina del film */
 	public String getImageURL() {
 		return imageURL;
 	}
 
-	/** METODO per farsi dire l'url del trailer del film */
 	public String getTrailerURL() {
 		return trailerURL;
 	}
+
 }
