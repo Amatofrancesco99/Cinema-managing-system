@@ -3,7 +3,7 @@ package cinema.model.reservation.discount.coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 
 /**
- * Rappresenta un coupon che pu� essere applicato per poter effettuare una
+ * Rappresenta un coupon che può essere applicato per poter effettuare una
  * detrazione dal totale della prenotazione, pari all'importo del coupon stesso.
  * 
  * @author Screaming Hairy Armadillo Team
