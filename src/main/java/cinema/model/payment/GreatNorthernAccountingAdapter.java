@@ -5,28 +5,37 @@ import java.util.Random;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 
 /**
- * Rappresenta una possibile metodologia di pagamento messa a disposizione dal
- * cinema.
+ * Rappresenta una possibile metodologia di pagamento digitale messa a
+ * disposizione dal cinema.
  * 
  * @author Screaming Hairy Armadillo Team
  *
  */
 public class GreatNorthernAccountingAdapter implements IPaymentAdapter {
 
+	/**
+	 * Carta di credito.
+	 */
 	@SuppressWarnings("unused")
 	private PaymentCard p;
 
+	/**
+	 * Costruttore del servizio di pagamento digitale GreatNorthernAccounting.
+	 * 
+	 * @param p carta di credito che sfrutta il servizio.
+	 */
 	public GreatNorthernAccountingAdapter(PaymentCard p) {
 		this.p = p;
 	}
 
 	/**
-	 * METODO per ridurre il saldo della carta Resituisce sempre true perché non
-	 * abbiamo una implementazione vera della carta Ipotizziamo semplicemente che
-	 * qualsiasi cifra inserita venga sempre restituito vero Ovviamente bisognerebbe
-	 * considerare delle problematiche, ossia se per qualche motivo non si potesse
-	 * raggiungere il gestore della carta, o se il saldo da pagare fosse superiore
-	 * rispetto al credito residuo, ecc...
+	 * Permette di simulare un pagamento. Il valore di succesProbability rappresenta
+	 * la probabilità di successo del pagamento (1 sempre successo, 0 sempre
+	 * insuccesso).
+	 * 
+	 * @param amount quantita di denaro da sottrarre dal saldo.
+	 * @return true se il pagamento è andato a buon fine, false nel caso ci siano
+	 *         stati dei problemi.
 	 */
 	@Override
 	public boolean pay(double amount) {

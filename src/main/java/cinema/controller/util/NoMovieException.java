@@ -11,7 +11,9 @@ package cinema.controller.util;
 public class NoMovieException extends Exception {
 
 	/**
-	 * METODO utilizzato per stampare le informazioni dell'eccezione
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message messaggio da riportare.
 	 */
 	public NoMovieException(String message) {
 		super(message);

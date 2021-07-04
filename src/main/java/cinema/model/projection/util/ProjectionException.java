@@ -9,6 +9,11 @@ package cinema.model.projection.util;
 @SuppressWarnings("serial")
 public class ProjectionException extends Exception {
 
+	/**
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message messaggio da riportare.
+	 */
 	public ProjectionException(String message) {
 		super(message);
 	}

@@ -11,11 +11,34 @@ import java.time.YearMonth;
  */
 public class PaymentCard {
 
+	/**
+	 * Titolare della carta.
+	 */
 	private String owner;
+
+	/**
+	 * Numero della carta.
+	 */
 	private String number;
+
+	/**
+	 * Codice di sicurezza della carta.
+	 */
 	private String cvv;
+
+	/**
+	 * Data di scadenza della carta (formato YYYY-MM).
+	 */
 	private YearMonth expirationDate;
 
+	/**
+	 * Costruttore della carta di credito.
+	 * 
+	 * @param number         numero della carta.
+	 * @param owner          titolare della carta.
+	 * @param cvv            codice di sicurezza della carta.
+	 * @param expirationDate data di scadenza della carta.
+	 */
 	public PaymentCard(String number, String owner, String cvv, YearMonth expirationDate) {
 		this.owner = owner;
 		this.number = number;
