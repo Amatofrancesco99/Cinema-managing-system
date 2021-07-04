@@ -9,9 +9,11 @@ package cinema.model.payment;
 public interface IPaymentAdapter {
 
 	/**
-	 * Permette di gestire il pagamento.
+	 * Richiede ad un'API di pagamento specificata dalla classe che implementa
+	 * questa interfaccia una transazione di denaro attraverso il metodo di
+	 * pagamento inserito.
 	 * 
-	 * @param amount quantita di denaro da sottrarre dal saldo.
+	 * @param amount importo da sottrarre.
 	 * @return true se il pagamento è andato a buon fine, false nel caso ci siano
 	 *         stati dei problemi.
 	 */
