@@ -87,7 +87,7 @@ public class EmailHandler {
 				    // Generazione di una nuova sessione mail
 				    Session session = startNewSession(user,password,properties);
 					   
-				    //Tentativo di composizione del messaggio ed invio dell'email  
+				    //Tentativo di composizione del messaggio ed invio dell'email
 				    createMessageAndSendEmail(session,user,to,r);
 				} catch (HandlerException exception) {
 					System.out.println(exception.getMessage());

@@ -123,13 +123,11 @@ public class Cinema {
 			//occupazione dei posti
 			
 			/**
-			 * 
 			 * for(Projection p : getCurrently...){
-			 * 		ArrayList<ProjectionSeat> blockedSeats = persistenceFacade.getOcuupiedSeats(p.getId());
+			 * 		ArrayList<ProjectionSeat> blockedSeats = persistenceFacade.getOccupiedSeats(p.getId());
 			 *      for(ProjectionSeat ps : blockedSeats)
 			 *      	p.takeSeat(ps.getRow(), ps.getColumn());
 			 * }
-			 * 
 			 */
 			
 			
