@@ -24,17 +24,31 @@ import cinema.model.spectator.util.InvalidSpectatorInfoException;
  * Permette allo spettatore di poter effettuare le operazioni principali
  * (visualizzare i film proiettati, visualizzare le proiezioni dei film,
  * selezionare i posti nella sala, inserire i dati per poter effettuare sconti,
- * pagamento e invio email da parte del cinema dell'avvenuta prenotazione con
- * tutte le informazioni utili).
+ * pagamento e invio e-mail contenente la ricevuta di prenotazione).
  * 
  * @author Screaming Hairy Armadillo Team
  *
  */
 public class CLIUserMain {
 
+	/**
+	 * Scanner utilizzato per leggere gli input dal terminale.
+	 */
 	private Scanner keyboard;
+	
+	/**
+	 * Controller di dominio utilizzato come interfaccia verso il modello.
+	 */
 	private Cinema cinema;
+	
+	/**
+	 * Massimo numero di tentativi di pagamento errati permessi prima di rinunciare.
+	 */
 	private final int MAX_PAYMENT_ATTEMPTS = 3;
+	
+	/**
+	 * Separatore delle sezioni dell'output sul terminale.
+	 */
 	private final String SEPARATOR = "-----------------------------------------------------\n";
 
 	/**
