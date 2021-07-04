@@ -149,7 +149,7 @@ public class CLIAdminMain {
 					}
 				}
 				if (i == cinema.getAllDiscountStrategy().size()) {
-				    System.out.println("Scelta non valida.\n");
+					System.out.println("Scelta non valida.\n");
 				}
 			} while (true);
 		} catch (PersistenceException exception) {
@@ -171,8 +171,8 @@ public class CLIAdminMain {
 			selectProjectionDateTime(projection);
 			selectProjectionPrice(projection);
 			try {
-				cinema.putNewProjectionIntoDb();
-			} catch (PersistenceException exception) {
+				cinema.putNewProjectionIntoDb(projection);
+			} catch (PersistenceException | ProjectionException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		}
@@ -209,7 +209,7 @@ public class CLIAdminMain {
 						inputInt("Inserisci l'ID del film da associare alla proiezione: "));
 				System.out.println();
 				return;
-			} catch (NoMovieException exception) {
+			} catch (NoMovieException | ProjectionException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -230,7 +230,7 @@ public class CLIAdminMain {
 				cinema.setProjectionRoom(projection,
 						inputInt("Inserisci il numero della sala da associare alla proiezione: "));
 				return;
-			} catch (RoomException exception) {
+			} catch (RoomException | ProjectionException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
