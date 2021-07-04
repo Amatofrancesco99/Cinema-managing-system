@@ -512,7 +512,7 @@ public class Cinema {
 	 * @throws PersistenceException
 	 */
 	public int getMaxDiscountAge() throws PersistenceException {
-		return this.persistenceFacade.getAgeDiscounts().getMax_age();
+		return this.persistenceFacade.getAgeDiscounts().getMaxAge();
 	}
 
 	/**
@@ -523,7 +523,7 @@ public class Cinema {
 	 * @throws PersistenceException
 	 */
 	public int getMinDiscountAge() throws PersistenceException {
-		return this.persistenceFacade.getAgeDiscounts().getMin_age();
+		return this.persistenceFacade.getAgeDiscounts().getMinAge();
 	}
 
 	/**

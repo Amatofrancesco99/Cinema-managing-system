@@ -35,17 +35,17 @@ public class CLIUserMain {
 	 * Scanner utilizzato per leggere gli input dal terminale.
 	 */
 	private Scanner keyboard;
-	
+
 	/**
 	 * Controller di dominio utilizzato come interfaccia verso il modello.
 	 */
 	private Cinema cinema;
-	
+
 	/**
 	 * Massimo numero di tentativi di pagamento errati permessi prima di rinunciare.
 	 */
 	private final int MAX_PAYMENT_ATTEMPTS = 3;
-	
+
 	/**
 	 * Separatore delle sezioni dell'output sul terminale.
 	 */
