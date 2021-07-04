@@ -15,9 +15,9 @@ import cinema.model.reservation.discount.coupon.util.CouponException;
  */
 public interface ICouponDao {
 	/**
-	 * Restituisce tutti i coupon presenti nel database.
+	 * Restituisce tutti i coupon presenti nel meccanismo di persistenza.
 	 * 
-	 * @return i coupon presenti nel database.
+	 * @return i coupon presenti nel meccanismo di persistenza.
 	 * @throws SQLException    se vengono riscontrati errori nell'interazione con il
 	 *                         meccanismo di persistenza.
 	 * @throws CouponException se il codice del coupon non è valido, ovvero non di
@@ -29,7 +29,7 @@ public interface ICouponDao {
 	 * Restituisce un coupon sulla base del suo codice promozionale.
 	 * 
 	 * @param promoCode codice promozionale del coupon da restituire.
-	 * @return un coupon sulla base del proprio codice promozionale.
+	 * @return un coupon sulla base del suo codice promozionale.
 	 * @throws SQLException    se vengono riscontrati errori nell'interazione con il
 	 *                         meccanismo di persistenza.
 	 * @throws CouponException se il codice del coupon identificato non è valido,
