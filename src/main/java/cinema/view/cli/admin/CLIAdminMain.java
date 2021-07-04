@@ -83,7 +83,7 @@ public class CLIAdminMain {
 					int projectionId = Integer.parseInt(keyboard.nextLine());
 					try {
 						myCinema.removeProjection(projectionId);
-					} catch (ProjectionException e) {
+					} catch (ProjectionException | PersistenceException e) {
 						System.out.println(e.getMessage());
 					}
 					System.out.println("\n\nVuoi rimuovere altre proiezioni? (Y/N) ");
@@ -107,9 +107,13 @@ public class CLIAdminMain {
 		System.out.println("\nLista di tutte le proiezioni");
 		// TODO: change this method with something like :   
 		//    	 myCinema.getProjections(int thisYear or a limited range)
-		for (Projection p : myCinema.getProjections()) {
-			System.out.println(p.getId() + ") ");
-			System.out.println(p.toString());
+		try {
+			for (Projection p : myCinema.getProjections()) {
+				System.out.println(p.getId() + ") ");
+				System.out.println(p.toString());
+			}
+		} catch (PersistenceException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -167,7 +171,7 @@ public class CLIAdminMain {
 			int hour = Integer.parseInt(parts2[0]);
 			int minute = Integer.parseInt(parts2[1]);
 			try {
-				projectionDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
+				projectionDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute, 0);
 			} catch (Exception e) {
 				
 			}
@@ -192,7 +196,7 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionPrice(p,price);
 				end = true;
-			} catch (ProjectionException e) {
+			} catch (ProjectionException | PersistenceException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -215,7 +219,7 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionRoom(p,roomId);
 				end = true;
-			} catch (RoomException | ProjectionException e) {
+			} catch (RoomException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -240,7 +244,7 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionMovie(p,movieId);
 				end = true;
-			} catch (NoMovieException | ProjectionException e) {
+			} catch (NoMovieException e) {
 				System.out.println(e.getMessage());
 			}
 		}
@@ -257,7 +261,7 @@ public class CLIAdminMain {
 			try {
 				myCinema.createProjectionWithID(projectionId);
 				end = true;
-			} catch (ProjectionException e) {
+			} catch (ProjectionException | PersistenceException e) {
 				System.out.println(e.getMessage());
 			}
 		}

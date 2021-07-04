@@ -117,7 +117,8 @@ public class PersistenceFacade {
 		try {
 			this.iProjectionDao.putProjection(newProjection);
 		} catch (SQLException e) {
-			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+			e.printStackTrace();
+			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
 	

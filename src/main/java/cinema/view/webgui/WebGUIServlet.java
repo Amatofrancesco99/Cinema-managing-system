@@ -82,7 +82,7 @@ public class WebGUIServlet extends HttpServlet {
 		long reservationId = cinema.createReservation();
 		try {
 			cinema.setReservationProjection(reservationId, projectionId);
-		} catch (ProjectionException | ReservationException e) {
+		} catch (ProjectionException | ReservationException | PersistenceException e) {
 			renderError(req, resp);
 			return;
 		}
@@ -94,12 +94,16 @@ public class WebGUIServlet extends HttpServlet {
 	}
 
 	protected void renderIndex(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Movie> resultMovies;
+		List<Movie> resultMovies = null;
 		String query = req.getParameter("query");
-		if (query == null) {
-			resultMovies = cinema.getCurrentlyAvailableMovies();
-		} else {
-			resultMovies = cinema.getCurrentlyAvailableMovies(query);
+		try {
+			if (query == null) {
+				resultMovies = cinema.getCurrentlyAvailableMovies();
+			} else {
+				resultMovies = cinema.getCurrentlyAvailableMovies(query);
+			}
+		} catch (PersistenceException e) {
+			System.out.println(e.getMessage());
 		}
 		resp.getWriter().write(Rythm.render("index.html", cinema, resultMovies, query));
 	}
@@ -110,7 +114,12 @@ public class WebGUIServlet extends HttpServlet {
 		Movie movie = cinema.getMovie(movieId);
 
 		// Build the data structure used to store the sorted projections
-		ArrayList<Integer> sortedProjections = new ArrayList<>(cinema.getMovieProjections(movieId));
+		ArrayList<Integer> sortedProjections = null;
+		try {
+			sortedProjections = new ArrayList<>(cinema.getMovieProjections(movieId));
+		} catch (NoMovieException | PersistenceException e) {
+			System.out.println(e.getMessage());
+		}
 		Collections.sort(sortedProjections);
 		ArrayList<ArrayList<Integer>> schedule = new ArrayList<>();
 		LocalDate lastLocalDate = null;
@@ -118,7 +127,7 @@ public class WebGUIServlet extends HttpServlet {
 			LocalDate localDate = null;
 			try {
 				localDate = cinema.getProjectionDateTime(projection).toLocalDate();
-			} catch (ProjectionException exception) {
+			} catch (ProjectionException | PersistenceException exception) {
 				// No need to handle this exception
 			}
 			if (!Objects.equals(lastLocalDate, localDate)) {

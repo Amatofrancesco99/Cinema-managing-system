@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import cinema.controller.Cinema;
 import cinema.controller.handlers.util.HandlerException;
-import cinema.controller.util.DiscountNotFoundException;
 import cinema.controller.util.NoMovieException;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
@@ -17,7 +16,6 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
@@ -313,7 +311,7 @@ public class CLIUserMain {
 								System.out.print(" ------ ");
 							else 
 								System.out.print(" [ " + Room.rowIndexToRowLetter(i) + ( j + 1 ) + " ] ");
-						} catch (RoomException | ProjectionException e) {
+						} catch (RoomException | ProjectionException | PersistenceException e) {
 							System.out.println(e.getMessage());
 						}
 					}
@@ -329,7 +327,7 @@ public class CLIUserMain {
 		System.out.println("\n");
 		try {
 			myCinema.setReservationProjection(r, projectionId);
-		} catch (ProjectionException | ReservationException e) {
+		} catch (ProjectionException | ReservationException | PersistenceException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -346,7 +344,7 @@ public class CLIUserMain {
 				try {
 					myCinema.getCurrentlyAvailableProjection(projectionId);
 					end = true;
-				} catch (ProjectionException e) {
+				} catch (ProjectionException | PersistenceException e) {
 					System.out.println(e.getMessage());
 				}
 			}
@@ -374,7 +372,7 @@ public class CLIUserMain {
 				System.out.println(p.getId() + ")");
 				System.out.println(p.toString());
 			}
-		} catch (NoMovieException | ProjectionException e) {
+		} catch (NoMovieException | ProjectionException | PersistenceException e) {
 			System.out.println(e.getMessage());
 		}		
 	}
@@ -392,7 +390,7 @@ public class CLIUserMain {
 				try {
 					myCinema.getCurrentlyAvailableProjections(filmId);
 					end = true;
-				} catch (NoMovieException | ProjectionException e) {
+				} catch (NoMovieException | ProjectionException | PersistenceException e) {
 					System.out.println(e.getMessage());
 				}
 			}
@@ -417,10 +415,14 @@ public class CLIUserMain {
 	
 	private static void printCurrentlyAvailableMovies() {
 		System.out.println("FILM ATTUALMENTE PROIETTATI \n");
-		for (Movie m : myCinema.getCurrentlyAvailableMovies()) {
-			System.out.println(m.getId() + ")");
-			System.out.println(m.getDefaultDescription());
+		try {
+			for (Movie m : myCinema.getCurrentlyAvailableMovies()) {
+				System.out.println(m.getId() + ")");
+				System.out.println(m.getDefaultDescription());
+			}
+			System.out.println("-----------------------------------------------------\n");
+		} catch (PersistenceException e) {
+			System.out.println(e.getMessage());
 		}
-		System.out.println("-----------------------------------------------------\n");
 	}
 }

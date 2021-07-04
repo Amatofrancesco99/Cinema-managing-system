@@ -20,9 +20,6 @@ import cinema.model.projection.util.ProjectionException;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.Discount;
-import cinema.model.reservation.discount.types.DiscountAge;
-import cinema.model.reservation.discount.types.DiscountDay;
-import cinema.model.reservation.discount.types.DiscountNumberSpectators;
 import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.Reservation;
@@ -79,8 +76,8 @@ public class Cinema {
 	private String password;
 	private String adminPassword;
 	private EmailHandler emailHandler;
+	private Projection newProjection;
 	private List<Room> rooms;
-	private List<Projection> cinemaProjections;
 	private List<Reservation> cinemaReservations;
 	private Discount cinemaDiscount;
 	private ArrayList<Discount> allDiscounts;
@@ -107,7 +104,6 @@ public class Cinema {
 			System.out.println(e.getMessage());
 		}
 		rooms = new ArrayList<Room>();
-		cinemaProjections = new ArrayList<Projection>();
 		cinemaReservations = new ArrayList<Reservation>();
 		try {
 			cinemaDiscount = persistenceFacade.getAgeDiscounts();
@@ -124,7 +120,6 @@ public class Cinema {
 		// Test projections
 		try {
 			rooms = getAllRooms();
-			cinemaProjections = persistenceFacade.getAllProjections();
 			//occupazione dei posti
 			
 			/**
@@ -183,19 +178,21 @@ public class Cinema {
 	 * 
 	 * @param p Proiezione da rimuovere alla lista di proiezioni di cui il cinema
 	 *          dispone
+	 * @throws PersistenceException 
 	 * @throws NoProjectionException
 	 */
-	public void removeProjection(int p) throws ProjectionException {
-		cinemaProjections.remove(getProjection(p));
+	public void removeProjection(int p) throws ProjectionException, PersistenceException {
+		persistenceFacade.removeProjection(p);
 	}
 
 	/**
 	 * METODO per farsi restituire tutte le proiezioni di cui il cinema dispone
 	 * 
 	 * @return ArrayList<Projection> Insieme di tutte le proiezioni del cinema
+	 * @throws PersistenceException 
 	 */
-	public List<Projection> getProjections() {
-		return cinemaProjections;
+	public List<Projection> getProjections() throws PersistenceException {
+		return persistenceFacade.getAllProjections();
 	}
 
 	/**
@@ -203,19 +200,20 @@ public class Cinema {
 	 * 
 	 * @param newProjection
 	 * @param id
+	 * @throws PersistenceException 
 	 * @throws ProjectionIDAlreadyUsedException
 	 * @throws InvalidProjectionIdException
 	 */
-	public void createProjectionWithID(int id) throws ProjectionException {
-		for (Projection p : cinemaProjections) {
+	public void createProjectionWithID(int id) throws ProjectionException, PersistenceException {
+		for (Projection p : getProjections()) {
 			if (p.getId() == id)
-				throw new ProjectionException("La proiezione con id " + id + " non esiste.");
+				throw new ProjectionException("La proiezione con id " + id + " è già esistente.");
 		}
-		Projection p = new Projection();
-		p.setId(id);
-		cinemaProjections.add(p);
+		newProjection = new Projection();
+		newProjection.setId(id);
 	}
-
+	
+	
 	/**
 	 * METODO per associare ad una proiezione un film
 	 * 
@@ -224,8 +222,8 @@ public class Cinema {
 	 * @throws NoMovieException
 	 * @throws NoProjectionException
 	 */
-	public void setProjectionMovie(int p, int movieId) throws NoMovieException, ProjectionException {
-		getProjection(p).setMovie(getMovie(movieId));
+	public void setProjectionMovie(int p, int movieId) throws NoMovieException {
+		newProjection.setMovie(getMovie(movieId));
 	}
 
 	/**
@@ -236,8 +234,8 @@ public class Cinema {
 	 * @throws RoomNotExistsException
 	 * @throws NoProjectionException
 	 */
-	public void setProjectionRoom(int p, int roomId) throws RoomException, ProjectionException {
-		getProjection(p).setRoom(getRoom(roomId));
+	public void setProjectionRoom(int p, int roomId) throws RoomException {
+		newProjection.setRoom(getRoom(roomId));
 	}
 
 	/**
@@ -245,12 +243,10 @@ public class Cinema {
 	 * 
 	 * @param p
 	 * @param projectionDateTime
-	 * @throws InvalidProjectionDateTimeException
-	 * @throws NoProjectionException
+	 * @throws ProjectionException 
 	 */
-	public void setProjectionDateTime(int p, LocalDateTime projectionDateTime)
-			throws ProjectionException, ProjectionException {
-		getProjection(p).setDateTime(projectionDateTime);
+	public void setProjectionDateTime(int p, LocalDateTime projectionDateTime) throws ProjectionException {
+		newProjection.setDateTime(projectionDateTime);
 	}
 
 	/**
@@ -258,13 +254,18 @@ public class Cinema {
 	 * 
 	 * @param p
 	 * @param price
+	 * @throws PersistenceException 
 	 * @throws InvalidPriceException
 	 * @throws NoProjectionException
 	 */
-	public void setProjectionPrice(int p, double price) throws ProjectionException, ProjectionException {
-		getProjection(p).setPrice(price);
+	public void setProjectionPrice(int p, double price) throws ProjectionException, PersistenceException {
+		newProjection.setPrice(price);
+		// una volta terminata la creazione della proiezione e settati tutti gli attributi
+		// l'ultimo selezionato è il prezzo, viene inserita nel db la nuova proiezione creata
+		persistenceFacade.putProjection(newProjection);
 	}
-
+	
+	
 	/**
 	 * 
 	 * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
@@ -273,17 +274,18 @@ public class Cinema {
 	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
 	 * @return ArrayList<Projection> Insieme delle proiezioni dello specifico film
 	 * @throws NoMovieException
+	 * @throws PersistenceException 
 	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
 	 *                                     abbia quel film, tra i film proiettati
 	 * 
 	 *                                     DA ELIMINARE (RIDURRE L'ACCOPPIAMENTO CON
 	 *                                     LE INTERFACCE)
 	 */
-	public List<Projection> getProjections(int movieId) throws NoMovieException {
+	public List<Projection> getProjections(int movieId) throws NoMovieException, PersistenceException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
 		Movie m = getMovie(movieId);
 		if (m != null) {
-			for (Projection p : cinemaProjections) {
+			for (Projection p : getProjections()) {
 				if (p.getMovie().getId() == movieId) {
 					movieProjections.add(p);
 				}
@@ -300,17 +302,18 @@ public class Cinema {
 	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
 	 * @return ArrayList<Integer> Id delle proiezioni dello specifico film
 	 * @throws NoMovieException
+	 * @throws PersistenceException 
 	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
 	 *                                     abbia quel film, tra i film proiettati
 	 * 
 	 *                                     DA ELIMINARE (RIDURRE L'ACCOPPIAMENTO CON
 	 *                                     LE INTERFACCE)
 	 */
-	public List<Integer> getMovieProjections(int movieId) throws NoMovieException {
+	public List<Integer> getMovieProjections(int movieId) throws NoMovieException, PersistenceException {
 		List<Integer> movieProjections = new ArrayList<>();
 		Movie m = getMovie(movieId);
 		if (m != null) {
-			for (Projection p : cinemaProjections) {
+			for (Projection p : getProjections()) {
 				if (p.getMovie().getId() == movieId) {
 					movieProjections.add(p.getId());
 				}
@@ -329,6 +332,7 @@ public class Cinema {
 	 * @return ArrayList<Projection> Insieme delle proiezioni attualmente
 	 *         disponibili dello specifico film
 	 * @throws NoMovieException
+	 * @throws PersistenceException 
 	 * @throws MovieNoLongerProjectedException Eccezione lanciata qualora il film
 	 *                                         inserito non abbia proiezioni
 	 *                                         attualmente disponibili
@@ -336,11 +340,11 @@ public class Cinema {
 	 *                                         non abbia quel film, tra i film
 	 *                                         proiettati
 	 */
-	public List<Projection> getCurrentlyAvailableProjections(int movieId) throws NoMovieException, ProjectionException {
+	public List<Projection> getCurrentlyAvailableProjections(int movieId) throws NoMovieException, ProjectionException, PersistenceException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
 		Movie m = getMovie(movieId);
 		if (m != null) {
-			for (Projection p : cinemaProjections) {
+			for (Projection p : getProjections()) {
 				if ((p.getMovie().getId() == movieId) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
 					movieProjections.add(p);
 				}
@@ -364,10 +368,11 @@ public class Cinema {
 	 * 
 	 * @return List<Movie> Insieme di tutti i film che il cinema sta momentaneamente
 	 *         proiettando
+	 * @throws PersistenceException 
 	 */
-	public List<Movie> getCurrentlyAvailableMovies() {
+	public List<Movie> getCurrentlyAvailableMovies() throws PersistenceException {
 		List<Movie> movies = new ArrayList<Movie>();
-		for (Projection p : cinemaProjections) {
+		for (Projection p : getProjections()) {
 			if ((p.getDateTime() != null) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
 				boolean alreadyExists = false;
 				for (Movie m : movies) {
@@ -391,8 +396,9 @@ public class Cinema {
 	 * @param query Titolo del film che si vuole cercare tra le proiezioni del
 	 *              cinema (o una parte di esso)
 	 * @return ArrayList<Movie> Lista dei film
+	 * @throws PersistenceException 
 	 */
-	public List<Movie> getCurrentlyAvailableMovies(String query) {
+	public List<Movie> getCurrentlyAvailableMovies(String query) throws PersistenceException {
 		List<Movie> movies = new ArrayList<Movie>();
 		for (Movie m : getCurrentlyAvailableMovies()) {
 			if (m.getTitle().toLowerCase().contains(query.toLowerCase())) {
@@ -423,11 +429,12 @@ public class Cinema {
 	 * 
 	 * @param id Id della proiezione
 	 * @return Projection Proiezione con quello specifico Id
+	 * @throws PersistenceException 
 	 * @throws NoProjectionException Eccezione lanciata qualora non ci sia nessuna
 	 *                               proiezione con quell'Id
 	 */
-	public Projection getProjection(int id) throws ProjectionException {
-		for (Projection p : cinemaProjections) {
+	public Projection getProjection(int id) throws ProjectionException, PersistenceException {
+		for (Projection p : getProjections()) {
 			if (p.getId() == id) {
 				return p;
 			}
@@ -441,6 +448,7 @@ public class Cinema {
 	 * 
 	 * @param id Id della proiezione che si vuole verificare se sia disponibile
 	 * @return Projection Proiezione con quello specifico Id, attualmente proiettata
+	 * @throws PersistenceException 
 	 * @throws NoProjectionException                  Eccezione lanciata qualora non
 	 *                                                ci sia nessuna proiezione con
 	 *                                                quell'Id
@@ -449,8 +457,8 @@ public class Cinema {
 	 *                                                sia inferiore alla data
 	 *                                                odierna
 	 */
-	public Projection getCurrentlyAvailableProjection(int id) throws ProjectionException {
-		for (Projection p : cinemaProjections) {
+	public Projection getCurrentlyAvailableProjection(int id) throws ProjectionException, PersistenceException {
+		for (Projection p : getProjections()) {
 			if ((p.getId() == id) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
 				return p;
 			}
@@ -562,10 +570,11 @@ public class Cinema {
 	 * 
 	 * @param r
 	 * @param projectionId
+	 * @throws PersistenceException 
 	 * @throws NoProjectionException
 	 * @throws ReservationNotExistsException
 	 */
-	public void setReservationProjection(long r, int projectionId) throws ProjectionException, ReservationException {
+	public void setReservationProjection(long r, int projectionId) throws ProjectionException, ReservationException, PersistenceException {
 		getReservation(r).setProjection(getProjection(projectionId));
 	}
 
@@ -602,11 +611,12 @@ public class Cinema {
 	 * @param col
 	 * @return
 	 * @throws ProjectionException
+	 * @throws PersistenceException 
 	 * @throws InvalidRoomSeatCoordinatesException
 	 * @throws ReservationNotExistsException
 	 */
 	public boolean checkIfProjectionSeatIsAvailable(int p, int row, int col)
-			throws RoomException, ReservationException, ProjectionException {
+			throws RoomException, ReservationException, ProjectionException, PersistenceException {
 		return getProjection(p).checkIfSeatIsAvailable(row, col);
 	}
 
@@ -936,8 +946,8 @@ public class Cinema {
 		return getReservation(r).getCoupon().getCode();
 	}
 
-	public Movie getProjectionMovie(int p) throws ProjectionException {
-		for (Projection projection : cinemaProjections) {
+	public Movie getProjectionMovie(int p) throws ProjectionException, PersistenceException {
+		for (Projection projection : getProjections()) {
 			if (projection.getId() == p) {
 				return projection.getMovie();
 			}
@@ -945,8 +955,8 @@ public class Cinema {
 		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
 	}
 
-	public LocalDateTime getProjectionDateTime(int p) throws ProjectionException {
-		for (Projection projection : cinemaProjections) {
+	public LocalDateTime getProjectionDateTime(int p) throws ProjectionException, PersistenceException {
+		for (Projection projection : getProjections()) {
 			if (projection.getId() == p) {
 				return projection.getDateTime();
 			}
@@ -954,8 +964,8 @@ public class Cinema {
 		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
 	}
 
-	public Room getProjectionRoom(int p) throws ProjectionException {
-		for (Projection projection : cinemaProjections) {
+	public Room getProjectionRoom(int p) throws ProjectionException, PersistenceException {
+		for (Projection projection : getProjections()) {
 			if (projection.getId() == p) {
 				return projection.getRoom();
 			}
