@@ -2,23 +2,27 @@ package cinema.model.spectator;
 
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
-/** BREVE DESCRIZIONE CLASSE Spectator
+/**
+ * Rappresenta lo spettatore che effettua la prenotazione della visione del
+ * film.
  * 
  * @author Screaming Hairy Armadillo Team
- *	
- * Questa classe rappresenta lo spettatore che effettua la prenotazione della visione del film
+ * 
  */
 public class Spectator {
 
-	/** ATTRIBUTI
-	 * @param name			Nome/Nomi
-	 * @param surname		Cognome/Cognomi
-	 * @param email			Email
+	/**
+	 * ATTRIBUTI
+	 * 
+	 * @param name    Nome/Nomi
+	 * @param surname Cognome/Cognomi
+	 * @param email   Email
 	 */
 	private String name, surname, email;
 
 	/**
 	 * COSTRUTTORE della classe
+	 * 
 	 * @param name
 	 * @param surname
 	 * @param email
@@ -27,9 +31,9 @@ public class Spectator {
 	public Spectator(String name, String surname, String email) throws InvalidSpectatorInfoException {
 		if ((email.equals("")) || (name.equals("")) || (surname.equals(""))) {
 			throw new InvalidSpectatorInfoException("I dati personali richiesti sono mancanti.");
-		}
-		else {
-			this.name = name;;
+		} else {
+			this.name = name;
+			;
 			this.surname = surname;
 			this.email = email;
 		}
@@ -39,12 +43,12 @@ public class Spectator {
 	public String getName() {
 		return name;
 	}
-	
+
 	/** METODO per farsi dire il cognome dello spettatore */
 	public String getSurname() {
 		return surname;
 	}
-	
+
 	/** METODO per farsi dire l'email dello spettatore */
 	public String getEmail() {
 		return email;

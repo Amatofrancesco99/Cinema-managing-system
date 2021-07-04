@@ -21,18 +21,15 @@ import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
 /**
- * BREVE DESCRIZIONE CLASSE CLIMain
+ * Permette allo spettatore di poter effettuare le operazioni principali
+ * (visualizzare i film proiettati, visualizzare le proiezioni dei film,
+ * selezionare i posti nella sala, inserire i dati per poter effettuare sconti,
+ * pagamento e invio email da parte del cinema dell'avvenuta prenotazione con
+ * tutte le informazioni utili).
  * 
  * @author Screaming Hairy Armadillo Team
  *
- *         Questa classe permette allo spettatore di poter effettuare le
- *         operazioni principali (visualizzare i film attualmente proiettati,
- *         visualizzare le proiezioni dei film, selezione di posti per la
- *         prenotazione della visione in sala, inserimento dati per poter
- *         effettuare sconti, pagamento e invio email da parte del cinema
- *         dell'avvenuta prenotazione con tutte le informazioni utili).
- *         Chiaramante la resa grafica della WEBGui è molto più elevata, anche
- *         se le funzionalità sono le stesse.
+ * 
  */
 public class CLIUserMain {
 
@@ -290,7 +287,8 @@ public class CLIUserMain {
 						throw new Exception();
 					}
 				} catch (Exception exception) {
-					System.out.println("La carta di credito inserita è scaduta.\nInserisci una nuova carta di credito.\n");
+					System.out.println(
+							"La carta di credito inserita è scaduta.\nInserisci una nuova carta di credito.\n");
 				}
 			} while (!validDate);
 			System.out.print("Inserisci il CVV della carta di credito: ");

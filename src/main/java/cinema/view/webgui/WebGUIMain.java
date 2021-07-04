@@ -1,5 +1,11 @@
 package cinema.view.webgui;
 
+/**
+ * Classe principale utilizzata per la creazione del server.
+ * 
+ * @author Screaming Hairy Armadillo Team
+ * 
+ */
 public class WebGUIMain {
 
 	public static void main(String[] argv) {

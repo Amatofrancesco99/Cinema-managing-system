@@ -1,6 +1,6 @@
 package cinema.test.junit;
 
-import static org.junit.Assert.*;  
+import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,27 +28,11 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
-
-/** BREVE DESCRIZIONE CLASSE ReservationTest
+/**
+ * Effettua il test di unit�(tramite JUnit), sulla classe Reservation presente
+ * all'interno del model package.
  * 
  * @author Screaming Hairy Armadillo Team
- *
- * Questa classe nasce con lo scopo specifico di effettuare il test di unità (tramite JUnit),
- * ossia test effettuati su una classe specifica e dei suoi metodi, provando differenti
- * input e verificando gli output in maniera automatica (confrontando i risultati attesi
- * con quelli ottenuti), sulla classe Reservation, presente all'interno del model package.
- * Anche se l'implementazione reale prevede l'utilizzo di dati presenti su un DB, per
- * sfruttare il principio di persistenza dei dati (ad esempio dei Film, delle Sale, delle
- * Proiezioni, ecc...) sono utilizzati oggetti istanza "finti" (mock), ossia oggetti
- * che hanno la stessa interfaccia di oggetti esterni realmente utilizzati e che simulano le
- * loro funzionalità. 
- * Questo per evitare di dover effettuare attività preliminari di inserimento dati 
- * all'interno del DB, il che potrebbe comportare eventuali problematiche (perdita dei dati), 
- * un evento non molto gradito e una perdita di tempo, visto che i dati inseriti non sarebbero
- * quelli veri, ma quelli ottenuti di fronte ad errori di inserimento da parte di utenti
- * non particolarmente attenti/istruiti.
- * Chiaramente potrebbe essere utile fare sessioni di "istruzioni" a chi vendiamo il 
- * software, per poter fare in modo tale che inseriscano valori corretti all'interno del DB.
  * 
  */
 public class ReservationTest {
@@ -56,23 +40,24 @@ public class ReservationTest {
 	private static Reservation r;
 	private static Cinema myCinema = new Cinema();
 	private static ArrayList<Projection> projections;
-	
-	/** 
-	 * METODO per poter effettuare l'impostazione del nostro sistema, creando gli input
-	 * e gli output previsti.
+
+	/**
+	 * METODO per poter effettuare l'impostazione del nostro sistema, creando gli
+	 * input e gli output previsti.
+	 * 
 	 * @throws Exception
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		myCinema.setCinemaDiscountStrategy(TypeOfDiscounts.AGE);
 		r = myCinema.getReservation(myCinema.createReservation());
-		Room room = new Room(999, 3,3);
-		
+		Room room = new Room(999, 3, 3);
+
 		ArrayList<String> genres, directors, cast;
 		genres = new ArrayList<>();
 		directors = new ArrayList<>();
 		cast = new ArrayList<>();
-		
+
 		genres.add("Azione");
 		genres.add("Fantascienza");
 		genres.add("Avventura");
@@ -89,17 +74,17 @@ public class ReservationTest {
 				genres, directors, cast, 5, 182,
 				"https://images-na.ssl-images-amazon.com/images/I/71HyTegC0SL._AC_SY879_.jpg",
 				"https://www.youtube.com/watch?v=vqWz0ZCpYBs");
-		
+
 		projections = new ArrayList<Projection>();
-		projections.add(new Projection(109, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5,	room));
+		projections
+				.add(new Projection(109, AvengersEndgameMovie, LocalDateTime.parse("2021-06-02T22:30:00"), 12.5, room));
 		r.setProjection(projections.get(0));
-		
+
 		r.addSeat(0, 0);
 		r.addSeat(0, 1);
 		r.addSeat(0, 2);
 	}
 
-	
 	/** Test sull'assegnamento progressivo di una prenotazione */
 	@Test
 	public void testProgressiveAssignment() throws ReservationException {
@@ -109,16 +94,17 @@ public class ReservationTest {
 		}
 		assertEquals(STOP, myCinema.getReservation(STOP).getProgressive());
 	}
-	
-	
+
 	/** Test data di creazione nuova prenotazione */
 	@Test
 	public void testPurchaseDate() throws ReservationException {
-		assertEquals(LocalDate.now(),myCinema.getReservation(myCinema.createReservation()).getDate());
+		assertEquals(LocalDate.now(), myCinema.getReservation(myCinema.createReservation()).getDate());
 	}
-	
-	
-	/** Test di occupazione posti, qualora ce ne fossero alcuni già occupati da qualcun altro */
+
+	/**
+	 * Test di occupazione posti, qualora ce ne fossero alcuni già occupati da
+	 * qualcun altro
+	 */
 	@Test
 	public void testAlreadyTakenSeat() {
 		int error = 0;
@@ -129,16 +115,16 @@ public class ReservationTest {
 			error = 1;
 		}
 		assertEquals(1, error);
-		// Libero il posto usato per test e ritorno alla situazione di prima (rioccupo i posti)
+		// Libero il posto usato per test e ritorno alla situazione di prima (rioccupo i
+		// posti)
 		try {
 			r.getProjection().freeSeat(0, 0);
 			r.addSeat(0, 1);
 			r.addSeat(0, 2);
 		} catch (RoomException | SeatAvailabilityException e) {
-		}	
+		}
 	}
-	
-	
+
 	/** Test sui coupon */
 	@Test
 	public void testCoupon() {
@@ -146,19 +132,20 @@ public class ReservationTest {
 		// Coupon utilizzato una sola volta
 		try {
 			c1 = new Coupon("PROVA123", 3.5, false);
-		} catch (CouponException e1) { }
+		} catch (CouponException e1) {
+		}
 		try {
 			myCinema.setReservationCoupon(r.getProgressive(), c1.getCode());
 			r.setCoupon(c1);
-			assertEquals(21.5 , r.getTotal() , 0);
+			assertEquals(21.5, r.getTotal(), 0);
 		} catch (CouponException | ReservationException e) {
 			e.toString();
 		}
 		try {
 			r.setPaymentCard("1234567890123456", "TestOwnerName", "123", YearMonth.of(2022, 01));
 			myCinema.buyReservation(r.getProgressive());
-		} catch (NumberFormatException | SeatAvailabilityException | RoomException
-				| ReservationException | PaymentErrorException | PersistenceException e) {
+		} catch (NumberFormatException | SeatAvailabilityException | RoomException | ReservationException
+				| PaymentErrorException | PersistenceException e) {
 			e.toString();
 		}
 		// Cerco di riutilizzare lo stesso coupon in due reservation diverse
@@ -170,59 +157,62 @@ public class ReservationTest {
 			assertEquals(12.50, newReservation.getTotal(), 0);
 		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException e) {
 			e.toString();
-		}	
+		}
 	}
-	
-	
+
 	/** Test sui prezzi, usando lo sconto per età */
 	@Test
 	public void testPrices() throws CouponException {
-		assertEquals(12.50*2, r.getFullPrice(),0);
+		assertEquals(12.50 * 2, r.getFullPrice(), 0);
 		// uso lo sconto per età
 		try {
 			r.setNumberPeopleUnderMinAge(1);
 			r.setNumberPeopleOverMaxAge(0);
-		} catch (DiscountException e) {}
-		assertEquals(12.50*2 - 1.87 , r.getTotal() , 0);
+		} catch (DiscountException e) {
+		}
+		assertEquals(12.50 * 2 - 1.87, r.getTotal(), 0);
 	}
-	
-	
+
 	/** Test di occupazione dei posti (scegliere un posto non presente in sala) */
 	@Test
-	public void testRoomSeatNotExists() {	
+	public void testRoomSeatNotExists() {
 		int error = 0;
 		int nCols = r.getProjection().getRoom().getNumberCols();
 		int nRows = r.getProjection().getRoom().getNumberRows();
 		try {
-			r.addSeat(nRows + 2 , nCols + 8);
+			r.addSeat(nRows + 2, nCols + 8);
 		} catch (RoomException | SeatAvailabilityException e) {
-			error ++;
+			error++;
 		}
-		assertEquals(1,error);
+		assertEquals(1, error);
 	}
-	
-	
-	/** Test qualora si inserisca un numero di persone che hanno un età inferiore ad un
-	* età minima da cui partono gli sconti superiore al numero di persone della prenotazione
-	* stessa */
-	@Test 
+
+	/**
+	 * Test qualora si inserisca un numero di persone che hanno un età inferiore ad
+	 * un età minima da cui partono gli sconti superiore al numero di persone della
+	 * prenotazione stessa
+	 */
+	@Test
 	public void testOnOtherSpectatorInfo() {
 		int error = 0;
 		try {
 			r.setNumberPeopleOverMaxAge(10);
 		} catch (DiscountException e) {
-			error ++;
+			error++;
 		}
-		assertEquals(1,error);
+		assertEquals(1, error);
 	}
-	
-	
-	/** Test invio email 
-	 * @throws InvalidSpectatorInfoException */
+
+	/**
+	 * Test invio email
+	 * 
+	 * @throws InvalidSpectatorInfoException
+	 */
 	@Test
 	public void testSendEmail() throws InvalidSpectatorInfoException {
 		// cambia i campi qui sotto, specialmente l'email, per poter testare l'invio
-		// del report contenente tutte le informazioni sulla prenotazione alla tua casella
+		// del report contenente tutte le informazioni sulla prenotazione alla tua
+		// casella
 		// di posta personale
 		Reservation r2 = null;
 		try {
@@ -231,14 +221,15 @@ public class ReservationTest {
 			r2.addSeat(1, 1);
 			r2.addSeat(1, 2);
 			r2.setPaymentCard("1234567890123456", "Francesco Amato", "212", YearMonth.of(2024, 02));
-			r2.setPurchaser(new Spectator("Francesco", "Amato" , "francesco.amato01@universitadipavia.it"));
+			r2.setPurchaser(new Spectator("Francesco", "Amato", "francesco.amato01@universitadipavia.it"));
 		} catch (ReservationException | SeatAvailabilityException | RoomException e) {
 			System.out.println(e.getMessage());
 		}
 		try {
-			/* notare ci sono tre posti nell'email inviata 
-			* (ogni classe di test chiama setUpBeforeClass(), prima di iniziare)
-			*/
+			/*
+			 * notare ci sono tre posti nell'email inviata (ogni classe di test chiama
+			 * setUpBeforeClass(), prima di iniziare)
+			 */
 			myCinema.sendReservationEmail(r2.getProgressive());
 		} catch (HandlerException | ReservationException e) {
 			System.out.println(e.getMessage());

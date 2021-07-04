@@ -15,13 +15,12 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 
 /**
- * BREVE DESCRIZIONE CLASSE CLIAdminMain
+ * Permette all'amministratore del cinema di poter effettuare le operazioni base
+ * principali (login, aggiunta/rimozione prenotazione, modifica delle politiche
+ * di sconto).
  * 
  * @author Screaming Hairy Armadillo Team
- *
- *         Questa classe permette all'amministratore del cinema di poter
- *         effettuare le operazioni base principali (login, aggiunta/rimozione
- *         prenotazione, modifica delle politiche di sconto).
+ * 
  */
 public class CLIAdminMain {
 
@@ -130,7 +129,8 @@ public class CLIAdminMain {
 		System.out.println("\n" + SEPARATOR + "\nGestione sconti:\n");
 		System.out.print("Strategie di sconto disponibili: ");
 		try {
-			System.out.println(cinema.getAllDiscountStrategy().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n");
+			System.out.println(
+					cinema.getAllDiscountStrategy().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n");
 			do {
 				System.out.print("Inserisci una tra le strategie disponibili: ");
 				String newStrategyName = keyboard.nextLine().toUpperCase();
@@ -166,10 +166,10 @@ public class CLIAdminMain {
 			selectProjectionDateTime(projection);
 			selectProjectionPrice(projection);
 			try {
-					cinema.putNewProjectionIntoDb();
-				} catch (PersistenceException e) {
-					System.out.println(e.getMessage());
-				}
+				cinema.putNewProjectionIntoDb();
+			} catch (PersistenceException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 
