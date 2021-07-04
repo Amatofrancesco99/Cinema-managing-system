@@ -39,7 +39,7 @@ public class OccupiedSeatRdbDao implements IOccupiedSeatDao{
 
 
 	@Override
-	public boolean getOccupiedSeat(int projectionId, int row, int column) throws SQLException{
+	public boolean getSeatOccupationStatus(int projectionId, int row, int column) throws SQLException{
 		String sql = "SELECT * FROM OccupiedSeat WHERE projection = ? AND row = ? AND column = ?;";
         	PreparedStatement pstatement  = connection.prepareStatement(sql);
 	        pstatement.setInt(1, projectionId);

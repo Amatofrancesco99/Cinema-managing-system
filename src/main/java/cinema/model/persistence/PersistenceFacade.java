@@ -192,7 +192,7 @@ public class PersistenceFacade {
 	
 	public boolean getOccupiedSeat(int projectionId, int row, int column) throws PersistenceException {
 		try {
-			return this.iOccupiedSeatDao.getOccupiedSeat(projectionId, row, column);
+			return this.iOccupiedSeatDao.getSeatOccupationStatus(projectionId, row, column);
 		} catch (SQLException e) {
 			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
