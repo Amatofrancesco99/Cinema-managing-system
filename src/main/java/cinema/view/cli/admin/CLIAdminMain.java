@@ -137,6 +137,11 @@ public class CLIAdminMain {
 					selectProjectionRoom(p);
 					selectProjectionDateTime(p);
 					selectProjectionPrice(p);
+					try {
+						myCinema.putNewProjectionIntoDb();
+					} catch (PersistenceException e) {
+						System.out.println(e.getMessage());
+					}
 					insertingEnd = true;
 					System.out.println("\n\nVuoi inserire nuove proiezioni? (Y/N) ");
 					String c = keyboard.nextLine();
@@ -196,7 +201,7 @@ public class CLIAdminMain {
 			try {
 				myCinema.setProjectionPrice(p,price);
 				end = true;
-			} catch (ProjectionException | PersistenceException e) {
+			} catch (ProjectionException e) {
 				System.out.println(e.getMessage());
 			}
 		}

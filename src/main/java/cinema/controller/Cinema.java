@@ -252,17 +252,19 @@ public class Cinema {
 	 * 
 	 * @param p
 	 * @param price
-	 * @throws PersistenceException 
-	 * @throws InvalidPriceException
-	 * @throws NoProjectionException
+	 * @throws ProjectionException
 	 */
-	public void setProjectionPrice(int p, double price) throws ProjectionException, PersistenceException {
+	public void setProjectionPrice(int p, double price) throws ProjectionException {
 		newProjection.setPrice(price);
-		// una volta terminata la creazione della proiezione e settati tutti gli attributi
-		// l'ultimo selezionato è il prezzo, viene inserita nel db la nuova proiezione creata
-		persistenceFacade.putProjection(newProjection);
 	}
 	
+	/**METODO per inserire la nuova proiezione creata dall'admin all'interno del db
+	 * 
+	 * @throws PersistenceException
+	 */
+	public void putNewProjectionIntoDb() throws PersistenceException {
+		persistenceFacade.putProjection(newProjection);
+	}
 	
 	/**
 	 * 
