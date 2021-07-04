@@ -5,8 +5,8 @@ import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 /**
- * Strategia di sconto sulla prenotazione basata sull'et‡†degli spettatori che
- * visioneranno il film.
+ * Strategia di sconto sulla prenotazione basata sull'et√† degli spettatori che
+ * guarderanno il film.
  * 
  * @author Screaming Hairy Armadillo Team
  *

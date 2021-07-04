@@ -29,7 +29,7 @@ import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
 /**
- * Effettua il test di unit‡†(tramite JUnit), sulla classe Reservation presente
+ * Effettua il test di unit√† (tramite JUnit), sulla classe Reservation presente
  * all'interno del model package.
  * 
  * @author Screaming Hairy Armadillo Team
