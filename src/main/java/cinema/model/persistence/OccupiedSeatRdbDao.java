@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import cinema.model.cinema.PhysicalSeat;
+import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.Projection;
+import cinema.model.reservation.Reservation;
 
 public class OccupiedSeatRdbDao implements IOccupiedSeatDao{
 	private Connection connection;
@@ -46,5 +49,21 @@ public class OccupiedSeatRdbDao implements IOccupiedSeatDao{
 			if(result.next())
 				return false;
 			return true;
+	}
+
+	@Override
+	public void putOccupiedSeatsFromReservation(Reservation reservation) throws SQLException, RoomException {
+		for(PhysicalSeat ps : reservation.getSeats()) {
+			String coordinates = reservation.getProjection().getSeatCoordinates(ps);
+			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d",""));
+			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
+			String sql = "INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(?, ?, ?, ?);";
+	        PreparedStatement pstatement  = connection.prepareStatement(sql);
+	        pstatement.setInt(1, reservation.getProjection().getId());
+	        pstatement.setInt(2, row);
+	        pstatement.setInt(3, col);
+	        pstatement.setLong(4, reservation.getProgressive());
+	        pstatement.executeUpdate();
+		}
 	}
 }

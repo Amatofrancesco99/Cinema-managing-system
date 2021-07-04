@@ -135,6 +135,7 @@ public class Cinema {
 	public long createReservation() throws PersistenceException {
 		Reservation r = new Reservation(cinemaDiscount, persistenceFacade.getLastReservationId() + 1);
 		cinemaReservations.add(r);
+		persistenceFacade.putEmptyReservation(r);
 		return r.getProgressive();
 	}
 
@@ -768,6 +769,7 @@ public class Cinema {
 		if (coupon != null) {
 			persistenceFacade.setCouponUsed(coupon.getCode());
 		}
+		persistenceFacade.setReservationFields(getReservation(r));
 	}
 
 	/**

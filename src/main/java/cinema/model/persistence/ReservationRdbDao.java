@@ -3,8 +3,9 @@ package cinema.model.persistence;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 
+import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.util.PersistenceException;
 import cinema.model.reservation.Reservation;
 
 public class ReservationRdbDao implements IReservationDao{
@@ -18,23 +19,24 @@ public class ReservationRdbDao implements IReservationDao{
 
 
 	@Override
-	public void setReservationFields(Reservation reservation) throws SQLException {
-		String sql = "UPDATE Reservation SET date = ?, projection = ?, name = ?, surname = ?, email = ?, paymentcardowner = ?, paymentcard = ?, coupon = ?, discount = ?, numberpeopleunderage = ?, nuberpeopleoverage = ? WHERE id = ?;";
+	public void setReservationFields(Reservation reservation) throws SQLException, PersistenceException, RoomException {
+		String sql = "UPDATE Reservation SET date = ?, projection = ?, name = ?, surname = ?, email = ?, paymentcardowner = ?, paymentcard = ?, coupon = ?, discount = ?, numberpeopleunderage = ?, numberpeopleoverage = ? WHERE id = ?;";
 		PreparedStatement pstatement  = connection.prepareStatement(sql);
-        
-		pstatement.setString(1, new SimpleDateFormat("yyyy-MM-dd").format(reservation.getDate()));
+        pstatement.setString(1,reservation.getDate().toString());
         pstatement.setLong(2, reservation.getProjection().getId());
         pstatement.setString(3, reservation.getPurchaser().getName());
         pstatement.setString(4, reservation.getPurchaser().getSurname());
         pstatement.setString(5, reservation.getPurchaser().getEmail());
         pstatement.setString(6, reservation.getPaymentCard().getOwner());
         pstatement.setString(7, reservation.getPaymentCard().getNumber());
-        pstatement.setString(8, reservation.getCoupon().getCode());
+        if( reservation.getCoupon() != null )
+        	pstatement.setString(8, reservation.getCoupon().getCode());
         pstatement.setInt(9, reservation.getDiscountId());
         pstatement.setInt(10, reservation.getNumberPeopleUntilMinAge());
         pstatement.setLong(11, reservation.getNumberPeopleOverMaxAge());
         pstatement.setLong(12, reservation.getProgressive());
         pstatement.executeUpdate();
+        PersistenceFacade.getInstance().putOccupiedSeatsFromReservation(reservation);
 	}
 	
 	

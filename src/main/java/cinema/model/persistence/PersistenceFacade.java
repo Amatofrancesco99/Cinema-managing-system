@@ -10,6 +10,7 @@ import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
+import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.DiscountAge;
@@ -199,6 +200,33 @@ public class PersistenceFacade {
 			return this.iReservationDao.getLastReservationId();
 		} catch (SQLException e) {
 			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	public void putEmptyReservation(Reservation newReservation) throws PersistenceException{
+		try {
+			iReservationDao.putEmptyReservation(newReservation);
+		} catch (SQLException e) {
+			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
+			e.printStackTrace();
+		}
+	}
+	
+	public void setReservationFields(Reservation reservation) throws PersistenceException, RoomException{
+		try {
+			iReservationDao.setReservationFields(reservation);
+		} catch (SQLException e) {
+			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
+			e.printStackTrace();
+		}
+	}
+	
+	public void putOccupiedSeatsFromReservation(Reservation reservation) throws PersistenceException, RoomException{
+		try {
+			iOccupiedSeatDao.putOccupiedSeatsFromReservation(reservation);
+		} catch (SQLException e) {
+			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
+			e.printStackTrace();
 		}
 	}
 	
