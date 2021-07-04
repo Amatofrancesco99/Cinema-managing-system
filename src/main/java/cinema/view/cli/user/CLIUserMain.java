@@ -29,7 +29,6 @@ import cinema.model.spectator.util.InvalidSpectatorInfoException;
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * 
  */
 public class CLIUserMain {
 
@@ -107,7 +106,7 @@ public class CLIUserMain {
 				System.out.println(movie.getDefaultDescription());
 			}
 		} catch (PersistenceException exception) {
-			System.out.println(exception.getMessage());
+			System.out.println(exception.getMessage() + "\n");
 		}
 	}
 
@@ -287,8 +286,8 @@ public class CLIUserMain {
 						throw new Exception();
 					}
 				} catch (Exception exception) {
-					System.out.println(
-							"La carta di credito inserita è scaduta.\nInserisci una nuova carta di credito.\n");
+					System.out
+							.println("La carta di credito inserita è scaduta. Inserisci una nuova carta di credito.\n");
 				}
 			} while (!validDate);
 			System.out.print("Inserisci il CVV della carta di credito: ");
