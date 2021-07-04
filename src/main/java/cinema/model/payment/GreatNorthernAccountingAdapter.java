@@ -4,6 +4,13 @@ import java.util.Random;
 
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 
+/**
+ * Rappresenta una possibile metodologia di pagamento messa a disposizione dal
+ * cinema.
+ * 
+ * @author Screaming Hairy Armadillo Team
+ *
+ */
 public class GreatNorthernAccountingAdapter implements IPaymentAdapter {
 
 	@SuppressWarnings("unused")

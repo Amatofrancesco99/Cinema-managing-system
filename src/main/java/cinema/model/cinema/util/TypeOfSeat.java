@@ -1,14 +1,14 @@
 package cinema.model.cinema.util;
 
-/** BREVE DESCRIZIONE ENUMERATION TypeOfSeat
+/**
+ * Contiene le informazioni che riguardano i diversi tipi di posto, di cui il
+ * cinema potrebbe disporre, all'interno delle sale.
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * In questa enumeration sono presenti i diversi tipi di posti che un cinema dispone/potrebbe
- * disporre all'interno delle proprie sale.
  */
 public enum TypeOfSeat {
-	
+
 	NORMAL, PREMIUM;
-	
+
 }
