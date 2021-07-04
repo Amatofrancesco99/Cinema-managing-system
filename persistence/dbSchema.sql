@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS Room;
 DROP TABLE IF EXISTS Discount;
 DROP TABLE IF EXISTS Coupon;
 DROP TABLE IF EXISTS Reservation;
+DROP TABLE IF EXISTS OcupiedSeat;
 
 
 CREATE TABLE Movie(
@@ -44,9 +45,8 @@ CREATE TABLE Coupon(
 	used INTEGER NOT NULL DEFAULT(0) CHECK(used == 1 OR used == 0)
 );
 
-
 CREATE TABLE Discount(
-	code TEXT PRIMARY KEY NOT NULL,
+	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	type TEXT NOT NULL,
 	percentage REAL NOT NULL CHECK(percentage >= 0 AND percentage <= 1),
 	minage INTEGER CHECK(minage > 0),
@@ -59,21 +59,30 @@ CREATE TABLE Discount(
 
 CREATE TABLE Reservation(
 	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-	date INTEGER NOT NULL,
+	date INTEGER,
 	projection INTEGER,
-	name TEXT NOT NULL,
-	surname TEXT NOT NULL,
-	email TEXT NOT NULL,
-	paymentcardowner TEXT NOT NULL,
-	paymentcard TEXT NOT NULL,
+	name TEXT,
+	surname TEXT,
+	email TEXT,
+	paymentcardowner TEXT,
+	paymentcard TEXT,
 	coupon TEXT,
-	discount TEXT,
+	discount INTEGER,
 	numberpeopleunderage INTEGER DEFAULT(0) CHECK(numberpeopleunderage >= 0),
 	numberpeopleoverage INTEGER DEFAULT(0) CHECK(numberpeopleoverage >= 0),
-
 	FOREIGN KEY(projection) REFERENCES Projection(id) ON UPDATE CASCADE ON DELETE SET NULL,
 	FOREIGN KEY(coupon) REFERENCES Coupon(promocode) ON UPDATE CASCADE ON DELETE SET NULL,
-	FOREIGN KEY(discount) REFERENCES Discount(code) ON UPDATE CASCADE ON DELETE SET NULL
+	FOREIGN KEY(discount) REFERENCES Discount(id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+
+CREATE TABLE OccupiedSeat(
+	projection INTEGER,
+	row INTEGER,
+	column INTEGER,
+	reservation INTEGER,
+	FOREIGN KEY(projection) REFERENCES Projection(id) ON UPDATE CASCADE ON DELETE SET NULL,
+	FOREIGN KEY(reservation) REFERENCES Reservation(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 
@@ -96,42 +105,47 @@ INSERT INTO Room(id, rows, columns) VALUES(4, 6, 12);
 INSERT INTO Room(id, rows, columns) VALUES(5, 7, 11);
 
 
-INSERT INTO Projection(id, datetime, price, Movie, room)VALUES(1, "2021-08-01 19:30:00", 10.5, 1, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(2, "2021-08-01 22:30:00", 10.5, 1, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(3, "2021-08-02 20:00:00", 10.5, 1, 2);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(4, "2021-08-02 22:20:00", 10.5, 1, 2);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(5, "2021-08-03 19:30:00", 10.5, 1, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(6, "2021-08-03 21:15:00", 10.5, 1, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(7, "2021-08-04 18:30:00", 8.5, 1, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(8, "2021-08-04 21:45:00", 8.5, 1, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(9, "2021-08-01 16:30:00", 10.5, 2, 2);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(10, "2021-08-01 19:00:00", 9.5, 3, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(11, "2021-08-02 20:00:00", 9.5, 3, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(12, "2021-08-02 22:20:00", 9.5, 3, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(13, "2021-08-03 19:30:00", 7.5, 3, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(14, "2021-08-03 21:15:00", 7.5, 3, 2);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(15, "2021-08-03 18:30:00", 8.5, 3, 2);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(16, "2021-08-04 21:45:00", 8.5, 3, 4);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(17, "2021-08-01 16:30:00", 10.5, 4, 4);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(18, "2021-08-01 19:00:00", 10.5, 4, 4);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(19, "2021-08-02 20:10:00", 11.5, 4, 4);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(20, "2021-08-03 21:15:00", 9.5, 4, 4);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(21, "2021-08-03 21:10:00", 10.5, 4, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(22, "2021-08-01 16:30:00", 9.5, 5, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(23, "2021-08-01 19:00:00", 9.5, 5, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(24, "2021-08-02 20:00:00", 9.5, 5, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(25, "2021-08-02 22:20:00", 9.5, 5, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(26, "2021-08-03 19:30:00", 7.5, 5, 5);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(27, "2021-08-04 21:45:00", 8.5, 5, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(28, "2021-08-02 20:00:00", 9.5, 2, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(29, "2021-08-02 22:20:00", 9.5, 2, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(30, "2021-08-02 16:45:00", 10.5, 2, 3);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(31, "2021-08-03 21:15:00", 10.5, 2, 1);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(32, "2021-08-04 21:45:00", 8.5, 2, 2);
-INSERT INTO Projection(id, datetime, price, Movie, room) VALUES(33, "2021-08-01 16:30:00", 9.5, 3, 3);
+INSERT INTO Projection(id, datetime, price, movie, room)VALUES(1, "2021-08-01 19:30:00", 10.5, 1, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(2, "2021-08-01 22:30:00", 10.5, 1, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(3, "2021-08-02 20:00:00", 10.5, 1, 2);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(4, "2021-08-02 22:20:00", 10.5, 1, 2);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(5, "2021-08-03 19:30:00", 10.5, 1, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(6, "2021-08-03 21:15:00", 10.5, 1, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(7, "2021-08-04 18:30:00", 8.5, 1, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(8, "2021-08-04 21:45:00", 8.5, 1, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(9, "2021-08-01 16:30:00", 10.5, 2, 2);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(10, "2021-08-01 19:00:00", 9.5, 3, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(11, "2021-08-02 20:00:00", 9.5, 3, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(12, "2021-08-02 22:20:00", 9.5, 3, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(13, "2021-08-03 19:30:00", 7.5, 3, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(14, "2021-08-03 21:15:00", 7.5, 3, 2);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(15, "2021-08-03 18:30:00", 8.5, 3, 2);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(16, "2021-08-04 21:45:00", 8.5, 3, 4);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(17, "2021-08-01 16:30:00", 10.5, 4, 4);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(18, "2021-08-01 19:00:00", 10.5, 4, 4);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(19, "2021-08-02 20:10:00", 11.5, 4, 4);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(20, "2021-08-03 21:15:00", 9.5, 4, 4);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(21, "2021-08-03 21:10:00", 10.5, 4, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(22, "2021-08-01 16:30:00", 9.5, 5, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(23, "2021-08-01 19:00:00", 9.5, 5, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(24, "2021-08-02 20:00:00", 9.5, 5, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(25, "2021-08-02 22:20:00", 9.5, 5, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(26, "2021-08-03 19:30:00", 7.5, 5, 5);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(27, "2021-08-04 21:45:00", 8.5, 5, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(28, "2021-08-02 20:00:00", 9.5, 2, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(29, "2021-08-02 22:20:00", 9.5, 2, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(30, "2021-08-02 16:45:00", 10.5, 2, 3);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(31, "2021-08-03 21:15:00", 10.5, 2, 1);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(32, "2021-08-04 21:45:00", 8.5, 2, 2);
+INSERT INTO Projection(id, datetime, price, movie, room) VALUES(33, "2021-08-01 16:30:00", 9.5, 3, 3);
 
 
 INSERT INTO Coupon(promocode, amount) VALUES ("SCONTO10", 10.0);
 INSERT INTO Coupon(promocode, amount) VALUES ("PLUTO123", 4.0);
 INSERT INTO Coupon(promocode, amount) VALUES ("PAPERINO123", 7.0);
 INSERT INTO Coupon(promocode, amount) VALUES ("SCONTO50", 50.0);
+
+
+INSERT INTO Discount(type, percentage, minage, maxage) VALUES("AGE", 0.15, 5, 80);
+INSERT INTO Discount(type, percentage, date) VALUES("DAY", 0.2, "2021-08-01");
+INSERT INTO Discount(type, percentage, numberpeople) VALUES("NUMBER", 0.15, 5);

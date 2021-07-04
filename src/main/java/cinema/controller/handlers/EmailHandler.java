@@ -87,11 +87,10 @@ public class EmailHandler {
 				    // Generazione di una nuova sessione mail
 				    Session session = startNewSession(user,password,properties);
 					   
-				    //Tentativo di composizione del messaggio ed invio dell'email  
+				    //Tentativo di composizione del messaggio ed invio dell'email
 				    createMessageAndSendEmail(session,user,to,r);
 				} catch (HandlerException exception) {
-					// If an error occurred during the sending process, it is not handled (the
-					// spectator will notify the cinema to fix the issue)
+					System.out.println(exception.getMessage());
 				}
 			}
 		};

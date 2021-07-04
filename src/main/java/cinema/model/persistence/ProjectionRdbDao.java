@@ -45,7 +45,7 @@ public class ProjectionRdbDao implements IProjectionDao{
             Projection projection = new Projection(movieId, movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
             projections.add(projection);
         }
-		return null;
+		return projections;
 	}
 
 	@Override
@@ -68,18 +68,18 @@ public class ProjectionRdbDao implements IProjectionDao{
 		String sql = "DELETE FROM Projection WHERE id = ?;";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         pstatement.setInt(1, id);
-        pstatement.executeQuery();
+        pstatement.executeUpdate();
 	}
 
 	@Override
 	public void putProjection(Projection newProjection) throws SQLException {
-		String sql = "INSERT INTO Projection(id, datetime, price, Movie, room)VALUES(?, ?, ?, ?, ?);";
+		String sql = "INSERT INTO Projection(id, datetime, price, movie, room) VALUES(?, ?, ?, ?, ?);";
         PreparedStatement pstatement  = connection.prepareStatement(sql);
         pstatement.setInt(1, newProjection.getId());
-        pstatement.setString(2, newProjection.getDateTime().toString());
+        pstatement.setString(2, newProjection.getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         pstatement.setDouble(3, newProjection.getPrice());
         pstatement.setInt(4, newProjection.getMovie().getId());
         pstatement.setInt(5, newProjection.getRoom().getNumber());
-        pstatement.executeQuery();
+        pstatement.executeUpdate();
 	}
 }

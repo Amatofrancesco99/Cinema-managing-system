@@ -12,6 +12,9 @@ import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
+import cinema.model.reservation.discount.types.DiscountAge;
+import cinema.model.reservation.discount.types.DiscountDay;
+import cinema.model.reservation.discount.types.DiscountNumberSpectators;
 
 public class PersistenceFacade {
     Connection connection;
@@ -19,6 +22,7 @@ public class PersistenceFacade {
     IRoomDao iRoomDao;
     IProjectionDao iProjectionDao;
     ICouponDao iCouponDao;
+    IDiscountDao iDiscountDao;
 	private static PersistenceFacade singleInstance;
     
     private PersistenceFacade(String url) throws SQLException {
@@ -27,6 +31,7 @@ public class PersistenceFacade {
     	iRoomDao = new RoomRdbDao(connection);
     	iProjectionDao = new ProjectionRdbDao(connection);
     	iCouponDao = new CouponRdbDao(connection);
+    	iDiscountDao = new DiscountRdbDao(connection);
     }
     
     public static PersistenceFacade getInstance() throws SQLException {
@@ -112,7 +117,8 @@ public class PersistenceFacade {
 		try {
 			this.iProjectionDao.putProjection(newProjection);
 		} catch (SQLException e) {
-			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+			e.printStackTrace();
+			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
 	
@@ -138,9 +144,32 @@ public class PersistenceFacade {
 		try {
 			this.iCouponDao.setCouponUsed(promocode);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			//throw new PersistenceException("La richiesta al database non è andata a buon fine");
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
 	
+
+	public DiscountDay getAllDayDiscounts() throws PersistenceException{
+		try {
+			return this.iDiscountDao.getAllDayDiscounts();
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	public DiscountAge getAgeDiscounts() throws PersistenceException{
+		try {
+			return this.iDiscountDao.getAgeDiscounts();
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	public DiscountNumberSpectators getGroupDiscounts() throws PersistenceException{
+		try {
+			return this.iDiscountDao.getGroupDiscounts();
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
 }

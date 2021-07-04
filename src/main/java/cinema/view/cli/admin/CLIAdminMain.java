@@ -162,6 +162,11 @@ public class CLIAdminMain {
 			selectProjectionRoom(projection);
 			selectProjectionDateTime(projection);
 			selectProjectionPrice(projection);
+			try {
+					cinema.putNewProjectionIntoDb();
+				} catch (PersistenceException e) {
+					System.out.println(e.getMessage());
+				}
 		}
 	}
 
@@ -174,7 +179,7 @@ public class CLIAdminMain {
 				cinema.createProjectionWithID(projectionId);
 				System.out.println();
 				return projectionId;
-			} catch (ProjectionException exception) {
+			} catch (ProjectionException | PersistenceException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -196,7 +201,7 @@ public class CLIAdminMain {
 						inputInt("Inserisci l'ID del film da associare alla proiezione: "));
 				System.out.println();
 				return;
-			} catch (NoMovieException | ProjectionException exception) {
+			} catch (NoMovieException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -217,7 +222,7 @@ public class CLIAdminMain {
 				cinema.setProjectionRoom(projection,
 						inputInt("Inserisci il numero della sala da associare alla proiezione: "));
 				return;
-			} catch (RoomException | ProjectionException exception) {
+			} catch (RoomException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -285,7 +290,7 @@ public class CLIAdminMain {
 					cinema.removeProjection(projectionId);
 					System.out.println();
 					end = true;
-				} catch (ProjectionException exception) {
+				} catch (ProjectionException | PersistenceException exception) {
 					System.out.println(exception.getMessage() + "\n");
 				}
 			} while (!end);
@@ -295,9 +300,13 @@ public class CLIAdminMain {
 
 	private void showAllProjections() {
 		System.out.println("\nLista di tutte le proiezioni esistenti:\n");
-		for (Projection projection : cinema.getProjections()) {
-			System.out.println(projection.getId() + ") ");
-			System.out.println(projection.toString());
+		try {
+			for (Projection projection : cinema.getProjections()) {
+				System.out.println(projection.getId() + ") ");
+				System.out.println(projection.toString());
+			}
+		} catch (PersistenceException exception) {
+			System.out.println(exception.getMessage());
 		}
 	}
 

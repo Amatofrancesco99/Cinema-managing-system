@@ -19,17 +19,20 @@ public class DiscountAge extends Discount{
 	 * @param MAX_AGE	  Età al di sopra della quale lo sconto è valido
 	 * @param PERCENTAGE  Percentuale di sconto effettuata
 	 */
-	private int min_age = 5;
-	private int max_age = 80;
-	private double percentage = 0.15;
+	private int min_age;
+	private int max_age;
+	private double percentage;
 	
 	
 	/**
 	 * COSTRUTTORE 
 	 * @param type
 	 */
-	public DiscountAge() {
+	public DiscountAge(int minAge, int maxAge, double percentage) {
 		super(TypeOfDiscounts.AGE);
+		this.min_age = minAge;
+		this.max_age = maxAge;
+		this.percentage = percentage;
 	}
 
 	

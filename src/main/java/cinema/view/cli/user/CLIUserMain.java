@@ -104,9 +104,13 @@ public class CLIUserMain {
 
 	private void printCurrentlyAvailableMovies() {
 		System.out.println("\n" + SEPARATOR + "\nFilm attualmente proiettati:\n");
-		for (Movie movie : cinema.getCurrentlyAvailableMovies()) {
-			System.out.println(movie.getId() + ")");
-			System.out.println(movie.getDefaultDescription());
+		try {
+			for (Movie movie : cinema.getCurrentlyAvailableMovies()) {
+				System.out.println(movie.getId() + ")");
+				System.out.println(movie.getDefaultDescription());
+			}
+		} catch (PersistenceException exception) {
+			System.out.println(exception.getMessage());
 		}
 	}
 
@@ -123,7 +127,7 @@ public class CLIUserMain {
 		int projection = askProjectionId(movie);
 		try {
 			cinema.setReservationProjection(reservation, projection);
-		} catch (ProjectionException | ReservationException exception) {
+		} catch (ProjectionException | ReservationException | PersistenceException exception) {
 			System.out.println(exception.getMessage() + "\n");
 		}
 
@@ -145,7 +149,7 @@ public class CLIUserMain {
 			try {
 				cinema.getCurrentlyAvailableProjections(movieId);
 				return movieId;
-			} catch (NoMovieException | ProjectionException exception) {
+			} catch (NoMovieException | ProjectionException | PersistenceException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -162,7 +166,7 @@ public class CLIUserMain {
 				System.out.println(projection.getId() + ")");
 				System.out.println(projection.toString());
 			}
-		} catch (NoMovieException | ProjectionException exception) {
+		} catch (NoMovieException | ProjectionException | PersistenceException exception) {
 			System.out.println(exception.getMessage() + "\n");
 		}
 	}
@@ -176,7 +180,7 @@ public class CLIUserMain {
 					throw new ProjectionException("Inserisci il numero di una proiezione per il film scelto.");
 				}
 				return projectionId;
-			} catch (ProjectionException exception) {
+			} catch (ProjectionException | PersistenceException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -206,7 +210,7 @@ public class CLIUserMain {
 							System.out.print(" ------- ");
 						else
 							System.out.print(String.format(" [ %s%-2d ] ", Room.rowIndexToRowLetter(i), j + 1));
-					} catch (RoomException | ProjectionException exception) {
+					} catch (RoomException | ProjectionException | PersistenceException exception) {
 						System.out.println(exception.getMessage() + "\n");
 					}
 				}
@@ -263,16 +267,20 @@ public class CLIUserMain {
 
 	private void insertPaymentCardInfo(long reservation) {
 		System.out.println();
+		String owner = null;
+		String number = null;
+		YearMonth expirationDate = null;
 		boolean end = false;
 		do {
-			System.out.print("Inserisci nome e cognome del titolare della carta di credito: ");
-			String owner = keyboard.nextLine();
-			System.out.print("Inserisci il numero della carta di credito: ");
-			String number = keyboard.nextLine();
-			YearMonth expirationDate = null;
-			YearMonth currentYearMonth = YearMonth.parse(LocalDate.now().toString().substring(0, 7));
 			boolean validDate = false;
 			do {
+				System.out.print("Inserisci nome e cognome del titolare della carta di credito: ");
+				owner = keyboard.nextLine();
+				System.out.print("Inserisci il numero della carta di credito: ");
+				number = keyboard.nextLine();
+				expirationDate = null;
+				YearMonth currentYearMonth = YearMonth.parse(LocalDate.now().toString().substring(0, 7));
+				validDate = false;
 				System.out.print("Inserisci la data di scadenza della carta di credito (YYYY-MM): ");
 				try {
 					expirationDate = YearMonth.parse(keyboard.nextLine());
@@ -282,7 +290,7 @@ public class CLIUserMain {
 						throw new Exception();
 					}
 				} catch (Exception exception) {
-					System.out.println("La data inserita non è valida.\n");
+					System.out.println("La carta di credito inserita è scaduta.\nInserisci una nuova carta di credito.\n");
 				}
 			} while (!validDate);
 			System.out.print("Inserisci il CVV della carta di credito: ");
@@ -321,7 +329,7 @@ public class CLIUserMain {
 					}
 				} while (!end);
 			}
-		} catch (NumberFormatException | ReservationException exception) {
+		} catch (NumberFormatException | ReservationException | PersistenceException exception) {
 			System.out.println(exception.getMessage() + "\n");
 		}
 	}

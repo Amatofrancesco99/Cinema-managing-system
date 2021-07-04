@@ -94,7 +94,7 @@
                                         LocalDateTime projectionGroupDateTime = null;
                                         try {
                                             projectionGroupDateTime = cinema.getProjectionDateTime(dailyProjections.get(0));
-                                        } catch (ProjectionException exception) {
+                                        } catch (Exception exception) {
                                             // No exceptions to handle here
                                         }
                                     }
@@ -110,7 +110,7 @@
                                                 LocalDateTime projectionDateTime = null;
                                                 try {
                                                     projectionDateTime = cinema.getProjectionDateTime(projection);
-                                                } catch (ProjectionException exception) {
+                                                } catch (Exception exception) {
                                                     // No exceptions to handle here
                                                 }
                                             }

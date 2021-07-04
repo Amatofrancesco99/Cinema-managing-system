@@ -181,13 +181,29 @@
                                     <div id="age-discount-inputs" class="row g-3 mt-0">
                                         <div class="col-6">
                                             <label id="age-under-label" for="age-under" class="form-label">
-                                                < @(cinema.getMinDiscountAge()) anni
+                                                @{
+                                                    int minAge = 0;
+                                                    try {
+                                                        minAge = cinema.getMinDiscountAge();
+                                                    } catch (Exception exception) {
+                                                        // No exceptions to handle here
+                                                    }
+                                                }
+                                                < @(minAge) anni
                                             </label>
                                             <input type="number" class="form-control" id="age-under" name="age-under" min="0" value="0" required>
                                         </div>
                                         <div class="col-6">
                                             <label id="age-over-label" for="age-over" class="form-label">
-                                                > @(cinema.getMaxDiscountAge()) anni
+                                                @{
+                                                    int maxAge = 0;
+                                                    try {
+                                                        maxAge = cinema.getMaxDiscountAge();
+                                                    } catch (Exception exception) {
+                                                        // No exceptions to handle here
+                                                    }
+                                                }
+                                                > @(maxAge) anni
                                             </label>
                                             <input type="number" class="form-control" id="age-over" name="age-over" min="0" value="0" required>
                                         </div>

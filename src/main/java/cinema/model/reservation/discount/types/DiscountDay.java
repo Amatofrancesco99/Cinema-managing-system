@@ -20,7 +20,7 @@ public class DiscountDay extends Discount{
 	/** ATTRIBUTI 
 	 * 
 	 */
-	private HashMap<LocalDate, Double> discount = new HashMap<>();
+	private HashMap<LocalDate, Double> discount;
 	
 	/**
 	 * COSTRUTTORE 
@@ -28,6 +28,7 @@ public class DiscountDay extends Discount{
 	 */
 	public DiscountDay() {
 		super(TypeOfDiscounts.DAY);
+		discount = new HashMap<>();
 	}
 
 	
@@ -66,5 +67,9 @@ public class DiscountDay extends Discount{
 			output += "  Sconto: " + entry.getValue()*100 + "%\n";
 		}
 		return output;
-	}		  
+	} 
+	
+	public void addDayDiscount(LocalDate day, double percentage) {
+		this.discount.put(day, percentage);
+	}
 }
