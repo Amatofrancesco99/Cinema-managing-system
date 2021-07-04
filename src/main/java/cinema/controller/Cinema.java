@@ -190,7 +190,7 @@ public class Cinema {
 	public void createProjectionWithID(int id) throws ProjectionException {
 		for (Projection p : cinemaProjections) {
 			if (p.getId() == id)
-				throw new ProjectionException("La proiezione con id " + id + " non esiste.");
+				throw new ProjectionException("La proiezione con id " + id + " esiste già.");
 		}
 		Projection p = new Projection();
 		p.setId(id);
@@ -873,7 +873,7 @@ public class Cinema {
 	/* METODO per cambiare la password dell'admin */
 	public void setPassword(String newAdminPassword) throws PasswordException {
 		if (newAdminPassword.length() < 5) {
-			throw new PasswordException("La password inserita è troppo corta");
+			throw new PasswordException("La password inserita è troppo corta.");
 		}
 		adminPassword = newAdminPassword;
 	}

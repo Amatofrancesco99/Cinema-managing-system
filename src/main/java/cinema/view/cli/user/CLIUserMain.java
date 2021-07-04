@@ -59,7 +59,7 @@ public class CLIUserMain {
 		printWelcomeMessage();
 
 		// Menu di scelta delle opzioni disponibili
-		boolean end = true;
+		boolean end = false;
 		do {
 			System.out.println(SEPARATOR + "\nMenu\n");
 			System.out.println("Inserisci il numero corrispondente all'azione che vuoi effettuare:\n\n"
