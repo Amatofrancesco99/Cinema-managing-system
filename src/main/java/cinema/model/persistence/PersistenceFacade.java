@@ -23,6 +23,8 @@ public class PersistenceFacade {
     IProjectionDao iProjectionDao;
     ICouponDao iCouponDao;
     IDiscountDao iDiscountDao;
+    IOccupiedSeatDao iOccupiedSeatDao;
+    IReservationDao iReservationDao;
 	private static PersistenceFacade singleInstance;
     
     private PersistenceFacade(String url) throws SQLException {
@@ -32,6 +34,8 @@ public class PersistenceFacade {
     	iProjectionDao = new ProjectionRdbDao(connection);
     	iCouponDao = new CouponRdbDao(connection);
     	iDiscountDao = new DiscountRdbDao(connection);
+    	iOccupiedSeatDao = new OccupiedSeatRdbDao(connection);
+    	iReservationDao = new ReservationRdbDao(connection);
     }
     
     public static PersistenceFacade getInstance() throws SQLException {
@@ -172,4 +176,30 @@ public class PersistenceFacade {
 			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
+	
+	
+	public void setOccupiedSeats(Projection projection) throws PersistenceException{
+		try {
+			this.iOccupiedSeatDao.setOccupiedSeats(projection);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	public boolean getOccupiedSeat(int projectionId, int row, int column) throws PersistenceException {
+		try {
+			return this.iOccupiedSeatDao.getOccupiedSeat(projectionId, row, column);
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
+	public long getLastReservationId() throws PersistenceException{
+		try {
+			return this.iReservationDao.getLastReservationId();
+		} catch (SQLException e) {
+			throw new PersistenceException("La richiesta al database non è andata a buon fine");
+		}
+	}
+	
 }

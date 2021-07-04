@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS Room;
 DROP TABLE IF EXISTS Discount;
 DROP TABLE IF EXISTS Coupon;
 DROP TABLE IF EXISTS Reservation;
-DROP TABLE IF EXISTS OcupiedSeat;
+DROP TABLE IF EXISTS OccupiedSeat;
 
 
 CREATE TABLE Movie(
@@ -81,6 +81,7 @@ CREATE TABLE OccupiedSeat(
 	row INTEGER,
 	column INTEGER,
 	reservation INTEGER,
+	PRIMARY KEY(projection, row, column),
 	FOREIGN KEY(projection) REFERENCES Projection(id) ON UPDATE CASCADE ON DELETE SET NULL,
 	FOREIGN KEY(reservation) REFERENCES Reservation(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
@@ -149,3 +150,12 @@ INSERT INTO Coupon(promocode, amount) VALUES ("SCONTO50", 50.0);
 INSERT INTO Discount(type, percentage, minage, maxage) VALUES("AGE", 0.15, 5, 80);
 INSERT INTO Discount(type, percentage, date) VALUES("DAY", 0.2, "2021-08-01");
 INSERT INTO Discount(type, percentage, numberpeople) VALUES("NUMBER", 0.15, 5);
+
+
+INSERT INTO Reservation(id, date, projection, name, surname, email, paymentcardowner, paymentcard) VALUES(999, "2021-07-01", 1, "Fake", "Person", "fakeemail@fake.fa", "Fake Person", "FAKECREDITCARD");
+
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 1, 1);
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 2, 1);
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 3, 1);
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 4, 1);
+
