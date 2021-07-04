@@ -29,6 +29,7 @@ public class ProjectionRdbDao implements IProjectionDao{
         Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
         Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
         Projection projection = new Projection(id, movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
+        PersistenceFacade.getInstance().setOccupiedSeats(projection);        
         return projection;
 	}
 
@@ -43,6 +44,7 @@ public class ProjectionRdbDao implements IProjectionDao{
             Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
             Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
             Projection projection = new Projection(movieId, movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
+            PersistenceFacade.getInstance().setOccupiedSeats(projection);
             projections.add(projection);
         }
 		return projections;
@@ -58,6 +60,7 @@ public class ProjectionRdbDao implements IProjectionDao{
             Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
             Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
             Projection projection = new Projection(result.getInt("id"), movie, LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room );
+            PersistenceFacade.getInstance().setOccupiedSeats(projection);            
             projections.add(projection);
         }
 		return projections;

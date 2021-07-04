@@ -63,22 +63,12 @@ public class ReportHandler {
 		this.logoURL = logoURL;
 	}
 
-	/**
-	 * METODO per la creazione del report
-	 * 
-	 * @param r Prenotazione di cui si vuole creare il report
-	 * @throws HandlerException
-	 */
+	/** METODO per la creazione del report */
 	public void createReport(Reservation r) throws HandlerException {
 		String FILE = "./savedReports/Reservation_" + Long.toString(r.getProgressive()) + ".pdf"; // posizione in cui il
 																									// report sarà
 																									// salvato
 		HashMap<String, Font> allFonts = createAllFonts(); // impostazione dei font che verranno utilizzati nel report
-		generateReport(FILE, allFonts, r); // tentativo di generazione del report
-	}
-
-	/** METODO per la creazione del report */
-	private void generateReport(String FILE, HashMap<String, Font> allFonts, Reservation r) throws HandlerException {
 		try {
 			Document document = createEmptyDocument(FILE); // generazione di un documento vuoto e apertura di quest
 															// ultimo

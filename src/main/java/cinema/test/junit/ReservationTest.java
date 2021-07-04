@@ -90,14 +90,22 @@ public class ReservationTest {
 	public void testProgressiveAssignment() throws ReservationException {
 		final int STOP = 3;
 		for (int i = 1; i < STOP; i++) {
-			myCinema.createReservation();
+			try {
+				myCinema.createReservation();
+			} catch (PersistenceException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 		assertEquals(STOP, myCinema.getReservation(STOP).getProgressive());
 	}
 
-	/** Test data di creazione nuova prenotazione */
+	/**
+	 * Test data di creazione nuova prenotazione
+	 * 
+	 * @throws PersistenceException
+	 */
 	@Test
-	public void testPurchaseDate() throws ReservationException {
+	public void testPurchaseDate() throws ReservationException, PersistenceException {
 		assertEquals(LocalDate.now(), myCinema.getReservation(myCinema.createReservation()).getDate());
 	}
 
@@ -155,7 +163,8 @@ public class ReservationTest {
 			newReservation.addSeat(2, 2); // occupo un nuovo posto
 			myCinema.setReservationCoupon(newReservation.getProgressive(), c1.getCode());
 			assertEquals(12.50, newReservation.getTotal(), 0);
-		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException e) {
+		} catch (ReservationException | CouponException | SeatAvailabilityException | RoomException
+				| PersistenceException e) {
 			e.toString();
 		}
 	}
@@ -222,8 +231,8 @@ public class ReservationTest {
 			r2.addSeat(1, 2);
 			r2.setPaymentCard("1234567890123456", "Francesco Amato", "212", YearMonth.of(2024, 02));
 			r2.setPurchaser(new Spectator("Francesco", "Amato", "francesco.amato01@universitadipavia.it"));
-		} catch (ReservationException | SeatAvailabilityException | RoomException e) {
-			System.out.println(e.getMessage());
+		} catch (ReservationException | SeatAvailabilityException | RoomException | PersistenceException exception) {
+			System.out.println(exception.getMessage());
 		}
 		try {
 			/*

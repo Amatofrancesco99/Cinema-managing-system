@@ -16,19 +16,27 @@ public abstract class Discount implements IReservationDiscountStrategy {
 	 */
 	private TypeOfDiscounts type;
 
+	private int id;
+
 	/**
 	 * Costruttore del discount.
 	 * 
 	 * @param type Indica il tipo di sconto.
 	 */
-	public Discount(TypeOfDiscounts type) {
+	public Discount(TypeOfDiscounts type, int id) {
 		this.type = type;
+		this.id = id;
 	}
 
 	public TypeOfDiscounts getTypeOfDiscount() {
 		return type;
 	}
-
+	
+	public int getDiscountId() {
+		return id;
+	}
+	
+	/**METODO per farsi restituire le caratteristiche di uno sconto*/
 	public abstract String toString();
 
 }

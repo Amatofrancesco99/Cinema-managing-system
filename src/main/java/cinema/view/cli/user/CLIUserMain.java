@@ -117,25 +117,24 @@ public class CLIUserMain {
 		printMovieProjections(movie);
 
 		// Creazione di una nuova prenotazione e inserimento dei relativi dati
-		long reservation = cinema.createReservation();
-
-		// Selezione di una specifica proiezione
-		int projection = askProjectionId(movie);
+		long reservation = -1;
 		try {
+			reservation = cinema.createReservation();
+			// Selezione di una specifica proiezione
+			int projection = askProjectionId(movie);
 			cinema.setReservationProjection(reservation, projection);
+			// Inserimento dati, pagamento e invio della ricevuta allo spettatore
+			showProjectionSeats(reservation);
+			addSeatsToReservation(reservation);
+			insertSpectatorData(reservation);
+			insertPaymentCardInfo(reservation);
+			insertSpectatorsInfo(reservation);
+			insertCouponInfo(reservation);
+			if (buy(reservation)) {
+				sendEmail(reservation);
+			}
 		} catch (ProjectionException | ReservationException | PersistenceException exception) {
 			System.out.println(exception.getMessage() + "\n");
-		}
-
-		// Inserimento dati, pagamento e invio della ricevuta allo spettatore
-		showProjectionSeats(reservation);
-		addSeatsToReservation(reservation);
-		insertSpectatorData(reservation);
-		insertPaymentCardInfo(reservation);
-		insertSpectatorsInfo(reservation);
-		insertCouponInfo(reservation);
-		if (buy(reservation)) {
-			sendEmail(reservation);
 		}
 	}
 
@@ -292,9 +291,9 @@ public class CLIUserMain {
 			} while (!validDate);
 			System.out.print("Inserisci il CVV della carta di credito: ");
 			String cvv = keyboard.nextLine();
-			end = true;
 			try {
 				cinema.setReservationPaymentCard(reservation, number, owner, cvv, expirationDate);
+				end = true;
 			} catch (ReservationException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
@@ -302,14 +301,14 @@ public class CLIUserMain {
 	}
 
 	private void insertSpectatorsInfo(long reservation) {
-		System.out.println();
 		try {
 			if (cinema.getReservationTypeOfDiscount(reservation).equals("AGE")) {
+				System.out.println();
 				try {
 					cinema.setReservationNumberPeopleOverMaxAge(reservation, 0);
 					cinema.setReservationNumberPeopleUntilMinAge(reservation, 0);
 				} catch (DiscountException | ReservationException exception) {
-					// Nessuna eccezione da gestire qui
+					System.out.println(exception);
 				}
 				boolean end = false;
 				do {

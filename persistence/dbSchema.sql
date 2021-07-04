@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS Room;
 DROP TABLE IF EXISTS Discount;
 DROP TABLE IF EXISTS Coupon;
 DROP TABLE IF EXISTS Reservation;
-DROP TABLE IF EXISTS OcupiedSeat;
+DROP TABLE IF EXISTS OccupiedSeat;
+DROP TABLE IF EXISTS Cinema;
 
 
 CREATE TABLE Movie(
@@ -81,8 +82,25 @@ CREATE TABLE OccupiedSeat(
 	row INTEGER,
 	column INTEGER,
 	reservation INTEGER,
+	PRIMARY KEY(projection, row, column),
 	FOREIGN KEY(projection) REFERENCES Projection(id) ON UPDATE CASCADE ON DELETE SET NULL,
 	FOREIGN KEY(reservation) REFERENCES Reservation(id) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+
+CREATE TABLE Cinema(
+	id INTEGER PRIMARY KEY NOT NULL,
+	name TEXT NOT NULL,
+	city TEXT NOT NULL,
+	country TEXT NOT NULL,
+	zipCode TEXT NOT NULL,
+	address TEXT NOT NULL,
+	email TEXT NOT NULL,
+	mailPassword TEXT NOT NULL,
+	adminPassword TEXT NOT NULL,
+	logoURL TEXT NOT NULL,
+	discountstrategy TEXT NOT NULL,
+	FOREIGN KEY (discountstrategy) REFERENCES Discount(type)
 );
 
 
@@ -149,3 +167,16 @@ INSERT INTO Coupon(promocode, amount) VALUES ("SCONTO50", 50.0);
 INSERT INTO Discount(type, percentage, minage, maxage) VALUES("AGE", 0.15, 5, 80);
 INSERT INTO Discount(type, percentage, date) VALUES("DAY", 0.2, "2021-08-01");
 INSERT INTO Discount(type, percentage, numberpeople) VALUES("NUMBER", 0.15, 5);
+
+
+INSERT INTO Reservation(id, date, projection, name, surname, email, paymentcardowner, paymentcard) VALUES(1, "2021-07-01", 1, "Fake", "Person", "fakeemail@fake.fa", "Fake Person", "FAKECREDITCARD");
+
+
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 1, 1);
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 2, 1);
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 3, 1);
+INSERT INTO OccupiedSeat(projection, row, column, reservation) VALUES(1, 1, 4, 1);
+
+
+INSERT INTO Cinema(id, name, city, country, zipCode, address, email, mailPassword, adminPassword, logoURL, discountstrategy)
+    VALUES( 1, "Cinema Armadillo", "Pavia (PV)", "Italia", "27100", "Via A. Ferrata, 5", "cinemaarmadillo@gmail.com", "CinemaArmadillo@1999", "admin", "https://cdn1.iconfinder.com/data/icons/luchesa-2/128/Movie-512.png", "AGE");

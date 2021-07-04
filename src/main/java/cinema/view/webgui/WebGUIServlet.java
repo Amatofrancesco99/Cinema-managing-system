@@ -86,8 +86,9 @@ public class WebGUIServlet extends HttpServlet {
 	protected void renderCheckout(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, ProjectionException {
 		int projectionId = Integer.parseInt(req.getParameter("id"));
-		long reservationId = cinema.createReservation();
+		long reservationId;
 		try {
+			reservationId = cinema.createReservation();
 			cinema.setReservationProjection(reservationId, projectionId);
 		} catch (ProjectionException | ReservationException | PersistenceException exception) {
 			renderError(req, resp);

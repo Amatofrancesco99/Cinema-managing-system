@@ -9,7 +9,7 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * (Pattern Strategy + Pattern Composite)
+ *         (Pattern Strategy + Pattern Composite)
  */
 public interface IReservationDiscountStrategy {
 
@@ -22,6 +22,8 @@ public interface IReservationDiscountStrategy {
 	 * @return Money Ritorno del prezzo totale scontato
 	 */
 	public double getTotal(Reservation r);
+
+	public int getDiscountId();
 
 	public TypeOfDiscounts getTypeOfDiscount();
 

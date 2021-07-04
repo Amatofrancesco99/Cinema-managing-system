@@ -27,8 +27,8 @@ public class DiscountDay extends Discount {
 	 * 
 	 * @param type
 	 */
-	public DiscountDay() {
-		super(TypeOfDiscounts.DAY);
+	public DiscountDay(int id) {
+		super(TypeOfDiscounts.DAY, id);
 		discount = new HashMap<>();
 	}
 

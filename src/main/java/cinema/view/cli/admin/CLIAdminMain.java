@@ -168,7 +168,7 @@ public class CLIAdminMain {
 				cinema.setPassword(keyboard.nextLine());
 				System.out.println("\nPassword aggiornata con successo.\n");
 				return;
-			} catch (PasswordException exception) {
+			} catch (PasswordException | PersistenceException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -207,7 +207,7 @@ public class CLIAdminMain {
 				}
 			} while (true);
 		} catch (PersistenceException exception) {
-			System.out.println(exception.getMessage());
+			System.out.println(exception.getMessage() + "\n");
 		}
 	}
 
