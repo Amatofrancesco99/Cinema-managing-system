@@ -1,7 +1,9 @@
 package cinema.model.projection;
 
 import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import cinema.model.cinema.util.RoomException;
 import cinema.model.projection.util.ProjectionException;
@@ -234,14 +236,17 @@ public class Projection implements Comparable<Projection> {
 		catch (RoomException e) {
 		}
 		
+		String dayOfWeek = getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
+		String month = getDateTime().getMonth().getDisplayName(TextStyle.FULL, Locale.ITALIAN);
+		
 		return "Sala n°: " + this.getRoom().getProgressive() + "\n"
-				+ "Data: " + this.getDateTime().getDayOfWeek().toString().toLowerCase()
+				+ "Data: " + dayOfWeek.toUpperCase().charAt(0) + dayOfWeek.substring(1)
 				+ " " + this.getDateTime().getDayOfMonth()
-				+ " " + this.getDateTime().getMonth().toString().toLowerCase()
+				+ " " + month.toUpperCase().charAt(0) + month.substring(1)
 				+ " " + this.getDateTime().getYear() + "   "
 				+ "Ora: " + String.format("%02d", this.getDateTime().getHour()) 
 				+ ":" + String.format("%02d", this.getDateTime().getMinute()) + "\n"
-				+ "Prezzo: " + this.getPrice() + "€" + "\n" 
+				+ "Prezzo: " + String.format("%.2f €", this.getPrice()) + "\n" 
 				+ "Posti disponibili: " + availableSeats + "\n";
 	}
 

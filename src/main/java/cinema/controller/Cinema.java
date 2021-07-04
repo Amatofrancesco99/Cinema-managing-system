@@ -420,7 +420,7 @@ public class Cinema {
 		try {
 			return persistenceFacade.getMovie(id);
 		} catch (PersistenceException e) {
-			throw new NoMovieException("Il film con id " + id + " non esiste.");
+			throw new NoMovieException("Il film con ID " + id + " non esiste.");
 		}
 	}
 
@@ -904,7 +904,7 @@ public class Cinema {
 	/* METODO per cambiare la password dell'admin */
 	public void setPassword(String newAdminPassword) throws PasswordException {
 		if (newAdminPassword.length() < 5) {
-			throw new PasswordException("La password inserita è troppo corta");
+			throw new PasswordException("La password inserita è troppo corta.");
 		}
 		adminPassword = newAdminPassword;
 	}
@@ -919,7 +919,7 @@ public class Cinema {
 	 */
 	public void login(String password) throws PasswordException {
 		if (!getAdminPassword().equals(password))
-			throw new PasswordException("la password inserita è errata.");
+			throw new PasswordException("La password inserita è errata.");
 	}
 
 	public int getReservationNSeats(long r) throws ReservationException {

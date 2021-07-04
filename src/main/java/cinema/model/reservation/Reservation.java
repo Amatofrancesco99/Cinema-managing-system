@@ -268,7 +268,7 @@ public class Reservation {
 		if(n < 0)
 			throw new DiscountException("Il numero di persone non può essere negativo.");
 		if (n + getNumberPeopleOverMaxAge() > this.getNSeats())
-			throw new DiscountException("Il numero di persone sotto età supera il numero di biglietti che si intende comprare.");
+			throw new DiscountException("Il numero di persone sotto l'età minima supera il massimo consentito dai posti correntemente selezionati.");
 		numberPeopleUntilMinAge = n;
 	}
 	
@@ -282,7 +282,7 @@ public class Reservation {
 		if(n < 0)
 			throw new DiscountException("Il numero di persone non può essere negativo.");
 		if (n + getNumberPeopleUntilMinAge() > this.getNSeats())
-			throw new DiscountException("Il numero di persone sopra l'età supera il numero di biglietti che si intende comprare.");
+			throw new DiscountException("Il numero di persone sotto l'età massima supera il massimo consentito dai posti correntemente selezionati.");
 		numberPeopleOverMaxAge = n;
 	}
 	

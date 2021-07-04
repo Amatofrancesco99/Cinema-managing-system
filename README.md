@@ -26,7 +26,9 @@ Il procedimento per l'installazione a seconda del sistema operativo utilizzato p
 ***
 ## 1. ESECUZIONE DELL'APPLICAZIONE WEB - VISTA SPETTATORE
 
-Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java). È possibile farlo con l'aiuto di Gradle tramite i comandi riportati di seguito.
+Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario (dopo aver compilato il progetto) eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java) (è necessaria una versione di Java 1.8 o superiore).
+
+È possibile farlo con l'aiuto di Gradle per la gestione automatica delle dipendenze tramite i comandi riportati di seguito.
 
 ### 1.1 - Apertura del terminale o del prompt dei comandi
 Per poter compilare ed eseguire l'applicazione web (server HTTP) è necessario innanzitutto posizionarsi nella directory root del progetto all'interno di un terminale o prompt dei comandi:
@@ -75,3 +77,8 @@ Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, 
 ## 3. ESECUZIONE DA CLI - VISTA ADMIN
 
 Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
+
+***
+## 4. WIKI DEL PROGETTO
+
+È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/IngSW-unipv/Progetto-F21/wiki).
