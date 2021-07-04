@@ -82,7 +82,7 @@ public class WebGUIServlet extends HttpServlet {
 		long reservationId = cinema.createReservation();
 		try {
 			cinema.setReservationProjection(reservationId, projectionId);
-		} catch (ProjectionException | ReservationException | PersistenceException e) {
+		} catch (ProjectionException | ReservationException | PersistenceException exception) {
 			renderError(req, resp);
 			return;
 		}
@@ -102,8 +102,9 @@ public class WebGUIServlet extends HttpServlet {
 			} else {
 				resultMovies = cinema.getCurrentlyAvailableMovies(query);
 			}
-		} catch (PersistenceException e) {
-			System.out.println(e.getMessage());
+		} catch (PersistenceException exception) {
+			renderError(req, resp);
+			return;
 		}
 		resp.getWriter().write(Rythm.render("index.html", cinema, resultMovies, query));
 	}
@@ -117,8 +118,9 @@ public class WebGUIServlet extends HttpServlet {
 		ArrayList<Integer> sortedProjections = null;
 		try {
 			sortedProjections = new ArrayList<>(cinema.getMovieProjections(movieId));
-		} catch (NoMovieException | PersistenceException e) {
-			System.out.println(e.getMessage());
+		} catch (NoMovieException | PersistenceException exception) {
+			renderError(req, resp);
+			return;
 		}
 		Collections.sort(sortedProjections);
 		ArrayList<ArrayList<Integer>> schedule = new ArrayList<>();
