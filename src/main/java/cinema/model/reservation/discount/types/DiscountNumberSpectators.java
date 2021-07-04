@@ -14,20 +14,18 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 public class DiscountNumberSpectators extends Discount {
 
 	/**
-	 * ATTRIBUTI
-	 * 
-	 * @param NUMBER_PEOPLE Numero di persone minimo, al di sopra del quale lo
-	 *                      sconto comitiva sarà valido
-	 * @param PERCENTAGE    Percentuale di sconto effettuata
+	 * Numero di persone associate alla prenotazione.
 	 */
 	private int numberPeople;
+	/**
+	 * Percentuale di sconto da applicare.
+	 */
 	private double percentage;
 
 	/**
-	 * COSTRUTTORE
+	 * Costruttore dello sconto.
 	 * 
-	 * @param numberPeople
-	 * @param percentage
+	 * @param percentage Percentuale di sconto da applicare.
 	 */
 	public DiscountNumberSpectators(int numberPeople, double percentage, int id) {
 		super(TypeOfDiscounts.NUMBER, id);
@@ -36,10 +34,6 @@ public class DiscountNumberSpectators extends Discount {
 
 	}
 
-	/**
-	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi
-	 * restituire il nuovo totale, dato lo sconto
-	 */
 	@Override
 	public double getTotal(Reservation r) {
 		double totalPrice = 0;
@@ -51,10 +45,12 @@ public class DiscountNumberSpectators extends Discount {
 	}
 
 	/**
-	 * METODO per settare il numero di persone da cui parte lo sconto comitiva
+	 * Imposta il numero di persone oltre al quale si applica lo sconto comitiva.
 	 * 
-	 * @param n Numero di persone minimo
-	 * @throws InvalidNumberPeopleValueException
+	 * @param n numero di persone associate alla prenotazione.
+	 * @throws DiscountException eccezione lanciata qualora il numero di persone
+	 *                           oltre il quale si applica lo sconto è inferiore,o
+	 *                           uguale, a zero.
 	 */
 	public void setNumberPeople(int n) throws DiscountException {
 		if (n > 0) {
@@ -64,12 +60,10 @@ public class DiscountNumberSpectators extends Discount {
 					"Il numero di persone sopra il quale applicare lo sconto deve essere maggiore di zero.");
 	}
 
-	/** METODO per farsi dire il numero di persone da cui parte lo sconto */
 	public int getNumberPeople() {
 		return numberPeople;
 	}
 
-	/** METODO per farsi restituire le caratteristiche dello sconto comitiva */
 	@Override
 	public String toString() {
 		return "[ " + this.getTypeOfDiscount() + " ]" + "\n"

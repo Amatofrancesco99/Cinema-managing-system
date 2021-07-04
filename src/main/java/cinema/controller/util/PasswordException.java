@@ -10,6 +10,11 @@ package cinema.controller.util;
 @SuppressWarnings("serial")
 public class PasswordException extends Exception {
 
+	/**
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message messaggio da riportare.
+	 */
 	public PasswordException(String message) {
 		super(message);
 	}

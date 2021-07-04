@@ -10,7 +10,9 @@ package cinema.model.payment.util;
 public class PaymentErrorException extends Exception {
 
 	/**
-	 * METODO utilizzato per stampare le informazioni dell'eccezione
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message messaggio da riportare.
 	 */
 	public PaymentErrorException(String message) {
 		super(message);

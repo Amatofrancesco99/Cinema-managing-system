@@ -17,25 +17,19 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 public class DiscountDay extends Discount {
 
 	/**
-	 * ATTRIBUTI
-	 * 
+	 * HashMap che associa ad ogni data, uno sconto da sottrarre al totale della
+	 * prenotazione.
 	 */
 	private HashMap<LocalDate, Double> discount;
 
 	/**
-	 * COSTRUTTORE
-	 * 
-	 * @param type
+	 * Costruttore dello sconto.
 	 */
 	public DiscountDay(int id) {
 		super(TypeOfDiscounts.DAY, id);
 		discount = new HashMap<>();
 	}
 
-	/**
-	 * METODO utilizzato per poter effettuare lo sconto sulla prenotazione e farsi
-	 * restituire il nuovo totale, dato lo sconto
-	 */
 	@Override
 	public double getTotal(Reservation r) {
 		double totalPrice = 0;
@@ -51,13 +45,19 @@ public class DiscountDay extends Discount {
 		return totalPrice;
 	}
 
-	/** METODO per farsi restituire le caratteristiche dello sconto per giornata */
 	@Override
 	public String toString() {
 		return "[ " + this.getTypeOfDiscount() + " ]" + "\n"
 				+ "Giorni e percentuale di sconti nelle specifiche giornate: \n" + discountsToString(discount);
 	}
 
+	/**
+	 * Restituisce, sottoforma di stringa, lo sconto associato al giorno.
+	 * 
+	 * @param discount HashMap che associa ad ogni data, uno sconto da sottrarre al
+	 *                 totale della prenotazione.
+	 * @return lo sconto associato al giorno
+	 */
 	private String discountsToString(HashMap<LocalDate, Double> discount) {
 		String output = "";
 		for (Entry<LocalDate, Double> entry : discount.entrySet()) {

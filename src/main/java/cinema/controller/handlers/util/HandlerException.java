@@ -9,6 +9,11 @@ package cinema.controller.handlers.util;
 @SuppressWarnings("serial")
 public class HandlerException extends Exception {
 
+	/**
+	 * Costruttore dell'eccezione.
+	 * 
+	 * @param message messaggio da riportare.
+	 */
 	public HandlerException(String message) {
 		super(message);
 	}

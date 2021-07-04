@@ -1,7 +1,8 @@
 package cinema.model.reservation.discount.coupon.util;
 
 /**
- * Eccezione lanciata qualora il Coupon non rispetti i parametri fissati.
+ * Lanciata in caso di errori riscontrati nelle procedure di interazione con gli
+ * oggetti che rappresentano i coupon.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,7 +13,7 @@ public class CouponException extends Exception {
 	/**
 	 * Costruttore dell'eccezione.
 	 * 
-	 * @param message Messaggio da riportare.
+	 * @param message messaggio contenente i dettagli dell'errore riscontrato.
 	 */
 	public CouponException(String message) {
 		super(message);

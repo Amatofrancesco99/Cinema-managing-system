@@ -4,7 +4,8 @@ import cinema.model.reservation.discount.IReservationDiscountStrategy;
 import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 
 /**
- * Rappresenta la classe padre delle strategie.
+ * Rappresenta le strategie di sconti da applicare al costo totale delle
+ * prenotazioni.
  * 
  * @author Screaming Hairy Armadillo Team
  * 
@@ -12,16 +13,16 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 public abstract class Discount implements IReservationDiscountStrategy {
 
 	/**
-	 * Indica il tipo di sconto.
+	 * Tipo di sconto.
 	 */
 	private TypeOfDiscounts type;
 
 	private int id;
 
 	/**
-	 * Costruttore del discount.
+	 * Costruttore della strategia di sconto.
 	 * 
-	 * @param type Indica il tipo di sconto.
+	 * @param type tipo di sconto.
 	 */
 	public Discount(TypeOfDiscounts type, int id) {
 		this.type = type;
