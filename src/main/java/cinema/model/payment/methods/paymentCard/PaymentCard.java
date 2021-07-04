@@ -1,28 +1,28 @@
 package cinema.model.payment.methods.paymentCard;
 
-import java.time.YearMonth;  
+import java.time.YearMonth;
 
-/** BREVE DESCRIZIONE PAYMENTCARD
+/**
+ * Contiene le informazioni che riguardano la carta di credito, utilizzata dallo
+ * spettatore, per effettuare il pagamento della prenotazione.
  * 
- * @author Screaming HairyArmadillo Team
+ * @author Screaming Hairy Armadillo Team
  *
- * Classe che rappresenta la carta di credito utilizzata per effettuare il pagamento della
- * prenotazione
  */
-public class PaymentCard{
-	
+public class PaymentCard {
+
 	private String owner;
 	private String number;
 	private String cvv;
 	private YearMonth expirationDate;
-	
+
 	public PaymentCard(String number, String owner, String cvv, YearMonth expirationDate) {
 		this.owner = owner;
 		this.number = number;
 		this.cvv = cvv;
 		this.expirationDate = expirationDate;
 	}
-	
+
 	public String getNumber() {
 		return number;
 	}

@@ -1,11 +1,10 @@
 package cinema.controller.handlers.util;
 
-
-/** BREVE DESCRIZIONE CLASSE HandlerException
+/**
+ * Gestisce le eccezioni generate dalle classi EmailHanlder e ReportHandler.
  * 
  * @author Screaming Hairy Armadillo Team
  *
- * Questa classe raccoglie tutte le eccezioni dei diversi handlers
  */
 @SuppressWarnings("serial")
 public class HandlerException extends Exception {
@@ -13,5 +12,5 @@ public class HandlerException extends Exception {
 	public HandlerException(String message) {
 		super(message);
 	}
-	
+
 }
