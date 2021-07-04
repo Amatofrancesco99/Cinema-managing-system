@@ -128,24 +128,29 @@ public class CLIAdminMain {
 
 	private void changeNewReservationsDiscountStrategy() {
 		System.out.println("\n" + SEPARATOR + "\nGestione sconti:\n");
-		System.out.print("Strategie di sconto disponibili: ");
 		try {
-			System.out.println(cinema.getAllDiscountStrategy().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n");
+			System.out.print("Strategie di sconto disponibili: ");
+			System.out.println(
+					cinema.getAllDiscountStrategy().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n");
 			do {
 				System.out.print("Inserisci una tra le strategie disponibili: ");
 				String newStrategyName = keyboard.nextLine().toUpperCase();
-				for (int i = 0; i < cinema.getAllDiscountStrategy().size(); i++) {
+				int i;
+				for (i = 0; i < cinema.getAllDiscountStrategy().size(); i++) {
 					if (newStrategyName.equals(cinema.getAllDiscountStrategy().get(i).toString())) {
 						try {
 							cinema.setCinemaDiscountStrategy(cinema.getAllDiscountStrategy().get(i));
 							System.out.println("\nStrategia aggiornata con successo.\n");
+							return;
 						} catch (DiscountNotFoundException exception) {
 							System.out.println(exception.getMessage() + "\n");
+							break;
 						}
-						return;
 					}
 				}
-				System.out.println("Scelta non valida.\n");
+				if (i == cinema.getAllDiscountStrategy().size()) {
+					System.out.println("Scelta non valida.\n");
+				}
 			} while (true);
 		} catch (PersistenceException exception) {
 			System.out.println(exception.getMessage());
@@ -166,10 +171,10 @@ public class CLIAdminMain {
 			selectProjectionDateTime(projection);
 			selectProjectionPrice(projection);
 			try {
-					cinema.putNewProjectionIntoDb();
-				} catch (PersistenceException e) {
-					System.out.println(e.getMessage());
-				}
+				cinema.putNewProjectionIntoDb(projection);
+			} catch (PersistenceException | ProjectionException exception) {
+				System.out.println(exception.getMessage() + "\n");
+			}
 		}
 	}
 
@@ -204,7 +209,7 @@ public class CLIAdminMain {
 						inputInt("Inserisci l'ID del film da associare alla proiezione: "));
 				System.out.println();
 				return;
-			} catch (NoMovieException exception) {
+			} catch (NoMovieException | ProjectionException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -225,7 +230,7 @@ public class CLIAdminMain {
 				cinema.setProjectionRoom(projection,
 						inputInt("Inserisci il numero della sala da associare alla proiezione: "));
 				return;
-			} catch (RoomException exception) {
+			} catch (RoomException | ProjectionException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}
 		} while (true);
@@ -309,7 +314,7 @@ public class CLIAdminMain {
 				System.out.println(projection.toString());
 			}
 		} catch (PersistenceException exception) {
-			System.out.println(exception.getMessage());
+			System.out.println(exception.getMessage() + "\n");
 		}
 	}
 
