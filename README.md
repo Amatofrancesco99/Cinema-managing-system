@@ -1,4 +1,4 @@
-# Progetto-F21
+# Progetto-F21 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/IngSW-unipv/Progetto-F21/blob/main/LICENSE)
 
 ***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
 
