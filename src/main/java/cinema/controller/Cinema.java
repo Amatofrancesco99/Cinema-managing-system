@@ -784,6 +784,10 @@ public class Cinema {
 	public String getEmail() {
 		return cinemaInfo.get("email");
 	}
+	
+	public String getLogoURL() {
+		return cinemaInfo.get("logoURL");
+	}
 
 	/**
 	 * Imposta la strategia di sconto applicata dal cinema.
