@@ -31,49 +31,47 @@ import cinema.model.spectator.Spectator;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
 /**
- * BREVE SPIEGAZIONE CLASSE CINEMA ( Pattern Controller)
+ * Rappresenta il controllore che consente alle viste di poter eseguire
+ * operazioni utili, senza dover conoscere la logica di dominio.
+ * 
  * 
  * @author Screaming Hairy Armadillo Team
- *
- *         Questa classe rappresenta il controller del nostro progetto, ossia la
- *         classe he consente alla vista di poter eseguire operazioni utili,
- *         senza dover conoscere la logica di dominio. Essa è molto utile poiché
- *         qualora si usino interfacce diverse, come nel nostro caso (CLI e GUI)
- *         gli stessi metodi della CLI saranno presenti nella GUI, chiaramente
- *         cambierà il modo di gestire situazioni particolari, ma comunque
- *         permette di rendere migliore, tra le altre cose, la modificabilità
- *         del codice, l'high coesion ed il low coupling.
+ * 
  */
 public class Cinema {
 
 	/**
-	 * ATTRIBUTI
-	 * 
-	 * @param name               Nome
-	 * @param city               Città
-	 * @param country            Paese
-	 * @param zipCode            Codice comunale
-	 * @param address            Indirizzo (Via, numero civico)
-	 * @param logoURL            Logo del cinema
-	 * @param email              E-mail, utile per inviare report al cliente con i
-	 *                           diversi dati riferiti alla specifica prenotazione,
-	 *                           effettuata da quest ultimo
-	 * @param password           Password associata all'indirizzo email
-	 * @param adminPassword      Password dell'amministratore del cinema
-	 * @param cinemaReservations List: comprende tutte le prenotazioni del cinema
-	 * @param cinemaDiscount     Sconto attivo
-	 * @param persistenceFacade
+	 * HashMap contenente le informazioni generali del cinema.
 	 */
 	private HashMap<String, String> cinemaInfo;
+
+	/**
+	 * Gestisce l'invio dell'e-mail da parte del cinema.
+	 */
 	private EmailHandler emailHandler;
+
+	/**
+	 * HashMap contenente le informazioni della proiezione associata all'id.
+	 */
 	private HashMap<Integer, Projection> newProjections;
+
+	/**
+	 * Lista contenente tutte le prenotazioni generate dal cinema.
+	 */
 	private List<Reservation> cinemaReservations;
+
+	/**
+	 * Corrente strategia di sconto applicata dal cinema.
+	 */
 	private IReservationDiscountStrategy cinemaDiscount;
+
+	/**
+	 * Permette la gestione della persistenza dei dati.
+	 */
 	private PersistenceFacade persistenceFacade;
 
 	/**
-	 * COSTRUTTORE di default, contenente le informazioni specifiche del nostro
-	 * cinema
+	 * Costruttore del cinema.
 	 */
 	public Cinema() {
 		try {
@@ -90,11 +88,11 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per creare una nuova prenotazione (vuota), a partire dalla classe
-	 * cinema
+	 * Crea una nuova prenotazione (vuota), a partire dalla classe cinema.
 	 * 
-	 * @return reservation Nuova prenotazione creata
-	 * @throws PersistenceException
+	 * @return la nuova prenotazione creata.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public long createReservation() throws PersistenceException {
 		Reservation r = new Reservation(cinemaDiscount, persistenceFacade.getLastReservationId() + 1);
@@ -104,11 +102,12 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per farsi dare una prenotazione, dato il suo id
+	 * Restituisce una prenotazione, dato il suo id.
 	 * 
-	 * @param progressive
-	 * @return
-	 * @throws ReservationNotExistsException
+	 * @param progressive numero di prenotazione(id).
+	 * @return la prenotazione corrispondente all'id inserito.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
 	public Reservation getReservation(long progressive) throws ReservationException {
 		for (Reservation r : cinemaReservations) {
@@ -119,136 +118,136 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per rimuovere una proiezione al cinema
+	 * Rimuove una proiezione dal cinema, dato il suo id.
 	 * 
-	 * @param p Proiezione da rimuovere alla lista di proiezioni di cui il cinema
-	 *          dispone
-	 * @throws PersistenceException
-	 * @throws NoProjectionException
+	 * @param projectionId identificativo della proiezione.
+	 * @throws ProjectionException  qualora vi siano errori riscontrati nelle
+	 *                              procedure di interazione con gli oggetti che
+	 *                              rappresentano le proiezioni.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public void removeProjection(int p) throws ProjectionException, PersistenceException {
-		persistenceFacade.removeProjection(p);
+	public void removeProjection(int projectionId) throws ProjectionException, PersistenceException {
+		persistenceFacade.removeProjection(projectionId);
 	}
 
 	/**
-	 * METODO per farsi restituire tutte le proiezioni di cui il cinema dispone
+	 * Restituisce tutte le proiezioni di cui il cinema dispone.
 	 * 
-	 * @return ArrayList<Projection> Insieme di tutte le proiezioni del cinema
-	 * @throws PersistenceException
+	 * @return la lista di tutte le proiezioni del cinema.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public List<Projection> getProjections() throws PersistenceException {
 		return persistenceFacade.getAllProjections();
 	}
 
 	/**
-	 * METODO per impostare l'id di una proiezione
+	 * Crea una proiezione e gli imposta l'id.
 	 * 
-	 * @param newProjection
-	 * @param id
-	 * @throws PersistenceException
-	 * @throws ProjectionIDAlreadyUsedException
-	 * @throws InvalidProjectionIdException
+	 * @param projectionId identificativo della proiezione.
+	 * @throws ProjectionException  qualora la proiezione con l'id inserito sia già
+	 *                              esistente.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public void createProjectionWithID(int id) throws ProjectionException, PersistenceException {
+	public void createProjectionWithID(int projectionId) throws ProjectionException, PersistenceException {
 		for (Projection projection : getProjections()) {
-			if (projection.getId() == id)
-				throw new ProjectionException("La proiezione con id " + id + " è già esistente.");
+			if (projection.getId() == projectionId)
+				throw new ProjectionException("La proiezione con id " + projectionId + " è già esistente.");
 		}
 		Projection newProjection = new Projection();
-		newProjection.setId(id);
-		newProjections.put(id, newProjection);
+		newProjection.setId(projectionId);
+		newProjections.put(projectionId, newProjection);
 	}
 
 	/**
-	 * METODO per associare ad una proiezione un film
+	 * Associa un film ad una proiezione.
 	 * 
-	 * @param p
-	 * @param movie
-	 * @throws NoMovieException
-	 * @throws NoProjectionException
+	 * @param projectionId codice identificativo della proiezione.
+	 * @param movieId      codice identificativo del film.
+	 * @throws NoMovieException    qualora non si trovi nessun film, dato l'id.
+	 * @throws ProjectionException qualora la proiezione inserita non esista.
 	 */
-	public void setProjectionMovie(int p, int movieId) throws NoMovieException, ProjectionException {
+	public void setProjectionMovie(int projectionId, int movieId) throws NoMovieException, ProjectionException {
 		Projection projection = null;
-		if ((projection = newProjections.get(p)) == null) {
-			throw new ProjectionException("La proiezione " + p + " non esiste tra le nuove proiezioni.");
+		if ((projection = newProjections.get(projectionId)) == null) {
+			throw new ProjectionException("La proiezione " + projectionId + " non esiste tra le nuove proiezioni.");
 		}
 		projection.setMovie(getMovie(movieId));
 	}
 
 	/**
-	 * METODO per associare alla proiezione una sala
+	 * Associa alla proiezione una sala.
 	 * 
-	 * @param p
-	 * @param roomId
-	 * @throws ProjectionException
-	 * @throws RoomNotExistsException
-	 * @throws NoProjectionException
+	 * @param projectionId codice identificativo della proiezione.
+	 * @param roomId       codice identificativo della sala.
+	 * @throws RoomException       qualora vi siano errori legati alla gestione
+	 *                             della sala del cinema.
+	 * @throws ProjectionException qualora la proiezione inserita non esista.
 	 */
-	public void setProjectionRoom(int p, int roomId) throws RoomException, ProjectionException {
+	public void setProjectionRoom(int projectionId, int roomId) throws RoomException, ProjectionException {
 		Projection projection = null;
-		if ((projection = newProjections.get(p)) == null) {
-			throw new ProjectionException("La proiezione " + p + " non esiste tra le nuove proiezioni.");
+		if ((projection = newProjections.get(projectionId)) == null) {
+			throw new ProjectionException("La proiezione " + projectionId + " non esiste tra le nuove proiezioni.");
 		}
 		projection.setRoom(getRoom(roomId));
 	}
 
 	/**
-	 * METODO per impostare la data e l'ora di una proiezione
+	 * Imposta la data e l'ora di una proiezione.
 	 * 
-	 * @param p
-	 * @param projectionDateTime
-	 * @throws ProjectionException
+	 * @param projectionId       codice identificativo della proiezione.
+	 * @param projectionDateTime data e ora di una proiezione.
+	 * @throws ProjectionException qualora la proiezione inserita non esista.
 	 */
-	public void setProjectionDateTime(int p, LocalDateTime projectionDateTime) throws ProjectionException {
+	public void setProjectionDateTime(int projectionId, LocalDateTime projectionDateTime) throws ProjectionException {
 		Projection projection = null;
-		if ((projection = newProjections.get(p)) == null) {
-			throw new ProjectionException("La proiezione " + p + " non esiste tra le nuove proiezioni.");
+		if ((projection = newProjections.get(projectionId)) == null) {
+			throw new ProjectionException("La proiezione " + projectionId + " non esiste tra le nuove proiezioni.");
 		}
 		projection.setDateTime(projectionDateTime);
 	}
 
 	/**
-	 * METODO per associare alla proiezione un prezzo
+	 * Associa alla proiezione un prezzo.
 	 * 
-	 * @param p
-	 * @param price
-	 * @throws ProjectionException
+	 * @param projectionId codice identificativo della proiezione.
+	 * @param price        prezzo della proiezione.
+	 * @throws ProjectionException qualora la proiezione inserita non esista.
 	 */
-	public void setProjectionPrice(int p, double price) throws ProjectionException {
+	public void setProjectionPrice(int projectionId, double price) throws ProjectionException {
 		Projection projection = null;
-		if ((projection = newProjections.get(p)) == null) {
-			throw new ProjectionException("La proiezione " + p + " non esiste tra le nuove proiezioni.");
+		if ((projection = newProjections.get(projectionId)) == null) {
+			throw new ProjectionException("La proiezione " + projectionId + " non esiste tra le nuove proiezioni.");
 		}
 		projection.setPrice(price);
 	}
 
 	/**
-	 * METODO per inserire la nuova proiezione creata dall'admin all'interno del db
+	 * Inserisce la nuova proiezione creata dall'admin all'interno del database.
 	 * 
-	 * @throws PersistenceException
+	 * @param projectionId codice identificativo della proiezione.
+	 * @throws ProjectionException  qualora la proiezione inserita non esista.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public void saveNewProjection(int p) throws ProjectionException, PersistenceException {
+	public void saveNewProjection(int projectionId) throws ProjectionException, PersistenceException {
 		Projection projection = null;
-		if ((projection = newProjections.get(p)) == null) {
-			throw new ProjectionException("La proiezione " + p + " non esiste tra le nuove proiezioni.");
+		if ((projection = newProjections.get(projectionId)) == null) {
+			throw new ProjectionException("La proiezione " + projectionId + " non esiste tra le nuove proiezioni.");
 		}
 		persistenceFacade.putProjection(projection);
 	}
 
 	/**
+	 * Restituisce le proiezioni di un cinema, inerenti uno specifico film.
 	 * 
-	 * METODO per restituire le proiezioni di un cinema, inerenti uno specifico film
-	 * tramite l'id
-	 * 
-	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
-	 * @return ArrayList<Projection> Insieme delle proiezioni dello specifico film
-	 * @throws NoMovieException
-	 * @throws PersistenceException
-	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
-	 *                                     abbia quel film, tra i film proiettati
-	 * 
-	 *                                     DA ELIMINARE (RIDURRE L'ACCOPPIAMENTO CON
-	 *                                     LE INTERFACCE)
+	 * @param movieId codice identificativo del film.
+	 * @return la lista di proiezioni inerenti al film inserito.
+	 * @throws NoMovieException     qualora non si trovi nessun film, dato l'id.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public List<Projection> getProjections(int movieId) throws NoMovieException, PersistenceException {
 		List<Projection> movieProjections = new ArrayList<Projection>();
@@ -264,19 +263,13 @@ public class Cinema {
 	}
 
 	/**
+	 * Restituisce gli id delle proiezioni, inerenti ad uno specifico film.
 	 * 
-	 * METODO per restituire gli id delle pproiezioni di un cinema, inerenti uno
-	 * specifico film tramite l'id
-	 * 
-	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
-	 * @return ArrayList<Integer> Id delle proiezioni dello specifico film
-	 * @throws NoMovieException
-	 * @throws PersistenceException
-	 * @throws NoMovieProjectionsException Eccezione lanciata, qualora il cinema non
-	 *                                     abbia quel film, tra i film proiettati
-	 * 
-	 *                                     DA ELIMINARE (RIDURRE L'ACCOPPIAMENTO CON
-	 *                                     LE INTERFACCE)
+	 * @param movieId codice identificativo del film.
+	 * @return la lista degli id delle proiezioni inerenti al film inserito.
+	 * @throws NoMovieException     qualora non si trovi nessun film, dato l'id.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public List<Integer> getMovieProjections(int movieId) throws NoMovieException, PersistenceException {
 		List<Integer> movieProjections = new ArrayList<>();
@@ -292,22 +285,16 @@ public class Cinema {
 	}
 
 	/**
+	 * Restituisce le proiezioni attualmente proiettate da un cinema, inerenti uno
+	 * specifico film.
 	 * 
-	 * METODO per restituire le proiezioni attualmente realizzate da un cinema,
-	 * inerenti uno specifico film tramite l'id
-	 * 
-	 * @param movieId Id del film di cui si vogliono cercare le proiezioni
-	 *                attualmente disponibili
-	 * @return ArrayList<Projection> Insieme delle proiezioni attualmente
-	 *         disponibili dello specifico film
-	 * @throws NoMovieException
-	 * @throws PersistenceException
-	 * @throws MovieNoLongerProjectedException Eccezione lanciata qualora il film
-	 *                                         inserito non abbia proiezioni
-	 *                                         attualmente disponibili
-	 * @throws NoMovieProjectionsException     Eccezione lanciata, qualora il cinema
-	 *                                         non abbia quel film, tra i film
-	 *                                         proiettati
+	 * @param movieId codice identificativo del film.
+	 * @return la lista di proiezioni inerenti al film inserito.
+	 * @throws NoMovieException     qualora non si trovi nessun film, dato l'id.
+	 * @throws ProjectionException  qualora il film inserito non sia più in
+	 *                              programmazione.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public List<Projection> getCurrentlyAvailableProjections(int movieId)
 			throws NoMovieException, ProjectionException, PersistenceException {
@@ -327,18 +314,23 @@ public class Cinema {
 					"Il film \"" + this.getMovie(movieId).getTitle() + "\" non è attualmente in programmazione.");
 	}
 
-	/** METODO per farci dare tutte i film inerenti ad un anno specifico */
+	/**
+	 * Restituisce tutti i film presenti nel database.
+	 * 
+	 * @return la lista dei film presenti nel database.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
+	 */
 	public ArrayList<Movie> getAllMovies() throws PersistenceException {
 		return persistenceFacade.getAllMovies();
 	}
 
 	/**
+	 * Restituisce tutti i film attualmente proiettati.
 	 * 
-	 * METODO per restituire tutti i film che il cinema sta attualmente proiettando
-	 * 
-	 * @return List<Movie> Insieme di tutti i film che il cinema sta momentaneamente
-	 *         proiettando
-	 * @throws PersistenceException
+	 * @return la lista dei film attualmente proiettati.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public List<Movie> getCurrentlyAvailableMovies() throws PersistenceException {
 		List<Movie> movies = new ArrayList<Movie>();
@@ -360,18 +352,18 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per restituire la lista di film che il cinema proietta, dato il titolo
-	 * di un film (o una parte di esso)
+	 * Restituire la lista di film attualmente proiettati, dato il titolo di un film
+	 * (o parte di esso).
 	 * 
-	 * @param query Titolo del film che si vuole cercare tra le proiezioni del
-	 *              cinema (o una parte di esso)
-	 * @return ArrayList<Movie> Lista dei film
-	 * @throws PersistenceException
+	 * @param title titolo del film.
+	 * @return la lista di film attualmente proiettati.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public List<Movie> getCurrentlyAvailableMovies(String query) throws PersistenceException {
+	public List<Movie> getCurrentlyAvailableMovies(String title) throws PersistenceException {
 		List<Movie> movies = new ArrayList<Movie>();
 		for (Movie m : getCurrentlyAvailableMovies()) {
-			if (m.getTitle().toLowerCase().contains(query.toLowerCase())) {
+			if (m.getTitle().toLowerCase().contains(title.toLowerCase())) {
 				movies.add(m);
 			}
 		}
@@ -379,73 +371,69 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per restituire un film, dato il suo Id
+	 * Restituisce un film, dato il suo Id.
 	 * 
-	 * @param id Id del film
-	 * @return Movie Film trovato
-	 * @throws NoMovieException Eccezione lanciata qualora non si trovi nessun film
-	 *                          con quell'Id
+	 * @param movieId codice identificativo del film.
+	 * @return il film cercato.
+	 * @throws NoMovieException qualora non si trovi nessun film, dato l'id.
 	 */
-	public Movie getMovie(int id) throws NoMovieException {
+	public Movie getMovie(int movieId) throws NoMovieException {
 		try {
-			return persistenceFacade.getMovie(id);
+			return persistenceFacade.getMovie(movieId);
 		} catch (PersistenceException e) {
-			throw new NoMovieException("Il film con ID " + id + " non esiste.");
+			throw new NoMovieException("Il film con ID " + movieId + " non esiste.");
 		}
 	}
 
 	/**
-	 * METODO per resituire una proiezione, dato il suo Id
+	 * Resituisce una proiezione, dato il suo Id.
 	 * 
-	 * @param id Id della proiezione
-	 * @return Projection Proiezione con quello specifico Id
-	 * @throws PersistenceException
-	 * @throws NoProjectionException Eccezione lanciata qualora non ci sia nessuna
-	 *                               proiezione con quell'Id
+	 * @param projectionId codice identificativo della proiezione.
+	 * @return la proiezione cercata.
+	 * @throws ProjectionException  qualora il film inserito non sia più in
+	 *                              programmazione.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public Projection getProjection(int id) throws ProjectionException, PersistenceException {
+	public Projection getProjection(int projectionId) throws ProjectionException, PersistenceException {
 		for (Projection p : getProjections()) {
-			if (p.getId() == id) {
+			if (p.getId() == projectionId) {
 				return p;
 			}
 		}
-		throw new ProjectionException("La proiezione con id " + id + " non esiste.");
+		throw new ProjectionException("La proiezione con id " + projectionId + " non esiste.");
 	}
 
 	/**
-	 * METODO per resituire una proiezione, se attualmente proiettata, dato il suo
-	 * Id
+	 * Resituisce una proiezione, se attualmente proiettata, dato il suo id.
 	 * 
-	 * @param id Id della proiezione che si vuole verificare se sia disponibile
-	 * @return Projection Proiezione con quello specifico Id, attualmente proiettata
-	 * @throws PersistenceException
-	 * @throws NoProjectionException                  Eccezione lanciata qualora non
-	 *                                                ci sia nessuna proiezione con
-	 *                                                quell'Id
-	 * @throws ProjectionIsNoLongerProjectedException Eccezione lanciata qualora la
-	 *                                                data della proiezione inserita
-	 *                                                sia inferiore alla data
-	 *                                                odierna
+	 * @param projectionId codice identificativo della proiezione.
+	 * @return la proiezione cercata.
+	 * @throws ProjectionException  qualora il film inserito non sia più
+	 *                              disponiobile, o non esista.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public Projection getCurrentlyAvailableProjection(int id) throws ProjectionException, PersistenceException {
+	public Projection getCurrentlyAvailableProjection(int projectionId)
+			throws ProjectionException, PersistenceException {
 		for (Projection p : getProjections()) {
-			if ((p.getId() == id) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
+			if ((p.getId() == projectionId) && (p.getDateTime().isAfter(LocalDateTime.now()))) {
 				return p;
 			}
-			if ((p.getId() == id) && (p.getDateTime().isBefore(LocalDateTime.now()))) {
-				throw new ProjectionException("La proiezione selezionata con ID " + id + " non è più disponibile.");
+			if ((p.getId() == projectionId) && (p.getDateTime().isBefore(LocalDateTime.now()))) {
+				throw new ProjectionException(
+						"La proiezione selezionata con ID " + projectionId + " non è più disponibile.");
 			}
 		}
-		throw new ProjectionException("La proiezione con id " + id + " non esiste.");
+		throw new ProjectionException("La proiezione con id " + projectionId + " non esiste.");
 	}
 
 	/**
-	 * METODO per resituire un coupon, dato il suo id (progressivo)
+	 * Resituisce un coupon, dato il suo id.
 	 * 
-	 * @param progressive Id del coupon
-	 * @return Coupon Coupon con quello specifico progressivo
-	 * @throws CouponNotExistsException Eccezione lanciata qualora non ci sia nessun
-	 *                                  coupon con quell'Id progressivo
+	 * @param code codice coupon.
+	 * @return il coupon cercato.
+	 * @throws CouponException qualora non esista il coupon.
 	 */
 	public Coupon getCoupon(String code) throws CouponException {
 		try {
@@ -456,52 +444,47 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per farsi dire l'età più elevata da cui il cinema effettua uno sconto
-	 * sul totale
+	 * Restituisce l'età massima sopra la quale il cinema inizia ad effettuare uno
+	 * sconto.
 	 * 
-	 * @return max_age Età massima
-	 * @throws PersistenceException
+	 * @return l'età massima.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public int getMaxDiscountAge() throws PersistenceException {
 		return this.persistenceFacade.getAgeDiscounts().getMaxAge();
 	}
 
 	/**
-	 * METODO per farsi dire l'età più bassa da cui il cinema effettua uno sconto
-	 * sul totale
+	 * Restituisce l'età minima sotto la quale il cinema inizia ad effettuare uno
+	 * sconto.
 	 * 
-	 * @return min_age Età minima
-	 * @throws PersistenceException
+	 * @return l'età minima.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public int getMinDiscountAge() throws PersistenceException {
 		return this.persistenceFacade.getAgeDiscounts().getMinAge();
 	}
 
 	/**
-	 * METODO per farsi dire il numero di sale di cui il cinema è composto
+	 * Restituisce tutte le sale del cinema.
 	 * 
-	 * @return numberOfRooms
-	 * @throws PersistenceException
-	 */
-	public int getNumberOfRooms() throws PersistenceException {
-		return persistenceFacade.getAllRooms().size();
-	}
-
-	/**
-	 * METODO per farsi dire tutte le sale del cinema
-	 * 
-	 * @return rooms
-	 * @throws PersistenceException
+	 * @return la lista delle sale del cinema.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public List<Room> getAllRooms() throws PersistenceException {
 		return persistenceFacade.getAllRooms();
 	}
 
 	/**
-	 * METODO per farsi dire dal cinema la sala, dato l'id
+	 * Restituisce la sala del cinema, dato l'id.
 	 * 
-	 * @return
-	 * @throws RoomNotExistsException
+	 * @param roomId codice identifictivo della sala.
+	 * @return la sala cercata.
+	 * @throws RoomException qualora la sala cercata non sia presente all'interno
+	 *                       del cinema.
 	 */
 	public Room getRoom(int roomId) throws RoomException {
 		try {
@@ -512,9 +495,9 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per farsi dire le informazioni del luogo in cui il cinema è situato
+	 * Restituisce l'ubicazione del cinema.
 	 * 
-	 * @return location
+	 * @return l'ubicazione del cinema (indirizzo, città, cap, stato).
 	 */
 	public String getLocation() {
 		return cinemaInfo.get("address") + ", " + cinemaInfo.get("city") + " - " + cinemaInfo.get("zipCode") + " "
@@ -522,288 +505,307 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per impostare la proiezione di una prenotazione
+	 * Imposta la proiezione di una prenotazione.
 	 * 
-	 * @param r
-	 * @param projectionId
-	 * @throws PersistenceException
-	 * @throws NoProjectionException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param projectionId  codice identificativo della proiezione..
+	 * @throws ProjectionException  qualora vi siano errori riscontrati nelle
+	 *                              procedure di interazione con gli oggetti che
+	 *                              rappresentano le proiezioni..
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public void setReservationProjection(long r, int projectionId)
+	public void setReservationProjection(long reservationId, int projectionId)
 			throws ProjectionException, ReservationException, PersistenceException {
-		getReservation(r).setProjection(getProjection(projectionId));
+		getReservation(reservationId).setProjection(getProjection(projectionId));
 	}
 
 	/**
-	 * METODO per farsi dire il numero di colonne della sala in cui è proiettato il
-	 * film della prenotazione
+	 * Restituisce il numero di colonne della sala in cui è proiettato il film della
+	 * prenotazione.
 	 * 
-	 * @param r
-	 * @return
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il numero di colonne della sala.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public int getNumberColsReservationProjection(long r) throws ReservationException {
-		return getReservation(r).getProjection().getRoom().getNumberOfCols();
+	public int getNumberColsReservationProjection(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getProjection().getRoom().getNumberOfCols();
 	}
 
 	/**
-	 * METODO per farsi dire il numero di righe della sala in cui è proiettato il
-	 * film della prenotazione
+	 * Restituisce il numero di righe della sala in cui è proiettato il film della
+	 * prenotazione.
 	 * 
-	 * @param r
-	 * @return
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il numero di righe della sala.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public int getNumberRowsReservationProjection(long r) throws ReservationException {
-		return getReservation(r).getProjection().getRoom().getNumberOfRows();
+	public int getNumberRowsReservationProjection(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getProjection().getRoom().getNumberOfRows();
 	}
 
 	/**
-	 * METODO per farsi dire se il posto della sala selezionata dalla prenotazione è
-	 * libero o meno
+	 * Controlla se il posto della sala selezionata dalla prenotazione è libero o
+	 * meno.
 	 * 
-	 * @param r
-	 * @param row
-	 * @param col
-	 * @return
-	 * @throws ProjectionException
-	 * @throws PersistenceException
-	 * @throws InvalidRoomSeatCoordinatesException
-	 * @throws ReservationNotExistsException
+	 * @param projectionId codice identificativo della proiezione.
+	 * @param row          coordinata riga posto.
+	 * @param col          coordinata colonna posto.
+	 * @return True: libero, False: occupato.
+	 * @throws RoomException        qualora la sala cercata non sia presente
+	 *                              all'interno del cinema.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 * @throws ProjectionException  qualora vi siano errori riscontrati nelle
+	 *                              procedure di interazione con gli oggetti che
+	 *                              rappresentano le proiezioni.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
-	public boolean checkIfProjectionSeatIsAvailable(int p, int row, int col)
+	public boolean checkIfProjectionSeatIsAvailable(int projectionId, int row, int col)
 			throws RoomException, ReservationException, ProjectionException, PersistenceException {
-		return persistenceFacade.getOccupiedSeat(p, row, col);
+		return persistenceFacade.getOccupiedSeat(projectionId, row, col);
 	}
 
-	public int getReservationProjection(long r) throws ReservationException {
+	/**
+	 * Restituisce la proiezione associata alla prenotazione.
+	 * 
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return l'id della proiezione associata alla prenotazione inderita.
+	 * @throws ReservationException qualora la prenotazine inserita non esista.
+	 */
+	public int getReservationProjection(long reservationId) throws ReservationException {
 		for (Reservation reservation : cinemaReservations) {
-			if (reservation.getProgressive() == r)
+			if (reservation.getProgressive() == reservationId)
 				return reservation.getProjection().getId();
 		}
-		throw new ReservationException("La prenotazione " + r + " non esiste.");
+		throw new ReservationException("La prenotazione " + reservationId + " non esiste.");
 	}
 
 	/**
-	 * METODO per aggiungere un posto alla reservation
+	 * Aggiunge un posto alla reservation.
 	 * 
-	 * @param r
-	 * @param row
-	 * @param col
-	 * @throws SeatAlreadyTakenException
-	 * @throws InvalidRoomSeatCoordinatesException
-	 * @throws SeatTakenTwiceException
-	 * @throws FreeAnotherPersonSeatException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param row           coordinata riga posto.
+	 * @param col           coordinata colonna posto.
+	 * @throws RoomException             qualora la sala cercata non sia presente
+	 *                                   all'interno del cinema.
+	 * @throws SeatAvailabilityException qualora il posto richiesto non sia
+	 *                                   disponibile.
+	 * @throws ReservationException      qualora l'id della prenotazione inserita
+	 *                                   non esista.
 	 */
-	public void addSeatToReservation(long r, int row, int col)
+	public void addSeatToReservation(long reservationId, int row, int col)
 			throws RoomException, SeatAvailabilityException, ReservationException {
-		getReservation(r).addSeat(row, col);
+		getReservation(reservationId).addSeat(row, col);
 	}
 
 	/**
-	 * METODO per rimuovere un posto dalla reservation
+	 * Rimuove un posto dalla reservation.
 	 * 
-	 * @param r
-	 * @param row
-	 * @param col
-	 * @throws ReservationException
-	 * @throws SeatAvailabilityException
-	 * @throws RoomException
-	 * @throws SeatAlreadyTakenException
-	 * @throws InvalidRoomSeatCoordinatesException
-	 * @throws SeatTakenTwiceException
-	 * @throws FreeAnotherPersonSeatException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param row           coordinata riga posto.
+	 * @param col           coordinata colonna posto.
+	 * @throws RoomException        qualora la sala cercata non sia presente
+	 *                              all'interno del cinema.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public void removeSeatFromReservation(long r, int row, int col) throws RoomException, ReservationException {
-		getReservation(r).removeSeat(row, col);
+	public void removeSeatFromReservation(long reservationId, int row, int col)
+			throws RoomException, ReservationException {
+		getReservation(reservationId).removeSeat(row, col);
 	}
 
 	/**
-	 * METODO per aggiungere informazioni sul cliente che effettua la prenotazione
+	 * Aggiunge le informazioni dello spettatore alla prenotazione.
 	 * 
-	 * @param r
-	 * @param name
-	 * @param surname
-	 * @param email
-	 * @throws InvalidSpectatorInfoException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param name          nome dello spettatore.
+	 * @param surname       cognome dello spettatore.
+	 * @param email         email dello spettatore.
+	 * @throws InvalidSpectatorInfoException qualora le informazioni relative ai
+	 *                                       dati di uno spettatore vengano
+	 *                                       interpretate come non valide al momento
+	 *                                       dell'inserimento.
+	 * @throws ReservationException          qualora l'id della prenotazione
+	 *                                       inserita non esista.
 	 */
-	public void setReservationPurchaser(long r, String name, String surname, String email)
+	public void setReservationPurchaser(long reservationId, String name, String surname, String email)
 			throws InvalidSpectatorInfoException, ReservationException {
-		getReservation(r).setPurchaser(new Spectator(name, surname, email));
+		getReservation(reservationId).setPurchaser(new Spectator(name, surname, email));
 	}
 
 	/**
-	 * METODO per impostare il ccv di una carta di credito
+	 * Imposta i dati della carta di credito dello spettatore.
 	 * 
-	 * @param p
-	 * @param ccv
-	 * @throws ReservationException
-	 * @throws InvalidCCVException
+	 * @param reservationId  codice identificativo della prenotazione.
+	 * @param number         numero della carta di credito
+	 * @param owner          titolare della carta di credito.
+	 * @param cvv            codice di sicurezza della carta di credito.
+	 * @param expirationDate data di scadenza della carta di cradito.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public void setReservationPaymentCard(long r, String number, String owner, String cvv, YearMonth expirationDate)
-			throws ReservationException {
-		getReservation(r).setPaymentCard(number, owner, cvv, expirationDate);
+	public void setReservationPaymentCard(long reservationId, String number, String owner, String cvv,
+			YearMonth expirationDate) throws ReservationException {
+		getReservation(reservationId).setPaymentCard(number, owner, cvv, expirationDate);
 	}
 
 	/**
-	 * METODO per impostare il numero di persone che hanno un età inferiore ad un
-	 * età minima da cui parte lo sconto per la proiezione indicata (per età)
+	 * Imposta il numero di persone che hanno un'età inferiore all'età minima per la
+	 * quale viene applicato lo sconto.
 	 * 
-	 * @param r
-	 * @param n
-	 * @throws InvalidNumberPeopleValueException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param number        numero di persone con l'età inferiore all'età minima.
+	 * @throws DiscountException    qualora vi siano errori riscontrati nelle
+	 *                              procedure di interazione con gli oggetti che
+	 *                              rappresentano gli sconti.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public void setReservationNumberPeopleUntilMinAge(long r, int n) throws DiscountException, ReservationException {
-		getReservation(r).setNumberPeopleUnderMinAge(n);
+	public void setReservationNumberPeopleUntilMinAge(long reservationId, int number)
+			throws DiscountException, ReservationException {
+		getReservation(reservationId).setNumberPeopleUnderMinAge(number);
 	}
 
 	/**
-	 * METODO per impostare il numero di persone che hanno un età superiore ad un
-	 * età a partire dalla quale parte lo sconto per la proiezione indicata (per
-	 * età)
+	 * Imposta il numero di persone che hanno un'età superiore all'età massima per
+	 * la quale viene applicato lo sconto.
 	 * 
-	 * @param r
-	 * @param n
-	 * @throws InvalidNumberPeopleValueException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param number        numero di persone con l'età superiore all'età massima.
+	 * @throws DiscountException    qualora vi siano errori riscontrati nelle
+	 *                              procedure di interazione con gli oggetti che
+	 *                              rappresentano gli sconti.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public void setReservationNumberPeopleOverMaxAge(long r, int n) throws DiscountException, ReservationException {
-		getReservation(r).setNumberPeopleOverMaxAge(n);
+	public void setReservationNumberPeopleOverMaxAge(long reservationId, int number)
+			throws DiscountException, ReservationException {
+		getReservation(reservationId).setNumberPeopleOverMaxAge(number);
 	}
 
 	/**
-	 * METODO per aggiungere alla prenotazione un eventuale coupon per un ulteriore
-	 * sconto sul totale
+	 * Aggiunge alla prenotazione un eventuale coupon per un ulteriore sconto sul
+	 * totale.
 	 * 
-	 * @param r
-	 * @param coupon
-	 * @throws CouponNotExistsException
-	 * @throws CouponAleadyUsedException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @param code          codice del coupon.
+	 * @throws CouponException      qualora il coupon sia già stato usato.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public void setReservationCoupon(long r, String code) throws CouponException, ReservationException {
+	public void setReservationCoupon(long reservationId, String code) throws CouponException, ReservationException {
 		Coupon coupon = getCoupon(code);
 		if (coupon.isUsed() == true) {
 			throw new CouponException("Il coupon " + code + " è già stato usato.");
 		} else
-			getReservation(r).setCoupon(coupon);
+			getReservation(reservationId).setCoupon(coupon);
 	}
 
 	/**
-	 * METODO per comprare una prenotazione, una volta inseriti tutti i dati
+	 * Avvia il processo di pagamento per una prenotazione, una volta inseriti tutti
+	 * i dati.
 	 * 
-	 * @param r
-	 * @throws NumberFormatException
-	 * @throws SeatAlreadyTakenException
-	 * @throws InvalidRoomSeatCoordinatesException
-	 * @throws ReservationHasNoSeatException
-	 * @throws ReservationHasNoPaymentCardException
-	 * @throws PaymentErrorException
-	 * @throws PersistenceException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @throws NumberFormatException     qualora si tenti di convertire una stringa
+	 *                                   con formato non corretto in un valore
+	 *                                   numerico.
+	 * @throws SeatAvailabilityException qualora il posto richiesto non sia
+	 *                                   disponibile.
+	 * @throws RoomException             qualora la sala cercata non sia presente
+	 *                                   all'interno del cinema.
+	 * @throws ReservationException      qualora l'id della prenotazione inserita
+	 *                                   non esista.
+	 * @throws PaymentErrorException     qualora vi siano errori riscontrati nelle
+	 *                                   procedure di pagamento.
+	 * @throws ReservationException      qualora l'id della prenotazione inserita
+	 *                                   non esista.
+	 * @throws PersistenceException      qualora vi siano errori riscontrati durante
+	 *                                   l'uso di meccanismi di persistenza.
 	 */
-	public void buyReservation(long r) throws NumberFormatException, SeatAvailabilityException, RoomException,
-			ReservationException, PaymentErrorException, ReservationException, PersistenceException {
+	public void buyReservation(long reservationId) throws NumberFormatException, SeatAvailabilityException,
+			RoomException, ReservationException, PaymentErrorException, ReservationException, PersistenceException {
 		try {
-			getReservation(r).buy();
+			getReservation(reservationId).buy();
 		} catch (PaymentErrorException e) {
-			persistenceFacade.deleteReservation(r);
+			persistenceFacade.deleteReservation(reservationId);
 			throw new PaymentErrorException(e.getMessage());
 		}
 		/*
-		 * Se la reservation è associata ad un coupon una volta terminato il metodo buy
-		 * dico che quel coupon è stato già utilizzato, in modo tale da impedirne il
-		 * riutilizzo
+		 * Se la reservation è associata ad un coupon, una volta terminato il metodo
+		 * buy, il coupon viene segnato come già utilizzato in modo da impedirne il
+		 * riutilizzo.
 		 */
-		Coupon coupon = getReservation(r).getCoupon();
+		Coupon coupon = getReservation(reservationId).getCoupon();
 		if (coupon != null) {
 			persistenceFacade.setCouponUsed(coupon.getCode());
 		}
-		persistenceFacade.setReservationFields(getReservation(r));
+		persistenceFacade.setReservationFields(getReservation(reservationId));
 	}
 
 	/**
-	 * METODO per farsi dire il totale di una prenotazione
+	 * Restituisce il totale di una prenotazione.
 	 * 
-	 * @param r
-	 * @return
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il totale della prenotazione inserita.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
 	 */
-	public double getReservationTotalAmount(long r) throws ReservationException {
-		return getReservation(r).getTotal();
+	public double getReservationTotalAmount(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getTotal();
 	}
 
 	/**
-	 * METODO per inviare un email al cliente che ha compilato la prenotazione
-	 * comprendente il report (documento comprendente le varie informazioni sulla
-	 * sua prenotazione: film, posti prenotati, ora, ecc...)
+	 * Invia un e-mail allo spettatore che ha completato la compilazione della
+	 * prenotazione (comprende il report).
 	 * 
-	 * @param r
-	 * @throws HandlerException
-	 * @throws ReservationNotExistsException
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il thread che gestisce l'invio dell'e-mail.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 * @throws HandlerException     qualora ci siano errori riscontrati durante le
+	 *                              procedure di generazione dei report delle
+	 *                              prenotazioni e conseguente invio di e-mail allo
+	 *                              spettatore.
 	 */
-	public Thread sendReservationEmail(long reservation) throws ReservationException, HandlerException {
-		return emailHandler.sendEmail(getReservation(reservation));
+	public Thread sendReservationEmail(long reservationId) throws ReservationException, HandlerException {
+		return emailHandler.sendEmail(getReservation(reservationId));
 	}
 
-	/**
-	 * METODO per farsi dire il nome del cinema
-	 * 
-	 * @return
-	 */
 	public String getName() {
 		return cinemaInfo.get("name");
 	}
 
-	/**
-	 * METODO per farsi restituire l'email del cinema
-	 * 
-	 * @return
-	 */
 	public String getEmail() {
 		return cinemaInfo.get("email");
 	}
 
 	/**
-	 * METODO per farsi dare il logo del cinema
+	 * Imposta la strategia di sconto applicata dal cinema.
 	 * 
-	 * @return
+	 * @param typeOfDiscount tipo di sconto.
+	 * @throws DiscountNotFoundException qualora la strategia di sconto richiesta
+	 *                                   non sia valida.
+	 * @throws PersistenceException      qualora vi siano errori riscontrati durante
+	 *                                   l'uso di meccanismi di persistenza.
 	 */
-	public String getLogoURL() {
-		return cinemaInfo.get("logoURL");
+	public void setCinemaDiscountStrategy(TypeOfDiscount typeOfDiscount)
+			throws DiscountNotFoundException, PersistenceException {
+		cinemaDiscount = this.getDiscountByStrategy(typeOfDiscount);
+		persistenceFacade.setDiscountStrategy(1, typeOfDiscount.name().toString().toUpperCase());
 	}
 
 	/**
-	 * METODO per farsi restituire la password del cinema
+	 * Restituisce tutte le strategie del cinema presenti nel database.
 	 * 
-	 * @return
-	 */
-	public String getPassword() {
-		return cinemaInfo.get("mailPassword");
-	}
-
-	/**
-	 * METODO per settare la strategia
-	 * 
-	 * @param td
-	 * @throws DiscountNotFoundException
-	 * @throws PersistenceException
-	 */
-	public void setCinemaDiscountStrategy(TypeOfDiscount td) throws DiscountNotFoundException, PersistenceException {
-		cinemaDiscount = this.getDiscountByStrategy(td);
-		persistenceFacade.setDiscountStrategy(1, td.name().toString().toUpperCase());
-	}
-
-	/**
-	 * METODO per farsi dire tutte le strategie che il cinema ha presente nel db
-	 * 
-	 * @return
-	 * @throws PersistenceException
+	 * @return lista di tutte le strategie di sconto possibili.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public ArrayList<Discount> getAllCinemaDiscounts() throws PersistenceException {
 		ArrayList<Discount> allDiscounts = new ArrayList<Discount>();
@@ -814,10 +816,11 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per farsi dire tutte le tipologie di sconto applicabili
+	 * Restituisce tutte le tipologie di sconto applicabili.
 	 * 
-	 * @param td
-	 * @throws PersistenceException
+	 * @return la lista di tutte le tipologie di sconto a disposizione del cinema.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
 	 */
 	public ArrayList<TypeOfDiscount> getAllDiscountStrategies() throws PersistenceException {
 		ArrayList<TypeOfDiscount> allTypesOfDiscounts = new ArrayList<>();
@@ -827,6 +830,13 @@ public class Cinema {
 		return allTypesOfDiscounts;
 	}
 
+	/**
+	 * Restituisce la descrizione di tutte le strategia di sconto.
+	 * 
+	 * @return la lista delle descrizioni di tutte le strategie.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
+	 */
 	public ArrayList<String> getAllDiscountStrategiesDescription() throws PersistenceException {
 		ArrayList<String> allTypesOfDiscountsDescription = new ArrayList<>();
 		for (Discount discount : getAllCinemaDiscounts()) {
@@ -836,37 +846,51 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per farsi dare uno sconto data la sua strategia
+	 * Restituisce uno sconto dato il tipo di sconto inserito.
 	 * 
-	 * @param t
-	 * @return
-	 * @throws DiscountNotFoundException
-	 * @throws PersistenceException
+	 * @param typeOfDiscount tipo di sconto.
+	 * @return lo sconto dato il tipo di sconto inserito.
+	 * @throws DiscountNotFoundException qualoro non ci sia nessuno sconto associato
+	 *                                   al tipo di sconto inserito.
+	 * @throws PersistenceException      qualora vi siano errori riscontrati durante
+	 *                                   l'uso di meccanismi di persistenza.
 	 */
-	public Discount getDiscountByStrategy(TypeOfDiscount t) throws DiscountNotFoundException, PersistenceException {
+	public Discount getDiscountByStrategy(TypeOfDiscount typeOfDiscount)
+			throws DiscountNotFoundException, PersistenceException {
 		Discount discount = null;
 		for (Discount d : getAllCinemaDiscounts()) {
-			if (d.getTypeOfDiscount() == t) {
+			if (d.getTypeOfDiscount() == typeOfDiscount) {
 				discount = d;
 			}
 		}
 		if (discount == null)
-			throw new DiscountNotFoundException("Non è stato trovato nessuno sconto che applica la strategia " + t);
+			throw new DiscountNotFoundException(
+					"Non è stato trovato nessuno sconto che applica la strategia " + typeOfDiscount);
 		else
 			return discount;
 	}
 
+	/**
+	 * 0 References da eliminare.
+	 */
 	public String getDiscountStrategyDescription(TypeOfDiscount t)
 			throws DiscountNotFoundException, PersistenceException {
 		return getDiscountByStrategy(t).toString();
 	}
 
-	/** METODO per farsi dire la password dell'admin */
 	public String getAdminPassword() {
 		return cinemaInfo.get("adminPassword");
 	}
 
-	/* METODO per cambiare la password dell'admin */
+	/**
+	 * Imposta la password dell'amministratore.
+	 * 
+	 * @param newAdminPassword nuova password dell'amministratore.
+	 * @throws PasswordException    qualorala password inserita non rispetti il
+	 *                              requisito di validità.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
+	 */
 	public void setPassword(String newAdminPassword) throws PasswordException, PersistenceException {
 		if (newAdminPassword.length() < 5) {
 			throw new PasswordException("La password inserita è troppo corta.");
@@ -875,66 +899,136 @@ public class Cinema {
 	}
 
 	/**
-	 * METODO per effettuare il login per l'amministratore
+	 * Effettua il login per l'amministratore.
 	 * 
-	 * @param password Password inserita
-	 * @return Esito del login
-	 * @throws WrongAdminPasswordException Eccezione lanciata qualora si inserisca
-	 *                                     una password errata nella fase di login
+	 * @param password password dell'amministratore.
+	 * @throws PasswordException Eccezione lanciata qualora si inserisca una
+	 *                           password errata nella fase di login.
 	 */
 	public void login(String password) throws PasswordException {
 		if (!getAdminPassword().equals(password))
 			throw new PasswordException("La password inserita è errata.");
 	}
 
-	public int getReservationNSeats(long r) throws ReservationException {
-		return getReservation(r).getNSeats();
+	/**
+	 * Restistuisce il numero di posti della prenotazione.
+	 * 
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il numero di posti della prenotazione.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 */
+	public int getReservationNSeats(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getNSeats();
 	}
 
-	public String getReservationTypeOfDiscount(long r) throws ReservationException {
-		return getReservation(r).getTypeOfDiscount().name();
+	/**
+	 * Restistuisce il tipo di sconto applicato dalla prenotazione stessa.
+	 * 
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il tipo di sconto applicato dalla prenotazione stessa.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 */
+	public String getReservationTypeOfDiscount(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getTypeOfDiscount().name();
 	}
 
-	public double getReservationFullPrice(long r) throws ReservationException {
-		return getReservation(r).getFullPrice();
+	/**
+	 * Restistuisce il totale della prenotazione, a meno degli sconti.
+	 * 
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il totale della prenotazione, a meno degli sconti.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 */
+	public double getReservationFullPrice(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getFullPrice();
 	}
 
-	public double getReservationCouponDiscount(long r) throws ReservationException {
+	/**
+	 * Restistuisce lo sconto del coupon, se esistente, associato alla prenotazione.
+	 * 
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return lo sconto del coupon associato alla prenotazione.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 */
+	public double getReservationCouponDiscount(long reservationId) throws ReservationException {
 		try {
-			return getReservation(r).getCoupon().getDiscount();
+			return getReservation(reservationId).getCoupon().getDiscount();
 		} catch (NullPointerException exception) {
 			return 0.0;
 		}
 	}
 
-	public String getReservationCouponCode(long r) throws ReservationException {
-		return getReservation(r).getCoupon().getCode();
+	/**
+	 * Restistuisce il codice del coupon, se esistente, associato alla prenotazione.
+	 * 
+	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il codice del coupon associato alla prenotazione.
+	 * @throws ReservationException qualora l'id della prenotazione inserita non
+	 *                              esista.
+	 */
+	public String getReservationCouponCode(long reservationId) throws ReservationException {
+		return getReservation(reservationId).getCoupon().getCode();
 	}
 
-	public Movie getProjectionMovie(int p) throws ProjectionException, PersistenceException {
+	/**
+	 * Restituisce il film associato all'id della proiezione inserito.
+	 * 
+	 * @param projectionId codice identificativo della proiezione.
+	 * @return il film associato all'id della proiezione cercato.
+	 * @throws ProjectionException  qualora la proiezione con l'id inserito non
+	 *                              esista.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
+	 */
+	public Movie getProjectionMovie(int projectionId) throws ProjectionException, PersistenceException {
 		for (Projection projection : getProjections()) {
-			if (projection.getId() == p) {
+			if (projection.getId() == projectionId) {
 				return projection.getMovie();
 			}
 		}
-		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
+		throw new ProjectionException("La proiezione con id " + projectionId + " non esiste.");
 	}
 
-	public LocalDateTime getProjectionDateTime(int p) throws ProjectionException, PersistenceException {
+	/**
+	 * Restituisce data e ora della proiezione.
+	 * 
+	 * @param projectionId codice identificativo della proiezione.
+	 * @return la data e ora della proiezione.
+	 * @throws ProjectionException  qualora la proiezione con l'id inserito non
+	 *                              esista.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
+	 */
+	public LocalDateTime getProjectionDateTime(int projectionId) throws ProjectionException, PersistenceException {
 		for (Projection projection : getProjections()) {
-			if (projection.getId() == p) {
+			if (projection.getId() == projectionId) {
 				return projection.getDateTime();
 			}
 		}
-		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
+		throw new ProjectionException("La proiezione con id " + projectionId + " non esiste.");
 	}
 
-	public Room getProjectionRoom(int p) throws ProjectionException, PersistenceException {
+	/**
+	 * Restituisce la sala della proiezione.
+	 * 
+	 * @param projectionId codice identificativo della proiezione.
+	 * @return la sala della proiezione.
+	 * @throws ProjectionException  qualora la proiezione con l'id inserito non
+	 *                              esista.
+	 * @throws PersistenceException qualora vi siano errori riscontrati durante
+	 *                              l'uso di meccanismi di persistenza.
+	 */
+	public Room getProjectionRoom(int projectionId) throws ProjectionException, PersistenceException {
 		for (Projection projection : getProjections()) {
-			if (projection.getId() == p) {
+			if (projection.getId() == projectionId) {
 				return projection.getRoom();
 			}
 		}
-		throw new ProjectionException("La proiezione con id " + p + " non esiste.");
+		throw new ProjectionException("La proiezione con id " + projectionId + " non esiste.");
 	}
+
 }

@@ -80,8 +80,7 @@ public class Projection implements Comparable<Projection> {
 	 * Imposta l'id di una proiezione.
 	 * 
 	 * @param id codice identificativo del film.
-	 * @throws ProjectionException ecceziona lanciata qualora l'id inserito sia
-	 *                             negativo.
+	 * @throws ProjectionException qualora l'id inserito sia negativo.
 	 */
 	public void setId(int id) throws ProjectionException {
 		if (id < 0)
@@ -111,9 +110,8 @@ public class Projection implements Comparable<Projection> {
 	 * Aggiunge la data della proiezione.
 	 * 
 	 * @param dateTime data e ora.
-	 * @throws InvalidProjectionDateTimeException eccezione lanciata qualora la data
-	 *                                            della proiezione inserita sia già
-	 *                                            passata.
+	 * @throws InvalidProjectionDateTimeException qualora la data della proiezione
+	 *                                            inserita sia già passata.
 	 */
 	public void setDateTime(LocalDateTime dateTime) throws ProjectionException {
 		if (dateTime.isBefore(LocalDateTime.now()))
@@ -125,8 +123,7 @@ public class Projection implements Comparable<Projection> {
 	 * Aggiunge il prezzo alla proiezione.
 	 * 
 	 * @param price prezzo del film per persona.
-	 * @throws ProjectionException eccezione lanciata qualora il prezzo inserito sia
-	 *                             negativo,o nullo.
+	 * @throws ProjectionException qualora il prezzo inserito sia negativo,o nullo.
 	 */
 	public void setPrice(double price) throws ProjectionException {
 		if (price <= 0)
@@ -140,8 +137,7 @@ public class Projection implements Comparable<Projection> {
 	 * @param row coordinata riga.
 	 * @param col coordinata colonna.
 	 * @return True: libero, False: occupato.
-	 * @throws RoomException eccezione lanciata qualora il posto selezionato non
-	 *                       esista.
+	 * @throws RoomException qualora il posto selezionato non esista.
 	 */
 	public boolean checkIfSeatIsAvailable(int row, int col) throws RoomException {
 		try {
@@ -156,8 +152,8 @@ public class Projection implements Comparable<Projection> {
 	 * Restituisce il numero di posti liberi per la stanza presa in considerazione.
 	 * 
 	 * @return numero di posti disponibili/liberi.
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public int getNumberAvailableSeat() throws RoomException {
 		int availableSeats = 0;
@@ -178,8 +174,8 @@ public class Projection implements Comparable<Projection> {
 	 * @param col coordinata colonna.
 	 * @return True: posto occupato con successo, False: fallimento nell'occupare il
 	 *         posto.
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public boolean takeSeat(int row, int col) throws RoomException {
 		if (checkIfSeatIsAvailable(row, col)) {
@@ -196,8 +192,8 @@ public class Projection implements Comparable<Projection> {
 	 * @param col coordinata colonna.
 	 * @return True: posto rilasciato con successo, False: fallimento nel rilasciare
 	 *         il posto.
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public boolean freeSeat(int row, int col) throws RoomException {
 		if (!checkIfSeatIsAvailable(row, col)) {
@@ -213,8 +209,8 @@ public class Projection implements Comparable<Projection> {
 	 * @param row coordinata riga.
 	 * @param col coordinata colonna.
 	 * @return posto fisico.
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public PhysicalSeat getPhysicalSeat(int row, int col) throws RoomException {
 		return this.getSeats().get(row).get(col).getPhysicalSeat();
@@ -225,8 +221,8 @@ public class Projection implements Comparable<Projection> {
 	 * 
 	 * @param s posto fisico.
 	 * @return coordinate del posto.
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public String getSeatCoordinates(PhysicalSeat s) throws RoomException {
 		for (int i = 0; i < room.getNumberOfRows(); i++) {
