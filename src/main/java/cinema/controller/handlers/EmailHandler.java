@@ -78,7 +78,7 @@ public class EmailHandler {
 	 * @throws HandlerException se ci fosse un problema nella spedizione del report
 	 *                          o nella sua generazione.
 	 */
-	public void sendEmail(Reservation reservation) throws HandlerException {
+	public Thread sendEmail(Reservation reservation) throws HandlerException {
 		ReportHandler reportHandler = new ReportHandler(name, email, location, logoURL);
 		Thread emailThread = new Thread() {
 			@Override
@@ -108,6 +108,7 @@ public class EmailHandler {
 			}
 		};
 		emailThread.start();
+		return emailThread;
 	}
 
 	/**

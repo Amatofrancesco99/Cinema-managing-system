@@ -747,8 +747,8 @@ public class Cinema {
 	 * @throws HandlerException
 	 * @throws ReservationNotExistsException
 	 */
-	public void sendReservationEmail(long r) throws ReservationException, HandlerException {
-		emailHandler.sendEmail(getReservation(r));
+	public Thread sendReservationEmail(long reservation) throws ReservationException, HandlerException {
+		return emailHandler.sendEmail(getReservation(reservation));
 	}
 
 	/**
