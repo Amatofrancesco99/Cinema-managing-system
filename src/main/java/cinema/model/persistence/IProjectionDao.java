@@ -21,7 +21,8 @@ public interface IProjectionDao {
 	 * 
 	 * @param id identificativo della proiezione che si vuole ottenere dal
 	 *           meccanismo di persistenza.
-	 * @return la proiezione identificata da {@code id}.
+	 * @return la proiezione identificata da {@code id} o null se nessuna proiezione
+	 *         con l'identificativo specificato è presente.
 	 * @throws SQLException         se vengono riscontrati errori nell'interazione
 	 *                              con il meccanismo di persistenza.
 	 * @throws PersistenceException se il film o la stanza dove era programmata la
