@@ -2,7 +2,7 @@ package cinema.model.reservation.discount.types.util;
 
 /**
  * Lanciata in caso di errori riscontrati nelle procedure di interazione con gli
- * oggetti che rappresentano i gli sconti.
+ * oggetti che rappresentano gli sconti.
  * 
  * @author Screaming Hairy Armadillo Team
  *

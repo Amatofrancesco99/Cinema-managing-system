@@ -104,8 +104,8 @@ public class Reservation {
 	 * 
 	 * @param row coordinata riga del posto.
 	 * @param col coordinata colonna del posto.
-	 * @throws SeatAvailabilityException eccezione lanciata qualora il posto scelto
-	 *                                   sia già stato selezionato,o occupato.
+	 * @throws SeatAvailabilityException qualora il posto scelto sia già stato
+	 *                                   selezionato,o occupato.
 	 * @throws RoomException             eccezione lanciata qualora vi siano errori
 	 *                                   legati alla gestione della sala del cinema.
 	 */
@@ -133,8 +133,8 @@ public class Reservation {
 	 * 
 	 * @param row coordinata riga del posto.
 	 * @param col coordinata colonna del posto.
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public void removeSeat(int row, int col) throws RoomException {
 		seats.remove(projection.getPhysicalSeat(row, col));
@@ -149,8 +149,8 @@ public class Reservation {
 	 */
 	public double getTotal() {
 		double total = rd.getTotal(this);
-		// Qualora alla prenotazione sia associato un coupon esistente vado a detrarre
-		// il totale dell'importo di sconto di questo coupon
+		// Qualora alla prenotazione sia associato un coupon esistente, si sottrae
+		// al totale dell'importo il valore del coupon stesso.
 		if (getCoupon() != null) {
 			if (total > getCoupon().getDiscount()) {
 				total -= getCoupon().getDiscount();
@@ -169,8 +169,7 @@ public class Reservation {
 	 * Aggiunge un coupon dato il suo progressivo.
 	 * 
 	 * @param coupon coupon
-	 * @throws CouponException eccezione lanciata qualora il coupon inserito sia gia
-	 *                         stato usato.
+	 * @throws CouponException qualora il coupon inserito sia gia stato usato.
 	 */
 	public void setCoupon(Coupon coupon) throws CouponException {
 		if (coupon == null)
@@ -191,22 +190,20 @@ public class Reservation {
 	 * Consente il pagamento della prenotazione, una volta compilata la
 	 * prenotazione.
 	 * 
-	 * @throws SeatAvailabilityException eccezione lanciata qualora il posto
-	 *                                   richiesto non sia disponibile.
-	 * @throws NumberFormatException     eccezione lanciata qualora si tenti di
-	 *                                   convertire una stringa con formato non
-	 *                                   corretto in un valore numerico.
-	 * @throws RoomException             eccezione lanciata qualora vi siano errori
-	 *                                   legati alla gestione della sala del cinema.
-	 * @throws ReservationException      eccezione lanciata qualora vi siano errori
-	 *                                   riscontrati nelle procedure di interazione
-	 *                                   con gli oggetti che rappresentano le
-	 *                                   prenotazioni.
-	 * @throws PaymentErrorException     eccezione lanciata qualora vi siano errori
-	 *                                   riscontrati nelle procedure di pagamento.
-	 * @throws PersistenceException      eccezione lanciata qualora vi siano errori
-	 *                                   riscontrati durante l'uso di meccanismi di
-	 *                                   persistenza.
+	 * @throws SeatAvailabilityException qualora il posto richiesto non sia
+	 *                                   disponibile.
+	 * @throws NumberFormatException     qualora si tenti di convertire una stringa
+	 *                                   con formato non corretto in un valore
+	 *                                   numerico.
+	 * @throws RoomException             qualora vi siano errori legati alla
+	 *                                   gestione della sala del cinema.
+	 * @throws ReservationException      qualora vi siano errori riscontrati nelle
+	 *                                   procedure di interazione con gli oggetti
+	 *                                   che rappresentano le prenotazioni.
+	 * @throws PaymentErrorException     qualora vi siano errori riscontrati nelle
+	 *                                   procedure di pagamento.
+	 * @throws PersistenceException      qualora vi siano errori riscontrati durante
+	 *                                   l'uso di meccanismi di persistenza.
 	 */
 	public void buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException,
 			PaymentErrorException, PersistenceException {
@@ -224,10 +221,10 @@ public class Reservation {
 	 * Permette di occupare i posti selezionati e di gestire le situazioni di
 	 * concorrenza.
 	 * 
-	 * @throws RoomException             eccezione lanciata qualora vi siano errori
-	 *                                   legati alla gestione della sala del cinema.
-	 * @throws SeatAvailabilityException eccezione lanciata qualora il posto
-	 *                                   richiesto sia già satto occupato.
+	 * @throws RoomException             qualora vi siano errori legati alla
+	 *                                   gestione della sala del cinema.
+	 * @throws SeatAvailabilityException qualora il posto richiesto sia già satto
+	 *                                   occupato.
 	 */
 	public void takeSeat() throws RoomException, SeatAvailabilityException {
 		for (int i = 0; i < seats.size(); i++) {
@@ -247,14 +244,13 @@ public class Reservation {
 	/**
 	 * Permette di pagare la prenotazione.
 	 * 
-	 * @throws ReservationException  eccezione lanciata qualora la prenotazione non
-	 *                               sia associata ad alcuna carta di credito,
-	 *                               oppure non si sia selezionato alcun posto.
-	 * @throws PaymentErrorException eccezione lanciata qualora il pagamento non sia
-	 *                               andato a buon fine.
-	 * @throws PersistenceException  eccezione lanciata qualora vi siano errori
-	 *                               riscontrati durante l'uso di meccanismi di
-	 *                               persistenza.
+	 * @throws ReservationException  qualora la prenotazione non sia associata ad
+	 *                               alcuna carta di credito, oppure non si sia
+	 *                               selezionato alcun posto.
+	 * @throws PaymentErrorException qualora il pagamento non sia andato a buon
+	 *                               fine.
+	 * @throws PersistenceException  qualora vi siano errori riscontrati durante
+	 *                               l'uso di meccanismi di persistenza.
 	 */
 	public void pay() throws ReservationException, PaymentErrorException, PersistenceException {
 		if (getNSeats() > 0) {
@@ -273,8 +269,8 @@ public class Reservation {
 	/**
 	 * Libera tutti i posti.
 	 * 
-	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
-	 *                       gestione della sala del cinema.
+	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
+	 *                       del cinema.
 	 */
 	public void freeAllSeats() throws RoomException {
 		for (int i = 0; i < seats.size(); i++) {
@@ -286,13 +282,6 @@ public class Reservation {
 		}
 	}
 
-	/**
-	 * METODO per settare il numero di persone che hanno un'età inferiore ad un età
-	 * minima
-	 * 
-	 * @param n Numero di persone
-	 * @throws InvalidNumberPeopleValueException
-	 */
 	/**
 	 * Imposta il numero di persone che hanno un'età inferiore ad un età minima.
 	 * 
@@ -313,12 +302,12 @@ public class Reservation {
 	 * massima
 	 * 
 	 * @param n Numero di persone
-	 * @throws InvalidNumberPeopleValueException eccezione lanciata qualora il
-	 *                                           numero di persone inserito sia
-	 *                                           negativo, oppure il numero di
-	 *                                           persone sotto l'età massima supera
-	 *                                           il massimo consentito dai posti
-	 *                                           correntemente selezionati.
+	 * @throws InvalidNumberPeopleValueException qualora il numero di persone
+	 *                                           inserito sia negativo, oppure il
+	 *                                           numero di persone sotto l'età
+	 *                                           massima supera il massimo
+	 *                                           consentito dai posti correntemente
+	 *                                           selezionati.
 	 */
 	public void setNumberPeopleOverMaxAge(int n) throws DiscountException {
 		if (n < 0)
