@@ -227,7 +227,7 @@ public class Cinema {
 	 * 
 	 * @throws PersistenceException
 	 */
-	public void putNewProjectionIntoDb(int p) throws ProjectionException, PersistenceException {
+	public void saveNewProjection(int p) throws ProjectionException, PersistenceException {
 		Projection projection = null;
 		if ((projection = newProjections.get(p)) == null) {
 			throw new ProjectionException("La proiezione " + p + " non esiste tra le nuove proiezioni.");
@@ -819,14 +819,20 @@ public class Cinema {
 	 * @param td
 	 * @throws PersistenceException
 	 */
-	public ArrayList<TypeOfDiscount> getAllDiscountStrategy() throws PersistenceException {
-		ArrayList<TypeOfDiscount> allTypeOfDiscounts = new ArrayList<TypeOfDiscount>();
-		for (Discount d : getAllCinemaDiscounts()) {
-			if (!allTypeOfDiscounts.contains(d.getTypeOfDiscount())) {
-				allTypeOfDiscounts.add(d.getTypeOfDiscount());
-			}
+	public ArrayList<TypeOfDiscount> getAllDiscountStrategies() throws PersistenceException {
+		ArrayList<TypeOfDiscount> allTypesOfDiscounts = new ArrayList<>();
+		for (Discount discount : getAllCinemaDiscounts()) {
+			allTypesOfDiscounts.add(discount.getTypeOfDiscount());
 		}
-		return allTypeOfDiscounts;
+		return allTypesOfDiscounts;
+	}
+
+	public ArrayList<String> getAllDiscountStrategiesDescription() throws PersistenceException {
+		ArrayList<String> allTypesOfDiscountsDescription = new ArrayList<>();
+		for (Discount discount : getAllCinemaDiscounts()) {
+			allTypesOfDiscountsDescription.add(discount.toString());
+		}
+		return allTypesOfDiscountsDescription;
 	}
 
 	/**

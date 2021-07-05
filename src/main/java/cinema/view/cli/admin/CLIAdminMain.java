@@ -183,17 +183,19 @@ public class CLIAdminMain {
 	 */
 	private void changeNewReservationsDiscountStrategy() {
 		System.out.println("\n" + SEPARATOR + "\nGestione sconti:\n");
+		System.out.println("Strategie di sconto disponibili e relative caratteristiche:\n");
 		try {
-			System.out.println(
-					cinema.getAllDiscountStrategy().toString().replaceAll("\\[", "").replaceAll("\\]", "") + "\n");
+			for (String discountDescription : cinema.getAllDiscountStrategiesDescription()) {
+				System.out.println(discountDescription);
+			}
 			do {
 				System.out.print("Inserisci una tra le strategie disponibili: ");
 				String newStrategyName = keyboard.nextLine().toUpperCase();
 				int i;
-				for (i = 0; i < cinema.getAllDiscountStrategy().size(); i++) {
-					if (newStrategyName.equals(cinema.getAllDiscountStrategy().get(i).toString())) {
+				for (i = 0; i < cinema.getAllDiscountStrategies().size(); i++) {
+					if (newStrategyName.equals(cinema.getAllDiscountStrategies().get(i).toString())) {
 						try {
-							cinema.setCinemaDiscountStrategy(cinema.getAllDiscountStrategy().get(i));
+							cinema.setCinemaDiscountStrategy(cinema.getAllDiscountStrategies().get(i));
 							System.out.println("\nStrategia aggiornata con successo.\n");
 							return;
 						} catch (DiscountNotFoundException exception) {
@@ -202,7 +204,7 @@ public class CLIAdminMain {
 						}
 					}
 				}
-				if (i == cinema.getAllDiscountStrategy().size()) {
+				if (i == cinema.getAllDiscountStrategies().size()) {
 					System.out.println("Scelta non valida.\n");
 				}
 			} while (true);
@@ -232,7 +234,7 @@ public class CLIAdminMain {
 			selectProjectionDateTime(projection);
 			selectProjectionPrice(projection);
 			try {
-				cinema.putNewProjectionIntoDb(projection);
+				cinema.saveNewProjection(projection);
 			} catch (PersistenceException | ProjectionException exception) {
 				System.out.println(exception.getMessage() + "\n");
 			}

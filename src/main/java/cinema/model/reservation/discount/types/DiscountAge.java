@@ -14,12 +14,12 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 public class DiscountAge extends Discount {
 
 	/**
-	 * Età minima sotto a cui si ottiene lo sconto per età.
+	 * Età minima sotto la quale si ottiene lo sconto per età.
 	 */
 	private int minAge;
 
 	/**
-	 * Età massima sopra a cui si ottiene lo sconto per età.
+	 * Età massima sopra la quale si ottiene lo sconto per età.
 	 */
 	private int maxAge;
 
@@ -31,8 +31,8 @@ public class DiscountAge extends Discount {
 	/**
 	 * Costruttore dello sconto in base all'età.
 	 * 
-	 * @param minAge     età minima sotto a cui si ottiene lo sconto per età.
-	 * @param maxAge     età massima sopra a cui si ottiene lo sconto per età.
+	 * @param minAge     età minima sotto la quale si ottiene lo sconto per età.
+	 * @param maxAge     età massima sopra la quale si ottiene lo sconto per età.
 	 * @param percentage percentuale di sconto da applicare al costo totale della
 	 *                   prenotazione.
 	 * @param id         id della strategia di sconto.
@@ -62,9 +62,9 @@ public class DiscountAge extends Discount {
 	}
 
 	/**
-	 * Imposta l'età sotto a cui si ottiene lo sconto per età.
+	 * Imposta l'età sotto la quale si ottiene lo sconto per età.
 	 * 
-	 * @param minAge età minima sotto a cui si ottiene lo sconto per età.
+	 * @param minAge età minima sotto la quale si ottiene lo sconto per età.
 	 * @throws DiscountException se l'età minima inserita è minore di zero.
 	 */
 	public void setMinAge(int minAge) throws DiscountException {
@@ -75,9 +75,9 @@ public class DiscountAge extends Discount {
 	}
 
 	/**
-	 * Imposta l'età sopra a cui si ottiene lo sconto per età.
+	 * Imposta l'età sopra la quale si ottiene lo sconto per età.
 	 * 
-	 * @param maxAge età massima sopra a cui si ottiene lo sconto per l'età.
+	 * @param maxAge età massima sopra la quale si ottiene lo sconto per l'età.
 	 * @throws DiscountException se l'età massima inserita è minore di zero.
 	 */
 	public void setMaxAge(int maxAge) throws DiscountException {
@@ -113,8 +113,8 @@ public class DiscountAge extends Discount {
 	@Override
 	public String toString() {
 		return String.format(
-				"[%s]\nEtà sotto a cui lo sconto è valido: %d\nEtà sopra a cui lo sconto è valido: %d\n"
-						+ "Percentuale di sconto applicato: %d%%",
+				"[%s]\nEtà sotto la quale lo sconto è valido: %d anni\nEtà sopra la quale lo sconto è valido: %d anni\n"
+						+ "Percentuale di sconto applicato: %d%%\n",
 				getTypeOfDiscount().toString(), minAge, maxAge, (int) (percentage * 100.0));
 	}
 

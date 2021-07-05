@@ -6,7 +6,7 @@ import cinema.model.cinema.util.RoomException;
 import cinema.model.cinema.util.TypeOfSeat;
 
 /**
- * Sala del cinema.
+ * Una specifica sala del cinema.
  *
  * @author Screaming Hairy Armadillo Team
  *
@@ -117,7 +117,7 @@ public class Room {
 
 	@Override
 	public String toString() {
-		return String.format("Sala %d, %d posti", number, getNumberOfSeats());
+		return String.format("Sala %d: %d posti", number, getNumberOfSeats());
 	}
 
 }

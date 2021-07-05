@@ -1,12 +1,11 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.types.util.DiscountException;
 import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 
 /**
  * Strategia di sconto sulla prenotazione basata sul numero delle persone
- * facenti parte della prenotazione.
+ * partecipanti alla proiezione per la prenotazione stessa.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -14,60 +13,52 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 public class DiscountNumberSpectators extends Discount {
 
 	/**
-	 * Numero di persone associate alla prenotazione.
+	 * Numero di spettatori all'interno della prenotazione sopra il quale viene
+	 * applicato lo sconto.
 	 */
-	private int numberPeople;
+	private int numberOfPeople;
+
 	/**
-	 * Percentuale di sconto da applicare.
+	 * Percentuale di sconto da applicare al costo totale della reservation.
 	 */
 	private double percentage;
 
 	/**
 	 * Costruttore dello sconto.
 	 * 
-	 * @param percentage Percentuale di sconto da applicare.
+	 * @param numberOfPeople numero di spettatori all'interno della prenotazione
+	 *                       sopra il quale viene applicato lo sconto.
+	 * @param percentage     percentuale di sconto da applicare al costo totale
+	 *                       della prenotazione.
+	 * @param id             id della strategia di sconto.
 	 */
-	public DiscountNumberSpectators(int numberPeople, double percentage, int id) {
+	public DiscountNumberSpectators(int numberOfPeople, double percentage, int id) {
 		super(TypeOfDiscount.NUMBER, id);
-		this.numberPeople = numberPeople;
+		this.numberOfPeople = numberOfPeople;
 		this.percentage = percentage;
-
-	}
-
-	@Override
-	public double getTotal(Reservation reservation) {
-		double totalPrice = 0;
-		if (reservation.getNSeats() >= getNumberPeople()) {
-			totalPrice += reservation.getProjection().getPrice() * (1 - percentage) * reservation.getNSeats();
-		} else
-			totalPrice += reservation.getProjection().getPrice() * reservation.getNSeats();
-		return totalPrice;
 	}
 
 	/**
-	 * Imposta il numero di persone oltre al quale si applica lo sconto comitiva.
-	 * 
-	 * @param n numero di persone associate alla prenotazione.
-	 * @throws DiscountException eccezione lanciata qualora il numero di persone
-	 *                           oltre il quale si applica lo sconto è inferiore,o
-	 *                           uguale, a zero.
+	 * Restituisce il costo totale scontato della prenotazione dopo l'applicazione
+	 * dello sconto definito dalla strategia corrente.
+	 *
+	 * Se la prenotazione riguarda un numero di spettatori uguale o superiore al
+	 * minimo preimpostato per la strategia di sconto corrente viene applicata la
+	 * detrazione della percentuale di sconto dal costo totale della prenotazione.
 	 */
-	public void setNumberPeople(int n) throws DiscountException {
-		if (n > 0) {
-			this.numberPeople = n;
-		} else
-			throw new DiscountException(
-					"Il numero di persone sopra il quale applicare lo sconto deve essere maggiore di zero.");
-	}
-
-	public int getNumberPeople() {
-		return numberPeople;
+	@Override
+	public double getTotal(Reservation reservation) {
+		if (reservation.getNSeats() >= numberOfPeople) {
+			return reservation.getProjection().getPrice() * (1.0 - percentage) * reservation.getNSeats();
+		}
+		return reservation.getProjection().getPrice() * reservation.getNSeats();
 	}
 
 	@Override
 	public String toString() {
-		return "[ " + this.getTypeOfDiscount() + " ]" + "\n"
-				+ "Numero di persone al di sopra del quale parte lo sconto è valido: " + numberPeople + "\n"
-				+ "Percentuale di sconto applicata: " + percentage;
+		return String.format(
+				"[%s]\nNumero di persone a partire al quale lo sconto è valido: %d\nPercentuale di sconto applicato: %d%%\n",
+				getTypeOfDiscount(), numberOfPeople, (int) (percentage * 100.0));
 	}
+
 }
