@@ -52,20 +52,25 @@ public class CLIUserMain {
 	private final String SEPARATOR = "-----------------------------------------------------\n";
 
 	/**
-	 * METODO Main, per avviare la CLI
+	 * Punto di avvio dell'applicazione di interfaccia con lo spettatore.
 	 * 
-	 * @param args Parametri in ingresso, nel nostro caso non servono, ne tanto meno
-	 *             vengono utilizzati.
-	 * @throws InvalidNumberPeopleValueException
+	 * @param args parametri dell'applicazione (non utilizzati).
 	 */
 	public static void main(String[] args) {
 		new CLIUserMain();
 	}
 
+	/**
+	 * Costruttore dell'interfaccia utente da riga di comando.
+	 * 
+	 * Viene proposto un menu numerato contenente varie scelte che lo spettatore può
+	 * selezionare per agire sui dati gestiti dall'applicazione.
+	 */
 	public CLIUserMain() {
 		keyboard = new Scanner(System.in);
 		cinema = new Cinema();
 
+		// Informazioni generali sul cinema, e messaggio di benvenuto
 		printWelcomeMessage();
 
 		// Menu di scelta delle opzioni disponibili
@@ -97,6 +102,9 @@ public class CLIUserMain {
 		sayGoodbye();
 	}
 
+	/**
+	 * Stampa un messaggio di benvenuto allo spettatore sul terminale.
+	 */
 	private void printWelcomeMessage() {
 		System.out.println(SEPARATOR);
 		System.out.println(cinema.getName() + "\n");
@@ -106,12 +114,23 @@ public class CLIUserMain {
 		System.out.println("Benvenuto!\n");
 	}
 
+	/**
+	 * Chiede allo spettatore se vuole tornare al menu principale o uscire
+	 * dall'applicazione.
+	 *
+	 * @return true se l'utente vuole tornare al menu principale, false se vuole
+	 *         uscire dall'applicazione.
+	 */
 	private boolean backToMenu() {
 		boolean answer = inputBoolean("Vuoi tornare al menu principale (M) o preferisci uscire (U)? ", "M", "U");
 		System.out.println();
 		return answer;
 	}
 
+	/**
+	 * Mostra allo spettatore l'elenco dei film associati ad almeno una proiezione
+	 * prevista in futuro e la relativa descrizione breve.
+	 */
 	private void printCurrentlyAvailableMovies() {
 		System.out.println("\n" + SEPARATOR + "\nFilm attualmente proiettati:\n");
 		try {
@@ -124,6 +143,18 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Gestisce la procedura di creazione di una nuova prenotazione da parte dello
+	 * spettatore.
+	 *
+	 * Viene mostrato l'elenco dei film disponibili e viene chiesto a quale film lo
+	 * spettatore è interessato; a questo punto viene istanziata una nuova
+	 * prenotazione e vengono richiesti i relativi dati allo spettatore.
+	 *
+	 * Una volta terminata la fase di inserimento dati viene avviato il processo di
+	 * pagamento e, se quest'ultimo va a buon fine, viene generata la ricevuta di
+	 * avvenuta prenotazione e inviata allo spettatore per e-mail.
+	 */
 	private void createReservation() {
 		printCurrentlyAvailableMovies();
 
@@ -134,15 +165,17 @@ public class CLIUserMain {
 		long reservation = -1;
 		try {
 			reservation = cinema.createReservation();
+
 			// Selezione di una specifica proiezione
 			int projection = askProjectionId(movie);
 			cinema.setReservationProjection(reservation, projection);
+
 			// Inserimento dati, pagamento e invio della ricevuta allo spettatore
 			showProjectionSeats(reservation);
 			addSeatsToReservation(reservation);
 			insertSpectatorData(reservation);
 			insertPaymentCardInfo(reservation);
-			insertSpectatorsInfo(reservation);
+			insertDiscountData(reservation);
 			insertCouponInfo(reservation);
 			if (buy(reservation)) {
 				sendEmail(reservation);
@@ -152,6 +185,14 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Chiede allo spettatore di inserire un id valido di un film per il quale c'è
+	 * almeno una proiezione disponibile attualmente.
+	 *
+	 * Se l'id inserito non è valido esso viene chiesto nuovamente.
+	 *
+	 * @return l'id del film inserito dallo spettatore.
+	 */
 	private int askMovieId() {
 		do {
 			int movieId = inputInt("Inserisci il numero del film da guardare: ");
@@ -164,6 +205,12 @@ public class CLIUserMain {
 		} while (true);
 	}
 
+	/**
+	 * Mostra allo spettatore l'elenco di tutte le proiezioni disponibili per il
+	 * film con id {@code movieId}.
+	 * 
+	 * @param movieId id del film di cui mostrare le proiezioni.
+	 */
 	private void printMovieProjections(int movieId) {
 		try {
 			cinema.getCurrentlyAvailableProjections(movieId);
@@ -314,7 +361,7 @@ public class CLIUserMain {
 		} while (!end);
 	}
 
-	private void insertSpectatorsInfo(long reservation) {
+	private void insertDiscountData(long reservation) {
 		try {
 			if (cinema.getReservationTypeOfDiscount(reservation).equals("AGE")) {
 				System.out.println();
@@ -396,10 +443,23 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Stampa sul terminale il messaggio di chiusura dell'applicazione.
+	 */
 	private void sayGoodbye() {
 		System.out.println(SEPARATOR + "\nGrazie, a presto!");
 	}
 
+	/**
+	 * Permette allo spettatore di inserire un numero intero da terminale.
+	 *
+	 * Viene effettuato un controllo per permettere solamente l'inserimento di un
+	 * numero intero (e non altri tipi di dato).
+	 *
+	 * @param question messaggio da stampare sul terminale prima dell'input dello
+	 *                 spettatore.
+	 * @return il valore letto.
+	 */
 	private int inputInt(String question) {
 		do {
 			System.out.print(question);
@@ -411,6 +471,18 @@ public class CLIUserMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette allo spettatore di effettuare una scelta binaria.
+	 *
+	 * Viene effettuato un controllo per permettere solamente l'inserimento di una
+	 * scelta binaria (S/N, A/B, ...) da parte dello spettatore.
+	 *
+	 * @param question messaggio da stampare sul terminale prima dell'input dello
+	 *                 spettatore.
+	 * @param onTrue   stringa corrispondente al valore restituito true.
+	 * @param onFalse  stringa corrispondente al valore restituito false.
+	 * @return true se l'input utente è onTrue, false se è onFalse.
+	 */
 	private boolean inputBoolean(String question, String onTrue, String onFalse) {
 		do {
 			System.out.print(question);

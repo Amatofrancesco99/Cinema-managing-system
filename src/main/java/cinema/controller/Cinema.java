@@ -324,7 +324,7 @@ public class Cinema {
 			return movieProjections;
 		else
 			throw new ProjectionException(
-					"Il film \"" + this.getMovie(movieId).getTitle() + "\" non è più in programmazione.");
+					"Il film \"" + this.getMovie(movieId).getTitle() + "\" non è attualmente in programmazione.");
 	}
 
 	/** METODO per farci dare tutte i film inerenti ad un anno specifico */
