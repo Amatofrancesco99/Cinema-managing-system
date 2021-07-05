@@ -761,10 +761,11 @@ public class Cinema {
 	}
 
 	/**
-	 * Invia un email allo spettatore che ha completato la compilazione della
+	 * Invia un e-mail allo spettatore che ha completato la compilazione della
 	 * prenotazione (comprende il report).
 	 * 
 	 * @param reservationId codice identificativo della prenotazione.
+	 * @return il thread che gestisce l'invio dell'e-mail.
 	 * @throws ReservationException qualora l'id della prenotazione inserita non
 	 *                              esista.
 	 * @throws HandlerException     qualora ci siano errori riscontrati durante le
@@ -772,8 +773,8 @@ public class Cinema {
 	 *                              prenotazioni e conseguente invio di e-mail allo
 	 *                              spettatore.
 	 */
-	public void sendReservationEmail(long reservationId) throws ReservationException, HandlerException {
-		emailHandler.sendEmail(getReservation(reservationId));
+	public Thread sendReservationEmail(long reservationId) throws ReservationException, HandlerException {
+		return emailHandler.sendEmail(getReservation(reservationId));
 	}
 
 	public String getName() {
