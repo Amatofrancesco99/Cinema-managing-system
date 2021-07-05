@@ -36,8 +36,9 @@ public class OccupiedSeatRdbDao implements IOccupiedSeatDao {
 	}
 
 	/**
-	 * Esegeue la query sul database relazionale per implementare la persistenza
-	 * dell'occupazione dei posti per una determinata proiezione.
+	 * Esegeue la query sul database relazionale per ottenere le informazioni sui
+	 * posti occupati in una proiezione e occuparli per sincronizzare i dati locali
+	 * con il database.
 	 */
 	@Override
 	public void setOccupiedSeats(Projection projection) throws SQLException {

@@ -25,11 +25,10 @@ public interface IOccupiedSeatDao {
 	public void setOccupiedSeats(Projection projection) throws SQLException;
 
 	/**
-	 * Rende persistente l'occupazione dei posti quando viene effettuata una
-	 * prenotazione.
+	 * Occupa localmente i posti di una proiezioni in modo da sincronizzare i dati
+	 * locali con il meccanismo di persistenza dei dati.
 	 * 
-	 * @param reservation prenotazione di cui si vuole rendere persistente
-	 *                    l'occupazione dei posti.
+	 * @param reservation prenotazione di cui si vuole occupare i posti.
 	 * @throws SQLException se vengono riscontrati errori nell'interazione col
 	 *                      meccanismo di persistenza.
 	 */

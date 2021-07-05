@@ -294,6 +294,13 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Rende persistente la proprietà di un coupon di essere stato utilizzato.
+	 * 
+	 * @param promocode codice promozionale del coupon che è stato usato.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public void setCouponUsed(String promocode) throws PersistenceException {
 		try {
 			this.iCouponDao.setCouponUsed(promocode);
@@ -302,6 +309,16 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Restituisce tutti gli sconti fatti sulla base del giorno della proiezione che
+	 * sono mantenuti dal meccanismo di persistenza dei dati.
+	 * 
+	 * @return tutti gli sconti fatti sulla base del giorno che sono mantenuti dal
+	 *         meccanismo di persistenza dei dati o null se non ne è presente
+	 *         nessuno.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public DiscountDay getAllDayDiscounts() throws PersistenceException {
 		try {
 			return this.iDiscountDao.getAllDayDiscounts();
@@ -310,6 +327,16 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Restituisce tutti gli sconti fatti sulla base dell'età degli spettatori che
+	 * sono mantenuti dal meccanismo di persistenza dei dati.
+	 * 
+	 * @return tutti gli sconti fatti sulla base dell'età degli spettatori che sono
+	 *         mantenuti dal meccanismo di persistenza dei dati o null se non ne è
+	 *         presente nessuno.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public DiscountAge getAgeDiscounts() throws PersistenceException {
 		try {
 			return this.iDiscountDao.getAgeDiscounts();
@@ -318,6 +345,16 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Restituisce tutti gli sconti fatti sulla base del numero di biglietti
+	 * acquistati che sono mantenuti dal meccanismo di persistenza dei dati.
+	 * 
+	 * @return tutti gli sconti fatti sulla base del numero di biglietti acquistati
+	 *         che sono mantenuti dal meccanismo di persistenza dei dati o null se
+	 *         non ne è presente nessuno.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public DiscountNumberSpectators getGroupDiscounts() throws PersistenceException {
 		try {
 			return this.iDiscountDao.getGroupDiscounts();
@@ -326,6 +363,14 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Occupa i posti di una proiezione in modo da sincronizzare i dati locali con i
+	 * dati mantenuti dal meccanismo di persistenza dei dati.
+	 * 
+	 * @param projection proiezione di cui si vuole occupare i posti.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public void setOccupiedSeats(Projection projection) throws PersistenceException {
 		try {
 			this.iOccupiedSeatDao.setOccupiedSeats(projection);
