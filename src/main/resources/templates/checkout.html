@@ -63,7 +63,7 @@
                 @(projectionMovie.getTitle().escapeHtml())
             </h5>
             <h6 class="text-muted">
-                Proiezione di @(projectionDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html")) <strong>@(projectionDateTime.getDayOfMonth().format("00"))/@(projectionDateTime.getMonthValue().format("00"))</strong> delle <strong>@(projectionDateTime.toLocalTime().format("hh:mm"))</strong> (Sala @(projectionRoom.getProgressive()))
+                Proiezione di @(projectionDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN).capitalizeWords().escape("html")) <strong>@(projectionDateTime.getDayOfMonth().format("00"))/@(projectionDateTime.getMonthValue().format("00"))</strong> delle <strong>@(projectionDateTime.toLocalTime().format("hh:mm"))</strong> (Sala @(projectionRoom.getNumber()))
             </h6>
         </div>
         <div class="alert alert-secondary d-flex align-items-center mb-4" role="alert">
@@ -82,24 +82,24 @@
                     <tbody>
                         <tr class="p-0 m-0">
                             <th class="p-0 m-0"></th>
-                            <th class="pb-2 m-0 text-center" colspan="@(projectionRoom.getNumberCols())">
+                            <th class="pb-2 m-0 text-center" colspan="@(projectionRoom.getNumberOfCols())">
                                 <img src="/static/img/screen.svg" width="500px" class="img-fluid" alt="Schermo della sala" data-bs-toggle="tooltip" data-placement="top" title="Schermo della sala">
                             </th>
                         </tr>
                         <tr class="p-0 m-0">
                             <th class="p-0 m-0"></th>
-                            @for (int j = 1; j <= projectionRoom.getNumberCols(); j++) {
+                            @for (int j = 1; j <= projectionRoom.getNumberOfCols(); j++) {
                                 <th class="p-1 m-1 text-center align-middle">
                                     @(j)
                                 </th>
                             }
                         </tr>
-                        @for (int i = 0; i < projectionRoom.getNumberRows(); i++) {
+                        @for (int i = 0; i < projectionRoom.getNumberOfRows(); i++) {
                             <tr class="p-0 m-0">
                                 <th class="px-2 py-1 m-1 text-center align-middle">
                                     @(Room.rowIndexToRowLetter(i))
                                 </th>
-                                @for (int j = 0; j < projectionRoom.getNumberCols(); j++) {
+                                @for (int j = 0; j < projectionRoom.getNumberOfCols(); j++) {
                                     <td class="p-1 m-1 text-center">
                                         @{
                                             String seatIcon = "";
