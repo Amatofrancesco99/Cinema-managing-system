@@ -34,6 +34,9 @@ import cinema.model.reservation.util.ReservationException;
  * 
  * @author Screaming Hairy Armadillo Team
  * 
+ *         Per ogni volta che esegui la classe di test ricorda di eseguire il
+ *         seguente comando dal terminale (dove hai il clone di questo
+ *         progetto): @git restore persistence/cinemaDb.db
  */
 public class ReservationTest {
 
@@ -41,19 +44,20 @@ public class ReservationTest {
 	 * Reservation utilizzata nel test
 	 */
 	private static Reservation r;
-	
+
 	/**
 	 * Controller di dominio utilizzato come interfaccia verso il modello.
 	 */
 	private static Cinema cinema = new Cinema();
-	
+
 	/**
 	 * Proiezioni create per poter effettuare il test
 	 */
 	private static ArrayList<Projection> projections;
 
 	/**
-	 * Impostazione del sistema, creando dati utili per poter effettuare i diversi test.
+	 * Impostazione del sistema, creando dati utili per poter effettuare i diversi
+	 * test.
 	 * 
 	 * @throws Exception
 	 */
@@ -81,7 +85,9 @@ public class ReservationTest {
 			}
 		}
 		try {
-			assertEquals(PersistenceFacade.getInstance().getLastReservationId() + STOP, cinema.getReservation(PersistenceFacade.getInstance().getLastReservationId()).getProgressive()+STOP);
+			assertEquals(PersistenceFacade.getInstance().getLastReservationId() + STOP,
+					cinema.getReservation(PersistenceFacade.getInstance().getLastReservationId()).getProgressive()
+							+ STOP);
 		} catch (PersistenceException | SQLException | ReservationException exception) {
 			System.out.println(exception.getMessage());
 		}
@@ -121,7 +127,7 @@ public class ReservationTest {
 		}
 	}
 
-	/** Test sui coupon (verifica monouso)*/
+	/** Test sui coupon (verifica monouso) */
 	@Test
 	public void testCoupon() {
 		Coupon c1 = null;
@@ -157,12 +163,16 @@ public class ReservationTest {
 		}
 	}
 
-	/** Test sui prezzi, usando lo sconto per età 
-	 * @throws PersistenceException  qualora il servizio al database non sia raggiungibile
-	 * @throws DiscountNotFoundException qualora lo sconto che si vuole applicare non esiste*/
+	/**
+	 * Test sui prezzi, usando lo sconto per età
+	 * 
+	 * @throws PersistenceException      qualora il servizio al database non sia
+	 *                                   raggiungibile
+	 * @throws DiscountNotFoundException qualora lo sconto che si vuole applicare
+	 *                                   non esiste
+	 */
 	@Test
 	public void testPrices() throws CouponException, DiscountNotFoundException, PersistenceException {
-		cinema.setCinemaDiscountStrategy(TypeOfDiscount.AGE);
 		assertEquals(projections.get(0).getPrice() * 2, r.getFullPrice(), 1);
 		// uso lo sconto per età
 		try {
@@ -170,7 +180,7 @@ public class ReservationTest {
 			r.setNumberPeopleOverMaxAge(0);
 		} catch (DiscountException e) {
 		}
-		assertEquals(projections.get(0).getPrice() * 2 - 0.15*projections.get(0).getPrice(), r.getTotal(), 1);
+		assertEquals(projections.get(0).getPrice() * 2 - 0.15 * projections.get(0).getPrice(), r.getTotal(), 1);
 	}
 
 	/** Test di occupazione dei posti (scegliere un posto non presente in sala) */
@@ -212,12 +222,12 @@ public class ReservationTest {
 	public void testSendEmail() throws InvalidSpectatorInfoException {
 		// cambia i campi qui sotto, specialmente l'email, per poter testare l'invio
 		// del report contenente tutte le informazioni sulla prenotazione alla tua
-		// casella
-		// di posta personale
+		// casella di posta personale
 		try {
-			r.setPurchaser(new Spectator("Francesco","Amato","francesco.amato01@universitadipavia.it"));
-			cinema.sendReservationEmail(r.getProgressive());
-		} catch (HandlerException | ReservationException exception ) {
+			r.setPurchaser(new Spectator("Francesco", "Amato", "francesco.amato01@universitadipavia.it"));
+			Thread emailThread = cinema.sendReservationEmail(r.getProgressive());
+			emailThread.join();
+		} catch (HandlerException | InterruptedException | ReservationException exception) {
 			System.out.println(exception.getMessage());
 		}
 	}

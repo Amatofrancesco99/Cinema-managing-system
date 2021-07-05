@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
+import cinema.model.cinema.util.RoomException;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 
@@ -87,13 +88,21 @@ public class ProjectionRdbDao implements IProjectionDao {
 		PreparedStatement pstatement = connection.prepareStatement(sql);
 		ResultSet result = pstatement.executeQuery();
 		ArrayList<Projection> projections = new ArrayList<Projection>();
+		MovieRdbDao moviePersistence = new MovieRdbDao(connection);
+		RoomRdbDao roomPersistence = new RoomRdbDao(connection);
+		OccupiedSeatRdbDao seatPersistence = new OccupiedSeatRdbDao(connection);
 		while (result.next()) {
-			Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
-			Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
+			Movie movie = moviePersistence.getMovie(result.getInt("movie"));
+			Room room = null;
+			try {
+				room = roomPersistence.getRoom(result.getInt("room"));
+			} catch (SQLException | RoomException e) {
+				throw new PersistenceException("La richiesta al database non è andata a buon fine.");
+			}
 			Projection projection = new Projection(result.getInt("id"), movie, LocalDateTime
 					.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
 					result.getDouble("price"), room);
-			PersistenceFacade.getInstance().setOccupiedSeats(projection);
+			seatPersistence.setOccupiedSeats(projection);
 			projections.add(projection);
 		}
 		return projections;

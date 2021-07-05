@@ -54,7 +54,7 @@ public class ReservationRdbDao implements IReservationDao {
 		pstatement.setLong(11, reservation.getNumberPeopleOverMaxAge());
 		pstatement.setLong(12, reservation.getProgressive());
 		pstatement.executeUpdate();
-		PersistenceFacade.getInstance().putOccupiedSeatsFromReservation(reservation);
+		new OccupiedSeatRdbDao(connection).putOccupiedSeatsFromReservation(reservation);
 	}
 
 	/**
