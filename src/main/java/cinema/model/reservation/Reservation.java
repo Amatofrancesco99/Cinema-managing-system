@@ -17,7 +17,7 @@ import cinema.model.reservation.discount.IReservationDiscountStrategy;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
@@ -376,7 +376,7 @@ public class Reservation {
 		this.paymentCard = new PaymentCard(number, owner, cvv, expirationDate);
 	}
 	
-	public TypeOfDiscounts getTypeOfDiscount() {
+	public TypeOfDiscount getTypeOfDiscount() {
 		return rd.getTypeOfDiscount();
 	}
 	

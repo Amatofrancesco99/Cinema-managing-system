@@ -2,7 +2,7 @@ package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 
 /**
  * Strategia di sconto sulla prenotazione basata sul numero delle persone
@@ -28,19 +28,19 @@ public class DiscountNumberSpectators extends Discount {
 	 * @param percentage Percentuale di sconto da applicare.
 	 */
 	public DiscountNumberSpectators(int numberPeople, double percentage, int id) {
-		super(TypeOfDiscounts.NUMBER, id);
+		super(TypeOfDiscount.NUMBER, id);
 		this.numberPeople = numberPeople;
 		this.percentage = percentage;
 
 	}
 
 	@Override
-	public double getTotal(Reservation r) {
+	public double getTotal(Reservation reservation) {
 		double totalPrice = 0;
-		if (r.getNSeats() >= getNumberPeople()) {
-			totalPrice += r.getProjection().getPrice() * (1 - percentage) * r.getNSeats();
+		if (reservation.getNSeats() >= getNumberPeople()) {
+			totalPrice += reservation.getProjection().getPrice() * (1 - percentage) * reservation.getNSeats();
 		} else
-			totalPrice += r.getProjection().getPrice() * r.getNSeats();
+			totalPrice += reservation.getProjection().getPrice() * reservation.getNSeats();
 		return totalPrice;
 	}
 

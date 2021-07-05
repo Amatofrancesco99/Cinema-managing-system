@@ -1,43 +1,48 @@
 package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.discount.IReservationDiscountStrategy;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 
 /**
- * Rappresenta le strategie di sconti da applicare al costo totale delle
- * prenotazioni.
- * 
+ * Strategia generica di sconto da applicare al costo totale delle prenotazioni.
+ *
+ * Questa classe rappresenta una strategia generica dotata di id univoco e di un
+ * determinato tipo, senza specificare la reale implementazione della strategia.
+ *
  * @author Screaming Hairy Armadillo Team
  * 
  */
 public abstract class Discount implements IReservationDiscountStrategy {
 
 	/**
-	 * Tipo di sconto.
+	 * Tipo della strategia di sconto.
 	 */
-	private TypeOfDiscounts type;
+	private TypeOfDiscount type;
 
+	/**
+	 * Id della strategia di sconto.
+	 */
 	private int id;
 
 	/**
 	 * Costruttore della strategia di sconto.
 	 * 
-	 * @param type tipo di sconto.
+	 * @param type tipo della strategia di sconto.
+	 * @param id   id della strategia di sconto.
 	 */
-	public Discount(TypeOfDiscounts type, int id) {
+	public Discount(TypeOfDiscount type, int id) {
 		this.type = type;
 		this.id = id;
 	}
 
-	public TypeOfDiscounts getTypeOfDiscount() {
+	@Override
+	public TypeOfDiscount getTypeOfDiscount() {
 		return type;
 	}
-	
+
+	@Override
 	public int getDiscountId() {
 		return id;
 	}
-	
-	/**METODO per farsi restituire le caratteristiche di uno sconto*/
-	public abstract String toString();
 
 }

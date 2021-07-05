@@ -23,7 +23,7 @@ import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.Discount;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.util.ReservationException;
 import cinema.model.reservation.util.SeatAvailabilityException;
@@ -79,7 +79,7 @@ public class Cinema {
 		try {
 			persistenceFacade = PersistenceFacade.getInstance();
 			cinemaInfo = persistenceFacade.getAllCinemaInfo(1);
-			cinemaDiscount = getDiscountByStrategy(TypeOfDiscounts.valueOf(cinemaInfo.get("discountStrategy")));
+			cinemaDiscount = getDiscountByStrategy(TypeOfDiscount.valueOf(cinemaInfo.get("discountStrategy")));
 		} catch (SQLException | PersistenceException | DiscountNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
@@ -794,7 +794,7 @@ public class Cinema {
 	 * @throws DiscountNotFoundException
 	 * @throws PersistenceException
 	 */
-	public void setCinemaDiscountStrategy(TypeOfDiscounts td) throws DiscountNotFoundException, PersistenceException {
+	public void setCinemaDiscountStrategy(TypeOfDiscount td) throws DiscountNotFoundException, PersistenceException {
 		cinemaDiscount = this.getDiscountByStrategy(td);
 		persistenceFacade.setDiscountStrategy(1, td.name().toString().toUpperCase());
 	}
@@ -819,8 +819,8 @@ public class Cinema {
 	 * @param td
 	 * @throws PersistenceException
 	 */
-	public ArrayList<TypeOfDiscounts> getAllDiscountStrategy() throws PersistenceException {
-		ArrayList<TypeOfDiscounts> allTypeOfDiscounts = new ArrayList<TypeOfDiscounts>();
+	public ArrayList<TypeOfDiscount> getAllDiscountStrategy() throws PersistenceException {
+		ArrayList<TypeOfDiscount> allTypeOfDiscounts = new ArrayList<TypeOfDiscount>();
 		for (Discount d : getAllCinemaDiscounts()) {
 			if (!allTypeOfDiscounts.contains(d.getTypeOfDiscount())) {
 				allTypeOfDiscounts.add(d.getTypeOfDiscount());
@@ -837,7 +837,7 @@ public class Cinema {
 	 * @throws DiscountNotFoundException
 	 * @throws PersistenceException
 	 */
-	public Discount getDiscountByStrategy(TypeOfDiscounts t) throws DiscountNotFoundException, PersistenceException {
+	public Discount getDiscountByStrategy(TypeOfDiscount t) throws DiscountNotFoundException, PersistenceException {
 		Discount discount = null;
 		for (Discount d : getAllCinemaDiscounts()) {
 			if (d.getTypeOfDiscount() == t) {
@@ -850,7 +850,7 @@ public class Cinema {
 			return discount;
 	}
 
-	public String getDiscountStrategyDescription(TypeOfDiscounts t)
+	public String getDiscountStrategyDescription(TypeOfDiscount t)
 			throws DiscountNotFoundException, PersistenceException {
 		return getDiscountByStrategy(t).toString();
 	}

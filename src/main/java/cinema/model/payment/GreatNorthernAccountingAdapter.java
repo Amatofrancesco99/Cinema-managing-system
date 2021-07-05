@@ -5,42 +5,53 @@ import java.util.Random;
 import cinema.model.payment.methods.paymentCard.PaymentCard;
 
 /**
- * Rappresenta una possibile metodologia di pagamento digitale messa a
- * disposizione dal cinema.
- * 
+ * Adattatore specifico per l'API (fittizia) di un ipotetico servizio di
+ * pagamento del gestore Great Northern Accounting.
+ *
+ * In un contesto reale questo adattatore dovrebbe esporre al dominio attraverso
+ * un'interfaccia comune le funzionalità dell'API remota; in questo contesto
+ * invece il metodo di pagamento simula il comportamento reale ma non esegue
+ * nessuna transazione effettiva.
+ *
  * @author Screaming Hairy Armadillo Team
  *
  */
 public class GreatNorthernAccountingAdapter implements IPaymentAdapter {
 
 	/**
-	 * Carta di credito.
+	 * Carta di credito utilizzata per il pagamento.
 	 */
 	@SuppressWarnings("unused")
-	private PaymentCard p;
+	private PaymentCard paymentCard;
 
 	/**
-	 * Costruttore del servizio di pagamento digitale GreatNorthernAccounting.
-	 * 
-	 * @param p carta di credito che sfrutta il servizio.
+	 * Probabilità di successo della transazione di pagamento.
+	 *
+	 * Poiché l'adattatore simula il comportamento reale di un'API di pagamento,
+	 * questa costante imposta la percentuale di successo (0.0 = 0%, 1.0 = 100%) di
+	 * ogni chiamata al metodo che effettua il pagamento.
 	 */
-	public GreatNorthernAccountingAdapter(PaymentCard p) {
-		this.p = p;
+	private final double SUCCESS_PROBABILITY = 1.0;
+
+	/**
+	 * Costruttore dell'adattatore del servizio di pagamento digitale
+	 * GreatNorthernAccounting.
+	 * 
+	 * @param paymentCard carta di credito che sfrutta il servizio.
+	 */
+	public GreatNorthernAccountingAdapter(PaymentCard paymentCard) {
+		this.paymentCard = paymentCard;
 	}
 
 	/**
-	 * Permette di simulare un pagamento. Il valore di succesProbability rappresenta
-	 * la probabilità di successo del pagamento (1 sempre successo, 0 sempre
-	 * insuccesso).
+	 * Effettua il pagamento mediante la carta di credito specificata.
 	 * 
-	 * @param amount quantita di denaro da sottrarre dal saldo.
-	 * @return true se il pagamento è andato a buon fine, false nel caso ci siano
-	 *         stati dei problemi.
+	 * Il pagamento simulato ha probabilità di successo
+	 * {@code} SUCCESS_PROBABILITY}.
 	 */
 	@Override
 	public boolean pay(double amount) {
-		double successProbability = 1;
-		return new Random().nextDouble() < successProbability;
+		return new Random().nextDouble() < SUCCESS_PROBABILITY;
 	}
 
 }

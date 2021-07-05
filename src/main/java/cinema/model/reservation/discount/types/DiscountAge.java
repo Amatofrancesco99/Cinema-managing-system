@@ -2,11 +2,11 @@ package cinema.model.reservation.discount.types;
 
 import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 
 /**
  * Strategia di sconto sulla prenotazione basata sull'età degli spettatori che
- * guarderanno il film.
+ * effettuano la prenotazione per una data proiezione.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -14,31 +14,31 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
 public class DiscountAge extends Discount {
 
 	/**
-	 * Età minima sotto la quale si ottiene lo sconto per l'età.
+	 * Età minima sotto a cui si ottiene lo sconto per età.
 	 */
 	private int minAge;
 
 	/**
-	 * Età massima sopra la quale si ottiene lo sconto per l'età.
+	 * Età massima sopra a cui si ottiene lo sconto per età.
 	 */
 	private int maxAge;
 
 	/**
-	 * Percentuale di sconto.
+	 * Percentuale di sconto applicato al costo totale della prenotazione.
 	 */
 	private double percentage;
 
 	/**
 	 * Costruttore dello sconto in base all'età.
 	 * 
-	 * @param minAge     età minima sotto la quale si ottiene lo sconto per l'età.
-	 * @param maxAge     età massima sopra la quale si ottiene lo sconto per l'età.
+	 * @param minAge     età minima sotto a cui si ottiene lo sconto per età.
+	 * @param maxAge     età massima sopra a cui si ottiene lo sconto per età.
 	 * @param percentage percentuale di sconto da applicare al costo totale della
 	 *                   prenotazione.
 	 * @param id         id della strategia di sconto.
 	 */
 	public DiscountAge(int minAge, int maxAge, double percentage, int id) {
-		super(TypeOfDiscounts.AGE, id);
+		super(TypeOfDiscount.AGE, id);
 		this.minAge = minAge;
 		this.maxAge = maxAge;
 		this.percentage = percentage;
@@ -62,45 +62,44 @@ public class DiscountAge extends Discount {
 	}
 
 	/**
-	 * Imposta l'età sotto la quale si ottiene lo sconto.
+	 * Imposta l'età sotto a cui si ottiene lo sconto per età.
 	 * 
-	 * @param minAge età minima, sotto la quale si ottiene lo sconto per l'età.
-	 * @throws DiscountException se l'età minima inserita è minore o uguale a 0.
+	 * @param minAge età minima sotto a cui si ottiene lo sconto per età.
+	 * @throws DiscountException se l'età minima inserita è minore di zero.
 	 */
 	public void setMinAge(int minAge) throws DiscountException {
-		if (minAge >= 0) {
-			this.minAge = minAge;
-		} else
-			throw new DiscountException("L'età minima deve essere maggiore di zero.");
+		if (minAge < 0) {
+			throw new DiscountException("L'età minima deve essere maggiore o uguale a zero.");
+		}
+		this.minAge = minAge;
 	}
 
 	/**
-	 * Imposta l'età sopra la quale si ottiene lo sconto.
+	 * Imposta l'età sopra a cui si ottiene lo sconto per età.
 	 * 
-	 * @param maxAge età massima, sopra la quale si ottiene lo sconto per l'età.
-	 * @throws DiscountException se l'età massima inserita è minore o uguale a 0.
+	 * @param maxAge età massima sopra a cui si ottiene lo sconto per l'età.
+	 * @throws DiscountException se l'età massima inserita è minore di zero.
 	 */
 	public void setMaxAge(int maxAge) throws DiscountException {
-		if (maxAge >= 0) {
-			this.maxAge = maxAge;
-		} else
-			throw new DiscountException("L'età massima deve essere maggiore di zero.");
+		if (maxAge < 0) {
+			throw new DiscountException("L'età massima deve essere maggiore o uguale a zero.");
+		}
+		this.maxAge = maxAge;
 	}
 
 	/**
-	 * Imposta la percentuale di sconto per una strategia di sconto.
+	 * Imposta la percentuale di sconto per la strategia di sconto corrente.
 	 * 
-	 * @param discount valore dello sconto.
+	 * @param percentage percentuale di sconto da applicare al costo totale della
+	 *                   prenotazione.
 	 * @throws DiscountException se la percentuale di sconto è minore di 0 o
 	 *                           maggiore di 1.
 	 */
-	public void setPercentage(double discount) throws DiscountException {
-		if (discount < 0) {
-			throw new DiscountException("La percentuale dello sconto deve essere positiva.");
-		} else if (discount > 1) {
-			throw new DiscountException("La percentuale dello sconto deve essere minore o uguale il 100%");
+	public void setPercentage(double percentage) throws DiscountException {
+		if (percentage < 0.0 || percentage > 1.0) {
+			throw new DiscountException("La percentuale di sconto deve essere compresa tra 0.0 (0%) e 1.0 (100%).");
 		}
-		this.percentage = discount;
+		this.percentage = percentage;
 	}
 
 	public int getMinAge() {
@@ -113,9 +112,10 @@ public class DiscountAge extends Discount {
 
 	@Override
 	public String toString() {
-		return "[ " + this.getTypeOfDiscount() + " ]" + "\n" + "Età al di sotto della quale lo sconto è valido: "
-				+ minAge + "\n" + "Età al di sopra della quale lo sconto è valido: " + maxAge + "\n"
-				+ "Percentuale di sconto applicata: " + percentage;
+		return String.format(
+				"[%s]\nEtà sotto a cui lo sconto è valido: %d\nEtà sopra a cui lo sconto è valido: %d\n"
+						+ "Percentuale di sconto applicato: %d%%",
+				getTypeOfDiscount().toString(), minAge, maxAge, (int) (percentage * 100.0));
 	}
 
 }

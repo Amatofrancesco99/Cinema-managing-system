@@ -24,7 +24,7 @@ import cinema.model.reservation.Reservation;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 import cinema.model.reservation.discount.types.util.DiscountException;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
@@ -49,7 +49,7 @@ public class ReservationTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		myCinema.setCinemaDiscountStrategy(TypeOfDiscounts.AGE);
+		myCinema.setCinemaDiscountStrategy(TypeOfDiscount.AGE);
 		r = myCinema.getReservation(myCinema.createReservation());
 		Room room = new Room(999, 3, 3);
 

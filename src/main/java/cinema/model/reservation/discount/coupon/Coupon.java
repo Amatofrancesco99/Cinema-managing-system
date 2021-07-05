@@ -3,8 +3,8 @@ package cinema.model.reservation.discount.coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 
 /**
- * Rappresenta un coupon che può essere applicato per poter effettuare una
- * detrazione dal totale della prenotazione, pari all'importo del coupon stesso.
+ * Coupon che può essere applicato ad una prenotazione per poter effettuare una
+ * detrazione del relativo importo dal costo totale della prenotazione stessa.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -12,39 +12,44 @@ import cinema.model.reservation.discount.coupon.util.CouponException;
 public class Coupon {
 
 	/**
-	 * Numero minimo di caratteri del coupon.
+	 * Numero minimo di caratteri di ogni coupon.
 	 */
 	private final int MIN_COUPON_CHARACTERS = 8;
+
 	/**
-	 * Codice coupon.
+	 * Codice del coupon.
 	 */
 	private final String code;
+
 	/**
-	 * Sconto da applicare.
+	 * Sconto da applicare all'importo da pagare.
 	 */
 	private double discount;
+
 	/**
-	 * Indica se il coupon è gia stato usato o meno.
+	 * Stato del coupon (true = coupon già utilizzato, false = coupon ancora da
+	 * utilizzare).
 	 */
 	private boolean used;
 
 	/**
 	 * Costruttore del coupon.
 	 * 
-	 * @param code     Codice coupon.
-	 * @param discount Sconto da applicare.
-	 * @param used     Indica se il coupon è gia stato usato o meno.
-	 * @throws CouponException Eccezione lanciata qualora il coupon sia troppo
-	 *                         corto.
+	 * @param code     codice del coupon.
+	 * @param discount sconto da applicare.
+	 * @param used     stato del coupon (true = coupon già utilizzato, false =
+	 *                 coupon ancora da utilizzare).
+	 * @throws CouponException se il coupon ha una lunghezza minore di quella
+	 *                         consentita.
 	 */
 	public Coupon(String code, double discount, boolean used) throws CouponException {
 		if (code.length() < MIN_COUPON_CHARACTERS) {
-			throw new CouponException("Il coupon che si sta cercando di creare è troppo corto (almeno 8 cifre).");
-		} else {
-			this.code = code;
-			this.discount = Math.round(discount * 100.0) / 100.0;
-			this.used = used;
+			throw new CouponException(
+					"La lunghezza del codice del coupon è inferiore a quella consentita (8 caratteri).");
 		}
+		this.code = code;
+		this.discount = Math.round(discount * 100.0) / 100.0;
+		this.used = used;
 	}
 
 	public String getCode() {
@@ -59,12 +64,13 @@ public class Coupon {
 		return used;
 	}
 
-	public void setUsed(boolean b) {
-		this.used = b;
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
 
 	@Override
 	public String toString() {
-		return this.getCode() + " " + this.getDiscount() + " " + this.isUsed();
+		return String.format("%s %f %s", code, discount, ((Boolean) used).toString());
 	}
+
 }

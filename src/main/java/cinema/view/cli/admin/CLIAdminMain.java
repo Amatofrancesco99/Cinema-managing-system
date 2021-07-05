@@ -15,9 +15,9 @@ import cinema.model.projection.Projection;
 import cinema.model.projection.util.ProjectionException;
 
 /**
- * Permette all'amministratore del cinema di poter effettuare le operazioni base
- * principali (login, aggiunta/rimozione di prenotazioni, modifica delle
- * politiche di sconto).
+ * Permette all'amministratore del cinema di poter effettuare le operazioni
+ * principali richieste dalle specifiche di progetto (login, aggiunta/rimozione
+ * di prenotazioni e modifica delle politiche di sconto).
  * 
  * @author Screaming Hairy Armadillo Team
  * 
@@ -48,7 +48,7 @@ public class CLIAdminMain {
 	/**
 	 * Avvia l'interfaccia testuale riservata all'amministratore del sistema.
 	 *
-	 * @param args Parametri dell'applicazione (non utilizzati).
+	 * @param args parametri dell'applicazione (non utilizzati).
 	 */
 	public static void main(String[] args) {
 		new CLIAdminMain();

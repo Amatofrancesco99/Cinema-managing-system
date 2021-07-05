@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import cinema.model.reservation.Reservation;
-import cinema.model.reservation.discount.types.util.TypeOfDiscounts;
+import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 
 /**
  * Strategia di sconto sulla prenotazione basata sul giorno in cui gli
@@ -26,29 +26,24 @@ public class DiscountDay extends Discount {
 	 * Costruttore dello sconto.
 	 */
 	public DiscountDay(int id) {
-		super(TypeOfDiscounts.DAY, id);
+		super(TypeOfDiscount.DAY, id);
 		discount = new HashMap<>();
 	}
 
 	@Override
-	public double getTotal(Reservation r) {
+	public double getTotal(Reservation reservation) {
 		double totalPrice = 0;
 		if (discount.size() > 0) {
 			for (Entry<LocalDate, Double> entry : discount.entrySet()) {
-				if (entry.getKey().equals(r.getProjection().getDateTime().toLocalDate())) {
-					totalPrice += r.getProjection().getPrice() * (1 - entry.getValue()) * r.getNSeats();
+				if (entry.getKey().equals(reservation.getProjection().getDateTime().toLocalDate())) {
+					totalPrice += reservation.getProjection().getPrice() * (1 - entry.getValue())
+							* reservation.getNSeats();
 					return totalPrice;
 				}
 			}
 		}
-		totalPrice += r.getProjection().getPrice() * r.getNSeats();
+		totalPrice += reservation.getProjection().getPrice() * reservation.getNSeats();
 		return totalPrice;
-	}
-
-	@Override
-	public String toString() {
-		return "[ " + this.getTypeOfDiscount() + " ]" + "\n"
-				+ "Giorni e percentuale di sconti nelle specifiche giornate: \n" + discountsToString(discount);
 	}
 
 	/**
@@ -70,4 +65,11 @@ public class DiscountDay extends Discount {
 	public void addDayDiscount(LocalDate day, double percentage) {
 		this.discount.put(day, percentage);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("[%s]\nGiorni e relativa percentuale di sconto nelle seguenti date:\n%s",
+				getTypeOfDiscount().toString(), discountsToString(discount));
+	}
+
 }
