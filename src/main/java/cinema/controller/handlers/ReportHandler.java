@@ -91,12 +91,8 @@ public class ReportHandler {
 																						// contenente
 			// alcune informazioni riassuntive sul
 			// film che si vuole visionare
-			Paragraph infoReservationP = createReservationPropertiesParagraph(allFonts, reservation); // Crea un
-																										// paragrafo con
-																										// le
-																										// informazioni
-																										// della
-																										// reservation
+			// Crea un paragrafo con le informazioni della reservation
+			Paragraph infoReservationP = createReservationPropertiesParagraph(allFonts, reservation);
 			PdfPTable table = createEmptyTable(); // Genera una tabella
 			insertFieldsIntoTable(table, reservation); // Aggiunge alla tabella i posti selezionati
 			Paragraph totalP = createTotalParagraph(allFonts, reservation); // Crea un paragrafo con il totale della
