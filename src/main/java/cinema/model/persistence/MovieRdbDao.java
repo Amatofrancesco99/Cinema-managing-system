@@ -33,7 +33,7 @@ public class MovieRdbDao implements IMovieDao {
 	}
 
 	/**
-	 * Esegue la query al database relazionale per recuperare le informazioni sul
+	 * Esegue la query sul database relazionale per recuperare le informazioni sul
 	 * film identificato da {@code id}.
 	 */
 	@Override
