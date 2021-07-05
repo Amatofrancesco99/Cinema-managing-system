@@ -34,6 +34,9 @@ import cinema.model.reservation.util.ReservationException;
  * 
  * @author Screaming Hairy Armadillo Team
  * 
+ *         Per ogni volta che esegui la classe di test ricorda di eseguire il
+ *         seguente comando dal terminale (dove hai il clone di questo
+ *         progetto): @git restore persistence/cinemaDb.db
  */
 public class ReservationTest {
 
@@ -170,7 +173,6 @@ public class ReservationTest {
 	 */
 	@Test
 	public void testPrices() throws CouponException, DiscountNotFoundException, PersistenceException {
-		cinema.setCinemaDiscountStrategy(TypeOfDiscount.AGE);
 		assertEquals(projections.get(0).getPrice() * 2, r.getFullPrice(), 1);
 		// uso lo sconto per età
 		try {
@@ -220,8 +222,7 @@ public class ReservationTest {
 	public void testSendEmail() throws InvalidSpectatorInfoException {
 		// cambia i campi qui sotto, specialmente l'email, per poter testare l'invio
 		// del report contenente tutte le informazioni sulla prenotazione alla tua
-		// casella
-		// di posta personale
+		// casella di posta personale
 		try {
 			r.setPurchaser(new Spectator("Francesco", "Amato", "francesco.amato01@universitadipavia.it"));
 			Thread emailThread = cinema.sendReservationEmail(r.getProgressive());
