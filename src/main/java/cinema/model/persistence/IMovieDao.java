@@ -16,7 +16,7 @@ public interface IMovieDao {
 	 * Restituice un film sulla base del suo identificativo.
 	 * 
 	 * @param id identificativo del film che si vuole ottenere.
-	 * @return un film sulla base del suo identificativo.
+	 * @return un film sulla base del suo identificativo o null se non è presente.
 	 * @throws SQLException se vengono riscontrati errori nell'interazione col
 	 *                      meccanismo di persistenza.
 	 */

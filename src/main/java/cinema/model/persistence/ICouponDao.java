@@ -29,7 +29,8 @@ public interface ICouponDao {
 	 * Restituisce un coupon sulla base del suo codice promozionale.
 	 * 
 	 * @param promoCode codice promozionale del coupon da restituire.
-	 * @return un coupon sulla base del suo codice promozionale.
+	 * @return un coupon sulla base del suo codice promozionale o null se non è
+	 *         presente.
 	 * @throws SQLException    se vengono riscontrati errori nell'interazione con il
 	 *                         meccanismo di persistenza.
 	 * @throws CouponException se il codice del coupon identificato non è valido,
