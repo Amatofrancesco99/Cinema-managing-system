@@ -12,40 +12,46 @@ import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 
 /**
- * BREVE DESCRIZIONE CLASSE Projection
+ * Comprende tutte le informazioni, e metodi, necessari per rappresentare una
+ * proiezione effettuata dal cinema.
  * 
  * @author Screaming Hairy Armadillo Team
  *
- *         Questa classe comprende tutte le informazioni e metodi che servono
- *         per rappresentare una proiezione che viene effettuata dal cinema.
  */
 public class Projection implements Comparable<Projection> {
-
 	/**
-	 * ATTRIBUTI
-	 * 
-	 * @param id       Id
-	 * @param movie    Film associato
-	 * @param room     Sala in cui il film verrà proiettato
-	 * @param dateTime Data e ora
-	 * @param price    Prezzo
-	 * @param seats    Posti della sala in cui il film è proiettato
+	 * Codice identificativo del film.
 	 */
 	private int id;
+	/**
+	 * Film associato.
+	 */
 	private Movie movie;
+	/**
+	 * Sala in cui verrà proiettato il film.
+	 */
 	private Room room;
+	/**
+	 * Data e ora.
+	 */
 	private LocalDateTime dateTime;
+	/**
+	 * Prezzo del film per persona.
+	 */
 	private double price;
+	/**
+	 * Posti della sala in cui il film è proiettato.
+	 */
 	private ArrayList<ArrayList<ProjectionSeat>> seats;
 
 	/**
-	 * COSTRUTTORE
+	 * Costruttore della Proiezione.
 	 * 
-	 * @param id
-	 * @param movie
-	 * @param dateTime
-	 * @param price
-	 * @param room
+	 * @param id       codice identificativo del film.
+	 * @param movie    film associato.
+	 * @param dateTime data e ora.
+	 * @param price    prezzo del film per persona.
+	 * @param room     sala in cui verrà proiettato il film.
 	 */
 	public Projection(int id, Movie movie, LocalDateTime dateTime, double price, Room room) {
 		this.id = id;
@@ -63,16 +69,19 @@ public class Projection implements Comparable<Projection> {
 		}
 	}
 
-	/** COSTRUTTORE DI DEFAULT */
+	/**
+	 * Costruttore di default.
+	 */
 	public Projection() {
 		this.seats = new ArrayList<ArrayList<ProjectionSeat>>();
 	}
 
 	/**
-	 * METODO per impostare l'id di una proiezione
+	 * Imposta l'id di una proiezione.
 	 * 
-	 * @param id
-	 * @throws InvalidProjectionIdException
+	 * @param id codice identificativo del film.
+	 * @throws ProjectionException ecceziona lanciata qualora l'id inserito sia
+	 *                             negativo.
 	 */
 	public void setId(int id) throws ProjectionException {
 		if (id < 0)
@@ -80,12 +89,10 @@ public class Projection implements Comparable<Projection> {
 		this.id = id;
 	}
 
-	/** METODO per associare un film alla proiezione */
 	public void setMovie(Movie movie) {
 		this.movie = movie;
 	}
 
-	/** METODO per aggiungere la sala in cui è proiettato il film */
 	public void setRoom(Room room) {
 		this.room = room;
 		if (seats.size() != 0) {
@@ -101,10 +108,12 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO per aggiungere la data della proiezione
+	 * Aggiunge la data della proiezione.
 	 * 
-	 * @param dateTime
-	 * @throws InvalidProjectionDateTimeException
+	 * @param dateTime data e ora.
+	 * @throws InvalidProjectionDateTimeException eccezione lanciata qualora la data
+	 *                                            della proiezione inserita sia già
+	 *                                            passata.
 	 */
 	public void setDateTime(LocalDateTime dateTime) throws ProjectionException {
 		if (dateTime.isBefore(LocalDateTime.now()))
@@ -113,10 +122,11 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO per aggiungere il prezzo alla proiezione
+	 * Aggiunge il prezzo alla proiezione.
 	 * 
-	 * @param price
-	 * @throws InvalidPriceException
+	 * @param price prezzo del film per persona.
+	 * @throws ProjectionException eccezione lanciata qualora il prezzo inserito sia
+	 *                             negativo,o nullo.
 	 */
 	public void setPrice(double price) throws ProjectionException {
 		if (price <= 0)
@@ -125,11 +135,13 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO che serve per verificare se un posto specifico è libero.
+	 * Verifica se un posto specifico sia libero.
 	 * 
-	 * @param row, col Coordinate
-	 * @return True: libero, False: occupato
-	 * @throws InvalidRoomSeatCoordinatesException
+	 * @param row coordinata riga.
+	 * @param col coordinata colonna.
+	 * @return True: libero, False: occupato.
+	 * @throws RoomException eccezione lanciata qualora il posto selezionato non
+	 *                       esista.
 	 */
 	public boolean checkIfSeatIsAvailable(int row, int col) throws RoomException {
 		try {
@@ -141,10 +153,11 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO per farsi restituire il numero di posti liberi per quella stanza
+	 * Restituisce il numero di posti liberi per la stanza presa in considerazione.
 	 * 
-	 * @return int Numero di posti disponibili/liberi
-	 * @throws InvalidRoomSeatCoordinatesException
+	 * @return numero di posti disponibili/liberi.
+	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
+	 *                       gestione della sala del cinema.
 	 */
 	public int getNumberAvailableSeat() throws RoomException {
 		int availableSeats = 0;
@@ -159,11 +172,14 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO occupa posto della sala in cui è fatta la proiezione
+	 * Occupa il posto della sala in cui è fatta la proiezione.
 	 * 
-	 * @param row, col Coordinate
-	 * @return esito Esito occupazione del posto
-	 * @throws InvalidRoomSeatCoordinatesException
+	 * @param row coordinata riga.
+	 * @param col coordinata colonna.
+	 * @return True: posto occupato con successo, False: fallimento nell'occupare il
+	 *         posto.
+	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
+	 *                       gestione della sala del cinema.
 	 */
 	public boolean takeSeat(int row, int col) throws RoomException {
 		if (checkIfSeatIsAvailable(row, col)) {
@@ -174,11 +190,14 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO per liberare il posto di una sala
+	 * Libera il posto di una sala.
 	 * 
-	 * @param row, col Coordinate
-	 * @return esito Esito rilascio del posto
-	 * @throws InvalidRoomSeatCoordinatesException
+	 * @param row coordinata riga.
+	 * @param col coordinata colonna.
+	 * @return True: posto rilasciato con successo, False: fallimento nel rilasciare
+	 *         il posto.
+	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
+	 *                       gestione della sala del cinema.
 	 */
 	public boolean freeSeat(int row, int col) throws RoomException {
 		if (!checkIfSeatIsAvailable(row, col)) {
@@ -189,22 +208,25 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * METODO per restituire un posto, date le coordinate
+	 * Restituisce un posto, date le coordinate.
 	 * 
-	 * @param row, col Coordinate
-	 * @return Posto fisico
-	 * @throws InvalidRoomSeatCoordinatesException
+	 * @param row coordinata riga.
+	 * @param col coordinata colonna.
+	 * @return posto fisico.
+	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
+	 *                       gestione della sala del cinema.
 	 */
 	public PhysicalSeat getPhysicalSeat(int row, int col) throws RoomException {
 		return this.getSeats().get(row).get(col).getPhysicalSeat();
 	}
 
 	/**
-	 * METODO per farsi dare le coordinate di un posto
+	 * Restituisce le coordinate di un posto.
 	 * 
-	 * @param s Posto fisico
-	 * @return Coordinate
-	 * @throws InvalidRoomSeatCoordinatesException
+	 * @param s posto fisico.
+	 * @return coordinate del posto.
+	 * @throws RoomException eccezione lanciata qualora vi siano errori legati alla
+	 *                       gestione della sala del cinema.
 	 */
 	public String getSeatCoordinates(PhysicalSeat s) throws RoomException {
 		for (int i = 0; i < room.getNumberOfRows(); i++) {
@@ -216,19 +238,11 @@ public class Projection implements Comparable<Projection> {
 		return null;
 	}
 
-	/**
-	 * Compara due proiezioni tramite la loro data (ordine cronologico).
-	 */
 	@Override
 	public int compareTo(Projection projection) {
 		return dateTime.compareTo(projection.getDateTime());
 	}
 
-	/**
-	 * METODO per stampare le caratteristiche principali della classe
-	 * 
-	 * @return caratteristiche
-	 */
 	@Override
 	public String toString() {
 		int availableSeats = 0;

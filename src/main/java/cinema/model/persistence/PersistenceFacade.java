@@ -379,6 +379,18 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Controlla se è disponibile un determinato posto identificato dalla fila
+	 * {@code row} e dalla colonna {@code column} in una proiezione indicata con
+	 * {@code projectionId}.
+	 * 
+	 * @param projectionId identificativo della proiezione .
+	 * @param row          fila del posto che si vuole controllare.
+	 * @param column       posto nella fila del posto che si vuole controllare.
+	 * @return true se il posto è libero, false se il posto è occupato.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public boolean getOccupiedSeat(int projectionId, int row, int column) throws PersistenceException {
 		try {
 			return this.iOccupiedSeatDao.getSeatOccupationStatus(projectionId, row, column);
@@ -387,6 +399,15 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Restituisce l'identificativo dell'ultima prenotazione mantenuta nel
+	 * meccanismo di persistenza dei dati.
+	 * 
+	 * @return identificativo dell'ultima prenotazione di cui si ha traccia nel
+	 *         meccanismo di persistenza.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public long getLastReservationId() throws PersistenceException {
 		try {
 			return this.iReservationDao.getLastReservationId();
@@ -395,6 +416,13 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Elimina una proiezione dal meccanismo di persistenza dei dati.
+	 * 
+	 * @param reservationId identificativo della proiezione che si vuole eliminare.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public void deleteReservation(long reservationId) throws PersistenceException {
 		try {
 			iReservationDao.deleteReservation(reservationId);
@@ -403,6 +431,18 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Rende persistente una nuova prenotazione di cui si sa quindi solo
+	 * l'identificativo.
+	 * 
+	 * Il metodo rende persistente solamente l'identificativo della prenotazione.
+	 * Eventuali altri dati riguardanti la prenotazione non vengono presi in
+	 * considerazione e quindi non vangono resi consistenti.
+	 * 
+	 * @param newReservation la prenotazione da rendere persistente.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public void putEmptyReservation(Reservation newReservation) throws PersistenceException {
 		try {
 			iReservationDao.putEmptyReservation(newReservation);
@@ -411,6 +451,21 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Rende persistenti le informazioni riguardanti una prenotazione.
+	 * 
+	 * La prenotazione a cui si fa riferimento deve essere stata inserita nel
+	 * meccanismo di persistenza precedentemente col metodo
+	 * {@code putEmptyReservation(Reservation newReservation)}. Questo è neccessario
+	 * per mantenere la consistenza degli identificativi delle prenotazioni.
+	 * 
+	 * @param reservation prenotazione di cui si vogliono rendere persisteni le
+	 *                    informazioni.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 * @throws RoomException        se la stanza referenziata nella prenotazione non
+	 *                              è valida.
+	 */
 	public void setReservationFields(Reservation reservation) throws PersistenceException, RoomException {
 		try {
 			iReservationDao.setReservationFields(reservation);
@@ -419,6 +474,16 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Rende persistenti le occupazioni dei posti di una determinata prenotazione.
+	 * 
+	 * @param reservation prenotazioni di cui si vuole rendere persistente
+	 *                    l'occupazione dei posti.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 * @throws RoomException        se la stanza referenziata nella prenotazione non
+	 *                              è valida.
+	 */
 	public void putOccupiedSeatsFromReservation(Reservation reservation) throws PersistenceException, RoomException {
 		try {
 			iOccupiedSeatDao.putOccupiedSeatsFromReservation(reservation);
@@ -427,6 +492,16 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Restituisce le informazioni generali del cinema e del suo gestore tramite
+	 * l'identifiactivo del cinema.
+	 * 
+	 * @param cinemaId identificativo del cinema di cui si vogliono recuperare le
+	 *                 informazioni.
+	 * @return tutte le informazioni del cinema e del gestore del cinema.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public HashMap<String, String> getAllCinemaInfo(int cinemaId) throws PersistenceException {
 		try {
 			return iCinemaDao.getAllCinemaInfo(cinemaId);
@@ -435,6 +510,15 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Rende persistente il cambio della password per il login del gestore del
+	 * cinema nel sistema.
+	 * 
+	 * @param cinemaId    identificativo del cinema a cui si fa riferimento.
+	 * @param newPassword nuova password da rendere persistente.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public void setPassword(int cinemaId, String newPassword) throws PersistenceException {
 		try {
 			iCinemaDao.setPassword(cinemaId, newPassword);
@@ -443,6 +527,17 @@ public class PersistenceFacade {
 		}
 	}
 
+	/**
+	 * Rende persistente il cambio di strategia di applicazione degli sconti
+	 * effettuata dal gestore del cinema.
+	 * 
+	 * @param cinemaId             identificativo del cinema di cui si vuole
+	 *                             cambiare la strategia di applicazione degli
+	 *                             sconti.
+	 * @param discountStrategyName il nome della nuova strategia da applicare.
+	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
+	 *                              dati fallisce.
+	 */
 	public void setDiscountStrategy(int cinemaId, String discountStrategyName) throws PersistenceException {
 		try {
 			iCinemaDao.setDiscountStrategy(cinemaId, discountStrategyName);
