@@ -1,4 +1,4 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.rdbClasses;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import cinema.model.persistence.dao.interfaces.ICouponDao;
 import cinema.model.reservation.discount.coupon.Coupon;
 import cinema.model.reservation.discount.coupon.util.CouponException;
 

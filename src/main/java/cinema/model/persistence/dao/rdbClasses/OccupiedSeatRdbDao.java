@@ -1,4 +1,4 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.rdbClasses;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import cinema.model.cinema.PhysicalSeat;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.dao.interfaces.IOccupiedSeatDao;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
 

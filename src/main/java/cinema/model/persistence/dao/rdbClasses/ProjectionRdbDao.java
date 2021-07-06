@@ -1,4 +1,4 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.rdbClasses;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.dao.interfaces.IProjectionDao;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 
@@ -40,39 +41,41 @@ public class ProjectionRdbDao implements IProjectionDao {
 	/**
 	 * Esegue la query sul database relazionale per recuperare le informazioni sulla
 	 * proiezione identificata da {@code id}.
+	 * @throws RoomException se non esiste la sala associata a quella proiezione
 	 */
 	@Override
-	public Projection getProjection(int id) throws SQLException, PersistenceException {
+	public Projection getProjection(int id) throws SQLException, PersistenceException, RoomException {
 		String sql = "SELECT * FROM Projection WHERE id = ?;";
 		PreparedStatement pstatement = connection.prepareStatement(sql);
 		pstatement.setInt(1, id);
 		ResultSet result = pstatement.executeQuery();
-		Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
-		Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
+		Movie movie = new MovieRdbDao(connection).getMovie(result.getInt("movie"));
+		Room room = new RoomRdbDao(connection).getRoom(result.getInt("room"));
 		Projection projection = new Projection(id, movie,
 				LocalDateTime.parse(result.getString("datetime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
 				result.getDouble("price"), room);
-		PersistenceFacade.getInstance().setOccupiedSeats(projection);
+		new OccupiedSeatRdbDao(connection).setOccupiedSeats(projection);
 		return projection;
 	}
 
 	/**
 	 * Esegue la query sul database relazionale per recuperare le informazioni sulle
 	 * proiezioni riguardanti un determinato film identificato da {@code movieId}.
+	 * @throws RoomException  se non esiste la sala in cui il film è proiettato
 	 */
 	@Override
-	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException {
+	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException, RoomException {
 		String sql = "SELECT * FROM Projection WHERE movie = ?;";
 		PreparedStatement pstatement = connection.prepareStatement(sql);
 		pstatement.setInt(1, movieId);
 		ResultSet result = pstatement.executeQuery();
 		ArrayList<Projection> projections = new ArrayList<Projection>();
 		while (result.next()) {
-			Movie movie = PersistenceFacade.getInstance().getMovie(result.getInt("movie"));
-			Room room = PersistenceFacade.getInstance().getRoom(result.getInt("room"));
+			Movie movie = new MovieRdbDao(connection).getMovie(result.getInt("movie"));
+			Room room = new RoomRdbDao(connection).getRoom(result.getInt("room"));
 			Projection projection = new Projection(movieId, movie, LocalDateTime.parse(result.getString("datetime"),
 					DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), result.getDouble("price"), room);
-			PersistenceFacade.getInstance().setOccupiedSeats(projection);
+			new OccupiedSeatRdbDao(connection).setOccupiedSeats(projection);
 			projections.add(projection);
 		}
 		return projections;

@@ -9,6 +9,22 @@ import java.util.HashMap;
 import cinema.model.Movie;
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.dao.interfaces.ICinemaDao;
+import cinema.model.persistence.dao.interfaces.ICouponDao;
+import cinema.model.persistence.dao.interfaces.IDiscountDao;
+import cinema.model.persistence.dao.interfaces.IMovieDao;
+import cinema.model.persistence.dao.interfaces.IOccupiedSeatDao;
+import cinema.model.persistence.dao.interfaces.IProjectionDao;
+import cinema.model.persistence.dao.interfaces.IReservationDao;
+import cinema.model.persistence.dao.interfaces.IRoomDao;
+import cinema.model.persistence.dao.rdbClasses.CinemaRdbDao;
+import cinema.model.persistence.dao.rdbClasses.CouponRdbDao;
+import cinema.model.persistence.dao.rdbClasses.DiscountRdbDao;
+import cinema.model.persistence.dao.rdbClasses.MovieRdbDao;
+import cinema.model.persistence.dao.rdbClasses.OccupiedSeatRdbDao;
+import cinema.model.persistence.dao.rdbClasses.ProjectionRdbDao;
+import cinema.model.persistence.dao.rdbClasses.ReservationRdbDao;
+import cinema.model.persistence.dao.rdbClasses.RoomRdbDao;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
@@ -76,18 +92,13 @@ public class PersistenceFacade {
 	ICinemaDao iCinemaDao;
 
 	/**
-	 * Unica istanza della classe necessaria a implementare il pattern singleton.
-	 */
-	private static PersistenceFacade singleInstance;
-
-	/**
 	 * Costruttore del facade controller che gestisce la persistenza dei dati.
 	 * 
 	 * @param url URI del meccanismo di persistenza dei dati.
 	 * @throws SQLException se occorrono degli errori nella connessione al
 	 *                      meccanismo di persistenza dei dati.
 	 */
-	private PersistenceFacade(String url) throws SQLException {
+	public PersistenceFacade(String url) throws SQLException {
 		connection = DriverManager.getConnection(url);
 		iMovieDao = new MovieRdbDao(connection);
 		iRoomDao = new RoomRdbDao(connection);
@@ -97,21 +108,6 @@ public class PersistenceFacade {
 		iOccupiedSeatDao = new OccupiedSeatRdbDao(connection);
 		iReservationDao = new ReservationRdbDao(connection);
 		iCinemaDao = new CinemaRdbDao(connection);
-	}
-
-	/**
-	 * Restituisce l'unico oggetto della classe che è permesso avere implementando
-	 * il pattern singleton.
-	 * 
-	 * @return l'unica istanza della calsse permassa dal pattern singleton.
-	 * @throws SQLException se occorrono degli errori nella connessione al
-	 *                      meccanismo di persistenza dei dati.
-	 */
-	public static PersistenceFacade getInstance() throws SQLException {
-		if (singleInstance == null) {
-			singleInstance = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
-		}
-		return singleInstance;
 	}
 
 	/**
@@ -189,8 +185,9 @@ public class PersistenceFacade {
 	 *         la proiezione non è presente.
 	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
 	 *                              dati fallisce.
+	 * @throws RoomException        se non esiste la sala associata a quella proiezione
 	 */
-	public Projection getProjection(int projectionId) throws PersistenceException {
+	public Projection getProjection(int projectionId) throws PersistenceException, RoomException {
 		try {
 			return this.iProjectionDao.getProjection(projectionId);
 		} catch (SQLException e) {
@@ -207,8 +204,9 @@ public class PersistenceFacade {
 	 * @return le proiezioni riguardanti il film con identificativo {@code movieId}.
 	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
 	 *                              dati fallisce.
+	 * @throws RoomException        se non esiste la sala associata a quel film
 	 */
-	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws PersistenceException {
+	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws PersistenceException, RoomException {
 		try {
 			return this.iProjectionDao.getAllProjectionsByMovieId(movieId);
 		} catch (SQLException e) {

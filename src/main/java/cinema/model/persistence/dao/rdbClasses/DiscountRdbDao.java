@@ -1,4 +1,4 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.rdbClasses;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import cinema.model.persistence.dao.interfaces.IDiscountDao;
 import cinema.model.reservation.discount.types.DiscountAge;
 import cinema.model.reservation.discount.types.DiscountDay;
 import cinema.model.reservation.discount.types.DiscountNumberSpectators;
