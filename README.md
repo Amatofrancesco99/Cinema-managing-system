@@ -2,9 +2,18 @@
 
 ***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
 
+[Presentazione](https://docs.google.com/presentation/d/1DnBT-Xm7wlHo8Mx5TOKYY6t92_84Xn-ywwDrSrER7wE/edit?usp=sharing)
+
 ![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png)
 
+![JAVA](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![HTML](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![JAVASCRIPT](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+![BOOTSTRAP](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+
 ***
+
 ## 0. SETUP DEL REPOSITORY
 
 ### 0.1 - Download di Git
