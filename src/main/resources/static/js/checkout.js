@@ -307,7 +307,7 @@ $(window).on('load', function() {
         var seats = $('.seat').toArray();
 
         // Count the number of selected seats and return it
-        for (var i = 0; i < seats.length - 1; i++) {
+        for (var i = 0; i < seats.length; i++) {
             if (seats[i].status == 'selezionato') {
                 selectedSeats++;
             }
