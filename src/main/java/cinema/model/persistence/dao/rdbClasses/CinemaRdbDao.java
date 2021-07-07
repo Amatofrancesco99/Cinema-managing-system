@@ -1,10 +1,12 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.rdbClasses;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+
+import cinema.model.persistence.dao.interfaces.ICinemaDao;
 
 /**
  * Si interfaccia con un database relazionale per implementare la persistenza

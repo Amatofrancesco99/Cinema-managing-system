@@ -1,4 +1,4 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.rdbClasses;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import cinema.model.cinema.Room;
 import cinema.model.cinema.util.RoomException;
+import cinema.model.persistence.dao.interfaces.IRoomDao;
 
 /**
  * Si interfaccia con un database relazionale per implementare la persistenza

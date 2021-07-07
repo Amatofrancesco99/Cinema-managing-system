@@ -1,8 +1,9 @@
-package cinema.model.persistence;
+package cinema.model.persistence.dao.interfaces;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import cinema.model.cinema.util.RoomException;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 
@@ -28,8 +29,9 @@ public interface IProjectionDao {
 	 * @throws PersistenceException se il film o la stanza dove era programmata la
 	 *                              proiezione non sono più presenti nel meccanismo
 	 *                              di persistenza dei dati.
+	 * @throws RoomException        se non esiste la sala associata a quella proiezione
 	 */
-	public Projection getProjection(int id) throws SQLException, PersistenceException;
+	public Projection getProjection(int id) throws SQLException, PersistenceException, RoomException;
 
 	/**
 	 * Restituisce tutte le proiezioni riguardanti un film identificato da
@@ -37,12 +39,14 @@ public interface IProjectionDao {
 	 * 
 	 * @param movieId identificativo del film di cui si vogliono ottenere le
 	 *                proiezioni.
-	 * @return tutte le proiezioni del film identificato da {@code movieId}
-	 * @throws SQLException         se vengono riscontrati errori nell'interazione
-	 *                              con il meccanismo di persistenza.
-	 * @throws PersistenceException
+	 * @return tutte le proiezioni   del film identificato da {@code movieId}
+	 * @throws SQLException          se vengono riscontrati errori nell'interazione
+	 *                               con il meccanismo di persistenza.
+	 * @throws PersistenceException  se vi è un problema nel raggiungere il servizio offerto dal
+	 * 								 database
+	 * @throws RoomException         se non esiste la sala in cui il film è proiettato
 	 */
-	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException;
+	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException, RoomException;
 
 	/**
 	 * Restituisce tutte le proiezioni gestite dal cinema attraverso il meccanismo

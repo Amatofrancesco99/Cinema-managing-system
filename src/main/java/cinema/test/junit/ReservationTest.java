@@ -17,7 +17,6 @@ import cinema.model.spectator.Spectator;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 import cinema.model.cinema.util.RoomException;
 import cinema.model.payment.util.PaymentErrorException;
-import cinema.model.persistence.PersistenceFacade;
 import cinema.model.persistence.util.PersistenceException;
 import cinema.model.projection.Projection;
 import cinema.model.reservation.Reservation;
@@ -85,8 +84,8 @@ public class ReservationTest {
 			}
 		}
 		try {
-			assertEquals(PersistenceFacade.getInstance().getLastReservationId() + STOP,
-					cinema.getReservation(PersistenceFacade.getInstance().getLastReservationId()).getProgressive()
+			assertEquals(cinema.getPersistenceFacade().getLastReservationId() + STOP,
+					cinema.getReservation(cinema.getPersistenceFacade().getLastReservationId()).getProgressive()
 							+ STOP);
 		} catch (PersistenceException | SQLException | ReservationException exception) {
 			System.out.println(exception.getMessage());

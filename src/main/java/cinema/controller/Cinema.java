@@ -75,7 +75,7 @@ public class Cinema {
 	 */
 	public Cinema() {
 		try {
-			persistenceFacade = PersistenceFacade.getInstance();
+			persistenceFacade = new PersistenceFacade("jdbc:sqlite:persistence/cinemaDb.db");
 			cinemaInfo = persistenceFacade.getAllCinemaInfo(1);
 			cinemaDiscount = getDiscountByStrategy(TypeOfDiscount.valueOf(cinemaInfo.get("discountStrategy")));
 		} catch (SQLException | PersistenceException | DiscountNotFoundException e) {
@@ -504,6 +504,16 @@ public class Cinema {
 				+ cinemaInfo.get("country");
 	}
 
+	/**
+	 * Resituisce il persistenceFacade creato nel costruttore del cinema.
+	 * @return PersistenceFacade istanza del PersistenceFacade
+	 * @throws SQLException	qualora vi siano problemi nel collegarsi al
+	 * 						database.
+	 */
+	public PersistenceFacade getPersistenceFacade() throws SQLException {
+		return persistenceFacade;
+	}
+	
 	/**
 	 * Imposta la proiezione di una prenotazione.
 	 * 
