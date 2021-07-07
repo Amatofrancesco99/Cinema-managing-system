@@ -47,4 +47,5 @@ public interface ICinemaDao {
 	 *                      meccanismo di persistenza.
 	 */
 	public void setDiscountStrategy(int cinemaId, String discountStrategyName) throws SQLException;
+
 }

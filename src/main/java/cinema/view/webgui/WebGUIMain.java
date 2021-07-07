@@ -22,6 +22,7 @@ public class WebGUIMain {
 	/**
 	 * Avvia il server web in ascolto sulla porta specificata.
 	 *
+	 * <p>
 	 * Le richieste HTTP dei client sono gestite attraverso l'istanza della servlet
 	 * {@code WebGUIServlet} creata al momento dell'avvio del server web.
 	 *

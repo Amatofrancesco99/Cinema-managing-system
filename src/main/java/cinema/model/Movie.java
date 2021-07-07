@@ -3,7 +3,7 @@ package cinema.model;
 import java.util.ArrayList;
 
 /**
- * Comprende tutti gli attributi che compongono un film.
+ * Film (con relativi attributi dettagliati) che sarà proiettato al cinema.
  * 
  * @author Screaming Hairy Armadillo Team
  *

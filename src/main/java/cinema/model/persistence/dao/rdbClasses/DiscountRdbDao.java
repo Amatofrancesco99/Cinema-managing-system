@@ -20,6 +20,7 @@ import cinema.model.reservation.discount.types.DiscountNumberSpectators;
  *
  */
 public class DiscountRdbDao implements IDiscountDao {
+
 	/**
 	 * Connessione al database.
 	 */

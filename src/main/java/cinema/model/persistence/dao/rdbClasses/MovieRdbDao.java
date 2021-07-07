@@ -18,6 +18,7 @@ import cinema.model.persistence.dao.interfaces.IMovieDao;
  *
  */
 public class MovieRdbDao implements IMovieDao {
+
 	/**
 	 * Connessione al database.
 	 */

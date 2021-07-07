@@ -38,4 +38,5 @@ public interface IRoomDao {
 	 *                       meccanismo di eprsistenza non sono valide.
 	 */
 	public ArrayList<Room> getAllRooms() throws SQLException, RoomException;
+
 }

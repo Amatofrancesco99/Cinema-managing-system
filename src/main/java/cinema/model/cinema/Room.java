@@ -26,6 +26,7 @@ public class Room {
 	/**
 	 * Costruttore della sala.
 	 *
+	 * <p>
 	 * {@code rows} e {@code cols} partono da zero (il primo posto vicino allo
 	 * schermo a sinistra dall'alto ha coordinate (0, 0)).
 	 * 

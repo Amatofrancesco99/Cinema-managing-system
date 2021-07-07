@@ -38,6 +38,7 @@ import cinema.model.reservation.discount.types.DiscountNumberSpectators;
  * Contiene i metodi necessari per interfacciare l'applicazione con un
  * meccanismo di persistenza dei dati.
  * 
+ * <p>
  * La classe implementa tutti i metodi per implementare la persistenza dei dati
  * interfacciando l'applicazione col meccanismo di persistenza dei dati.
  * 
@@ -185,7 +186,8 @@ public class PersistenceFacade {
 	 *         la proiezione non è presente.
 	 * @throws PersistenceException se la richiesta al meccanismo di persistenza dei
 	 *                              dati fallisce.
-	 * @throws RoomException        se non esiste la sala associata a quella proiezione
+	 * @throws RoomException        se non esiste la sala associata a quella
+	 *                              proiezione
 	 */
 	public Projection getProjection(int projectionId) throws PersistenceException, RoomException {
 		try {
@@ -433,6 +435,7 @@ public class PersistenceFacade {
 	 * Rende persistente una nuova prenotazione di cui si sa quindi solo
 	 * l'identificativo.
 	 * 
+	 * <p>
 	 * Il metodo rende persistente solamente l'identificativo della prenotazione.
 	 * Eventuali altri dati riguardanti la prenotazione non vengono presi in
 	 * considerazione e quindi non vangono resi consistenti.
@@ -452,6 +455,7 @@ public class PersistenceFacade {
 	/**
 	 * Rende persistenti le informazioni riguardanti una prenotazione.
 	 * 
+	 * <p>
 	 * La prenotazione a cui si fa riferimento deve essere stata inserita nel
 	 * meccanismo di persistenza precedentemente col metodo
 	 * {@code putEmptyReservation(Reservation newReservation)}. Questo è neccessario
@@ -543,4 +547,5 @@ public class PersistenceFacade {
 			throw new PersistenceException("La richiesta al database non è andata a buon fine");
 		}
 	}
+
 }

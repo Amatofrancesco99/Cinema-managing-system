@@ -46,4 +46,5 @@ public interface ICouponDao {
 	 *                      meccanismo di persistenza.
 	 */
 	public void setCouponUsed(String promoCode) throws SQLException;
+
 }

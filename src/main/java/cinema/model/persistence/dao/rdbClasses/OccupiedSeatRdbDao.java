@@ -21,6 +21,7 @@ import cinema.model.reservation.Reservation;
  *
  */
 public class OccupiedSeatRdbDao implements IOccupiedSeatDao {
+
 	/**
 	 * Connessione al database.
 	 */
@@ -99,4 +100,5 @@ public class OccupiedSeatRdbDao implements IOccupiedSeatDao {
 			pstatement.executeUpdate();
 		}
 	}
+
 }

@@ -5,6 +5,7 @@ import cinema.model.cinema.PhysicalSeat;
 /**
  * Posto di proiezione associato ad uno specifico posto fisico di una sala.
  *
+ * <p>
  * A differenza di un posto fisico, un posto di proiezione tiene conto dello
  * stato del posto fisico per una determinata proiezione (in particolare modella
  * la disponibilità del posto fisico nel contesto della proiezione).

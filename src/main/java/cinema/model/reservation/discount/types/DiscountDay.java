@@ -36,6 +36,7 @@ public class DiscountDay extends Discount {
 	 * Restituisce il costo totale scontato della prenotazione dopo l'applicazione
 	 * dello sconto definito dalla strategia corrente.
 	 *
+	 * <p>
 	 * Se la data della proiezione coincide con una data per la quale è stato
 	 * preimpostato uno sconto esso viene applicato al costo totale della
 	 * prenotazione.

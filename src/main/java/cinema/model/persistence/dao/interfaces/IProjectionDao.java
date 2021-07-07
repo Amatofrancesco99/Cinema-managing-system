@@ -82,4 +82,5 @@ public interface IProjectionDao {
 	 *                      meccanismo di persistenza.
 	 */
 	public void putProjection(Projection newProjection) throws SQLException;
+
 }

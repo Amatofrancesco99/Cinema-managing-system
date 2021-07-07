@@ -55,6 +55,7 @@ public class WebGUIServlet extends HttpServlet {
 	/**
 	 * Inoltra le richieste GET a {@code handleRequest()}.
 	 *
+	 * <p>
 	 * Ogni richiesta viene inviata a {@code handleRequest()} che restituisce la
 	 * pagina voluta indipendentemente dal metodo HTTP utilizzato per richiederla
 	 * (permettendo sia richieste GET che POST in modo da poter testare comodamente
@@ -70,6 +71,7 @@ public class WebGUIServlet extends HttpServlet {
 	/**
 	 * Inoltra le richieste POST a {@code handleRequest()}.
 	 *
+	 * <p>
 	 * Ogni richiesta viene inviata a {@code handleRequest()} che restituisce la
 	 * pagina voluta indipendentemente dal metodo HTTP utilizzato per richiederla
 	 * (permettendo sia richieste GET che POST in modo da poter testare comodamente
@@ -85,6 +87,7 @@ public class WebGUIServlet extends HttpServlet {
 	/**
 	 * Gestisce le richiete provenienti dai client degli spettatori.
 	 *
+	 * <p>
 	 * Ogni richiesta viene smistata in base al percorso dell'URL e viene inoltrata
 	 * al metodo specifico per quella data pagina.
 	 *
@@ -127,11 +130,13 @@ public class WebGUIServlet extends HttpServlet {
 	/**
 	 * Gestisce le richieste corrispondenti alla pagina di checkout (/checkout).
 	 *
+	 * <p>
 	 * Viene creata una nuova prenotazione (vuota) per la proiezione con id
 	 * {@code id} e mostrata la pagina di checkout che permette di selezionare i
 	 * posti desiderati all'interno della sala e di concludere l'acquisto
 	 * successivamente.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza o
 	 * comunque in una qualsiasi fase dell'inizializzazione di una prenotazione
 	 * viene mostrato un messaggio di errore.
@@ -175,11 +180,13 @@ public class WebGUIServlet extends HttpServlet {
 	/**
 	 * Gestisce le richieste corrispondenti alla pagina principale (/).
 	 *
+	 * <p>
 	 * Se non viene specificata nessuna {@code query} corrispondente a un film, la
 	 * pagina mostra tutti i film per i quali sono presenti delle proiezioni
 	 * programmate in futuro. Altrimenti viene mostrato l'elenco dei film che
 	 * contengono nel titolo la stringa {@code query}.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * mostrato un messaggio di errore.
 	 *
@@ -210,10 +217,12 @@ public class WebGUIServlet extends HttpServlet {
 	 * Gestisce le richieste corrispondenti alla pagina che mostra i dettagli di un
 	 * determinato film (/movie-details).
 	 *
+	 * <p>
 	 * Se non viene specificato nessun {@code id} di un film viene mostrato un
 	 * messaggio di errore, altrimenti la pagina mostra i dettagli del film e le
 	 * relative proiezioni in ordine cronologico, raggruppate per data.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * mostrato un messaggio di errore.
 	 *
@@ -261,15 +270,18 @@ public class WebGUIServlet extends HttpServlet {
 	 * Gestisce le richieste corrispondenti all'aggiornamento dello stato dei posti
 	 * per una determinata proiezione (/update-seat-status).
 	 *
+	 * <p>
 	 * La richiesta deve contenere nel parametro {@code seat-id} una stringa nel
 	 * formato seat-0-1 (posto 1 della fila 0) e un parametro {@code seat-status}
 	 * che può assumere i valori {@code selezionato} o {@code disponibile}. Il posto
 	 * verrà aggiornato per la prenotazione corrente (con id {@code reservation-id})
 	 * a seconda del valore del parametro di stato.
 	 *
+	 * <p>
 	 * Se i valori dei parametri non sono validi viene inviato un messaggio di
 	 * errore.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * inviato un messaggio di errore.
 	 *
@@ -313,13 +325,16 @@ public class WebGUIServlet extends HttpServlet {
 	 * Gestisce le richieste corrispondenti all'aggiornamento del carrello di una
 	 * prenotazione (/get-checkout-info).
 	 *
+	 * <p>
 	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
 	 * prenotazione. La risposta contiene al suo interno i valori richiesti per
 	 * aggiornare lo stato del carrello mostrato allo spettatore (si veda il
 	 * corrispondente script JavaScript per maggiori informazioni).
 	 *
+	 * <p>
 	 * Se il valore del parametro non è valido viene inviato un messaggio di errore.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * inviato un messaggio di errore.
 	 *
@@ -364,14 +379,17 @@ public class WebGUIServlet extends HttpServlet {
 	 * Gestisce le richieste corrispondenti all'aggiornamento dello stato dei
 	 * parametri relativi allo sconto di tipo {@code AGE} (/set-age-discount).
 	 *
+	 * <p>
 	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
 	 * prenotazione. I parametri {@code age-under} e {@code age-over} sono usati per
 	 * impostare il numero di persone sotto l'età minima e sopra l'età massima per
 	 * avere lo sconto di tipo {@code AGE}.
 	 *
+	 * <p>
 	 * Se i valori dei parametri non sono validi viene inviato un messaggio di
 	 * errore.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * inviato un messaggio di errore.
 	 *
@@ -404,14 +422,17 @@ public class WebGUIServlet extends HttpServlet {
 	 * Gestisce le richieste corrispondenti all'inserimento di un codice coupon per
 	 * la prenotazione corrente (/apply-coupon).
 	 *
+	 * <p>
 	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
 	 * prenotazione. Il parametro {@code coupon-code} è usato per inserire un coupon
 	 * nella prenotazione corrente e ottenerne il relativo sconto sull'importo
 	 * totale.
 	 *
+	 * <p>
 	 * Se i valori dei parametri non sono validi (es. il coupon non esiste o è già
 	 * stato utilizzato) viene inviato un messaggio di errore.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * inviato un messaggio di errore.
 	 *
@@ -442,15 +463,18 @@ public class WebGUIServlet extends HttpServlet {
 	 * della prenotazione, pagamento e invio dell'e-mail allo spettatore contenente
 	 * la ricevuta di avvenuta prenotazione (/buy).
 	 *
+	 * <p>
 	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
 	 * prenotazione. Vengono impostati i vari campi necessari al corretto
 	 * completamento di una prenotazione in corso (si veda il corrispondente script
 	 * JavaScript per maggiori informazioni); viene poi avviato il processo di
 	 * pagamento e l'invio (asincrono) dell'e-mail.
 	 *
+	 * <p>
 	 * Se i valori dei parametri non sono validi o si riscontra un errore nel
 	 * processo di pagamento viene inviato un messaggio di errore.
 	 *
+	 * <p>
 	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
 	 * inviato un messaggio di errore.
 	 *

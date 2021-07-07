@@ -15,6 +15,7 @@ import org.rythmengine.Rythm;
  * Apre la porta TCP sulla quale rimane in ascolto in attesa di rischieste da
  * parte dei client degli spettatori.
  *
+ * <p>
  * Una volta aperta una connessione la richiesta viene gestita da un'istanza di
  * {@code WebGUIServlet}, tramite una servlet Jetty, sfruttando il motore di
  * rendering Rhythm per la generazione dinamica delle pagine web da mostrare
@@ -50,6 +51,7 @@ public class WebGUIServer {
 	/**
 	 * Inizializza il server web e lo avvia in attesa di connessioni.
 	 *
+	 * <p>
 	 * Viene configurato il motore di rendering delle pagine web e successivamente
 	 * creato inizializzato l'oggetto {@code Server} e avviato quest'ultimo.
 	 *
@@ -69,6 +71,7 @@ public class WebGUIServer {
 	/**
 	 * Imposta il gestore dei file statici utilizzati dalle pagine web della GUI.
 	 *
+	 * <p>
 	 * I file statici (immagini e script JavaScript di frontend) si trovano
 	 * all'interno della cartella {@code src/main/resources/static}.
 	 *
@@ -86,6 +89,7 @@ public class WebGUIServer {
 	 * Inizializza il motore di rendering dei template (Rhythm) delle pagine web
 	 * gestite dal server.
 	 *
+	 * <p>
 	 * I template si trovano all'interno della cartella
 	 * {@code src/main/resources/templates}
 	 */

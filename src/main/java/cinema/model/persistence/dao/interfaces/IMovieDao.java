@@ -30,4 +30,5 @@ public interface IMovieDao {
 	 *                      meccanismo di persistenza.
 	 */
 	public ArrayList<Movie> getAllMovies() throws SQLException;
+
 }

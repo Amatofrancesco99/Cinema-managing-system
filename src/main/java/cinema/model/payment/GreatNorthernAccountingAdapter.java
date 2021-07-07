@@ -8,6 +8,7 @@ import cinema.model.payment.methods.paymentCard.PaymentCard;
  * Adattatore specifico per l'API (fittizia) di un ipotetico servizio di
  * pagamento del gestore Great Northern Accounting.
  *
+ * <p>
  * In un contesto reale questo adattatore dovrebbe esporre al dominio attraverso
  * un'interfaccia comune le funzionalità dell'API remota; in questo contesto
  * invece il metodo di pagamento simula il comportamento reale ma non esegue
@@ -27,6 +28,7 @@ public class GreatNorthernAccountingAdapter implements IPaymentAdapter {
 	/**
 	 * Probabilità di successo della transazione di pagamento.
 	 *
+	 * <p>
 	 * Poiché l'adattatore simula il comportamento reale di un'API di pagamento,
 	 * questa costante imposta la percentuale di successo (0.0 = 0%, 1.0 = 100%) di
 	 * ogni chiamata al metodo che effettua il pagamento.

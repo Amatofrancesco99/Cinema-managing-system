@@ -18,6 +18,7 @@ import cinema.model.reservation.discount.coupon.util.CouponException;
  *
  */
 public class CouponRdbDao implements ICouponDao {
+
 	/**
 	 * Connessione al database.
 	 */

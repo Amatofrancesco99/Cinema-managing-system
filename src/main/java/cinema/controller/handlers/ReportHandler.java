@@ -247,7 +247,6 @@ public class ReportHandler {
 	/**
 	 * Genera un paragrafo contenente il titolo del film.
 	 * 
-	 * 
 	 * @param allFonts    HashMap che contiene tutti i font utili.
 	 * @param reservation prenotazione di cui si vuole creare il report.
 	 * @return il paragrafo che contiene il titolo del film associato alla

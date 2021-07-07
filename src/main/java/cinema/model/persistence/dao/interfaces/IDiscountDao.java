@@ -49,4 +49,5 @@ public interface IDiscountDao {
 	 *                      meccanismo di persistenza.
 	 */
 	public DiscountNumberSpectators getGroupDiscounts() throws SQLException;
+
 }

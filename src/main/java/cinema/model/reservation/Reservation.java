@@ -25,6 +25,7 @@ import cinema.model.reservation.util.ReservationException;
  * Rappresenta la prenotazione effettuata dallo spettatore una volta selezionato
  * il film desiderato e una relativa proiezione.
  * 
+ * <p>
  * Gestisce la prenotazione e tutte le sue informazioni, genera un file PDF
  * contenente tutte le informazioni della prenotazione stessa (sala, film, posti
  * riservati...) e lo invia come allegato tramite e-mail da parte del cinema al
@@ -216,6 +217,7 @@ public class Reservation {
 	/**
 	 * Consente il pagamento della prenotazione, una volta compilata.
 	 *
+	 * <p>
 	 * All'inizio della procedura i posti vengono segnati come occupati per la
 	 * proiezione corrente. Una volta avviato il processo effettivo di pagamento, se
 	 * questo non va a buon fine viene reimpostato lo stato precedente dei posti in
@@ -250,6 +252,7 @@ public class Reservation {
 	 * Permette di occupare effettivamente i posti selezionati e di gestire le
 	 * situazioni di concorrenza tra prenotazioni simultanee.
 	 *
+	 * <p>
 	 * Viene effettuata la prenotazione effettiva dei posti aggiunti alla
 	 * prenotazione in modo tale che essi risultino occupati per altri spettatori
 	 * concorrenti o futuri. Se un posto non può essere riservato al momento della

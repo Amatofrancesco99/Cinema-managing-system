@@ -10,6 +10,7 @@ import cinema.model.reservation.Reservation;
  * Contiene i metodi necessari per mantenere la persistenza dei dati riguardanti
  * le prenotazioni gestite dal sistema.
  * 
+ * <p>
  * Per mantenere la coerenza dei dati persistenti è necessario che in ogni
  * momento ogni reservation abbia un proprio identificativo univoco. Questa
  * classe mette a disposizione un metodo per ottenere l'identificativo
@@ -24,6 +25,7 @@ public interface IReservationDao {
 	 * Rende persistente una nuova prenotazione memorizzando l'identificativo che è
 	 * reso consistente rispetto a altre possibili prenotazioni.
 	 *
+	 * <p>
 	 * Indipendentemente dal valore degli altri attributi della prenotazione, viene
 	 * reso persistente solo l'identificativo. Questo è necessario perchè questo
 	 * metodo è chiamato prima che gli altri dati vengano specificati.
@@ -69,4 +71,5 @@ public interface IReservationDao {
 	 *                      meccanismo di persistenza.
 	 */
 	public void deleteReservation(long reservationId) throws SQLException;
+
 }

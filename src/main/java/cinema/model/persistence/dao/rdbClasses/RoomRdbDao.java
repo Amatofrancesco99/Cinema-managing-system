@@ -18,6 +18,7 @@ import cinema.model.persistence.dao.interfaces.IRoomDao;
  *
  */
 public class RoomRdbDao implements IRoomDao {
+
 	/**
 	 * Connessione al database.
 	 */
@@ -46,7 +47,7 @@ public class RoomRdbDao implements IRoomDao {
 		Room room = new Room(id, result.getInt("rows"), result.getInt("columns"));
 		return room;
 	}
-	
+
 	/**
 	 * Esegue la query per recuperare tutte le sale presenti sul database
 	 * relazionale.

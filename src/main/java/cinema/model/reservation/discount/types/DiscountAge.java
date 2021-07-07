@@ -48,6 +48,7 @@ public class DiscountAge extends Discount {
 	 * Restituisce il costo totale scontato della prenotazione dopo l'applicazione
 	 * dello sconto definito dalla strategia corrente.
 	 *
+	 * <p>
 	 * Se il numero di persone corrispondenti al prezzo scontato non è compatibile
 	 * con quello dei posti riservati nella prenotazione non viene applicato alcuno
 	 * sconto.

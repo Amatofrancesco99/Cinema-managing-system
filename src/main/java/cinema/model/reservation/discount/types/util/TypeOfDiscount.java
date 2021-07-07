@@ -7,6 +7,7 @@ package cinema.model.reservation.discount.types.util;
  * 
  */
 public enum TypeOfDiscount {
+
 	/**
 	 * Sconto basato sull'età degli spettatori che guardano il film.
 	 */

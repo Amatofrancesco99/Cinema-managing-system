@@ -19,33 +19,39 @@ import cinema.model.cinema.Room;
  *
  */
 public class Projection implements Comparable<Projection> {
+
 	/**
 	 * Codice identificativo del film.
 	 */
 	private int id;
+
 	/**
 	 * Film associato.
 	 */
 	private Movie movie;
+
 	/**
 	 * Sala in cui verrà proiettato il film.
 	 */
 	private Room room;
+
 	/**
 	 * Data e ora.
 	 */
 	private LocalDateTime dateTime;
+
 	/**
 	 * Prezzo del film per persona.
 	 */
 	private double price;
+
 	/**
 	 * Posti della sala in cui il film è proiettato.
 	 */
 	private ArrayList<ArrayList<ProjectionSeat>> seats;
 
 	/**
-	 * Costruttore della Proiezione.
+	 * Costruttore della proiezione.
 	 * 
 	 * @param id       codice identificativo del film.
 	 * @param movie    film associato.
@@ -70,10 +76,11 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * Costruttore di default.
+	 * Costruttore di default che inizializza solamente l'ArrayList di posti
+	 * (vuoto).
 	 */
 	public Projection() {
-		this.seats = new ArrayList<ArrayList<ProjectionSeat>>();
+		seats = new ArrayList<ArrayList<ProjectionSeat>>();
 	}
 
 	/**
@@ -92,6 +99,12 @@ public class Projection implements Comparable<Projection> {
 		this.movie = movie;
 	}
 
+	/**
+	 * Associa la proiezione ad una specifica sala e ne inizializza i
+	 * {@code ProjectionSeat}.
+	 *
+	 * @param room sala nella quale si svolge la proiezione.
+	 */
 	public void setRoom(Room room) {
 		this.room = room;
 		if (seats.size() != 0) {
@@ -245,6 +258,7 @@ public class Projection implements Comparable<Projection> {
 		try {
 			availableSeats = this.getNumberAvailableSeat();
 		} catch (RoomException exception) {
+			// Nessuna eccezione da gestire qui
 		}
 
 		String dayOfWeek = getDateTime().getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.ITALIAN);

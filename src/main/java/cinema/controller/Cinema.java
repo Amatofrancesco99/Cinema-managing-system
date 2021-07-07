@@ -33,8 +33,7 @@ import cinema.model.spectator.util.InvalidSpectatorInfoException;
 /**
  * Rappresenta il controllore che consente alle viste di poter eseguire
  * operazioni utili, senza dover conoscere la logica di dominio.
- * 
- * 
+ *
  * @author Screaming Hairy Armadillo Team
  * 
  */
@@ -483,15 +482,15 @@ public class Cinema {
 	}
 
 	/**
-	 * Resituisce il persistenceFacade creato nel costruttore del cinema.
-	 * @return PersistenceFacade istanza del PersistenceFacade
-	 * @throws SQLException	qualora vi siano problemi nel collegarsi al
-	 * 						database.
+	 * Resituisce il PersistenceFacade del cinema corrente.
+	 *
+	 * @return PersistenceFacade istanza del PersistenceFacade.
+	 * @throws SQLException qualora vi siano problemi nel collegarsi al database.
 	 */
 	public PersistenceFacade getPersistenceFacade() throws SQLException {
 		return persistenceFacade;
 	}
-	
+
 	/**
 	 * Imposta la proiezione di una prenotazione.
 	 * 
@@ -765,18 +764,6 @@ public class Cinema {
 		return emailHandler.sendEmail(getReservation(reservationId));
 	}
 
-	public String getName() {
-		return cinemaInfo.get("name");
-	}
-
-	public String getEmail() {
-		return cinemaInfo.get("email");
-	}
-	
-	public String getLogoURL() {
-		return cinemaInfo.get("logoURL");
-	}
-
 	/**
 	 * Imposta la strategia di sconto applicata dal cinema.
 	 * 
@@ -860,10 +847,6 @@ public class Cinema {
 					"Non è stato trovato nessuno sconto che applica la strategia " + typeOfDiscount);
 		else
 			return discount;
-	}
-
-	public String getAdminPassword() {
-		return cinemaInfo.get("adminPassword");
 	}
 
 	/**
@@ -1013,6 +996,22 @@ public class Cinema {
 			}
 		}
 		throw new ProjectionException("La proiezione con id " + projectionId + " non esiste.");
+	}
+
+	public String getName() {
+		return cinemaInfo.get("name");
+	}
+
+	public String getEmail() {
+		return cinemaInfo.get("email");
+	}
+
+	public String getLogoURL() {
+		return cinemaInfo.get("logoURL");
+	}
+
+	public String getAdminPassword() {
+		return cinemaInfo.get("adminPassword");
 	}
 
 }

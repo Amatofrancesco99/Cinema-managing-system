@@ -6,6 +6,7 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscount;
 /**
  * Strategia generica di sconto da applicare al costo totale delle prenotazioni.
  *
+ * <p>
  * Questa classe rappresenta una strategia generica dotata di id univoco e di un
  * determinato tipo, senza specificare la reale implementazione della strategia.
  *

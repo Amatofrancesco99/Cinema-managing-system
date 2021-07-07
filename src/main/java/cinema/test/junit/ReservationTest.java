@@ -30,6 +30,7 @@ import cinema.model.reservation.util.ReservationException;
 /**
  * Effettua il test di unità (tramite JUnit) sulla classe Reservation.
  *
+ * <p>
  * Se necessario, reimpostare il database
  * ({@code git restore persistence/cinemaDb.db}) prima di avviare il test.
  * 
@@ -123,6 +124,7 @@ public class ReservationTest {
 			error = 1;
 		}
 		assertEquals(1, error);
+
 		// Viene liberato il posto usato per il test tornando poi alla situazione
 		// iniziale
 		try {
@@ -159,6 +161,7 @@ public class ReservationTest {
 				| PaymentErrorException | PersistenceException | InvalidSpectatorInfoException e) {
 			System.out.println(e.getMessage());
 		}
+
 		// Viene tentato di riutilizzare lo stesso coupon in due prenotazioni diverse
 		try {
 			Reservation newReservation = cinema.getReservation(cinema.createReservation());
@@ -182,6 +185,7 @@ public class ReservationTest {
 	@Test
 	public void testPrices() throws DiscountNotFoundException, PersistenceException {
 		assertEquals(projections.get(0).getPrice() * 2, r.getFullPrice(), 1);
+
 		// Viene usato lo sconto per età
 		try {
 			r.setNumberPeopleUnderMinAge(1);

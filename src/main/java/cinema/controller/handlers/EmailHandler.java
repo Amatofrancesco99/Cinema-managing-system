@@ -251,4 +251,5 @@ public class EmailHandler {
 		properties.put("mail.smtp.auth", "true");
 		return properties;
 	}
+
 }

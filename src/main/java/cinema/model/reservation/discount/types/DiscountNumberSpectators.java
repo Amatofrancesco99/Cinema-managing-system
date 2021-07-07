@@ -42,6 +42,7 @@ public class DiscountNumberSpectators extends Discount {
 	 * Restituisce il costo totale scontato della prenotazione dopo l'applicazione
 	 * dello sconto definito dalla strategia corrente.
 	 *
+	 * <p>
 	 * Se la prenotazione riguarda un numero di spettatori uguale o superiore al
 	 * minimo preimpostato per la strategia di sconto corrente viene applicata la
 	 * detrazione della percentuale di sconto dal costo totale della prenotazione.

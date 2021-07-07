@@ -63,6 +63,7 @@ public class CLIUserMain {
 	/**
 	 * Costruttore dell'interfaccia utente da riga di comando.
 	 * 
+	 * <p>
 	 * Viene proposto un menu numerato contenente varie scelte che lo spettatore può
 	 * selezionare per agire sui dati gestiti dall'applicazione.
 	 */
@@ -147,10 +148,12 @@ public class CLIUserMain {
 	 * Gestisce la procedura di creazione di una nuova prenotazione da parte dello
 	 * spettatore.
 	 *
+	 * <p>
 	 * Viene mostrato l'elenco dei film disponibili e viene chiesto a quale film lo
 	 * spettatore è interessato; a questo punto viene istanziata una nuova
 	 * prenotazione e vengono richiesti i relativi dati allo spettatore.
 	 *
+	 * <p>
 	 * Una volta terminata la fase di inserimento dati viene avviato il processo di
 	 * pagamento e, se quest'ultimo va a buon fine, viene generata la ricevuta di
 	 * avvenuta prenotazione e inviata allo spettatore per e-mail.
@@ -189,6 +192,7 @@ public class CLIUserMain {
 	 * Chiede allo spettatore di inserire un id valido di un film per il quale c'è
 	 * almeno una proiezione disponibile attualmente.
 	 *
+	 * <p>
 	 * Se l'id inserito non è valido esso viene chiesto nuovamente.
 	 *
 	 * @return l'id del film inserito dallo spettatore.
@@ -444,6 +448,7 @@ public class CLIUserMain {
 	 * Permette allo spettatore di inserire i il codice del coupon (se lo spettatore
 	 * ne ha uno) da applicare alla prenotazione.
 	 *
+	 * <p>
 	 * Viene controllata la validità del coupon al momento dell'inserimento e viene
 	 * richiesto un altro copuon se quello inserito non è valido o è già stato
 	 * utilizzato.
@@ -469,6 +474,7 @@ public class CLIUserMain {
 	/**
 	 * Avvia il processo di pagamento per una data prenotazione.
 	 *
+	 * <p>
 	 * Vengono effettuati al massimo {@code MAX_PAYMENT_ATTEMPTS} tentativi di
 	 * pagamento (in caso i pagamenti fallissero), dopo i quali la funzione termina
 	 * segnalando l'errore al chiamante attraverso il valore restituito.
@@ -531,6 +537,7 @@ public class CLIUserMain {
 	/**
 	 * Permette allo spettatore di inserire un numero intero da terminale.
 	 *
+	 * <p>
 	 * Viene effettuato un controllo per permettere solamente l'inserimento di un
 	 * numero intero (e non altri tipi di dato).
 	 *
@@ -552,6 +559,7 @@ public class CLIUserMain {
 	/**
 	 * Permette allo spettatore di effettuare una scelta binaria.
 	 *
+	 * <p>
 	 * Viene effettuato un controllo per permettere solamente l'inserimento di una
 	 * scelta binaria (S/N, A/B, ...) da parte dello spettatore.
 	 *

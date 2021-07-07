@@ -57,6 +57,7 @@ public class CLIAdminMain {
 	/**
 	 * Costruttore dell'interfaccia utente da riga di comando.
 	 * 
+	 * <p>
 	 * Viene proposto un menu numerato contenente varie scelte che l'amministratore
 	 * può selezionare per agire sui dati gestiti dall'applicazione.
 	 */
@@ -117,6 +118,7 @@ public class CLIAdminMain {
 	/**
 	 * Permette all'amministratore di autenticarsi attraverso la passowrd.
 	 * 
+	 * <p>
 	 * Se viene raggiunto il numero massimo ti tentativi di login falliti
 	 * l'applicazione viene chiusa.
 	 */
@@ -157,6 +159,7 @@ public class CLIAdminMain {
 	/**
 	 * Permette all'amministratore di cambiare la passowrd di login.
 	 *
+	 * <p>
 	 * Se la password non rispetta i requisiti minimi di lunghezza essa viene
 	 * richiesta.
 	 */
@@ -178,6 +181,7 @@ public class CLIAdminMain {
 	 * Permette all'amministratore di cambiare la strategia di discount applicata
 	 * alle prenotazioni future tra quelle disponibili.
 	 * 
+	 * <p>
 	 * Se viene inserita una strategia inesistente viene chiesto di effettuare una
 	 * nuova selezione della scelta.
 	 */
@@ -342,7 +346,7 @@ public class CLIAdminMain {
 				int minute = Integer.parseInt(tokens2[1]);
 				projectionDateTime = LocalDateTime.of(year, month, dayOfMonth, hour, minute);
 			} catch (Exception exception) {
-				// Nessuna eccezione da gestire
+				// Nessuna eccezione da gestire qui
 			}
 			try {
 				if (projectionDateTime != null) {
@@ -426,6 +430,7 @@ public class CLIAdminMain {
 	/**
 	 * Permette all'amministratore di inserire un numero intero da terminale.
 	 *
+	 * <p>
 	 * Viene effettuato un controllo per permettere solamente l'inserimento di un
 	 * numero intero (e non altri tipi di dato).
 	 *
@@ -447,6 +452,7 @@ public class CLIAdminMain {
 	/**
 	 * Permette all'amministratore di effettuare una scelta binaria.
 	 *
+	 * <p>
 	 * Viene effettuato un controllo per permettere solamente l'inserimento di una
 	 * scelta binaria (S/N, A/B, ...) da parte dell'amministratore.
 	 *

@@ -8,6 +8,7 @@ import cinema.model.reservation.discount.types.util.TypeOfDiscount;
  * l'applicazione di uno sconto sul costo totale di una determinata
  * prenotazione.
  *
+ * <p>
  * Ogni strategia di sconto possiede un id univoco.
  *
  * @author Screaming Hairy Armadillo Team

@@ -23,6 +23,7 @@ import cinema.model.projection.Projection;
  *
  */
 public class ProjectionRdbDao implements IProjectionDao {
+
 	/**
 	 * Connessione al database.
 	 */
@@ -41,6 +42,7 @@ public class ProjectionRdbDao implements IProjectionDao {
 	/**
 	 * Esegue la query sul database relazionale per recuperare le informazioni sulla
 	 * proiezione identificata da {@code id}.
+	 * 
 	 * @throws RoomException se non esiste la sala associata a quella proiezione
 	 */
 	@Override
@@ -61,10 +63,12 @@ public class ProjectionRdbDao implements IProjectionDao {
 	/**
 	 * Esegue la query sul database relazionale per recuperare le informazioni sulle
 	 * proiezioni riguardanti un determinato film identificato da {@code movieId}.
-	 * @throws RoomException  se non esiste la sala in cui il film è proiettato
+	 * 
+	 * @throws RoomException se non esiste la sala in cui il film è proiettato
 	 */
 	@Override
-	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException, RoomException {
+	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId)
+			throws SQLException, PersistenceException, RoomException {
 		String sql = "SELECT * FROM Projection WHERE movie = ?;";
 		PreparedStatement pstatement = connection.prepareStatement(sql);
 		pstatement.setInt(1, movieId);
@@ -139,4 +143,5 @@ public class ProjectionRdbDao implements IProjectionDao {
 		pstatement.setInt(5, newProjection.getRoom().getNumber());
 		pstatement.executeUpdate();
 	}
+
 }
