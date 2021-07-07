@@ -11,8 +11,8 @@
 ***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
 [Presentazione](https://docs.google.com/presentation/d/1DnBT-Xm7wlHo8Mx5TOKYY6t92_84Xn-ywwDrSrER7wE/edit?usp=sharing)
 
-<!-- #![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png) -->
-#![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/mockup.png)
+<!-- ![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png) -->
+![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/mockup.png)
 
 ***
 
