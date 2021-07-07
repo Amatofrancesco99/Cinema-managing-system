@@ -241,28 +241,6 @@ public class Cinema {
 	}
 
 	/**
-	 * Restituisce le proiezioni di un cinema, inerenti uno specifico film.
-	 * 
-	 * @param movieId codice identificativo del film.
-	 * @return la lista di proiezioni inerenti al film inserito.
-	 * @throws NoMovieException     qualora non si trovi nessun film, dato l'id.
-	 * @throws PersistenceException qualora vi siano errori riscontrati durante
-	 *                              l'uso di meccanismi di persistenza.
-	 */
-	public List<Projection> getProjections(int movieId) throws NoMovieException, PersistenceException {
-		List<Projection> movieProjections = new ArrayList<Projection>();
-		Movie m = getMovie(movieId);
-		if (m != null) {
-			for (Projection p : getProjections()) {
-				if (p.getMovie().getId() == movieId) {
-					movieProjections.add(p);
-				}
-			}
-		}
-		return movieProjections;
-	}
-
-	/**
 	 * Restituisce gli id delle proiezioni, inerenti ad uno specifico film.
 	 * 
 	 * @param movieId codice identificativo del film.
@@ -882,14 +860,6 @@ public class Cinema {
 					"Non è stato trovato nessuno sconto che applica la strategia " + typeOfDiscount);
 		else
 			return discount;
-	}
-
-	/**
-	 * 0 References da eliminare.
-	 */
-	public String getDiscountStrategyDescription(TypeOfDiscount t)
-			throws DiscountNotFoundException, PersistenceException {
-		return getDiscountByStrategy(t).toString();
 	}
 
 	public String getAdminPassword() {
