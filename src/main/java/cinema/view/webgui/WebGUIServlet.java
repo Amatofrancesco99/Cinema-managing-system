@@ -138,10 +138,11 @@ public class WebGUIServlet extends HttpServlet {
 	 *
 	 * @param req  parametri della richiesta.
 	 * @param resp risposta del server alla richiesta.
-	 * @throws ServletException se si verificano errori durante la gestione della
-	 *                          richiesta.
-	 * @throws IOException      se non risulta possibile scrivere nel buffer di
-	 *                          risposta alla richiesta.
+	 * @throws ServletException    se si verificano errori durante la gestione della
+	 *                             richiesta.
+	 * @throws IOException         se non risulta possibile scrivere nel buffer di
+	 *                             risposta alla richiesta.
+	 * @throws ProjectionException se la proiezione con id {@code id} non è valida.
 	 */
 	protected void renderCheckout(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, ProjectionException {
@@ -222,6 +223,7 @@ public class WebGUIServlet extends HttpServlet {
 	 *                          richiesta.
 	 * @throws IOException      se non risulta possibile scrivere nel buffer di
 	 *                          risposta alla richiesta.
+	 * @throws NoMovieException se il film con id {@code id} non è valido.
 	 */
 	protected void renderMovieDetails(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, NoMovieException {

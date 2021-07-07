@@ -75,6 +75,8 @@ public class EmailHandler {
 	 * Invia l'e-mail allo spettatore.
 	 * 
 	 * @param reservation prenotazione da inviare.
+	 * @return il Thread, già avviato, utilizzato per l'invio asincrono dell'e-mail
+	 *         allo spettatore.
 	 * @throws HandlerException se ci fosse un problema nella spedizione del report
 	 *                          o nella sua generazione.
 	 */

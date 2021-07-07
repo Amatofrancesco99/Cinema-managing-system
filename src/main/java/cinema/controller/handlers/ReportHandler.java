@@ -70,7 +70,13 @@ public class ReportHandler {
 		this.logoURL = logoURL;
 	}
 
-	/** METODO per la creazione del report */
+	/**
+	 * Crea la ricevuta contenente i dati della prenotazione.
+	 *
+	 * @param reservation prenotazione della quale si vuole generare la ricevuta.
+	 * @throws HandlerException se vengono riscontrati errori nella creazione della
+	 *                          ricevuta di prenotazione.
+	 */
 	public void createReport(Reservation reservation) throws HandlerException {
 		// Posizione in cui il report sarà salvato
 		String FILE = "./savedReports/Reservation_" + Long.toString(reservation.getProgressive()) + ".pdf";
@@ -143,7 +149,7 @@ public class ReportHandler {
 	}
 
 	/**
-	 * Generare un paragrafo contenente il totale della prenotazione.
+	 * Genera un paragrafo contenente il totale della prenotazione.
 	 * 
 	 * @param allFonts    HashMap che contiene tutti i font utili.
 	 * @param reservation prenotazione di cui si vuole creare il report.
@@ -159,7 +165,7 @@ public class ReportHandler {
 	}
 
 	/**
-	 * Aggiungere alla tabella i posti selezionati nella prenotazione.
+	 * Aggiunge alla tabella i posti selezionati nella prenotazione.
 	 * 
 	 * @param table       tabella che conterrà i posti associati alla prenotazione.
 	 * @param reservation prenotazione di cui si vuole creare il report.
@@ -300,7 +306,7 @@ public class ReportHandler {
 	}
 
 	/**
-	 * Aggiugne i metadati al documento.
+	 * Aggiunge i metadati al documento.
 	 * 
 	 * @param document    documento che formalmente rappresenta il nostro report.
 	 * @param reservation prenotazione di cui si vuole creare il report.
@@ -352,4 +358,5 @@ public class ReportHandler {
 		allFonts.put("smallFont", smallFont);
 		return allFonts;
 	}
+
 }

@@ -73,6 +73,9 @@ public class ReservationTest {
 
 	/**
 	 * Test sull'assegnazione del progressivo di una prenotazione.
+	 *
+	 * @throws ReservationException se vengono riscontrati errori nella gestione
+	 *                              della prenotazione.
 	 */
 	@Test
 	public void testProgressiveAssignment() throws ReservationException {

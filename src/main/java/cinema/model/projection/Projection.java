@@ -107,11 +107,11 @@ public class Projection implements Comparable<Projection> {
 	}
 
 	/**
-	 * Aggiunge la data della proiezione.
+	 * Imposta la data della proiezione.
 	 * 
-	 * @param dateTime data e ora.
-	 * @throws InvalidProjectionDateTimeException qualora la data della proiezione
-	 *                                            inserita sia già passata.
+	 * @param dateTime data e ora della proiezione.
+	 * @throws ProjectionException se la data della proiezione inserita è già
+	 *                             passata.
 	 */
 	public void setDateTime(LocalDateTime dateTime) throws ProjectionException {
 		if (dateTime.isBefore(LocalDateTime.now()))

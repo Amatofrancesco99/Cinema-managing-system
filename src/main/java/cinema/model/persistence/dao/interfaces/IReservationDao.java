@@ -38,7 +38,7 @@ public interface IReservationDao {
 	 * Rende persistente i dati della prenotazione quando il pagamento di questa è
 	 * andato a buon fine.
 	 * 
-	 * @param reservation
+	 * @param reservation prenotazione da rendere persistente.
 	 * @throws SQLException         se vengono riscontrati errori nell'interazione
 	 *                              con il meccanismo di persistenza.
 	 * @throws PersistenceException se i dati riguardanti il film o la proiezione

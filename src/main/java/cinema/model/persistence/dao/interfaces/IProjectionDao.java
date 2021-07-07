@@ -29,7 +29,8 @@ public interface IProjectionDao {
 	 * @throws PersistenceException se il film o la stanza dove era programmata la
 	 *                              proiezione non sono più presenti nel meccanismo
 	 *                              di persistenza dei dati.
-	 * @throws RoomException        se non esiste la sala associata a quella proiezione
+	 * @throws RoomException        se non esiste la sala associata a quella
+	 *                              proiezione
 	 */
 	public Projection getProjection(int id) throws SQLException, PersistenceException, RoomException;
 
@@ -39,14 +40,16 @@ public interface IProjectionDao {
 	 * 
 	 * @param movieId identificativo del film di cui si vogliono ottenere le
 	 *                proiezioni.
-	 * @return tutte le proiezioni   del film identificato da {@code movieId}
-	 * @throws SQLException          se vengono riscontrati errori nell'interazione
-	 *                               con il meccanismo di persistenza.
-	 * @throws PersistenceException  se vi è un problema nel raggiungere il servizio offerto dal
-	 * 								 database
-	 * @throws RoomException         se non esiste la sala in cui il film è proiettato
+	 * @return tutte le proiezioni del film identificato da {@code movieId}
+	 * @throws SQLException         se vengono riscontrati errori nell'interazione
+	 *                              con il meccanismo di persistenza.
+	 * @throws PersistenceException se vi è un problema nel raggiungere il servizio
+	 *                              offerto dal database
+	 * @throws RoomException        se non esiste la sala in cui il film è
+	 *                              proiettato
 	 */
-	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId) throws SQLException, PersistenceException, RoomException;
+	public ArrayList<Projection> getAllProjectionsByMovieId(int movieId)
+			throws SQLException, PersistenceException, RoomException;
 
 	/**
 	 * Restituisce tutte le proiezioni gestite dal cinema attraverso il meccanismo
@@ -55,7 +58,8 @@ public interface IProjectionDao {
 	 * @return tutte le proiezioni gestite dal cinema.
 	 * @throws SQLException         se vengono riscontrati errori nell'interazione
 	 *                              con il meccanismo di persistenza.
-	 * @throws PersistenceException
+	 * @throws PersistenceException se vengono riscontrati errori nella gestione
+	 *                              della persistenza.
 	 */
 	public ArrayList<Projection> getAllProjections() throws SQLException, PersistenceException;
 

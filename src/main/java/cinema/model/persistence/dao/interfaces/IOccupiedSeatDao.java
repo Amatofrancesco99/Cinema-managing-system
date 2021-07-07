@@ -29,8 +29,10 @@ public interface IOccupiedSeatDao {
 	 * locali con il meccanismo di persistenza dei dati.
 	 * 
 	 * @param reservation prenotazione di cui si vuole occupare i posti.
-	 * @throws SQLException se vengono riscontrati errori nell'interazione col
-	 *                      meccanismo di persistenza.
+	 * @throws SQLException  se vengono riscontrati errori nell'interazione col
+	 *                       meccanismo di persistenza.
+	 * @throws RoomException se vengono riscontrati errori nell'identificazione dei
+	 *                       posti all'interno della sala.
 	 */
 	public void putOccupiedSeatsFromReservation(Reservation reservation) throws SQLException, RoomException;
 
