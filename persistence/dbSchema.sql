@@ -1,9 +1,9 @@
-# Creazione dello schema del database relazionale utilizzato nella persistenza
-# e inserimento dati (instassi standard SQLite).
-#
-# Screaming Hairy Armadillo Team
+-- Creazione dello schema del database relazionale utilizzato nella persistenza
+-- e inserimento dati (instassi standard SQLite).
+--
+-- Screaming Hairy Armadillo Team
 
-# Eliminazione tabelle eventualmente esistenti
+-- Eliminazione tabelle eventualmente esistenti
 
 DROP TABLE IF EXISTS Movie;
 DROP TABLE IF EXISTS Projection;
@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS Reservation;
 DROP TABLE IF EXISTS OccupiedSeat;
 DROP TABLE IF EXISTS Cinema;
 
-# Creazione tabelle
+-- Creazione tabelle
 
 CREATE TABLE Movie(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -107,7 +107,7 @@ CREATE TABLE Cinema(
 
 
 
-# Inserimento dati all'interno delle tabelle create in precedenza
+-- Inserimento dati all'interno delle tabelle create in precedenza
 
 INSERT INTO Movie (id, title, duration, rating, imageurl, trailerurl, description, genres, directors, cast)
     VALUES (1, "Druk - Un altro giro", 117, 4, "druk-un-altro-giro.jpg", "https://www.youtube.com/watch?v=hFbDh58QHzw", "C'è una teoria secondo la quale tutti noi siamo nati con una piccola quantità di alcool già presente nel sangue e che, pertanto, una piccola ebbrezza possa aprire le nostre menti al mondo che ci circonda, diminuendo la nostra percezione dei problemi e aumentando la nostra creatività. Rincuorati da questa teoria, Martin e tre suoi amici, tutti annoiati insegnanti delle superiori, intraprendono un esperimento per mantenere un livello costante di ubriachezza durante tutta la giornata lavorativa. Se Churchill vinse la seconda guerra mondiale in preda a un pesante stordimento da alcool, chissà cosa potrebbero fare pochi bicchieri per loro e per i loro studenti?", "Drammatico,Commedia", "Thomas Vinterberg", "Mads Mikkelsen,Thomas Bo Larsen,Lars Ranthe,Magnus Millang");
@@ -160,10 +160,10 @@ INSERT INTO Projection(id, datetime, price, movie, room) VALUES (31, "2021-08-03
 INSERT INTO Projection(id, datetime, price, movie, room) VALUES (32, "2021-08-04 21:45:00", 8.5, 2, 2);
 INSERT INTO Projection(id, datetime, price, movie, room) VALUES (33, "2021-08-01 16:30:00", 9.5, 3, 3);
 
-INSERT INTO Coupon (promocode, amount) VALUES ("SCONTO10", 10.0);
-INSERT INTO Coupon (promocode, amount) VALUES ("PLUTO123", 4.0);
-INSERT INTO Coupon (promocode, amount) VALUES ("PAPERINO123", 7.0);
-INSERT INTO Coupon (promocode, amount) VALUES ("SCONTO50", 50.0);
+INSERT INTO Coupon (promocode, amount) VALUES ("COUPON-NDH7AF5MY51", 10.0);
+INSERT INTO Coupon (promocode, amount) VALUES ("COUPON-ABVIEMHSIFE", 4.0);
+INSERT INTO Coupon (promocode, amount) VALUES ("COUPON-H28FGAKW9GP", 7.0);
+INSERT INTO Coupon (promocode, amount) VALUES ("COUPON-TEST", 50.0);
 
 INSERT INTO Discount (type, percentage, minage, maxage) VALUES ("AGE", 0.15, 5, 80);
 INSERT INTO Discount (type, percentage, date)           VALUES ("DAY", 0.2, "2021-08-01");
