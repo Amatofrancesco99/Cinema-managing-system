@@ -22,14 +22,13 @@ import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.reservation.util.ReservationException;
 
 /**
- * Rappresenta la prenotazione effettuata una volta selezionato il film
- * desiderato e l'orario.
+ * Rappresenta la prenotazione effettuata dallo spettatore una volta selezionato
+ * il film desiderato e una relativa proiezione.
  * 
- * Crea la prenotazione e tutte le sue informazioni, genera un file .pdf
+ * Gestisce la prenotazione e tutte le sue informazioni, genera un file PDF
  * contenente tutte le informazioni della prenotazione stessa (sala, film, posti
- * riservati, ecc...) e lo invia come allegato tramite email, da parte del
- * cinema al cliente. Infine permette di pagare tramite il metodo di pagamento
- * selezionato dall'utente.
+ * riservati...) e lo invia come allegato tramite e-mail da parte del cinema al
+ * cliente una volta terminato e convalidato il pagamento.
  * 
  * @author Screaming Hairy Armadillo Team
  *
@@ -37,57 +36,73 @@ import cinema.model.reservation.util.ReservationException;
 public class Reservation {
 
 	/**
-	 * Numero di prenotazione.
+	 * Identificativo della prenotazione.
 	 */
 	private final long progressive;
+
 	/**
 	 * Data di creazione della prenotazione.
 	 */
 	private LocalDate purchaseDate;
+
 	/**
 	 * Spettatore che sta compilando la prenotazione.
 	 */
 	private Spectator purchaser;
+
 	/**
-	 * Posti selezionati/occupati.
+	 * Posti selezionati associati alla prenotazione.
 	 */
 	private ArrayList<PhysicalSeat> seats;
+
 	/**
-	 * Proiezione che si desidera visionare.
+	 * Proiezione per la quale lo spettatore desidera prenotare dei posti.
 	 */
 	private Projection projection;
+
 	/**
-	 * Metodo di pagamento.
+	 * Carta di credito usata per il pagamento.
 	 */
 	private PaymentCard paymentCard;
+
 	/**
-	 * Area di memoria in cui salviamo il report della prenotazione.
+	 * URI che identifica il file contenente la ricevuta di prenotazione una volta
+	 * avviato il processo di acquisto.
 	 */
 	private String reportLocation;
+
 	/**
-	 * Coupon utilizzabile nella prenotazione.
+	 * Coupon utilizzato nella prenotazione (se lo spettatore ne ha a disposizione
+	 * uno).
 	 */
 	private Coupon coupon;
+
 	/**
-	 * Numero di persone la cui un'età è inferiore ad una determinata età minima.
+	 * Numero di persone la cui età è minore o uguale ad una determinata età minima
+	 * utilizzata per il calcolo dello sconto se la strategia di sconto applicata
+	 * correntemente dal cinema è {@code AGE}.
 	 */
 	private int numberPeopleUntilMinAge;
+
 	/**
-	 * Numero di persone la cui un'età è superiore ad una determinata età massima.
+	 * Numero di persone la cui età è maggiore o uguale ad una determinata età
+	 * massima utilizzata per il calcolo dello sconto se la strategia di sconto
+	 * applicata correntemente dal cinema è {@code AGE}.
 	 */
 	private int numberPeopleOverMaxAge;
+
 	/**
-	 * Strategia di sconto applicata.
+	 * Strategia di sconto applicata correntemente dal cinema.
 	 */
 	private IReservationDiscountStrategy rd;
 
 	/**
 	 * Costruttore della prenotazione.
 	 * 
-	 * @param rd strategia di sconto applicata.
-	 * @param id numero di prenotazione.
+	 * @param strategy strategia di sconto applicata correntemente dal cinema.
+	 * @param id       identificativo della prenotazione.
 	 */
-	public Reservation(IReservationDiscountStrategy rd, long id) {
+	public Reservation(IReservationDiscountStrategy strategy, long id) {
 		progressive = id;
 		purchaseDate = java.time.LocalDate.now();
 		seats = new ArrayList<PhysicalSeat>();
@@ -96,18 +111,19 @@ public class Reservation {
 		coupon = null;
 		numberPeopleUntilMinAge = 0;
 		numberPeopleOverMaxAge = 0;
-		this.rd = rd;
+		rd = strategy;
 	}
 
 	/**
-	 * Aggiunge un posto alla reservation.
+	 * Aggiunge un posto alla prenotazione.
 	 * 
-	 * @param row coordinata riga del posto.
-	 * @param col coordinata colonna del posto.
-	 * @throws SeatAvailabilityException qualora il posto scelto sia già stato
-	 *                                   selezionato,o occupato.
-	 * @throws RoomException             eccezione lanciata qualora vi siano errori
-	 *                                   legati alla gestione della sala del cinema.
+	 * @param row fila del posto da occupare.
+	 * @param col posto all'interno della fila {@code row} da occupare.
+	 * @throws SeatAvailabilityException se il posto scelto è già stato selezionato
+	 *                                   o occupato precedentemente.
+	 * @throws RoomException             se il posto selezionato non esiste
+	 *                                   all'interno della sala associata alla
+	 *                                   prenotazione.
 	 */
 	public void addSeat(int row, int col) throws SeatAvailabilityException, RoomException {
 		boolean findDuplicate = false;
@@ -129,28 +145,28 @@ public class Reservation {
 	}
 
 	/**
-	 * Rimuove un posto dalla reservation.
+	 * Rimuove un posto dalla prenotazione.
 	 * 
-	 * @param row coordinata riga del posto.
-	 * @param col coordinata colonna del posto.
-	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
-	 *                       del cinema.
+	 * @param row fila del posto da rimuovere.
+	 * @param col posto all'interno della fila {@code row} da rimuovere.
+	 * @throws RoomException se il posto selezionato non esiste all'interno della
+	 *                       sala associata alla prenotazione.
 	 */
 	public void removeSeat(int row, int col) throws RoomException {
 		seats.remove(projection.getPhysicalSeat(row, col));
 	}
 
 	/**
-	 * Restituisce il totale della reservation, a fronte di eventuali sconti
-	 * effettuati su quest'ultima.
+	 * Restituisce il costo totale della prenotazione, una volta applicato un
+	 * eventuale coupon aggiunto a quest'ultima dallo spettatore.
 	 * 
-	 * @return ammontare di denaro da pagare.
-	 * 
+	 * @return costo totale della prenotazione una volta applicati eventuali coupon.
 	 */
 	public double getTotal() {
 		double total = rd.getTotal(this);
-		// Qualora alla prenotazione sia associato un coupon esistente, si sottrae
-		// al totale dell'importo il valore del coupon stesso.
+
+		// Se alla prenotazione è associato un coupon esistente si sottrae
+		// al costo totale il valore del coupon stesso
 		if (getCoupon() != null) {
 			if (total > getCoupon().getDiscount()) {
 				total -= getCoupon().getDiscount();
@@ -161,79 +177,99 @@ public class Reservation {
 		return Math.round(total * 100.0) / 100.0;
 	}
 
+	/**
+	 * Restituisce il costo totale della prenotazione senza l'applicazione di alcuno
+	 * sconto o coupon.
+	 * 
+	 * @return il costo totale della prenotazione senza l'applicazione di alcuno
+	 *         sconto o coupon.
+	 */
 	public double getFullPrice() {
 		return Math.round(getNSeats() * this.projection.getPrice() * 100.0) / 100.0;
 	}
 
 	/**
-	 * Aggiunge un coupon dato il suo progressivo.
+	 * Aggiunge un coupon alla prenotazione dato il suo identificatore.
 	 * 
-	 * @param coupon coupon
-	 * @throws CouponException qualora il coupon inserito sia gia stato usato.
+	 * @param coupon codice del coupon da aggiungere alla prenotazione.
+	 * @throws CouponException se il coupon inserito è già stato usato.
 	 */
 	public void setCoupon(Coupon coupon) throws CouponException {
-		if (coupon == null)
-			;
-		else {
-			if (!coupon.isUsed())
+		if (coupon != null) {
+			if (!coupon.isUsed()) {
 				this.coupon = coupon;
-			else
+			} else {
 				throw new CouponException("Il coupon " + coupon.getCode() + " è già stato usato.");
+			}
 		}
 	}
 
+	/**
+	 * Returns the number of currently occupied seats for the reservation.
+	 *
+	 * @return the number of currently occupied seats for the reservation.
+	 */
 	public int getNSeats() {
 		return seats.size();
 	}
 
 	/**
-	 * Consente il pagamento della prenotazione, una volta compilata la
-	 * prenotazione.
-	 * 
-	 * @throws SeatAvailabilityException qualora il posto richiesto non sia
-	 *                                   disponibile.
-	 * @throws NumberFormatException     qualora si tenti di convertire una stringa
-	 *                                   con formato non corretto in un valore
-	 *                                   numerico.
-	 * @throws RoomException             qualora vi siano errori legati alla
-	 *                                   gestione della sala del cinema.
-	 * @throws ReservationException      qualora vi siano errori riscontrati nelle
+	 * Consente il pagamento della prenotazione, una volta compilata.
+	 *
+	 * All'inizio della procedura i posti vengono segnati come occupati per la
+	 * proiezione corrente. Una volta avviato il processo effettivo di pagamento, se
+	 * questo non va a buon fine viene reimpostato lo stato precedente dei posti in
+	 * modo da non mantenere occupati posti inseriti in prenotazioni non concluse.
+	 *
+	 * @throws SeatAvailabilityException se il posto richiesto non è disponibile.
+	 * @throws NumberFormatException     se si tanta di convertire una stringa con
+	 *                                   formato non corretto in un valore numerico.
+	 * @throws RoomException             se ci sono errori legati alla gestione
+	 *                                   della sala del cinema.
+	 * @throws ReservationException      se ci sono errori riscontrati nelle
 	 *                                   procedure di interazione con gli oggetti
 	 *                                   che rappresentano le prenotazioni.
-	 * @throws PaymentErrorException     qualora vi siano errori riscontrati nelle
-	 *                                   procedure di pagamento.
-	 * @throws PersistenceException      qualora vi siano errori riscontrati durante
-	 *                                   l'uso di meccanismi di persistenza.
+	 * @throws PaymentErrorException     se ci sono errori riscontrati nella
+	 *                                   procedura di pagamento.
+	 * @throws PersistenceException      se ci sono errori riscontrati durante l'uso
+	 *                                   dei meccanismi di persistenza.
 	 */
 	public void buy() throws SeatAvailabilityException, NumberFormatException, RoomException, ReservationException,
 			PaymentErrorException, PersistenceException {
 		takeSeat();
 		try {
 			pay();
-		} catch (ReservationException | PaymentErrorException | PersistenceException e) {
+		} catch (ReservationException | PaymentErrorException | PersistenceException exception) {
 			freeAllSeats();
 			seats.removeAll(seats);
-			throw e;
+			throw exception;
 		}
 	}
 
 	/**
-	 * Permette di occupare i posti selezionati e di gestire le situazioni di
-	 * concorrenza.
-	 * 
-	 * @throws RoomException             qualora vi siano errori legati alla
-	 *                                   gestione della sala del cinema.
-	 * @throws SeatAvailabilityException qualora il posto richiesto sia già satto
-	 *                                   occupato.
+	 * Permette di occupare effettivamente i posti selezionati e di gestire le
+	 * situazioni di concorrenza tra prenotazioni simultanee.
+	 *
+	 * Viene effettuata la prenotazione effettiva dei posti aggiunti alla
+	 * prenotazione in modo tale che essi risultino occupati per altri spettatori
+	 * concorrenti o futuri. Se un posto non può essere riservato al momento della
+	 * chiamata tutti i posti già occupati vengono liberati e viene lanciata
+	 * un'eccezione {@code SeatAvailabilityException} per notificare il chiamante
+	 * dell'errore riscontrato.
+	 *
+	 * @throws RoomException             se un posto non può essere considerato
+	 *                                   parte della sala della quale dovrebbe fare
+	 *                                   parte.
+	 * @throws SeatAvailabilityException se un posto richiesto è già stato
+	 *                                   effettivamente prenotato da un altro
+	 *                                   spettatore concorrente.
 	 */
 	public void takeSeat() throws RoomException, SeatAvailabilityException {
 		for (int i = 0; i < seats.size(); i++) {
 			String coordinates = projection.getSeatCoordinates(seats.get(i));
 			int row = Room.rowLetterToRowIndex(coordinates.replaceAll("\\d", ""));
 			int col = Integer.valueOf(coordinates.replaceAll("[\\D]", "")) - 1;
-			if (projection.takeSeat(row, col))
-				;
-			else {
+			if (!projection.takeSeat(row, col)) {
 				freeAllSeats();
 				seats.removeAll(seats);
 				throw new SeatAvailabilityException("Uno dei posti selezionati è già stato occupato.");
@@ -242,15 +278,14 @@ public class Reservation {
 	}
 
 	/**
-	 * Permette di pagare la prenotazione.
-	 * 
-	 * @throws ReservationException  qualora la prenotazione non sia associata ad
-	 *                               alcuna carta di credito, oppure non si sia
+	 * Permette di avviare la procedura di pagamento della prenotazione.
+	 *
+	 * @throws ReservationException  se la prenotazione non è associata ad alcuna
+	 *                               carta di credito, oppure non è stato
 	 *                               selezionato alcun posto.
-	 * @throws PaymentErrorException qualora il pagamento non sia andato a buon
-	 *                               fine.
-	 * @throws PersistenceException  qualora vi siano errori riscontrati durante
-	 *                               l'uso di meccanismi di persistenza.
+	 * @throws PaymentErrorException se il pagamento non è andato a buon fine.
+	 * @throws PersistenceException  se ci sono errori riscontrati durante l'uso dei
+	 *                               meccanismi di persistenza.
 	 */
 	public void pay() throws ReservationException, PaymentErrorException, PersistenceException {
 		if (getNSeats() > 0) {
@@ -267,10 +302,10 @@ public class Reservation {
 	}
 
 	/**
-	 * Libera tutti i posti.
+	 * Libera tutti i posti della prenotazione.
 	 * 
-	 * @throws RoomException qualora vi siano errori legati alla gestione della sala
-	 *                       del cinema.
+	 * @throws RoomException se un posto non può essere considerato parte della sala
+	 *                       della quale dovrebbe fare parte.
 	 */
 	public void freeAllSeats() throws RoomException {
 		for (int i = 0; i < seats.size(); i++) {
@@ -283,10 +318,11 @@ public class Reservation {
 	}
 
 	/**
-	 * Imposta il numero di persone che hanno un'età inferiore ad un età minima.
-	 * 
-	 * @param n numero di persone.
-	 * @throws DiscountException
+	 * Imposta il numero di persone che hanno un'età minore o uguale all'età minima.
+	 *
+	 * @param n numero di persone di età minore o uguale all'età minima per lo
+	 *          sconto di tipo {@code AGE}.
+	 * @throws DiscountException se il numero di persone da impostare non è valido.
 	 */
 	public void setNumberPeopleUnderMinAge(int n) throws DiscountException {
 		if (n < 0)
@@ -298,16 +334,12 @@ public class Reservation {
 	}
 
 	/**
-	 * METODO per settare il numero di persone che hanno un'età superiore ad un età
-	 * massima
-	 * 
-	 * @param n Numero di persone
-	 * @throws InvalidNumberPeopleValueException qualora il numero di persone
-	 *                                           inserito sia negativo, oppure il
-	 *                                           numero di persone sotto l'età
-	 *                                           massima supera il massimo
-	 *                                           consentito dai posti correntemente
-	 *                                           selezionati.
+	 * Imposta il numero di persone che hanno un'età maggiore o uguale all'età
+	 * massima.
+	 *
+	 * @param n numero di persone di età maggiore o uguale all'età massima per lo
+	 *          sconto di tipo {@code AGE}.
+	 * @throws DiscountException se il numero di persone da impostare non è valido.
 	 */
 	public void setNumberPeopleOverMaxAge(int n) throws DiscountException {
 		if (n < 0)
@@ -319,7 +351,7 @@ public class Reservation {
 	}
 
 	public Coupon getCoupon() {
-		return this.coupon;
+		return coupon;
 	}
 
 	public int getNumberPeopleUntilMinAge() {
@@ -363,7 +395,7 @@ public class Reservation {
 	}
 
 	public PaymentCard getPaymentCard() {
-		return this.paymentCard;
+		return paymentCard;
 	}
 
 	public void setProjection(Projection projection) {
@@ -385,4 +417,5 @@ public class Reservation {
 	public int getDiscountId() {
 		return rd.getDiscountId();
 	}
+
 }

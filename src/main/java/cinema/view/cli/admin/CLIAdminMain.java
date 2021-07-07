@@ -73,7 +73,7 @@ public class CLIAdminMain {
 		do {
 			System.out.println(SEPARATOR + "\nMenu\n");
 			System.out.println("Inserisci il numero corrispondente all'azione che vuoi effettuare:\n\n"
-					+ "1) Reimpostare la password\n2) Cambiare il tipo di discount applicato alle prenotazioni future\n"
+					+ "1) Reimpostare la password\n2) Cambiare il tipo di sconto applicato alle prenotazioni future\n"
 					+ "3) Inserire/rimuovere proiezioni\n4) Uscire dall'applicazione\n");
 			switch (inputInt("Scelta: ")) {
 			case 1:

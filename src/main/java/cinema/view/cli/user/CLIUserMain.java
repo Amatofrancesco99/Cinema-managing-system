@@ -227,6 +227,14 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Chiede allo spettatore l'id della proiezione per la quale desidera prenotare
+	 * dei posti (per il movie con id {@code movieId}).
+	 * 
+	 * @param movieId id del film associato alle proiezioni possibili tra le quali
+	 *                lo spettatore può scegliere.
+	 * @return l'id della proiezione scelta dallo spettatore.
+	 */
 	private int askProjectionId(long movieId) {
 		do {
 			int projectionId = inputInt("Inserisci il numero della proiezione da prenotare: ");
@@ -242,6 +250,13 @@ public class CLIUserMain {
 		} while (true);
 	}
 
+	/**
+	 * Mostra i posti disponibili all'interno della sala del cinema associata alla
+	 * proiezione collegata ad una specifica prenotazione.
+	 *
+	 * @param reservation id della prenotazione dalla quale ricavare la sala della
+	 *                    quale mostrare i posti.
+	 */
 	private void showProjectionSeats(long reservation) {
 		System.out.println("\nDi seguito viene mostrata la disposizione dei posti in sala.");
 		System.out.println("I posti segnati con i trattini sono già stati occupati.\n");
@@ -277,6 +292,13 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Permette allo spettatore di effettuare la selezione dei posti della sala
+	 * all'interno di una prenotazione e li aggiunge alla prenotazione stessa.
+	 *
+	 * @param reservation id della prenotazione alla quale associare i posti
+	 *                    selezionati dallo spettatore.
+	 */
 	private void addSeatsToReservation(long reservation) {
 		do {
 			boolean validSeat = false;
@@ -303,6 +325,15 @@ public class CLIUserMain {
 		} while (inputBoolean("Vuoi occupare altri posti? (S/N) ", "S", "N"));
 	}
 
+	/**
+	 * Permette allo spettatore di inserire i suoi dati personali al fine di
+	 * associarli alla prenotazione in corso, prima di effettuare l'acquisto.
+	 *
+	 * @param reservation id della prenotazione nella quale inserire i dati dello
+	 *                    spettatore che effettua l'acquisto (un singolo spettatore
+	 *                    effettua l'acquisto per ogni prenotazione, anche in caso
+	 *                    di gruppi).
+	 */
 	private void insertSpectatorData(long reservation) {
 		System.out.println();
 		do {
@@ -321,6 +352,14 @@ public class CLIUserMain {
 		} while (true);
 	}
 
+	/**
+	 * Permette allo spettatore di inserire i dati di una carta di credito da
+	 * utilizzare nella procedura di acquisto della prenotazione.
+	 *
+	 * @param reservation id della prenotazione nella quale inserire i dati della
+	 *                    carta di credito da utilizzare nella procedura di
+	 *                    acquisto.
+	 */
 	private void insertPaymentCardInfo(long reservation) {
 		System.out.println();
 		String owner = null;
@@ -361,6 +400,16 @@ public class CLIUserMain {
 		} while (!end);
 	}
 
+	/**
+	 * Permette allo spettatore di inserire i dati relativi allo sconto da applicare
+	 * alla prenotazione nel caso la tipologia di sconto correntemente applicata dal
+	 * cinema sia {@code AGE} (i dati richiesti sono il numero di persone sotto la
+	 * soglia minima di età per avere lo sconto e quello delle persone sopra la
+	 * soglia massima).
+	 *
+	 * @param reservation id della prenotazione nella quale inserire i dati relativi
+	 *                    allo sconto da applicare alla prenotazione.
+	 */
 	private void insertDiscountData(long reservation) {
 		try {
 			if (cinema.getReservationTypeOfDiscount(reservation).equals("AGE")) {
@@ -391,6 +440,17 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Permette allo spettatore di inserire i il codice del coupon (se lo spettatore
+	 * ne ha uno) da applicare alla prenotazione.
+	 *
+	 * Viene controllata la validità del coupon al momento dell'inserimento e viene
+	 * richiesto un altro copuon se quello inserito non è valido o è già stato
+	 * utilizzato.
+	 *
+	 * @param reservation id della prenotazione nella quale inserire il codice del
+	 *                    coupon da applicare alla prenotazione.
+	 */
 	private void insertCouponInfo(long reservation) {
 		System.out.println();
 		if (inputBoolean("Hai un codice coupon erogato dal nostro cinema da applicare al totale? (S/N) ", "S", "N")) {
@@ -406,6 +466,16 @@ public class CLIUserMain {
 		}
 	}
 
+	/**
+	 * Avvia il processo di pagamento per una data prenotazione.
+	 *
+	 * Vengono effettuati al massimo {@code MAX_PAYMENT_ATTEMPTS} tentativi di
+	 * pagamento (in caso i pagamenti fallissero), dopo i quali la funzione termina
+	 * segnalando l'errore al chiamante attraverso il valore restituito.
+	 *
+	 * @param reservation id della prenotazione della quale effettuare il pagamento.
+	 * @return true se l'acquisto è stato concluso con successo, false altrimenti.
+	 */
 	private boolean buy(long reservation) {
 		int attempts = 0;
 		System.out.println("\n" + SEPARATOR);
@@ -430,6 +500,14 @@ public class CLIUserMain {
 		return false;
 	}
 
+	/**
+	 * Invia allo spettatore che ha effettuato l'acquisto l'e-mail contenente la
+	 * ricevuta di avvenuta prenotazione e pagamento completato.
+	 *
+	 * @param reservation id della prenotazione della quale inviare una ricevuta
+	 *                    tramite e-mail allo spettatore che ha effettuato
+	 *                    l'acquisto.
+	 */
 	private void sendEmail(long reservation) {
 		System.out.println("\n" + SEPARATOR);
 		System.out.println("Invio prenotazione per e-mail:\n");
