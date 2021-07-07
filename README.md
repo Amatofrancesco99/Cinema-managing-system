@@ -1,16 +1,17 @@
-# Progetto-F21 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/IngSW-unipv/Progetto-F21/blob/main/LICENSE)
+# Progetto-F21
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/IngSW-unipv/Progetto-F21/blob/main/LICENSE)&emsp;
+![Java](https://img.shields.io/badge/Backend-java-red)
+![Rhythm](https://img.shields.io/badge/Templating-rhythm-green)&emsp;
+![HTML](https://img.shields.io/badge/Frontend-html%20-orange)
+![Bootstrap](https://img.shields.io/badge/Frontend-bootstrap-blueviolet)
+![JavaScript](https://img.shields.io/badge/Frontend-javascript%20-yellow)&emsp;
+![SQLite](https://img.shields.io/badge/Database-sqlite-blue)
 
 ***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
-
 [Presentazione](https://docs.google.com/presentation/d/1DnBT-Xm7wlHo8Mx5TOKYY6t92_84Xn-ywwDrSrER7wE/edit?usp=sharing)
 
 ![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png)
-
-![JAVA](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
-![HTML](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![JAVASCRIPT](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
-![BOOTSTRAP](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
 
 ***
 
