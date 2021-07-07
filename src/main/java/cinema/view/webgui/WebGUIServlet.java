@@ -31,7 +31,7 @@ import cinema.model.reservation.util.SeatAvailabilityException;
 import cinema.model.spectator.util.InvalidSpectatorInfoException;
 
 /**
- * Gestisce le richieste del client web via HTTP interfacciandosi con il
+ * Gestisce le richieste dei client web via HTTP interfacciandosi con il
  * controller.
  *
  * @author Screaming Hairy Armadillo Team
@@ -40,22 +40,63 @@ import cinema.model.spectator.util.InvalidSpectatorInfoException;
 @SuppressWarnings("serial")
 public class WebGUIServlet extends HttpServlet {
 
+	/**
+	 * Controller di dominio utilizzato come interfaccia verso il modello.
+	 */
 	private Cinema cinema;
 
+	/**
+	 * Costruttore dell'interfaccia utente web.
+	 */
 	public WebGUIServlet() {
 		this.cinema = new Cinema();
 	}
 
+	/**
+	 * Inoltra le richieste GET a {@code handleRequest()}.
+	 *
+	 * Ogni richiesta viene inviata a {@code handleRequest()} che restituisce la
+	 * pagina voluta indipendentemente dal metodo HTTP utilizzato per richiederla
+	 * (permettendo sia richieste GET che POST in modo da poter testare comodamente
+	 * l'applicazione variando i parametri della richiesta direttamente attraverso
+	 * la query string dell'URL, senza il bisogno di proxy di debug o comunque altri
+	 * software esterni ad un browser standard (es. Chrome)).
+	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		handleRequest(req, resp);
 	}
 
+	/**
+	 * Inoltra le richieste POST a {@code handleRequest()}.
+	 *
+	 * Ogni richiesta viene inviata a {@code handleRequest()} che restituisce la
+	 * pagina voluta indipendentemente dal metodo HTTP utilizzato per richiederla
+	 * (permettendo sia richieste GET che POST in modo da poter testare comodamente
+	 * l'applicazione variando i parametri della richiesta direttamente attraverso
+	 * la query string dell'URL, senza il bisogno di proxy di debug o comunque altri
+	 * software esterni ad un browser standard (es. Chrome)).
+	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		handleRequest(req, resp);
 	}
 
+	/**
+	 * Gestisce le richiete provenienti dai client degli spettatori.
+	 *
+	 * Ogni richiesta viene smistata in base al percorso dell'URL e viene inoltrata
+	 * al metodo specifico per quella data pagina.
+	 *
+	 * Se la pagina richiesta non esiste viene mostrato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
@@ -83,6 +124,25 @@ public class WebGUIServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti alla pagina di checkout (/checkout).
+	 *
+	 * Viene creata una nuova prenotazione (vuota) per la proiezione con id
+	 * {@code id} e mostrata la pagina di checkout che permette di selezionare i
+	 * posti desiderati all'interno della sala e di concludere l'acquisto
+	 * successivamente.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza o
+	 * comunque in una qualsiasi fase dell'inizializzazione di una prenotazione
+	 * viene mostrato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void renderCheckout(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, ProjectionException {
 		int projectionId = Integer.parseInt(req.getParameter("id"));
@@ -97,10 +157,38 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render("checkout.html", cinema, reservationId));
 	}
 
+	/**
+	 * Mostra una pagina di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void renderError(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.getWriter().write(Rythm.render("index.html", cinema, null, null));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti alla pagina principale (/).
+	 *
+	 * Se non viene specificata nessuna {@code query} corrispondente a un film, la
+	 * pagina mostra tutti i film per i quali sono presenti delle proiezioni
+	 * programmate in futuro. Altrimenti viene mostrato l'elenco dei film che
+	 * contengono nel titolo la stringa {@code query}.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * mostrato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void renderIndex(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<Movie> resultMovies = null;
 		String query = req.getParameter("query");
@@ -117,6 +205,24 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render("index.html", cinema, resultMovies, query));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti alla pagina che mostra i dettagli di un
+	 * determinato film (/movie-details).
+	 *
+	 * Se non viene specificato nessun {@code id} di un film viene mostrato un
+	 * messaggio di errore, altrimenti la pagina mostra i dettagli del film e le
+	 * relative proiezioni in ordine cronologico, raggruppate per data.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * mostrato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void renderMovieDetails(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, NoMovieException {
 		int movieId = Integer.parseInt(req.getParameter("id"));
@@ -149,6 +255,29 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render("movie-details.html", cinema, movie, schedule));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti all'aggiornamento dello stato dei posti
+	 * per una determinata proiezione (/update-seat-status).
+	 *
+	 * La richiesta deve contenere nel parametro {@code seat-id} una stringa nel
+	 * formato seat-0-1 (posto 1 della fila 0) e un parametro {@code seat-status}
+	 * che può assumere i valori {@code selezionato} o {@code disponibile}. Il posto
+	 * verrà aggiornato per la prenotazione corrente (con id {@code reservation-id})
+	 * a seconda del valore del parametro di stato.
+	 *
+	 * Se i valori dei parametri non sono validi viene inviato un messaggio di
+	 * errore.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * inviato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void handleUpdateSeatStatus(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
@@ -178,6 +307,27 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render(response));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti all'aggiornamento del carrello di una
+	 * prenotazione (/get-checkout-info).
+	 *
+	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
+	 * prenotazione. La risposta contiene al suo interno i valori richiesti per
+	 * aggiornare lo stato del carrello mostrato allo spettatore (si veda il
+	 * corrispondente script JavaScript per maggiori informazioni).
+	 *
+	 * Se il valore del parametro non è valido viene inviato un messaggio di errore.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * inviato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void handleGetCheckoutInfo(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
@@ -208,6 +358,28 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render(String.join("\n", responseTokens)));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti all'aggiornamento dello stato dei
+	 * parametri relativi allo sconto di tipo {@code AGE} (/set-age-discount).
+	 *
+	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
+	 * prenotazione. I parametri {@code age-under} e {@code age-over} sono usati per
+	 * impostare il numero di persone sotto l'età minima e sopra l'età massima per
+	 * avere lo sconto di tipo {@code AGE}.
+	 *
+	 * Se i valori dei parametri non sono validi viene inviato un messaggio di
+	 * errore.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * inviato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void handleSetAgeDiscount(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
@@ -226,6 +398,28 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render(response));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti all'inserimento di un codice coupon per
+	 * la prenotazione corrente (/apply-coupon).
+	 *
+	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
+	 * prenotazione. Il parametro {@code coupon-code} è usato per inserire un coupon
+	 * nella prenotazione corrente e ottenerne il relativo sconto sull'importo
+	 * totale.
+	 *
+	 * Se i valori dei parametri non sono validi (es. il coupon non esiste o è già
+	 * stato utilizzato) viene inviato un messaggio di errore.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * inviato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void handleApplyCoupon(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
@@ -241,6 +435,30 @@ public class WebGUIServlet extends HttpServlet {
 		resp.getWriter().write(Rythm.render(String.join("\n", response)));
 	}
 
+	/**
+	 * Gestisce le richieste corrispondenti all'avvio del processo di completamento
+	 * della prenotazione, pagamento e invio dell'e-mail allo spettatore contenente
+	 * la ricevuta di avvenuta prenotazione (/buy).
+	 *
+	 * La richiesta deve contenere nel parametro {@code reservation-id} l'id di una
+	 * prenotazione. Vengono impostati i vari campi necessari al corretto
+	 * completamento di una prenotazione in corso (si veda il corrispondente script
+	 * JavaScript per maggiori informazioni); viene poi avviato il processo di
+	 * pagamento e l'invio (asincrono) dell'e-mail.
+	 *
+	 * Se i valori dei parametri non sono validi o si riscontra un errore nel
+	 * processo di pagamento viene inviato un messaggio di errore.
+	 *
+	 * Se si verificano errori durante la lettura dei dati dalla persistenza viene
+	 * inviato un messaggio di errore.
+	 *
+	 * @param req  parametri della richiesta.
+	 * @param resp risposta del server alla richiesta.
+	 * @throws ServletException se si verificano errori durante la gestione della
+	 *                          richiesta.
+	 * @throws IOException      se non risulta possibile scrivere nel buffer di
+	 *                          risposta alla richiesta.
+	 */
 	protected void handleBuy(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		long reservationId = Integer.parseInt(req.getParameter("reservation-id"));
 
