@@ -92,3 +92,5 @@ Per accedere all'interfaccia a riga di comando riguardante la vista amministrato
 ## 4. WIKI DEL PROGETTO
 
 È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/IngSW-unipv/Progetto-F21/wiki).
+
+È possibile anche trovare la documentazione JavaDoc generata automaticamente dai commenti presenti nel codice sorgente nella cartella [doc](https://github.com/IngSW-unipv/Progetto-F21/blob/main/doc).
