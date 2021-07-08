@@ -9,6 +9,7 @@
 ![SQLite](https://img.shields.io/badge/Database-sqlite-blue)
 
 ***Sistema per la gestione delle prenotazioni dei biglietti di un cinema.***
+
 [Presentazione](https://docs.google.com/presentation/d/1DnBT-Xm7wlHo8Mx5TOKYY6t92_84Xn-ywwDrSrER7wE/edit?usp=sharing)
 
 <!-- ![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png) -->
@@ -37,7 +38,7 @@ Il procedimento per l'installazione a seconda del sistema operativo utilizzato p
 ***
 ## 1. ESECUZIONE DELL'APPLICAZIONE WEB - VISTA SPETTATORE
 
-Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario (dopo aver compilato il progetto) eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java) (è necessaria una versione di Java 1.8 o superiore).
+Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario (dopo aver compilato il progetto) eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java) (è necessaria una versione di Java 1.8 o superiore).
 
 È possibile farlo con l'aiuto di Gradle per la gestione automatica delle dipendenze tramite i comandi riportati di seguito.
 
@@ -82,16 +83,16 @@ Tramite un browser aggiornato (l'applicazione è stata testata sulle versioni re
 ***
 ## 2. ESECUZIONE DA CLI - VISTA SPETTATORE
 
-Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [CLIUserMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java).
+Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [CLIUserMain.java](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java).
 
 ***
 ## 3. ESECUZIONE DA CLI - VISTA ADMIN
 
-Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/IngSW-unipv/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
+Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
 
 ***
 ## 4. WIKI DEL PROGETTO
 
-È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/IngSW-unipv/Progetto-F21/wiki).
+È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/Amatofrancesco99/Progetto-F21/wiki).
 
-È possibile anche trovare la documentazione JavaDoc generata automaticamente dai commenti presenti nel codice sorgente nella cartella [doc](https://github.com/IngSW-unipv/Progetto-F21/blob/main/doc).
+È possibile anche trovare la documentazione JavaDoc generata automaticamente dai commenti presenti nel codice sorgente nella cartella [doc](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/doc).
