@@ -1,6 +1,6 @@
 # Progetto-F21
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/IngSW-unipv/Progetto-F21/blob/main/LICENSE)&emsp;
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/LICENSE)&emsp;
 ![Java](https://img.shields.io/badge/Backend-java-red)
 ![Rhythm](https://img.shields.io/badge/Templating-rhythm-green)&emsp;
 ![HTML](https://img.shields.io/badge/Frontend-html%20-orange)
@@ -12,8 +12,7 @@
 
 [Presentazione](https://docs.google.com/presentation/d/1DnBT-Xm7wlHo8Mx5TOKYY6t92_84Xn-ywwDrSrER7wE/edit?usp=sharing)
 
-<!-- ![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/popcorn.png) -->
-![image](https://github.com/IngSW-unipv/Progetto-F21/blob/main/images/mockup.png)
+![image](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/images/mockup.png)
 
 ***
 
