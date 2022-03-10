@@ -1,6 +1,6 @@
 # Cinema Managing System
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/LICENSE)&emsp;
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Amatofrancesco99/Cinema-managing-system/blob/main/LICENSE)&emsp;
 ![Java](https://img.shields.io/badge/Backend-java-red)
 ![Rhythm](https://img.shields.io/badge/Templating-rhythm-green)&emsp;
 ![HTML](https://img.shields.io/badge/Frontend-html%20-orange)
@@ -12,7 +12,7 @@
 
 [Presentazione](https://docs.google.com/presentation/d/1DnBT-Xm7wlHo8Mx5TOKYY6t92_84Xn-ywwDrSrER7wE/edit?usp=sharing)
 
-![image](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/images/mockup.png)
+![image](https://github.com/Amatofrancesco99/Cinema-managing-system/blob/main/images/mockup.png)
 
 ***
 
@@ -25,7 +25,7 @@ Se Git non è già presente sul sistema in uso, scaricarlo e installarlo da [git
 È possibile effettuare il clone del repository contenente tutto il necessario alla compilazione ed esecuzione dell'applicazione tramite il comando seguente:
 
 ```
-git clone https://github.com/IngSW-unipv/Progetto-F21.git
+git clone https://github.com/Amatofrancesco99/Cinema-managing-system.git
 ```
 
 ### 0.3 - Download di Gradle
@@ -37,7 +37,7 @@ Il procedimento per l'installazione a seconda del sistema operativo utilizzato p
 ***
 ## 1. ESECUZIONE DELL'APPLICAZIONE WEB - VISTA SPETTATORE
 
-Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario (dopo aver compilato il progetto) eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java) (è necessaria una versione di Java 1.8 o superiore).
+Per accedere all'interfaccia grafica web riguardante la vista spettatore, è necessario (dopo aver compilato il progetto) eseguire tramite una JVM la classe [WebGUIMain.java](https://github.com/Amatofrancesco99/Cinema-managing-system/blob/main/src/main/java/cinema/view/webgui/WebGUIMain.java) (è necessaria una versione di Java 1.8 o superiore).
 
 È possibile farlo con l'aiuto di Gradle per la gestione automatica delle dipendenze tramite i comandi riportati di seguito.
 
@@ -45,7 +45,7 @@ Per accedere all'interfaccia grafica web riguardante la vista spettatore, è nec
 Per poter compilare ed eseguire l'applicazione web (server HTTP) è necessario innanzitutto posizionarsi nella directory root del progetto all'interno di un terminale o prompt dei comandi:
 
 ```
-cd Progetto-F21
+cd Cinema-managing-system
 ```
 
 ### 1.2 - Compilazione e setup dell'applicazione
@@ -82,16 +82,16 @@ Tramite un browser aggiornato (l'applicazione è stata testata sulle versioni re
 ***
 ## 2. ESECUZIONE DA CLI - VISTA SPETTATORE
 
-Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [CLIUserMain.java](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java).
+Per accedere all'interfaccia a riga di comando riguardante la vista spettatore, è necessario eseguire tramite una JVM la classe [CLIUserMain.java](https://github.com/Amatofrancesco99/Cinema-managing-system/blob/main/src/main/java/cinema/view/cli/user/CLIUserMain.java).
 
 ***
 ## 3. ESECUZIONE DA CLI - VISTA ADMIN
 
-Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
+Per accedere all'interfaccia a riga di comando riguardante la vista amministratore, è necessario eseguire tramite una JVM la classe [CLIAdminMain.java](https://github.com/Amatofrancesco99/Cinema-managing-system/blob/main/src/main/java/cinema/view/cli/admin/CLIAdminMain.java).
 
 ***
 ## 4. WIKI DEL PROGETTO
 
-È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/Amatofrancesco99/Progetto-F21/wiki).
+È possibile consultare ulteriori informazioni dettagliate riguardo alla documentazione di progetto consultando la [wiki del repository](https://github.com/Amatofrancesco99/Cinema-managing-system/wiki).
 
-È possibile anche trovare la documentazione JavaDoc generata automaticamente dai commenti presenti nel codice sorgente nella cartella [doc](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/doc).
+È possibile anche trovare la documentazione JavaDoc generata automaticamente dai commenti presenti nel codice sorgente nella cartella [doc](https://github.com/Amatofrancesco99/Cinema-managing-system/blob/main/doc).
