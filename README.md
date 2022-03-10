@@ -1,4 +1,4 @@
-# Progetto-F21
+# Cinema Managing System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Amatofrancesco99/Progetto-F21/blob/main/LICENSE)&emsp;
 ![Java](https://img.shields.io/badge/Backend-java-red)
